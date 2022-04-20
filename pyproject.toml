@@ -7,8 +7,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-textual-extras = {git = "https://github.com/kraanzu/textual_extras.git"}
 textual = "^0.1.17"
+textual_extras = { git = "https://github.com/kraanzu/textual_extras.git", branch = "main" } #better widgets
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"

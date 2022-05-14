@@ -6,7 +6,11 @@ from .entry import Entry
 
 
 class TreeEdit(TreeControl):
-    def __init__(self, label: Text):
+    """
+    A Class that allows editing while displaying trees
+    """
+
+    def __init__(self, label: Text) -> None:
         super().__init__(label, None)
         self._tree.hide_root = True
         self.root._tree.expanded = True
@@ -14,28 +18,45 @@ class TreeEdit(TreeControl):
         self.highlighted = None
         self.selected = None
 
-    async def reset(self):
+    async def reset(self) -> None:
+        """
+        Turns off both highlight and editing
+        """
         await self.clear_select()
         self.highlighted = None
 
-    async def clear_select(self):
+    async def clear_select(self) -> None:
+        """
+        Leave editing mode
+        """
+
         if self.selected:
             self.nodes[self.selected].data._has_focus = False
 
         self.selected = None
         self.refresh()
 
-    async def select(self, id: NodeID | None = None):
+    async def select(self, id: NodeID | None = None) -> None:
+        """
+        Selects the node to be edited
+        """
         await self.clear_select()
         self.selected = id
         self.refresh()
 
-    def highlight(self, id: NodeID | None = None):
+    def highlight(self, id: NodeID | None = None) -> None:
+        """
+        Highlights the node
+        """
 
         self.highlighted = id
         self.refresh()
 
-    async def handle_keypress(self, event: events.Key):
+    async def handle_keypress(self, event: events.Key) -> None:
+        """
+        Handle incoming kepresses
+        """
+
         if event.key == "escape":
             if self.selected:
                 await self.clear_select()
@@ -74,6 +95,10 @@ class TreeEdit(TreeControl):
         self.refresh(layout=True)
 
     def render_node(self, node: TreeNode) -> RenderableType:
+        """
+        Renders styled node
+        """
+
         if node.data:
             label = Text(
                 str(node.data.render()).ljust(100, " "),

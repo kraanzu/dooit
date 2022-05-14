@@ -4,13 +4,17 @@ from textual_extras.events import TextChanged
 
 
 class Entry(TextInput):
+    """
+    A Simple subclass of TextInput widget with no borders
+    """
+
     def __init__(self, name: str | None = None) -> None:
         super().__init__(name)
 
     def _format_text(self, text: str) -> str:
         return text
 
-    def render_panel(self, text: TextType):
+    def render_panel(self, text: TextType) -> TextType:
         return text
 
     async def handle_keypress(self, key: str) -> None:

@@ -2,7 +2,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeControl, TreeNode, NodeID
-from .entry import Entry
+from textual.events import Key
 
 
 class TreeEdit(TreeControl):
@@ -17,6 +17,10 @@ class TreeEdit(TreeControl):
 
         self.highlighted = None
         self.selected = None
+
+    async def on_mouse_move(self, event: events.MouseMove) -> None:
+        self.highlighted = event.style.meta.get("tree_node")
+        return await super().on_mouse_move(event)
 
     async def reset(self) -> None:
         """
@@ -41,8 +45,17 @@ class TreeEdit(TreeControl):
         Selects the node to be edited
         """
         await self.clear_select()
+        self.highlighted = id
         self.selected = id
+        if self.selected:
+            self.nodes[self.selected].data._has_focus = True
+
+        self.hover_node = None  # Not to block due to still mouse pointer
         self.refresh()
+
+    async def handle_click(self) -> None:
+        # Yeah I know this is weird. BUT IT WORKS DAMMIT!
+        await self.handle_keypress(Key(self, "enter"))
 
     def highlight(self, id: NodeID | None = None) -> None:
         """
@@ -65,18 +78,22 @@ class TreeEdit(TreeControl):
 
         elif not self.selected:
             match event.key:
+                case "enter":
+                    await self.select(self.highlighted)
                 case "z":
                     if self.highlighted:
                         await self.nodes[self.highlighted].toggle()
 
                 case "j" | "down":
                     if self.highlighted:
-                        self.highlighted = (
-                            self.nodes[self.highlighted].next_node
-                            or self.root.children[0]
-                        ).id
+                        self.highlight(
+                            (
+                                self.nodes[self.highlighted].next_node
+                                or self.root.children[0]
+                            ).id
+                        )
                     else:
-                        self.highlighted = self.root.children[0].id
+                        self.highlight(self.root.children[0].id)
 
                 case "k" | "up":
                     if self.highlighted:
@@ -85,9 +102,9 @@ class TreeEdit(TreeControl):
                             prev_node = self.root.children[-1]
 
                         # SAFETY: The node will never be None because it does not even reach root
-                        self.highlighted = (prev_node).id
+                        self.highlight(prev_node.id)
                     else:
-                        self.highlighted = self.root.children[0].id
+                        self.highlight(self.root.children[0].id)
         else:
             if self.selected:
                 await self.nodes[self.selected].data.handle_keypress(event.key)
@@ -101,23 +118,24 @@ class TreeEdit(TreeControl):
 
         if node.data:
             label = Text(
-                str(node.data.render()).ljust(100, " "),
+                str(node.data.render()),
             )
         else:
             label = Text()
 
-        if node.id != self.highlighted or self.hover_node:
-            label.stylize("reverse green")
-        elif not self.hover_node:
-            label.stylize("reverse magenta")
-
-        if node.id == self.hover_node or (
-            not self.hover_node and self.highlighted == node.id
-        ):
-            label.stylize("reverse magenta")
+        # WASTE
+        if self.hover_node:
+            label = Text("Hover ") + label
+        if self.highlighted:
+            label = Text(f"high({self.highlighted}) ") + label
+        #######
 
         if node.id == self.selected:
-            label.stylize("bold cyan")
+            label.stylize("cyan")
+        elif node.id == self.highlighted:
+            label.stylize("magenta")
+        else:
+            label.stylize("yellow")
 
         meta = {
             "@click": f"click_label({node.id})",
@@ -127,30 +145,3 @@ class TreeEdit(TreeControl):
 
         label.apply_meta(meta)
         return label
-
-
-if __name__ == "__main__":
-
-    from textual.app import App
-    from textual.widgets import TreeClick
-
-    class MyApp(App):
-        async def on_mount(self):
-            self.a = TreeEdit(Text("hi"))
-            for i in range(10):
-                await self.a.root.add(str(i), Entry("hi"))
-
-            await self.a.root.children[0].add("x", Entry("hi"))
-            await self.view.dock(self.a, edge="left", size=40)
-
-        async def on_key(self, e):
-            await self.a.handle_keypress(e)
-
-        async def handle_tree_click(self, message: TreeClick):
-            box = message.node.data
-            if box:
-                box._has_focus = True
-                self.a.highlight(message.node.id)
-                await self.a.select(message.node.id)
-
-    MyApp.run()

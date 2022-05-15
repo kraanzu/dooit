@@ -186,6 +186,11 @@ class TodoList(TreeControl):
                 case "OVERDUE":
                     label = Text.from_markup("[b yellow] [/b yellow]") + label
 
+        if children := node.children:
+            total = len(children)
+            done = sum(child.data.todo.status == "COMPLETE" for child in children)
+            label.append(Text.from_markup(f" ( [green][/green] {done}/{total} )"))
+
         meta = {
             "@click": f"click_label({node.id})",
             "tree_node": node.id,

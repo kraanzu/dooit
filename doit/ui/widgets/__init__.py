@@ -1,7 +1,7 @@
-from .tree_edit import TreeEdit
+from .todo_list import TodoList
 from .entry import Entry
 
 __all__ = [
-    "TreeEdit",
+    "TodoList",
     "Entry",
 ]

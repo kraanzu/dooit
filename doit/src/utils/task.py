@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 class Task:
     """
     A task class to store data of the task
@@ -12,14 +9,12 @@ class Task:
     def __init__(
         self,
         name: str | None = None,
-        priority: int = 1,
+        urgency: int = 1,
         due: str | None = None,
     ) -> None:
         self.name = name
-        self.priority = priority
+        self.urgency = urgency
         self.tags = []
         self.status = "PENDING"
         self.due = due
-        self.created = datetime.now().time().strftime("on %D at %T")
-        self.last_modified = self.created
 

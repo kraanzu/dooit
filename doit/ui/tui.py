@@ -61,6 +61,9 @@ class Doit(App):
         for i in range(30):
             await self.navbar.root.add("All", Entry())
 
+        for i in range(4):
+            await self.navbar.root.children[0].add(str(i), Entry())
+
         placements = {"1b": ScrollView(self.navbar), "2b": self.todo_lists[""]}
         self.grid.place(**placements)
 

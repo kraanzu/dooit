@@ -1,7 +1,7 @@
+from typing import Literal
 from rich.text import TextType
 from textual import events
-from textual.reactive import Reactive
-from textual.widgets import TreeControl, NodeID
+from textual.widgets import TreeControl, NodeID, TreeNode
 from textual.events import Key
 from textual.messages import CursorMove
 
@@ -33,8 +33,11 @@ class TreeEdit(TreeControl):
         await self.clear_select()
         self.highlighted = NodeID(0)
 
-    async def move_cursor_line(self, delta: int) -> None:
-        self.current_line += delta
+    async def move_cursor_line(self, delta: int = 0, pos: int = 0) -> None:
+        if delta:
+            self.current_line += delta
+        else:
+            self.current_line = pos
         self.emit_no_wait(CursorMove(self, self.current_line))
 
     async def clear_select(self) -> None:
@@ -85,7 +88,7 @@ class TreeEdit(TreeControl):
         node = self.nodes[self.highlighted]
         if next_node := node.next_node:
             self.highlight(next_node.id)
-            await self.move_cursor_line(1)
+            await self.move_cursor_line(delta=1)
         elif node == self.root:
             self.highlight(self.root.children[0].id)
 
@@ -93,7 +96,7 @@ class TreeEdit(TreeControl):
         prev_node = self.nodes[self.highlighted].previous_node
         if prev_node and prev_node != self.root:
             self.highlight(prev_node.id)
-            await self.move_cursor_line(-1)
+            await self.move_cursor_line(delta=-1)
 
     def highlight(self, id: NodeID = NodeID(0)) -> None:
         """
@@ -104,21 +107,39 @@ class TreeEdit(TreeControl):
         self.refresh()
 
     async def handle_shortcut(self, key: str):
+        async def reach_to_node(node: TreeNode, direction: Literal["up", "down"]):
+            while self.highlighted != node.id:
+                await self.handle_shortcut(direction)
+
         match key:
-            case "m":
+            case "g":
+                while self.highlighted != self.root.children[0].id:
+                    await self.handle_shortcut("k")
+
+            case "G":
+                while self.highlighted != self.root.children[-1].id:
+                    await self.handle_shortcut("j")
+
+            case "i":
                 await self.select(self.highlighted)
 
             case "a":
                 node = self.nodes[self.highlighted]
                 await node.add("", Entry())
                 await node.expand()
-                self.highlight(node.children[-1].id)
-                await self.select(self.highlighted)
+                await reach_to_node(node.children[-1], "down")
+                await self.handle_shortcut("i")
 
             case "A":
-                if parent := self.nodes[self.highlighted].parent:
-                    self.highlight(parent.id)
-                    await self.handle_keypress(Key(self, "a"))
+                node = self.nodes[self.highlighted]
+                if node.parent == self.root:
+                    await self.root.add("", Entry())
+                    await self.handle_shortcut("G")
+                    await self.handle_shortcut("i")
+                else:
+                    # SAFETY: root parent case has already been handled above
+                    await reach_to_node(node.parent, "up")
+                    await self.handle_shortcut("a")
 
             case "c":
                 self.nodes[self.highlighted].data.mark_complete()
@@ -128,13 +149,17 @@ class TreeEdit(TreeControl):
 
             case "z":
                 if self.highlighted:
-                    await self.nodes[self.highlighted].toggle()
+                    node = self.nodes[self.highlighted]
+                    await node.toggle()
 
             case "Z":
                 if parent := self.nodes[self.highlighted].parent:
                     if parent != self.root:
-                        self.highlight(parent.id)
-                        await self.handle_keypress(Key(self, "z"))
+                        while self.nodes[self.highlighted].previous_node != parent:
+                            await self.handle_shortcut("k")
+
+                        await self.handle_shortcut("k")
+                        await self.handle_shortcut("z")
 
             case "j" | "down":
                 await self.move_highlight_down()

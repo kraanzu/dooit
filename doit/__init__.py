@@ -1,3 +1,4 @@
 from .ui.tui import Doit
 
-Doit.run()
+def main():
+    Doit.run()

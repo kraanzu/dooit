@@ -1,7 +1,6 @@
-from rich.console import RenderableType
-from rich.text import Text, TextType
+from rich.text import TextType
 from textual import events
-from textual.widgets import TreeControl, TreeNode, NodeID
+from textual.widgets import TreeControl, NodeID
 from textual.events import Key
 
 from ...ui.widgets.entry import Entry
@@ -12,7 +11,7 @@ class TreeEdit(TreeControl):
     A Class that allows editing while displaying trees
     """
 
-    def __init__(self, label: TextType) -> None:
+    def __init__(self, label: TextType = "") -> None:
         super().__init__(label, None)
         self._tree.hide_root = True
         self.root._tree.expanded = True

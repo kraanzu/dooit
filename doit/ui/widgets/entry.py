@@ -10,7 +10,7 @@ class Entry(TextInput):
     """
 
     def __init__(self, name: str | None = None) -> None:
-        super().__init__(name)
+        super().__init__(name, placeholder="hi")
         self.todo = Task()
 
     def mark_complete(self):

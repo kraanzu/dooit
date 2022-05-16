@@ -15,6 +15,7 @@ class Box(Widget):
         return Panel(
             Align.center(self.name, vertical="middle"),
             border_style=("bold " if self.highlighted else "dim ") + str(self.color),
+            height=3,
         )
 
     def highlight(self):
@@ -24,4 +25,3 @@ class Box(Widget):
     def lowlight(self):
         self.highlighted = False
         self.refresh()
-

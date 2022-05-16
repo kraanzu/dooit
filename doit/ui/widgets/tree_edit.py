@@ -1,7 +1,9 @@
 from rich.text import TextType
 from textual import events
+from textual.reactive import Reactive
 from textual.widgets import TreeControl, NodeID
 from textual.events import Key
+from textual.messages import CursorMove
 
 from ...ui.widgets.entry import Entry
 
@@ -16,6 +18,7 @@ class TreeEdit(TreeControl):
         self._tree.hide_root = True
         self.root._tree.expanded = True
 
+        self.current_line = 0
         self.highlighted = NodeID(0)
         self.selected = None
 
@@ -29,6 +32,10 @@ class TreeEdit(TreeControl):
         """
         await self.clear_select()
         self.highlighted = NodeID(0)
+
+    async def move_cursor_line(self, delta: int) -> None:
+        self.current_line += delta
+        self.emit_no_wait(CursorMove(self, self.current_line))
 
     async def clear_select(self) -> None:
         """
@@ -57,10 +64,10 @@ class TreeEdit(TreeControl):
     async def remove(self, id: NodeID):
         if next_node := self.nodes[id].next_node:
             if next_node.id != id:
-                self.move_highlight_down()
+                await self.move_highlight_down()
         elif prev_node := self.nodes[id].previous_node:
             if prev_node.id != id:
-                self.move_highlight_up()
+                await self.move_highlight_up()
 
         parent = self.nodes[id].parent or self.root
         for index, child in enumerate(parent.children):
@@ -74,24 +81,19 @@ class TreeEdit(TreeControl):
         # Yeah I know this is weird. BUT IT WORKS DAMMIT!
         await self.handle_keypress(Key(self, "enter"))
 
-    def move_highlight_down(self):
-        if self.highlighted:
-            self.highlight(
-                (self.nodes[self.highlighted].next_node or self.root.children[0]).id
-            )
-        else:
+    async def move_highlight_down(self):
+        node = self.nodes[self.highlighted]
+        if next_node := node.next_node:
+            self.highlight(next_node.id)
+            await self.move_cursor_line(1)
+        elif node == self.root:
             self.highlight(self.root.children[0].id)
 
-    def move_highlight_up(self):
-        if self.highlighted:
-            prev_node = self.nodes[self.highlighted].previous_node
-            if prev_node == self.root:
-                prev_node = self.root.children[-1]
-
-            # SAFETY: The node will never be None because it does not even reach root
+    async def move_highlight_up(self):
+        prev_node = self.nodes[self.highlighted].previous_node
+        if prev_node and prev_node != self.root:
             self.highlight(prev_node.id)
-        else:
-            self.highlight(self.root.children[0].id)
+            await self.move_cursor_line(-1)
 
     def highlight(self, id: NodeID = NodeID(0)) -> None:
         """
@@ -135,10 +137,10 @@ class TreeEdit(TreeControl):
                         await self.handle_keypress(Key(self, "z"))
 
             case "j" | "down":
-                self.move_highlight_down()
+                await self.move_highlight_down()
 
             case "k" | "up":
-                self.move_highlight_up()
+                await self.move_highlight_up()
 
     async def handle_keypress(self, event: events.Key) -> None:
         """

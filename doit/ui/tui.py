@@ -1,8 +1,6 @@
-from textual import widget
 from textual.app import App
 from textual import events
-from textual.widget import Widget
-from textual.widgets import Static, ScrollView
+from textual.widgets import ScrollView
 from collections import defaultdict
 
 from doit.ui.widgets import Navbar, Box

@@ -15,6 +15,7 @@ class Border(Widget):
 
     def toggle_highlight(self):
         self.highlight = not self.highlight
+        self.refresh()
 
     def render(self) -> RenderableType:
 

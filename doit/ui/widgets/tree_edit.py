@@ -1,5 +1,6 @@
 from typing import Literal
-from rich.text import TextType
+from rich.console import RenderableType
+from rich.text import TextType, Text
 from textual import events
 from textual.widgets import TreeControl, NodeID, TreeNode
 from textual.events import Key

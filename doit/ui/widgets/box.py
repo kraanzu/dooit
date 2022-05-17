@@ -6,7 +6,11 @@ from textual.widget import Widget
 
 
 class Box(Widget):
-    def __init__(self, name: str | None = None, color: StyleType = "green") -> None:
+    def __init__(
+        self,
+        name: str | None = None,
+        color: StyleType = "blue",
+    ) -> None:
         super().__init__(name)
         self.color = color
         self.highlighted = False

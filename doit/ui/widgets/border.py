@@ -5,7 +5,7 @@ from textual.widget import Widget
 
 class Border(Widget):
     def __init__(
-        self, name: str | None = None, color: str = "green", item="", measure="width"
+        self, name: str | None = None, color: str = "blue", item="", measure="width"
     ) -> None:
         super().__init__(name)
         self.highlight = False
@@ -25,20 +25,18 @@ class Border(Widget):
 
 
 class HorizontalLine(Border):
-    def __init__(self, name: str | None = None, color: str = "green") -> None:
-        super().__init__(name, color, "━")
+    def __init__(self) -> None:
+        super().__init__(item="━")
 
 
 class VerticalLine(Border):
-    def __init__(
-        self, name: str | None = None, color: str = "green", measure="height"
-    ) -> None:
-        super().__init__(name, color, "┃\n", measure)
+    def __init__(self) -> None:
+        super().__init__(item="┃\n", measure="height")
 
 
 class Connector1(Border):
-    def __init__(self, name: str | None = None, color: str = "green") -> None:
-        super().__init__(name, color, "┏")
+    def __init__(self) -> None:
+        super().__init__(item="┏")
 
     def render(self) -> RenderableType:
         width = self.size.width - 1
@@ -53,8 +51,8 @@ class Connector1(Border):
 
 
 class Connector2(Border):
-    def __init__(self, name: str | None = None, color: str = "green") -> None:
-        super().__init__(name, color, "┓")
+    def __init__(self) -> None:
+        super().__init__(item="┓")
 
     def render(self) -> RenderableType:
         width = self.size.width - 2
@@ -69,8 +67,8 @@ class Connector2(Border):
 
 
 class Connector3(Border):
-    def __init__(self, name: str | None = None, color: str = "green") -> None:
-        super().__init__(name, color, "┗")
+    def __init__(self) -> None:
+        super().__init__(item="┗")
 
     def render(self) -> RenderableType:
         width = self.size.width - 1
@@ -85,8 +83,8 @@ class Connector3(Border):
 
 
 class Connector4(Border):
-    def __init__(self, name: str | None = None, color: str = "green") -> None:
-        super().__init__(name, color, "┛")
+    def __init__(self) -> None:
+        super().__init__(item="┛")
 
     def render(self) -> RenderableType:
         width = self.size.width - 2

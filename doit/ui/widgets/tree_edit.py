@@ -65,12 +65,10 @@ class TreeEdit(TreeControl):
         self.refresh()
 
     async def remove(self, id: NodeID):
-        if next_node := self.nodes[id].next_node:
-            if next_node.id != id:
-                await self.move_highlight_down()
-        elif prev_node := self.nodes[id].previous_node:
-            if prev_node.id != id:
-                await self.move_highlight_up()
+        if self.nodes[id].next_node:
+            await self.move_highlight_down()
+        elif self.nodes[id].previous_node:
+            await self.move_highlight_up()
 
         parent = self.nodes[id].parent or self.root
         for index, child in enumerate(parent.children):
@@ -89,7 +87,7 @@ class TreeEdit(TreeControl):
         if next_node := node.next_node:
             self.highlight(next_node.id)
             await self.move_cursor_line(delta=1)
-        elif node == self.root:
+        elif node == self.root and self.root.children:
             self.highlight(self.root.children[0].id)
 
     async def move_highlight_up(self):

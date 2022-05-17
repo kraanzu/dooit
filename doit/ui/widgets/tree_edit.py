@@ -14,8 +14,8 @@ class TreeEdit(TreeControl):
     A Class that allows editing while displaying trees
     """
 
-    def __init__(self, label: TextType = "") -> None:
-        super().__init__(label, None)
+    def __init__(self, label: TextType = "", data: Entry = Entry()) -> None:
+        super().__init__(label, data)
         self._tree.hide_root = True
         self.root._tree.expanded = True
 

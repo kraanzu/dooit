@@ -10,7 +10,7 @@ class Task:
         self,
         name: str | None = None,
         urgency: int = 1,
-        due: str | None = None,
+        due: str = "",
     ) -> None:
         self.name = name
         self.urgency = urgency

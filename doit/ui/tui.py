@@ -3,7 +3,7 @@ from textual import events
 from textual.widgets import ScrollView
 from collections import defaultdict
 
-from doit.ui.widgets import Navbar, Box
+from doit.ui.widgets import Navbar, Box, DateTree
 from doit.ui.widgets import (
     Entry,
     TodoList,
@@ -18,11 +18,11 @@ from doit.ui.widgets import (
 
 class Doit(App):
     def setup_grid(self):
-        self.grid.add_row("a", fraction=13)
+        self.grid.add_row("a", size=3)
         self.grid.add_row("sep0", fraction=1)
-        self.grid.add_row("b", fraction=80)
+        self.grid.add_row("b", fraction=95)
         self.grid.add_row("sep1", fraction=1)
-        self.grid.add_row("bar", fraction=5)  # A bar at the bottom for looooks :)
+        self.grid.add_row("bar", fraction=3)  # A bar at the bottom for looooks :)
 
         self.grid.add_column("sep0", fraction=1)  # seperator lines
         self.grid.add_column("0", fraction=15)
@@ -131,8 +131,10 @@ class Doit(App):
         # --------- Widget Init -----------
         self.todo_lists = defaultdict(TodoList)
         self.navbar = Navbar()
+        self.dates = DateTree()
         for i in range(10):
             await self.navbar.root.add("All", Entry())
+            await self.dates.root.add("All", Entry())
 
         for i in range(4):
             await self.navbar.root.children[0].add(str(i), Entry())
@@ -140,6 +142,7 @@ class Doit(App):
         placements = {
             "0b": ScrollView(self.navbar, ),
             "1b": self.todo_lists[""],
+            "2b": self.dates
         }
         self.grid.place(**placements)
 

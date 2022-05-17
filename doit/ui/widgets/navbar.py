@@ -9,7 +9,7 @@ class Navbar(TreeEdit):
 
         if data := node.data:
             try:
-                label = Text.from_markup(str(data.render()), overflow="ellipsis")
+                label = Text.from_markup(str(data.render()))
             except:
                 label = Text(str(data.render()))
         else:

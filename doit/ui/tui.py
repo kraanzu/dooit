@@ -1,10 +1,14 @@
-from textual.app import App
-from textual import events
-from textual.widgets import ScrollView
 from collections import defaultdict
+from textual import events
+from textual.app import App
+from textual.widgets import ScrollView
+from doit.ui.events.events import DateKeypress, UrgencyKeypress
 
-from doit.ui.widgets import Navbar, Box, DateTree
 from doit.ui.widgets import (
+    Navbar,
+    Box,
+    DateTree,
+    UrgencyTree,
     Entry,
     TodoList,
     HorizontalLine,
@@ -119,34 +123,38 @@ class Doit(App):
         return box
 
     async def on_mount(self):
-
-        # ------- GRID PLACEMENT -------------
-        self.grid = await self.view.dock_grid(z=1)
+        self.current_menu = ""
+        self.grid = await self.view.dock_grid()
         self.setup_grid()
         self.setup_widget_spaces()
         self.setup_headings()
 
         self.setup_widget_borders()
+        await self.setup_screen()
 
-        # --------- Widget Init -----------
-        self.todo_lists = defaultdict(TodoList)
+    async def setup_screen(self):
         self.navbar = Navbar()
+        self.todo_lists = TodoList()
         self.dates = DateTree()
-        for i in range(10):
-            await self.navbar.root.add("All", Entry())
-            await self.dates.root.add("All", Entry())
+        self.urgency_trees = UrgencyTree()
 
-        for i in range(4):
-            await self.navbar.root.children[0].add(str(i), Entry())
+        # for i in range(10):
+        #     await self.navbar.root.add("All", Entry())
+        #     await self.dates.root.add("All", Entry())
+
+        # for i in range(4):
+        #     await self.navbar.root.children[0].add(str(i), Entry())
 
         placements = {
-            "0b": ScrollView(self.navbar, ),
-            "1b": self.todo_lists[""],
-            "2b": self.dates
+            "0b": ScrollView(
+                self.navbar,
+            ),
+            "1b": self.todo_lists,
+            "2b": self.dates,
+            "3b": self.urgency_trees,
         }
         self.grid.place(**placements)
 
-        # --------- Widget Placements ----------
         self.navbar_heading.highlight()
         self.current_tab = self.navbar_heading
 
@@ -177,6 +185,8 @@ class Doit(App):
         if self.current_tab == self.navbar_heading:
             await self.navbar.handle_keypress(event)
         elif self.current_tab == self.todos_heading:
-            await self.todo_lists[""].handle_keypress(event)
+            await self.todo_lists.handle_keypress(event)
+            await self.dates.handle_keypress(event)
+            await self.urgency_trees.handle_keypress(event)
 
         self.refresh()

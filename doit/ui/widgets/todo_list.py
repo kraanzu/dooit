@@ -1,6 +1,9 @@
 from rich.console import RenderableType
 from rich.text import Text
+from textual import events
 from textual.widgets import TreeNode
+
+from doit.ui.events import *
 from ...ui.widgets.tree_edit import TreeEdit
 
 

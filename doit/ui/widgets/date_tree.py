@@ -10,6 +10,7 @@ from textual.widgets import TreeNode
 class DateTree(TreeEdit):
     async def handle_shortcut(self, key: str):
         async def reach_to_node(node: TreeNode, direction: Literal["up", "down"]):
+            node = node or self.root
             while self.highlighted != node.id:
                 await self.handle_shortcut(direction)
 
@@ -22,13 +23,13 @@ class DateTree(TreeEdit):
                 while self.highlighted != self.root.children[-1].id:
                     await self.handle_shortcut("j")
 
-            case "a":
+            case "A":
                 node = self.nodes[self.highlighted]
                 await node.add("", Entry())
                 await node.expand()
                 await reach_to_node(node.children[-1], "down")
 
-            case "A":
+            case "a":
                 node = self.nodes[self.highlighted]
                 if node.parent == self.root:
                     await self.root.add("", Entry())
@@ -36,7 +37,7 @@ class DateTree(TreeEdit):
                 else:
                     # SAFETY: root parent case has already been handled above
                     await reach_to_node(node.parent, "up")
-                    await self.handle_shortcut("a")
+                    await self.handle_shortcut("A")
 
             case "c":
                 self.nodes[self.highlighted].data.mark_complete()
@@ -82,10 +83,10 @@ class DateTree(TreeEdit):
         if not label.plain:
             label = Text("No due date")
 
-        label = Text.from_markup(f"[{color}]   [/{color}]") + label
-        label.append(" ")
-
+        label = Text(" ") + label + " "
         if node.id == self.highlighted:
-            label.stylize("bold reverse red")
+            label.stylize("bold reverse blue")
+
+        label = Text.from_markup(f"[{color}]   [/{color}]") + label
 
         return label

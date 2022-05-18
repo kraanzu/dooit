@@ -45,9 +45,11 @@ class TodoList(TreeEdit):
             label = Text()
 
         if node.id == self.editing:
-            label.stylize("bold cyan")
+            label = Text(" ") + label + " "
+            label.stylize("bold reverse cyan")
         elif node.id == self.highlighted:
-            label.stylize("bold magenta")
+            label = Text(" ") + label + " "
+            label.stylize("bold reverse blue")
 
         if node != self.root:
             match node.data.todo.status:
@@ -62,6 +64,8 @@ class TodoList(TreeEdit):
             total = len(children)
             done = sum(child.data.todo.status == "COMPLETE" for child in children)
             label.append(Text.from_markup(f" ( [green][/green] {done}/{total} )"))
+
+        label = Text(" ") + label
 
         meta = {
             "@click": f"click_label({node.id})",

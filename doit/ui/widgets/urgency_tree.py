@@ -10,6 +10,7 @@ from textual.widgets import TreeNode
 class UrgencyTree(TreeEdit):
     async def handle_shortcut(self, key: str):
         async def reach_to_node(node: TreeNode, direction: Literal["up", "down"]):
+            node = node or self.root
             while self.highlighted != node.id:
                 await self.handle_shortcut(direction)
 
@@ -22,13 +23,13 @@ class UrgencyTree(TreeEdit):
                 while self.highlighted != self.root.children[-1].id:
                     await self.handle_shortcut("j")
 
-            case "a":
+            case "A":
                 node = self.nodes[self.highlighted]
                 await node.add("", Entry())
                 await node.expand()
                 await reach_to_node(node.children[-1], "down")
 
-            case "A":
+            case "a":
                 node = self.nodes[self.highlighted]
                 if node.parent == self.root:
                     await self.root.add("", Entry())
@@ -36,7 +37,7 @@ class UrgencyTree(TreeEdit):
                 else:
                     # SAFETY: root parent case has already been handled above
                     await reach_to_node(node.parent, "up")
-                    await self.handle_shortcut("a")
+                    await self.handle_shortcut("A")
 
             case "c":
                 self.nodes[self.highlighted].data.mark_complete()
@@ -68,7 +69,7 @@ class UrgencyTree(TreeEdit):
         color = "yellow"
         label = Text()
         if data := node.data:
-            label = Text(f"{data.todo.urgency} ")
+            label = Text(f"{data.todo.urgency}")
             match node.data.todo.due:
                 case "COMPLETE":
                     color = "green"
@@ -76,9 +77,9 @@ class UrgencyTree(TreeEdit):
                 case "OVERDUE":
                     color = "red"
 
-        label = Text.from_markup(f"[{color}]   [/{color}]") + label
-
+        label = Text(" ") + label + " "
         if node.id == self.highlighted:
-            label.stylize("bold reverse red")
+            label.stylize("bold reverse blue")
 
+        label = Text.from_markup(f"[{color}]   [/{color}]") + label
         return label

@@ -66,10 +66,17 @@ class TreeEdit(TreeControl):
         self.refresh()
 
     async def remove(self, id: NodeID):
-        if self.nodes[id].next_node:
+        node = self.nodes[id]
+        if node.expanded:
+            await node.toggle()
+
+        if node.next_node:
             await self.move_highlight_down()
-        elif self.nodes[id].previous_node:
-            await self.move_highlight_up()
+        elif prev_node:= node.previous_node:
+            if prev_node == self.root:
+                await self.reset()
+            else:
+                await self.move_highlight_up()
 
         parent = self.nodes[id].parent or self.root
         for index, child in enumerate(parent.children):
@@ -107,6 +114,7 @@ class TreeEdit(TreeControl):
 
     async def handle_shortcut(self, key: str):
         async def reach_to_node(node: TreeNode, direction: Literal["up", "down"]):
+            node = node or self.root
             while self.highlighted != node.id:
                 await self.handle_shortcut(direction)
 
@@ -122,14 +130,14 @@ class TreeEdit(TreeControl):
             case "i":
                 await self.select(self.highlighted)
 
-            case "a":
+            case "A":
                 node = self.nodes[self.highlighted]
                 await node.add("", Entry())
                 await node.expand()
                 await reach_to_node(node.children[-1], "down")
                 await self.handle_shortcut("i")
 
-            case "A":
+            case "a":
                 node = self.nodes[self.highlighted]
                 if node.parent == self.root:
                     await self.root.add("", Entry())
@@ -138,7 +146,7 @@ class TreeEdit(TreeControl):
                 else:
                     # SAFETY: root parent case has already been handled above
                     await reach_to_node(node.parent, "up")
-                    await self.handle_shortcut("a")
+                    await self.handle_shortcut("A")
 
             case "c":
                 self.nodes[self.highlighted].data.mark_complete()

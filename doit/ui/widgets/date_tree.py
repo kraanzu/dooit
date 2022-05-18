@@ -26,10 +26,10 @@ class DateTree(TreeEdit):
             label = Text()
 
         if not label.plain:
-            label = Text("No due date", justify="center")
+            label = Text("No due date")
 
         label = Text.from_markup(f"[{color}]   [/{color}]") + label
-        label.plain = label.plain + " "
+        label.append(" ")
 
         if node.id == self.highlighted:
             label.stylize("bold reverse red")

@@ -6,6 +6,7 @@ from .date_tree import DateTree
 from .urgency_tree import UrgencyTree
 
 from .border import (
+    Empty,
     HorizontalLine,
     VerticalLine,
     Connector1,
@@ -19,6 +20,7 @@ __all__ = [
     "Entry",
     "Navbar",
     "Box",
+    "Empty",
     "HorizontalLine",
     "VerticalLine",
     "Connector1",

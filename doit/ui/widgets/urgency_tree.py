@@ -14,7 +14,7 @@ class UrgencyTree(TreeEdit):
 
         color = "yellow"
         if data := node.data:
-            label = Text(str(data.todo.urgency))
+            label = Text(f"{data.todo.urgency} ")
             match node.data.todo.due:
                 case "COMPLETE":
                     color = "green"
@@ -24,13 +24,12 @@ class UrgencyTree(TreeEdit):
         else:
             label = Text()
 
-        if not label.plain:
-            label = Text("No due date", justify="center")
-
         label = Text.from_markup(f"[{color}]   [/{color}]") + label
-        label.plain = label.plain + " "
 
         if node.id == self.highlighted:
             label.stylize("bold reverse red")
+
+        # label.justify = "center"
+        label.append("   ")
 
         return label

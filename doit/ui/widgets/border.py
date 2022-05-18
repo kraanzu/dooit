@@ -24,6 +24,11 @@ class Border(Widget):
         return Text(self.item * count, style=style + self.color)
 
 
+class Empty(Border):
+    def __init__(self) -> None:
+        super().__init__(item=" ")
+
+
 class HorizontalLine(Border):
     def __init__(self) -> None:
         super().__init__(item="━")

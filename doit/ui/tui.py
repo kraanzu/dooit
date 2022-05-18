@@ -2,14 +2,12 @@ from collections import defaultdict
 from textual import events
 from textual.app import App
 from textual.widgets import ScrollView
-from doit.ui.events.events import DateKeypress, UrgencyKeypress
 
 from doit.ui.widgets import (
     Navbar,
     Box,
     DateTree,
     UrgencyTree,
-    Entry,
     TodoList,
     HorizontalLine,
     VerticalLine,
@@ -18,6 +16,7 @@ from doit.ui.widgets import (
     Connector3,
     Connector4,
 )
+from doit.ui.widgets.border import Empty
 
 
 class Doit(App):
@@ -43,14 +42,14 @@ class Doit(App):
 
     def setup_headings(self):
         self.navbar_heading = Box("Menu")
-        self.todos_heading = Box("Todo")
-        self.due_date_heading = Box("Due Date")
-        self.urgency_heading = Box("Urgency")
+        self.todos_heading = Box("Todos")
+
+        areas = {"nav": "0,a", "todo": "1-start|3-end,a"}
+
+        self.grid.add_areas(**areas)
         placements = {
-            "0a": self.navbar_heading,
-            "1a": self.todos_heading,
-            "2a": self.due_date_heading,
-            "3a": self.urgency_heading,
+            "nav": self.navbar_heading,
+            "todo": self.todos_heading,
         }
 
         self.grid.place(**placements)
@@ -58,8 +57,7 @@ class Doit(App):
     def setup_widget_spaces(self):
         middle_areas = dict()
         for i in "0123":
-            for j in "ab":
-                middle_areas[f"{i}{j}"] = f"{i},{j}"
+            middle_areas[f"{i}b"] = f"{i},b"
 
         self.grid.add_areas(**middle_areas)
 
@@ -89,32 +87,42 @@ class Doit(App):
         borders = []
         for i in range(4):
             borders.append(
-                self.make_box(
-                    [
-                        f"middle{2 * i}",
-                        f"top_connector{2 * i}",
-                        f"top{i}",
-                        f"top_connector{2 * i + 1}",
-                        f"middle{2 * i + 1}",
-                        f"bottom_connector{2 * i + 1}",
-                        f"bottom{i}",
-                        f"bottom_connector{2 * i}",
-                    ]
-                )
+                [
+                    f"middle{2 * i}",
+                    f"top_connector{2 * i}",
+                    f"top{i}",
+                    f"top_connector{2 * i + 1}",
+                    f"middle{2 * i + 1}",
+                    f"bottom_connector{2 * i + 1}",
+                    f"bottom{i}",
+                    f"bottom_connector{2 * i}",
+                ]
             )
 
-        self.navbar_box, self.todos_box, self.due_date_box, self.urgency_box = borders
+        self.navbar_box = self.make_box(
+            borders[0],
+        )
+        self.todos_box = self.make_box(borders[1], right=False)
+        self.due_date_box = self.make_box(borders[2], left=False, right=False)
+        self.urgency_box = self.make_box(borders[3], left=False)
 
-    def make_box(self, areas):
+    def make_box(
+        self,
+        areas,
+        left: bool = True,
+        top: bool = True,
+        bottom: bool = True,
+        right: bool = True,
+    ):
         box = [
-            VerticalLine(),
-            Connector1(),
-            HorizontalLine(),
-            Connector2(),
-            VerticalLine(),
-            Connector4(),
-            HorizontalLine(),
-            Connector3(),
+            VerticalLine() if left else Empty(),
+            Connector1() if left and top else HorizontalLine(),
+            HorizontalLine() if top else Empty(),
+            Connector2() if top and right else HorizontalLine(),
+            VerticalLine() if right else Empty(),
+            Connector4() if right and bottom else HorizontalLine(),
+            HorizontalLine() if bottom else Empty(),
+            Connector3() if bottom and left else HorizontalLine(),
         ]
 
         for area, widget in zip(areas, box):

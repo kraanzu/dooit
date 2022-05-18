@@ -12,6 +12,23 @@ class TodoList(TreeEdit):
     A Class that allows editing while displaying trees
     """
 
+    async def handle_keypress(self, event: events.Key) -> None:
+        if event.key == "escape":
+            if self.editing:
+                await self.clear_select()
+            else:
+                await self.post_message(Keystroke(self, event.key))
+                await self.reset()
+
+        elif not self.editing:
+            await self.handle_shortcut(event.key)
+            if event.key != "i":
+                await self.post_message(Keystroke(self, event.key))
+
+        elif self.editing:
+            await self.nodes[self.editing].data.handle_keypress(event.key)
+            self.refresh()
+
     def render_node(self, node: TreeNode) -> RenderableType:
         """
         Renders styled node
@@ -27,7 +44,7 @@ class TodoList(TreeEdit):
         else:
             label = Text()
 
-        if node.id == self.selected:
+        if node.id == self.editing:
             label.stylize("bold cyan")
         elif node.id == self.highlighted:
             label.stylize("bold magenta")

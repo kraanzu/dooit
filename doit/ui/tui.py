@@ -1,11 +1,13 @@
 from collections import defaultdict
 from textual import events
 from textual.app import App
+from textual.events import Key
 from textual.widgets import ScrollView
 
 from doit.ui.widgets import (
     Navbar,
     Box,
+    Empty,
     DateTree,
     UrgencyTree,
     TodoList,
@@ -16,7 +18,8 @@ from doit.ui.widgets import (
     Connector3,
     Connector4,
 )
-from doit.ui.widgets.border import Empty
+
+from .events import Keystroke, UrgencyKeypress
 
 
 class Doit(App):
@@ -146,13 +149,6 @@ class Doit(App):
         self.dates = DateTree()
         self.urgency_trees = UrgencyTree()
 
-        # for i in range(10):
-        #     await self.navbar.root.add("All", Entry())
-        #     await self.dates.root.add("All", Entry())
-
-        # for i in range(4):
-        #     await self.navbar.root.children[0].add(str(i), Entry())
-
         placements = {
             "0b": ScrollView(
                 self.navbar,
@@ -177,8 +173,6 @@ class Doit(App):
                 self.current_tab = self.navbar_heading
             case "todos":
                 self.current_tab = self.todos_heading
-            case "due_date":
-                self.current_tab = self.due_date_heading
 
         self.current_tab.highlight()
 
@@ -194,7 +188,9 @@ class Doit(App):
             await self.navbar.handle_keypress(event)
         elif self.current_tab == self.todos_heading:
             await self.todo_lists.handle_keypress(event)
-            await self.dates.handle_keypress(event)
-            await self.urgency_trees.handle_keypress(event)
 
         self.refresh()
+
+    async def handle_keystroke(self, event: Keystroke):
+        await self.dates.handle_keypress(Key(self, event.key))
+        await self.urgency_trees.handle_keypress(Key(self, event.key))

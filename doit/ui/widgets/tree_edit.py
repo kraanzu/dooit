@@ -21,7 +21,7 @@ class TreeEdit(TreeControl):
 
         self.current_line = 0
         self.highlighted = NodeID(0)
-        self.selected = None
+        self.editing = None
 
     async def on_mouse_move(self, event: events.MouseMove) -> None:
         self.highlighted = event.style.meta.get("tree_node")
@@ -46,10 +46,10 @@ class TreeEdit(TreeControl):
         Leave editing mode
         """
 
-        if self.selected:
-            self.nodes[self.selected].data._has_focus = False
+        if self.editing:
+            self.nodes[self.editing].data._has_focus = False
 
-        self.selected = None
+        self.editing = None
         self.refresh()
 
     async def select(self, id: NodeID | None = None) -> None:
@@ -58,9 +58,9 @@ class TreeEdit(TreeControl):
         """
         await self.clear_select()
         self.highlighted = id
-        self.selected = id
-        if self.selected:
-            self.nodes[self.selected].data._has_focus = True
+        self.editing = id
+        if self.editing:
+            self.nodes[self.editing].data._has_focus = True
 
         self.hover_node = None  # Not to block due to still mouse pointer
         self.refresh()
@@ -172,15 +172,15 @@ class TreeEdit(TreeControl):
         """
 
         if event.key == "escape":
-            if self.selected:
+            if self.editing:
                 await self.clear_select()
             else:
                 await self.reset()
 
-        elif not self.selected:
+        elif not self.editing:
             await self.handle_shortcut(event.key)
         else:
-            if self.selected:
-                await self.nodes[self.selected].data.handle_keypress(event.key)
+            if self.editing:
+                await self.nodes[self.editing].data.handle_keypress(event.key)
 
         self.refresh(layout=True)

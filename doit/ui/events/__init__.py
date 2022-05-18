@@ -1,7 +1,7 @@
-from .events import DateKeypress, UrgencyKeypress, MenuOptionChange
+from .events import Keystroke, UrgencyKeypress, MenuOptionChange
 
 __all__ = [
-    "DateKeypress",
+    "Keystroke",
     "UrgencyKeypress",
     "MenuOptionChange",
 ]

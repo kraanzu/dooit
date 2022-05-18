@@ -1,20 +1,18 @@
-from textual import events
-from textual.events import Event
+from textual.message import Message, MessageTarget
 
-
-class DateKeypress(Event):
-    def __init__(self, sender, key: events.Key) -> None:
+class Keystroke(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, key: str) -> None:
         super().__init__(sender)
         self.key = key
 
 
-class UrgencyKeypress(Event):
-    def __init__(self, sender, key: events.Key) -> None:
+class UrgencyKeypress(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, key: str) -> None:
         super().__init__(sender)
         self.key = key
 
 
-class MenuOptionChange(Event):
-    def __init__(self, sender, option: str) -> None:
+class MenuOptionChange(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, option: str) -> None:
         super().__init__(sender)
         self.option = option

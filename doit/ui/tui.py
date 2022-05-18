@@ -31,13 +31,13 @@ class Doit(App):
         self.grid.add_column("0", fraction=15)
         self.grid.add_column("sep1", fraction=1)
         self.grid.add_column("sep2", fraction=1)
-        self.grid.add_column("1", fraction=53)
+        self.grid.add_column("1", fraction=50)
         self.grid.add_column("sep3", fraction=1)
         self.grid.add_column("sep4", fraction=1)
-        self.grid.add_column("2", fraction=15)
+        self.grid.add_column("2", fraction=17)
         self.grid.add_column("sep5", fraction=1)
         self.grid.add_column("sep6", fraction=1)
-        self.grid.add_column("3", fraction=9)
+        self.grid.add_column("3", fraction=10)
         self.grid.add_column("sep7", fraction=1)
 
     def setup_headings(self):

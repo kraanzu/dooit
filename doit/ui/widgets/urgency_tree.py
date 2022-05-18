@@ -6,12 +6,15 @@ from textual.widgets import TreeNode
 
 
 class UrgencyTree(TreeEdit):
+    # def __init__(self) -> None:
+    #     super().__init__()
+    #     self._tree.guide_style = Style.null()
+
     async def handle_keypress(self, event: events.Key) -> None:
         if event.key != "i":
             return await super().handle_keypress(event)
 
     def render_node(self, node: TreeNode) -> RenderableType:
-
         color = "yellow"
         if data := node.data:
             label = Text(f"{data.todo.urgency} ")
@@ -29,7 +32,6 @@ class UrgencyTree(TreeEdit):
         if node.id == self.highlighted:
             label.stylize("bold reverse red")
 
-        # label.justify = "center"
         label.append("   ")
 
         return label

@@ -15,6 +15,7 @@ class TreeEdit(TreeControl):
     def __init__(self, label: TextType = "", data: Entry = Entry()) -> None:
         super().__init__(label, data)
         self._tree.hide_root = True
+        self._tree.guide_style = "conceal"
         self.root._tree.expanded = True
 
         self.current_line = 0

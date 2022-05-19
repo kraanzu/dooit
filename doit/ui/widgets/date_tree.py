@@ -13,6 +13,7 @@ class DateTree(TreeEdit):
 
         color = "yellow"
 
+        # setup text
         if data := node.data:
             label = Text(str(data.todo.due))
             match node.data.todo.due:
@@ -27,10 +28,13 @@ class DateTree(TreeEdit):
         if not label.plain:
             label = Text("No due date")
 
-        label = Text(" ") + label + " "
+        # fix padding
+        label = Text(" ") + label
+        label.plain += " " * ( 13 - len(label.plain) )
         if node.id == self.highlighted:
             label.stylize("bold reverse blue")
 
+        # setup pre-icons
         label = Text.from_markup(f"[{color}]   [/{color}]") + label
 
         return label

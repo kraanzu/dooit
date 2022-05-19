@@ -11,6 +11,7 @@ class Navbar(TreeEdit):
 
     def render_node(self, node: TreeNode) -> RenderableType:
 
+        # Gather text
         if data := node.data:
             try:
                 label = Text.from_markup(str(data.render()))
@@ -19,8 +20,25 @@ class Navbar(TreeEdit):
         else:
             label = Text()
 
+        # Trim to fit the size
+        label.plain = label.plain[: self.size.width - 2]
+
+        # Setup pre-icons
+        if node.children:
+            if node.expanded:
+                icon = "ﱮ"
+            else:
+                icon = ""
+        else:
+            icon = ""
+
+        # Padding adjustment
+        label.plain = f" {icon} " + label.plain + " "
+        label.pad_right(self.size.width, " ")
+
+        # Highlights
         if node.id == self.highlighted:
-            label.stylize("bold red")
+            label.stylize("bold reverse red")
 
         meta = {
             "@click": f"click_label({node.id})",

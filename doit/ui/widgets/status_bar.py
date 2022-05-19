@@ -40,6 +40,7 @@ class StatusBar(Widget):
                 self.color = "yellow"
             case "SEARCH":
                 self.color = "magenta"
+        self.refresh()
 
     def render(self) -> RenderableType:
         from rich.table import Table

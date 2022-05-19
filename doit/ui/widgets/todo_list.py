@@ -12,8 +12,13 @@ class TodoList(TreeEdit):
     A Class that allows editing while displaying trees
     """
 
+    async def edit_current_node(self) -> None:
+        await self.post_message(ChangeStatus(self, "INSERT"))
+        return await super().edit_current_node()
+
     async def handle_keypress(self, event: events.Key) -> None:
         if event.key == "escape":
+            await self.post_message(ChangeStatus(self, "NORMAL"))
             if self.editing:
                 await self.clear_select()
             else:
@@ -34,6 +39,7 @@ class TodoList(TreeEdit):
         Renders styled node
         """
 
+        # Setting up text
         if data := node.data:
             try:
                 label = Text.from_markup(
@@ -44,28 +50,31 @@ class TodoList(TreeEdit):
         else:
             label = Text()
 
-        if node.id == self.editing:
-            label = Text(" ") + label + " "
-            label.stylize("bold reverse cyan")
-        elif node.id == self.highlighted:
-            label = Text(" ") + label + " "
-            label.stylize("bold reverse blue")
-
-        if node != self.root:
-            match node.data.todo.status:
-                case "COMPLETE":
-                    label = Text.from_markup("[b green] [/b green]") + label
-                case "PENDING":
-                    label = Text.from_markup("[b yellow] [/b yellow]") + label
-                case "OVERDUE":
-                    label = Text.from_markup("[b yellow] [/b yellow]") + label
-
+        # setup milestone
         if children := node.children:
             total = len(children)
             done = sum(child.data.todo.status == "COMPLETE" for child in children)
             label.append(Text.from_markup(f" ( [green][/green] {done}/{total} )"))
 
-        label = Text(" ") + label
+        # fix padding
+        label.plain = " " + label.plain
+        label.pad_right(self.size.width, " ")
+
+        # setup highlight
+        if node.id == self.editing:
+            label.stylize("bold reverse cyan")
+        elif node.id == self.highlighted:
+            label.stylize("bold reverse blue")
+
+        # setup pre-icons
+        if node != self.root:
+            match node.data.todo.status:
+                case "COMPLETE":
+                    label = Text.from_markup(" [b green] [/b green]") + label
+                case "PENDING":
+                    label = Text.from_markup(" [b yellow] [/b yellow]") + label
+                case "OVERDUE":
+                    label = Text.from_markup(" [b yellow] [/b yellow]") + label
 
         meta = {
             "@click": f"click_label({node.id})",

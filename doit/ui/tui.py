@@ -3,6 +3,8 @@ from textual.app import App
 from textual.events import Key
 from textual.widgets import ScrollView
 
+from doit.ui.events.events import ChangeStatus
+
 
 from ..ui.widgets import (
     Navbar,
@@ -199,3 +201,6 @@ class Doit(App):
     async def handle_keystroke(self, event: Keystroke):
         await self.dates.handle_keypress(Key(self, event.key))
         await self.urgency_trees.handle_keypress(Key(self, event.key))
+
+    async def handle_change_status(self, event: ChangeStatus):
+        self.status_bar.set_status(event.status)

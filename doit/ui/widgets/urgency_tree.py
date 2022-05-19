@@ -12,6 +12,8 @@ class UrgencyTree(DateTree):
 
     def render_node(self, node: TreeNode) -> RenderableType:
         color = "yellow"
+
+        # setup text
         label = Text()
         if data := node.data:
             label = Text(f"{data.todo.urgency}")
@@ -22,7 +24,9 @@ class UrgencyTree(DateTree):
                 case "OVERDUE":
                     color = "red"
 
+        label.plain = label.plain.rjust(3, "0")
         label = Text(" ") + label + " "
+
         if node.id == self.highlighted:
             label.stylize("bold reverse blue")
 

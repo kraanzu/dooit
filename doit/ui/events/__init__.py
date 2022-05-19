@@ -1,7 +1,8 @@
-from .events import Keystroke, UrgencyKeypress, MenuOptionChange
+from .events import Keystroke, MenuOptionChange, ChangeStatus, ShowMessage
 
 __all__ = [
     "Keystroke",
-    "UrgencyKeypress",
     "MenuOptionChange",
+    "ChangeStatus",
+    "ShowMessage",
 ]

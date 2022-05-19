@@ -21,7 +21,13 @@ class StatusBar(Widget):
         """
         Returns current time
         """
-        return f"{datetime.now().time().strftime(' %X ')}"
+        return f"{datetime.now().time().strftime('   %X ')}"
+
+    def get_date(self) -> str:
+        """
+        Returns current time
+        """
+        return f"{datetime.today().strftime('   %D ')}"
 
     def set_status(self, status: str = Literal["NORMAL", "INSERT", "DATE", "SEARCH"]):
         self.status = status
@@ -41,7 +47,8 @@ class StatusBar(Widget):
         header_table = Table.grid(padding=(0, 1), expand=True)
         header_table.add_column("status", justify="center", width=len(self.status) + 1)
         header_table.add_column("message", justify="center", ratio=1)
-        header_table.add_column("clock", justify="center", width=10)
+        header_table.add_column("date", justify="center", width=13)
+        header_table.add_column("clock", justify="center", width=12)
 
         status = Text(f" {self.status}", style=f"reverse {self.color}")
         msg = Text(self.message, style="reverse black")
@@ -50,6 +57,10 @@ class StatusBar(Widget):
         header_table.add_row(
             status,
             msg,
+            Text(
+                self.get_date(),
+                style="reverse green",
+            ),
             Text(
                 self.get_clock(),
                 style="reverse yellow",
@@ -61,8 +72,8 @@ class StatusBar(Widget):
 if __name__ == "__main__":
     from textual.app import App
 
-    class A(App):
+    class MyApp(App):
         async def on_mount(self):
             await self.view.dock(StatusBar())
 
-    A.run()
+    MyApp.run()

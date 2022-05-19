@@ -1,8 +1,11 @@
 from collections import defaultdict
+from rich.text import Text
 from textual import events
 from textual.app import App
 from textual.events import Key
 from textual.widgets import ScrollView
+
+from doit.ui.widgets.status_bar import StatusBar
 
 from doit.ui.widgets import (
     Navbar,
@@ -149,6 +152,7 @@ class Doit(App):
         self.dates = DateTree()
         self.urgency_trees = UrgencyTree()
 
+
         placements = {
             "0b": ScrollView(
                 self.navbar,
@@ -158,6 +162,11 @@ class Doit(App):
             "3b": self.urgency_trees,
         }
         self.grid.place(**placements)
+
+
+        self.status_bar = StatusBar()
+        self.grid.add_areas(**{"bar": "0-start|3-end,bar"})
+        self.grid.place(bar = self.status_bar)
 
         self.navbar_heading.highlight()
         self.current_tab = self.navbar_heading

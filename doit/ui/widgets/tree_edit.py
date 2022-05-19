@@ -73,7 +73,7 @@ class TreeEdit(TreeControl):
         self.hover_node = None  # Not to block due to still mouse pointer
         self.refresh()
 
-    async def remove_node(self, id: NodeID | None) -> None:
+    async def remove_node(self, id: NodeID | None = None) -> None:
         """
         Removes the specified node
         removes highlighted node by default
@@ -238,6 +238,8 @@ class TreeEdit(TreeControl):
             case "k" | "up":
                 await self.move_highlight_up()
 
+        self.refresh(layout=True)
+
     async def handle_keypress(self, event: Key) -> None:
         """
         Handle incoming kepresses
@@ -248,7 +250,6 @@ class TreeEdit(TreeControl):
                 await self.clear_select()
             else:
                 await self.reset()
-
         elif not self.editing:
             await self.handle_key(event.key)
         else:

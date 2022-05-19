@@ -16,11 +16,28 @@ class TodoList(TreeEdit):
         await self.post_message(ChangeStatus(self, "INSERT"))
         return await super().edit_current_node()
 
+    async def check_node(self):
+        node = self.nodes[self.highlighted]
+        if not str(node.data.render()).strip():
+            await self.handle_keypress(events.Key(self, "x"))
+
+    async def handle_key(self, key: str) -> None:
+        match key:
+            case "d":
+                pass
+            case "+" | "=":
+                self.nodes[self.highlighted].data.increase_urgency()
+            case "-" | "_":
+                self.nodes[self.highlighted].data.decrease_urgency()
+
+        await super().handle_key(key)
+
     async def handle_keypress(self, event: events.Key) -> None:
         if event.key == "escape":
             await self.post_message(ChangeStatus(self, "NORMAL"))
             if self.editing:
                 await self.clear_select()
+                await self.check_node()
             else:
                 await self.post_message(Keystroke(self, event.key))
                 await self.reset()

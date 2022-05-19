@@ -10,6 +10,16 @@ class UrgencyTree(DateTree):
     A class to show a tree with current set urgency
     """
 
+    async def handle_key(self, key: str) -> None:
+
+        match key:
+            case "+" | "=":
+                self.nodes[self.highlighted].data.increase_urgency()
+            case "-" | "_":
+                self.nodes[self.highlighted].data.increase_urgency()
+
+        return await super().handle_key(key)
+
     def render_node(self, node: TreeNode) -> RenderableType:
         color = "yellow"
 

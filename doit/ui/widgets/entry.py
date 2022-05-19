@@ -10,7 +10,7 @@ class Entry(TextInput):
     """
 
     def __init__(self, name: str | None = None) -> None:
-        super().__init__(name, placeholder="hi")
+        super().__init__(name, placeholder="")
         self.todo = Task()
 
     def mark_complete(self) -> None:
@@ -21,6 +21,12 @@ class Entry(TextInput):
 
     def mark_overdue(self)  -> None:
         self.todo.status = "OVERDUE"
+
+    def increase_urgency(self) -> None:
+        self.todo.urgency += 1
+
+    def decrease_urgency(self) -> None:
+        self.todo.urgency -= 1
 
     def _format_text(self, text: str) -> str:
         return text

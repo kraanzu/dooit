@@ -3,8 +3,8 @@ from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
 
-from doit.ui.events import *
-from ...ui.widgets.tree_edit import TreeEdit
+from ...ui.events import *
+from ...ui.widgets import TreeEdit
 
 
 class TodoList(TreeEdit):
@@ -21,7 +21,7 @@ class TodoList(TreeEdit):
                 await self.reset()
 
         elif not self.editing:
-            await self.handle_shortcut(event.key)
+            await self.handle_key(event.key)
             if event.key != "i":
                 await self.post_message(Keystroke(self, event.key))
 

@@ -13,13 +13,13 @@ class Entry(TextInput):
         super().__init__(name, placeholder="hi")
         self.todo = Task()
 
-    def mark_complete(self):
+    def mark_complete(self) -> None:
         self.todo.status = "COMPLETE"
 
-    def mark_pending(self):
+    def mark_pending(self) -> None:
         self.todo.status = "PENDING"
 
-    def mark_overdue(self):
+    def mark_overdue(self)  -> None:
         self.todo.status = "OVERDUE"
 
     def _format_text(self, text: str) -> str:

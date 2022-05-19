@@ -1,10 +1,14 @@
-from rich.console import Console, RenderableType
+from rich.console import RenderableType
 from rich.text import Text
-from doit.ui.widgets.todo_list import TreeEdit
 from textual.widgets import TreeNode
+from . import TreeEdit
 
 
 class Navbar(TreeEdit):
+    """
+    A widget to show the todo menu
+    """
+
     def render_node(self, node: TreeNode) -> RenderableType:
 
         if data := node.data:

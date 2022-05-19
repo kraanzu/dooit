@@ -6,6 +6,10 @@ from textual.widget import Widget
 
 
 class StatusBar(Widget):
+    """
+    A status bar widget for showing messages and looks :)
+    """
+
     def __init__(self):
         super().__init__()
         self.message = ""
@@ -14,7 +18,10 @@ class StatusBar(Widget):
         self.set_interval(1, self.refresh)
 
     def get_clock(self) -> str:
-        return f" {datetime.now().time().strftime(' %X ')} "
+        """
+        Returns current time
+        """
+        return f"{datetime.now().time().strftime(' %X ')}"
 
     def set_status(self, status: str = Literal["NORMAL", "INSERT", "DATE", "SEARCH"]):
         self.status = status

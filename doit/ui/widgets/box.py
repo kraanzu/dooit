@@ -6,6 +6,10 @@ from textual.widget import Widget
 
 
 class Box(Widget):
+    """
+    A simple widget to render text with a panel
+    """
+
     def __init__(
         self,
         name: str | None = None,
@@ -22,10 +26,10 @@ class Box(Widget):
             height=3,
         )
 
-    def highlight(self):
+    def highlight(self) -> None:
         self.highlighted = True
         self.refresh()
 
-    def lowlight(self):
+    def lowlight(self) -> None:
         self.highlighted = False
         self.refresh()

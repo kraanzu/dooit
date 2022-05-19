@@ -4,6 +4,10 @@ from textual.widget import Widget
 
 
 class Border(Widget):
+    """
+    Widget to serve as borders
+    """
+
     def __init__(
         self, name: str | None = None, color: str = "blue", item="", measure="width"
     ) -> None:
@@ -13,7 +17,7 @@ class Border(Widget):
         self.item = item
         self.measure = measure
 
-    def toggle_highlight(self):
+    def toggle_highlight(self) -> None:
         self.highlight = not self.highlight
         self.refresh()
 
@@ -25,21 +29,37 @@ class Border(Widget):
 
 
 class Empty(Border):
+    """
+    Space consuimg widget
+    """
+
     def __init__(self) -> None:
         super().__init__(item=" ")
 
 
 class HorizontalLine(Border):
+    """
+    Draws a horizontal line wrt to its width
+    """
+
     def __init__(self) -> None:
         super().__init__(item="━")
 
 
 class VerticalLine(Border):
+    """
+    Draws a vertical line wrt to its height
+    """
+
     def __init__(self) -> None:
         super().__init__(item="┃\n", measure="height")
 
 
 class Connector1(Border):
+    """
+    Connects left and top border
+    """
+
     def __init__(self) -> None:
         super().__init__(item="┏")
 
@@ -56,6 +76,10 @@ class Connector1(Border):
 
 
 class Connector2(Border):
+    """
+    Connects right and top border
+    """
+
     def __init__(self) -> None:
         super().__init__(item="┓")
 
@@ -72,6 +96,10 @@ class Connector2(Border):
 
 
 class Connector3(Border):
+    """
+    Connects left and bottom border
+    """
+
     def __init__(self) -> None:
         super().__init__(item="┗")
 
@@ -88,6 +116,10 @@ class Connector3(Border):
 
 
 class Connector4(Border):
+    """
+    Connects right and bottom border
+    """
+
     def __init__(self) -> None:
         super().__init__(item="┛")
 

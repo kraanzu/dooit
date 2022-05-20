@@ -35,10 +35,10 @@ class Doit(App):
         self.grid.add_row("bar", fraction=3)  # A bar at the bottom for looooks :)
 
         self.grid.add_column("sep0", fraction=1)  # seperator lines
-        self.grid.add_column("0", fraction=15)
+        self.grid.add_column("0", fraction=20)
         self.grid.add_column("sep1", fraction=1)
         self.grid.add_column("sep2", fraction=1)
-        self.grid.add_column("1", fraction=50)
+        self.grid.add_column("1", fraction=45)
         self.grid.add_column("sep3", fraction=1)
         self.grid.add_column("sep4", fraction=1)
         self.grid.add_column("2", fraction=17)
@@ -137,7 +137,12 @@ class Doit(App):
 
         return box
 
+    async def action_refresh(self):
+        self.refresh()
+
     async def on_mount(self):
+        await self.bind('r', "refresh")
+
         self.current_menu = ""
         self.grid = await self.view.dock_grid()
         self.setup_grid()
@@ -145,6 +150,8 @@ class Doit(App):
         self.setup_headings()
 
         self.setup_widget_borders()
+
+        self.current_status = "NORMAL"
         await self.setup_screen()
 
     async def setup_screen(self):
@@ -202,8 +209,21 @@ class Doit(App):
 
         if self.current_tab == self.navbar_heading:
             await self.navbar.handle_keypress(event)
-        elif self.current_tab == self.todos_heading:
-            await self.todo_list.handle_keypress(event)
+        else:
+            match self.current_status:
+                case "NORMAL":
+                    await self.urgency_tree.handle_keypress(event)
+                    await self.date_tree.handle_keypress(event)
+                    await self.todo_list.handle_keypress(event)
+
+                case "INSERT":
+                    await self.todo_list.handle_keypress(event)
+
+                case "SEARCH":
+                    pass
+
+                case "DATE":
+                    await self.date_tree.handle_keypress(event)
 
         self.refresh()
 
@@ -212,4 +232,6 @@ class Doit(App):
         await self.urgency_tree.handle_keypress(Key(self, event.key))
 
     async def handle_change_status(self, event: ChangeStatus):
-        self.status_bar.set_status(event.status)
+        status = event.status
+        self.current_status = status
+        self.status_bar.set_status(status)

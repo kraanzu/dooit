@@ -7,19 +7,21 @@ from . import TreeEdit
 
 
 class DateTree(TreeEdit):
-    async def edit_current_node(self) -> None:
-        pass
+    # async def edit_current_node(self) -> None:
+    #     pass
 
-    # TODO
-    # async def validate(self, day, month, year) -> bool:
-    #     try:
-    #         datetime.datetime(int(year), int(month), int(day))
-    #         return True
-    #     except ValueError:
-    #         return False
+    async def validate(self, day, month, year) -> bool:
+        try:
+            datetime.datetime(int(year), int(month), int(day))
+            return True
+        except ValueError:
+            return False
 
-    async def edit_date(self):
-        await self.select()
+    async def handle_key(self, key: str) -> None:
+        if key == "d":
+            await self.edit_current_node()
+
+        return await super().handle_key(key)
 
     def render_node(self, node: TreeNode) -> RenderableType:
 

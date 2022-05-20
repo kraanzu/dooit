@@ -211,9 +211,6 @@ class TreeEdit(TreeControl):
             case "G":
                 await self.move_to_bottom()
 
-            case "i":
-                await self.edit_current_node()
-
             case "A":
                 await self.add_to_current_parent()
 
@@ -250,8 +247,10 @@ class TreeEdit(TreeControl):
                 await self.clear_select()
             else:
                 await self.reset()
+
         elif not self.editing:
             await self.handle_key(event.key)
+
         else:
             if self.editing:
                 await self.nodes[self.editing].data.handle_keypress(event.key)

@@ -20,9 +20,12 @@ class TodoList(TreeEdit):
         node = self.nodes[self.highlighted]
         if not str(node.data.render()).strip():
             await self.handle_keypress(events.Key(self, "x"))
+            await self.post_message(Keystroke(self, "x"))
 
     async def handle_key(self, key: str) -> None:
         match key:
+            case "i":
+                await self.edit_current_node()
             case "d":
                 pass
             case "+" | "=":
@@ -35,17 +38,15 @@ class TodoList(TreeEdit):
     async def handle_keypress(self, event: events.Key) -> None:
         if event.key == "escape":
             await self.post_message(ChangeStatus(self, "NORMAL"))
+            await self.post_message(Keystroke(self, event.key))
             if self.editing:
                 await self.clear_select()
                 await self.check_node()
             else:
-                await self.post_message(Keystroke(self, event.key))
                 await self.reset()
 
         elif not self.editing:
             await self.handle_key(event.key)
-            if event.key != "i":
-                await self.post_message(Keystroke(self, event.key))
 
         elif self.editing:
             await self.nodes[self.editing].data.handle_keypress(event.key)

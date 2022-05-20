@@ -1,3 +1,4 @@
+from collections import defaultdict
 from textual import events
 from textual.app import App
 from textual.events import Key
@@ -148,17 +149,25 @@ class Doit(App):
 
     async def setup_screen(self):
         self.navbar = Navbar()
-        self.todo_lists = TodoList()
-        self.dates = DateTree()
-        self.urgency_trees = UrgencyTree()
+        self.todo_lists = defaultdict(TodoList)
+        self.date_trees = defaultdict(DateTree)
+        self.urgency_trees = defaultdict(UrgencyTree)
+        await self.refresh_screen()
+
+    async def on_resize(self, event: events.Resize) -> None:
+        await self.refresh_screen()
+        return await super().on_resize(event)
+
+    async def refresh_screen(self):
+        self.todo_list = self.todo_lists[self.current_menu]
+        self.date_tree = self.date_trees[self.current_menu]
+        self.urgency_tree = self.urgency_trees[self.current_menu]
 
         placements = {
-            "0b": ScrollView(
-                self.navbar,
-            ),
-            "1b": self.todo_lists,
-            "2b": self.dates,
-            "3b": self.urgency_trees,
+            "0b": ScrollView(self.navbar),
+            "1b": self.todo_list,
+            "2b": self.date_tree,
+            "3b": self.urgency_tree,
         }
         self.grid.place(**placements)
 
@@ -194,13 +203,13 @@ class Doit(App):
         if self.current_tab == self.navbar_heading:
             await self.navbar.handle_keypress(event)
         elif self.current_tab == self.todos_heading:
-            await self.todo_lists.handle_keypress(event)
+            await self.todo_list.handle_keypress(event)
 
         self.refresh()
 
     async def handle_keystroke(self, event: Keystroke):
-        await self.dates.handle_keypress(Key(self, event.key))
-        await self.urgency_trees.handle_keypress(Key(self, event.key))
+        await self.date_tree.handle_keypress(Key(self, event.key))
+        await self.urgency_tree.handle_keypress(Key(self, event.key))
 
     async def handle_change_status(self, event: ChangeStatus):
         self.status_bar.set_status(event.status)

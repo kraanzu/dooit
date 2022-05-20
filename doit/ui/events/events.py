@@ -1,4 +1,7 @@
+from typing import Literal
 from textual.message import Message, MessageTarget
+
+StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH"]
 
 
 class Keystroke(Message, bubble=True):
@@ -14,7 +17,7 @@ class MenuOptionChange(Message, bubble=True):
 
 
 class ChangeStatus(Message, bubble=True):
-    def __init__(self, sender: MessageTarget, status: str) -> None:
+    def __init__(self, sender: MessageTarget, status: StatusType) -> None:
         super().__init__(sender)
         self.status = status
 

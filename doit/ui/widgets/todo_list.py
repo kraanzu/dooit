@@ -27,7 +27,7 @@ class TodoList(TreeEdit):
             case "i":
                 await self.edit_current_node()
             case "d":
-                pass
+                await self.post_message(ChangeStatus(self, "DATE"))
             case "+" | "=":
                 self.nodes[self.highlighted].data.increase_urgency()
             case "-" | "_":

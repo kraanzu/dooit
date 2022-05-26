@@ -17,6 +17,13 @@ class StatusBar(Widget):
         self.color = "blue"
         self.set_interval(1, self.refresh)
 
+    def set_message(self, message):
+        self.message = message
+        self.refresh()
+
+    def clear_message(self):
+        self.set_message("")
+
     def get_clock(self) -> str:
         """
         Returns current time
@@ -47,13 +54,13 @@ class StatusBar(Widget):
 
         header_table = Table.grid(padding=(0, 1), expand=True)
         header_table.add_column("status", justify="center", width=len(self.status) + 1)
-        header_table.add_column("message", justify="center", ratio=1)
+        header_table.add_column("message", justify="left", ratio=1)
         header_table.add_column("date", justify="center", width=13)
         header_table.add_column("clock", justify="center", width=12)
 
         status = Text(f" {self.status}", style=f"reverse {self.color}")
-        msg = Text(self.message, style="reverse black")
-        msg.pad(self.size.width)
+        msg = Text(f" {self.message}", style="magenta on black")
+        msg.pad_right(self.size.width)
 
         header_table.add_row(
             status,

@@ -22,7 +22,7 @@ class ChangeStatus(Message, bubble=True):
         self.status = status
 
 
-class ShowMessage(Message, bubble=True):
+class PostMessage(Message, bubble=True):
     def __init__(self, sender: MessageTarget, message: str) -> None:
         super().__init__(sender)
         self.message = message

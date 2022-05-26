@@ -4,7 +4,7 @@ from textual.app import App
 from textual.events import Key
 from textual.widgets import ScrollView
 
-from doit.ui.events.events import ChangeStatus
+from doit.ui.events.events import ChangeStatus, PostMessage
 
 
 from ..ui.widgets import (
@@ -141,7 +141,7 @@ class Doit(App):
         self.refresh()
 
     async def on_mount(self):
-        await self.bind('r', "refresh")
+        await self.bind("r", "refresh")
 
         self.current_menu = ""
         self.grid = await self.view.dock_grid()
@@ -200,6 +200,8 @@ class Doit(App):
         self.current_tab.highlight()
 
     async def on_key(self, event: events.Key):
+        # self.status_bar.clear_message()
+
         if event.key == "ctrl+i":
             if self.current_tab == self.navbar_heading:
                 self.change_current_tab("todos")
@@ -212,9 +214,9 @@ class Doit(App):
         else:
             match self.current_status:
                 case "NORMAL":
+                    await self.todo_list.handle_keypress(event)
                     await self.urgency_tree.handle_keypress(event)
                     await self.date_tree.handle_keypress(event)
-                    await self.todo_list.handle_keypress(event)
 
                 case "INSERT":
                     await self.todo_list.handle_keypress(event)
@@ -235,3 +237,6 @@ class Doit(App):
         status = event.status
         self.current_status = status
         self.status_bar.set_status(status)
+
+    async def handle_post_message(self, event: PostMessage):
+        self.status_bar.set_message(event.message)

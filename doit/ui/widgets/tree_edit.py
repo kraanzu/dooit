@@ -27,8 +27,7 @@ class TreeEdit(TreeControl):
         Highlights the node under cursor
         """
 
-        self.highlighted = event.style.meta.get("tree_node")
-        return await super().on_mouse_move(event)
+        self.highlight(event.style.meta.get("tree_node"))
 
     async def reset(self) -> None:
         """

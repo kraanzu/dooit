@@ -2,7 +2,9 @@ from collections import defaultdict
 from textual import events
 from textual.app import App
 from textual.events import Key
+from textual.layouts.dock import DockLayout
 from textual.widgets import ScrollView
+from textual_extras.events.events import ListItemSelected
 
 from doit.ui.events.events import ChangeStatus, PostMessage
 
@@ -27,7 +29,40 @@ from .events import Keystroke
 
 
 class Doit(App):
-    def setup_grid(self):
+    async def on_mount(self):
+        self.current_menu = ""
+        await self.init_vars()
+        await self.reset_screen()
+
+        self.current_status = "NORMAL"
+
+    async def init_vars(self):
+        self.navbar_heading = Box("Menu")
+        self.todos_heading = Box("Todos")
+
+        self.navbar = Navbar("")
+        self.todo_lists = defaultdict(TodoList)
+        self.date_trees = defaultdict(DateTree)
+        self.urgency_trees = defaultdict(UrgencyTree)
+
+        self.status_bar = StatusBar()
+
+    async def reset_screen(self):
+        await self._clear_screen()
+        await self.setup_grid()
+        self.setup_widgets()
+        await self.refresh_screen()
+
+    async def _clear_screen(self) -> None:
+        # clears all the widgets from the screen..and re render them all
+        # Why? you ask? this was the only way at the time of this writing
+
+        if isinstance(self.view.layout, DockLayout):
+            self.view.layout.docks.clear()
+        self.view.widgets.clear()
+
+    async def setup_grid(self):
+        self.grid = await self.view.dock_grid()
         self.grid.add_row("a", size=3)
         self.grid.add_row("sep0", fraction=1)
         self.grid.add_row("b", fraction=95)
@@ -47,9 +82,7 @@ class Doit(App):
         self.grid.add_column("3", fraction=10)
         self.grid.add_column("sep7", fraction=1)
 
-    def setup_headings(self):
-        self.navbar_heading = Box("Menu")
-        self.todos_heading = Box("Todos")
+    def setup_widgets(self):
 
         areas = {"nav": "0,a", "todo": "1-start|3-end,a"}
 
@@ -61,14 +94,15 @@ class Doit(App):
 
         self.grid.place(**placements)
 
-    def setup_widget_spaces(self):
+        # WIDGET SPACES
         middle_areas = dict()
         for i in "0123":
             middle_areas[f"{i}b"] = f"{i},b"
 
         self.grid.add_areas(**middle_areas)
 
-    def setup_widget_borders(self):
+        # WIDGET BORDERS
+
         # MIDDLE SEPERATORS
         middle_areas = {f"middle{i}": f"sep{i},b" for i in range(8)}
         self.grid.add_areas(**middle_areas)
@@ -137,30 +171,6 @@ class Doit(App):
 
         return box
 
-    async def action_refresh(self):
-        self.refresh()
-
-    async def on_mount(self):
-        await self.bind("r", "refresh")
-
-        self.current_menu = ""
-        self.grid = await self.view.dock_grid()
-        self.setup_grid()
-        self.setup_widget_spaces()
-        self.setup_headings()
-
-        self.setup_widget_borders()
-
-        self.current_status = "NORMAL"
-        await self.setup_screen()
-
-    async def setup_screen(self):
-        self.navbar = Navbar()
-        self.todo_lists = defaultdict(TodoList)
-        self.date_trees = defaultdict(DateTree)
-        self.urgency_trees = defaultdict(UrgencyTree)
-        await self.refresh_screen()
-
     async def on_resize(self, event: events.Resize) -> None:
         await self.refresh_screen()
         return await super().on_resize(event)
@@ -178,7 +188,6 @@ class Doit(App):
         }
         self.grid.place(**placements)
 
-        self.status_bar = StatusBar()
         self.grid.add_areas(**{"bar": "0-start|3-end,bar"})
         self.grid.place(bar=self.status_bar)
 
@@ -210,7 +219,7 @@ class Doit(App):
             return
 
         if self.current_tab == self.navbar_heading:
-            await self.navbar.handle_keypress(event)
+            await self.navbar.on_key(event)
         else:
             match self.current_status:
                 case "NORMAL":
@@ -240,3 +249,7 @@ class Doit(App):
 
     async def handle_post_message(self, event: PostMessage):
         self.status_bar.set_message(event.message)
+
+    async def on_list_item_selected(self, event: ListItemSelected):
+        self.current_menu = event.selected
+        await self.reset_screen()

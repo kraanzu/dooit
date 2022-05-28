@@ -1,15 +1,28 @@
 from rich.console import RenderableType
 from rich.text import Text
+from textual import events
 from textual.widgets import TreeNode
-from . import TreeEdit
+from textual_extras.events import ListItemSelected
+from textual_extras.widgets import NestedListEdit
 
 
-class Navbar(TreeEdit):
+class Navbar(NestedListEdit):
     """
     A widget to show the todo menu
     """
 
-    def render_node(self, node: TreeNode) -> RenderableType:
+    def render(self):
+        return self._tree
+
+    async def on_key(self, event: events.Key):
+        if not self.editing and event.key == "enter":
+            await self.emit(
+                ListItemSelected(self, self.nodes[self.highlighted].data.value)
+            )
+
+        return await super().on_key(event)
+
+    def render_custom_node(self, node: TreeNode) -> RenderableType:
 
         # Gather text
         if data := node.data:

@@ -58,7 +58,7 @@ class TreeEdit(TreeControl):
         self.editing = None
         self.refresh()
 
-    async def select(self, id: NodeID | None = None) -> None:
+    async def select(self, id: NodeID = NodeID(0)) -> None:
         """
         Selects the node to be edited
         """

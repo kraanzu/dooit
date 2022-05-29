@@ -19,14 +19,14 @@ class Entry(TextInput):
     def mark_pending(self) -> None:
         self.todo.status = "PENDING"
 
-    def mark_overdue(self)  -> None:
+    def mark_overdue(self) -> None:
         self.todo.status = "OVERDUE"
 
     def increase_urgency(self) -> None:
         self.todo.urgency += 1
 
     def decrease_urgency(self) -> None:
-        self.todo.urgency -= 1
+        self.todo.urgency = max(self.todo.urgency - 1, 0)
 
     def _format_text(self, text: str) -> str:
         return text

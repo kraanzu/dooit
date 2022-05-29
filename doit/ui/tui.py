@@ -1,15 +1,11 @@
 from collections import defaultdict
 from textual import events
 from textual.app import App
-from textual.events import Key
 from textual.layouts.dock import DockLayout
 from textual.widgets import ScrollView
 from textual_extras.events.events import ListItemSelected
 
-from doit.ui.events.events import ChangeStatus, PostMessage
-from doit.ui.widgets.entry import Entry
-
-
+from .events import ChangeStatus, PostMessage
 from ..ui.widgets import (
     Navbar,
     StatusBar,
@@ -25,8 +21,6 @@ from ..ui.widgets import (
     Connector3,
     Connector4,
 )
-
-from .events import Keystroke
 
 
 class Doit(App):
@@ -209,7 +203,7 @@ class Doit(App):
         self.current_tab.highlight()
 
     async def on_key(self, event: events.Key):
-        # self.status_bar.clear_message()
+        self.status_bar.clear_message()
 
         if event.key == "ctrl+i":
             if self.current_tab == self.navbar_heading:
@@ -238,9 +232,7 @@ class Doit(App):
 
         self.refresh()
 
-    async def handle_keystroke(self, event: Keystroke):
-        pass
-
+    # HANDLING EVENTS
     async def handle_change_status(self, event: ChangeStatus):
         status = event.status
         self.current_status = status

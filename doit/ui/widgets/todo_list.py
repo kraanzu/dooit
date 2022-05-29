@@ -17,7 +17,7 @@ class TodoList(NestedListEdit):
     """
 
     def __init__(self):
-        super().__init__("", Entry())
+        super().__init__("", Entry(), style_focus="bold magenta")
 
     def render(self):
         return self._tree
@@ -59,9 +59,8 @@ class TodoList(NestedListEdit):
                     await self.add_sibling()
                 case "i":
                     await self.focus_node()
-                case 'x':
+                case "x":
                     await self.remove_node()
-
 
         self.refresh()
 

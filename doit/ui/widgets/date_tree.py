@@ -3,11 +3,9 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
-from textual_extras.widgets import NestedListEdit
 
-from doit.ui.widgets.todo_list import TodoList
-
-from ...ui.events.events import PostMessage
+from ...ui.widgets import TodoList
+from ...ui.events.events import ChangeStatus
 
 
 class DateTree(TodoList):
@@ -33,41 +31,85 @@ class DateTree(TodoList):
             await self.reach_to_parent()
             await self.add_child()
 
-    async def on_key(self, event: events.Key) -> None:
-        if event.key == "i":
-            return
-        elif event.key == "d":
-            await self.focus_node()
+    async def focus_node(self) -> None:
+        self.nodes[self.highlighted].data.on_focus()
+        self.editing = True
+        await self.post_message(ChangeStatus(self, "DATE"))
 
-        await super().on_key(event)
+    async def unfocus_node(self) -> None:
+        self.nodes[self.highlighted].data.on_blur()
+        self.editing = False
+        await self.post_message(ChangeStatus(self, "NORMAL"))
+
+    async def on_key(self, event: events.Key) -> None:
+        if self.editing:
+            match event.key:
+                case "escape":
+                    await self.unfocus_node()
+                    await self.check_node()
+                case _:
+                    await self.send_key_to_selected(event)
+
+        else:
+            match event.key:
+                case "j" | "down":
+                    await self.cursor_down()
+                case "k" | "up":
+                    await self.cursor_up()
+                case "g":
+                    await self.move_to_top()
+                case "G":
+                    await self.move_to_bottom()
+                case "z":
+                    await self.toggle_expand()
+                case "Z":
+                    await self.toggle_expand_parent()
+                case "A":
+                    await self.add_child()
+                case "a":
+                    await self.add_sibling()
+                case "d":
+                    await self.focus_node()
+                case "x":
+                    await self.remove_node()
+
+        self.refresh()
+
+    async def check_node(self):
+        pass
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
 
         color = "yellow"
+        match node.data.todo.status:
+            case "PENDING":
+                color = "yellow"
+            case "COMPLETE":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
 
-        # setup text
-        if data := node.data:
-            label = Text(str(data.todo.due))
-            match node.data.todo.due:
-                case "COMPLETE":
-                    color = "green"
-
-                case "OVERDUE":
-                    color = "red"
-        else:
-            label = Text()
+        # Setting up text
+        label = Text.from_markup(
+            str(node.data.render()),
+        )
 
         if not label.plain:
             label = Text("No due date")
 
         # fix padding
         label = Text(" ") + label
-        label.plain += " " * (13 - len(label.plain))
+        label.pad_right(self.size.width)
+
         if node.id == self.highlighted:
-            style = "yellow" if self.editing else "blue"
-            label.stylize(f"bold reverse {style}")
+            if self.editing:
+                label.stylize(self.style_editing)
+            else:
+                label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
 
         # setup pre-icons
-        label = Text.from_markup(f"[{color}]   [/{color}]") + label
+        label = Text.from_markup(f"[{color}]  [/{color}]") + label
 
         return label

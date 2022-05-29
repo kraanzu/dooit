@@ -44,8 +44,6 @@ class UrgencyTree(TodoList):
                 await self.add_child()
             case "a":
                 await self.add_sibling()
-            # case "i":
-            #     await self.focus_node()
             case "x":
                 await self.remove_node()
             case "+" | "=":
@@ -57,24 +55,31 @@ class UrgencyTree(TodoList):
 
     #
     def render_node(self, node: TreeNode) -> RenderableType:
+
         color = "yellow"
+        match node.data.todo.status:
+            case "PENDING":
+                color = "yellow"
+            case "COMPLETE":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
 
-        # setup text
-        label = Text()
-        if data := node.data:
-            label = Text(f"{data.todo.urgency}")
-            match node.data.todo.due:
-                case "COMPLETE":
-                    color = "green"
-
-                case "OVERDUE":
-                    color = "red"
+        # Setting up text
+        label = Text.from_markup(
+            str(node.data.todo.urgency),
+        )
 
         label.plain = label.plain.rjust(3, "0")
         label = Text(" ") + label + " "
 
         if node.id == self.highlighted:
-            label.stylize("bold reverse blue")
+            if self.editing:
+                label.stylize(self.style_editing)
+            else:
+                label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
 
-        label = Text.from_markup(f"[{color}]   [/{color}]") + label
+        label = Text.from_markup(f"[{color}][/{color}]") + label
         return label

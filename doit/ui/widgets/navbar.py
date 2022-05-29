@@ -5,11 +5,16 @@ from textual.widgets import TreeNode
 from textual_extras.events import ListItemSelected
 from textual_extras.widgets import NestedListEdit
 
+from doit.ui.widgets.entry import Entry
+
 
 class Navbar(NestedListEdit):
     """
     A widget to show the todo menu
     """
+
+    def __init__(self):
+        super().__init__("", Entry())
 
     def render(self):
         return self._tree
@@ -21,6 +26,11 @@ class Navbar(NestedListEdit):
             )
 
         return await super().on_key(event)
+
+    async def add_child(self):
+        node = self.nodes[self.highlighted]
+        if node == self.root or node.parent == self.root:
+            return await super().add_child()
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
 

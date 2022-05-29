@@ -7,6 +7,7 @@ from textual.widgets import ScrollView
 from textual_extras.events.events import ListItemSelected
 
 from doit.ui.events.events import ChangeStatus, PostMessage
+from doit.ui.widgets.entry import Entry
 
 
 from ..ui.widgets import (
@@ -35,12 +36,14 @@ class Doit(App):
         await self.reset_screen()
 
         self.current_status = "NORMAL"
+        self.navbar_heading.highlight()
+        self.current_tab = self.navbar_heading
 
     async def init_vars(self):
         self.navbar_heading = Box("Menu")
         self.todos_heading = Box("Todos")
 
-        self.navbar = Navbar("")
+        self.navbar = Navbar()
         self.todo_lists = defaultdict(TodoList)
         self.date_trees = defaultdict(DateTree)
         self.urgency_trees = defaultdict(UrgencyTree)
@@ -191,9 +194,6 @@ class Doit(App):
         self.grid.add_areas(**{"bar": "0-start|3-end,bar"})
         self.grid.place(bar=self.status_bar)
 
-        self.navbar_heading.highlight()
-        self.current_tab = self.navbar_heading
-
     def change_current_tab(self, new_tab: str) -> None:
         """
         Changes the current tab
@@ -223,24 +223,23 @@ class Doit(App):
         else:
             match self.current_status:
                 case "NORMAL":
-                    await self.todo_list.handle_keypress(event)
-                    await self.urgency_tree.handle_keypress(event)
-                    await self.date_tree.handle_keypress(event)
+                    await self.todo_list.on_key(event)
+                    await self.urgency_tree.on_key(event)
+                    await self.date_tree.on_key(event)
 
                 case "INSERT":
-                    await self.todo_list.handle_keypress(event)
+                    await self.todo_list.on_key(event)
 
                 case "SEARCH":
                     pass
 
                 case "DATE":
-                    await self.date_tree.handle_keypress(event)
+                    await self.date_tree.on_key(event)
 
         self.refresh()
 
     async def handle_keystroke(self, event: Keystroke):
-        await self.date_tree.handle_keypress(Key(self, event.key))
-        await self.urgency_tree.handle_keypress(Key(self, event.key))
+        pass
 
     async def handle_change_status(self, event: ChangeStatus):
         status = event.status

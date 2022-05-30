@@ -5,7 +5,7 @@ from textual.layouts.dock import DockLayout
 from textual.widgets import ScrollView
 from textual_extras.events.events import ListItemSelected
 
-from .events import ChangeStatus, PostMessage
+from .events import ChangeStatus, Statusmessage
 from ..ui.widgets import (
     Navbar,
     StatusBar,
@@ -238,7 +238,8 @@ class Doit(App):
         self.current_status = status
         self.status_bar.set_status(status)
 
-    async def handle_post_message(self, event: PostMessage):
+    # Ik this naming is bad but idk `StatusMessage` was not working :(
+    async def handle_statusmessage(self, event: Statusmessage):
         self.status_bar.set_message(event.message)
 
     async def on_list_item_selected(self, event: ListItemSelected):

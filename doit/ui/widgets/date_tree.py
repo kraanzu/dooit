@@ -1,21 +1,15 @@
-import datetime
+from datetime import datetime
+import re
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
 
 from ...ui.widgets import TodoList
-from ...ui.events.events import ChangeStatus
+from ...ui.events.events import ChangeStatus, Statusmessage
 
 
 class DateTree(TodoList):
-    async def validate(self, day, month, year) -> bool:
-        try:
-            datetime.datetime(int(year), int(month), int(day))
-            return True
-        except ValueError:
-            return False
-
     async def add_child(self):
         node = self.nodes[self.highlighted]
         if node == self.root or node.parent == self.root:
@@ -32,6 +26,7 @@ class DateTree(TodoList):
             await self.add_child()
 
     async def focus_node(self) -> None:
+        self.prev_value = self.nodes[self.highlighted].data.value
         self.nodes[self.highlighted].data.on_focus()
         self.editing = True
         await self.post_message(ChangeStatus(self, "DATE"))
@@ -75,8 +70,54 @@ class DateTree(TodoList):
 
         self.refresh()
 
+    def _parse_date(self, date: str) -> tuple:
+        day = int(date[:2])
+        month = int(date[3:5])
+        year = int(date[6:])
+
+        return year, month, day
+
+    def _is_valid_date(self, date: str) -> bool:
+        try:
+            datetime(*self._parse_date(date))
+            return True
+        except ValueError:
+            return False
+
+    def _is_expired(self, date):
+        present = datetime.now()
+        due = datetime(*self._parse_date(date))
+
+        return due < present
+
     async def check_node(self):
-        pass
+        date = self.nodes[self.highlighted].data.value
+
+        if len(date) == 10 and re.findall("^\d\d-\d\d-\d\d\d\d$", date):
+            if not self._is_valid_date(date):
+                await self.post_message(
+                    Statusmessage(self, message="Please enter a valid date")
+                )
+            else:
+                if self._is_expired(date):
+                    await self.post_message(
+                        Statusmessage(self, message="This date has already expired")
+                    )
+                else:
+                    await self.post_message(
+                        Statusmessage(self, message="You due date was updated")
+                    )
+                    return
+
+        else:
+            await self.post_message(
+                Statusmessage(
+                    self, message="Invalid date format! Enter in format: dd-mm-yyyy"
+                )
+            )
+
+        self.nodes[self.highlighted].data.value = self.prev_value
+        self.refresh()
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
 

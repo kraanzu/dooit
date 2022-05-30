@@ -1,8 +1,8 @@
-from .events import Keystroke, MenuOptionChange, ChangeStatus, PostMessage
+from .events import Keystroke, MenuOptionChange, ChangeStatus, Statusmessage
 
 __all__ = [
     "Keystroke",
     "MenuOptionChange",
     "ChangeStatus",
-    "PostMessage",
+    "Statusmessage",
 ]

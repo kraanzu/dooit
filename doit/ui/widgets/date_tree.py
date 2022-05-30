@@ -39,14 +39,14 @@ class DateTree(TodoList):
         self.editing = False
         await self.post_message(ChangeStatus(self, "NORMAL"))
 
-    async def on_key(self, event: events.Key) -> None:
+    async def key_press(self, event: events.Key) -> None:
         if self.editing:
             match event.key:
                 case "escape":
                     await self.unfocus_node()
                     await self.check_node()
                 case _:
-                    await self.send_key_to_selected(event)
+                    await super().send_key_to_selected(event)
 
         else:
             match event.key:
@@ -170,6 +170,5 @@ class DateTree(TodoList):
             label.stylize("strike")
 
         label = Text.from_markup(f"[{color}]  [/{color}]") + label
-        label.justify = "center"
 
         return label

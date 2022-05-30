@@ -26,7 +26,8 @@ class UrgencyTree(TodoList):
             await self.reach_to_parent()
             await self.add_child()
 
-    async def on_key(self, event: events.Key) -> None:
+    async def key_press(self, event: events.Key) -> None:
+
         match event.key:
             case "j" | "down":
                 await self.cursor_down()

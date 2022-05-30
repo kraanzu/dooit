@@ -2,8 +2,9 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
-from textual_extras.widgets.nested_list_edit import NestedListEdit
 from textual_extras.widgets.text_input import View
+
+from doit.ui.widgets.tree_edit import NestedListEdit
 
 from ...ui.widgets.entry import Entry
 from ...ui.events import *
@@ -22,25 +23,29 @@ class TodoList(NestedListEdit):
             Entry(),
             style_focus="bold grey85",
             style_editing="bold cyan",
-            style_unfocus= "bold grey50"
+            style_unfocus="bold grey50",
         )
+
+    async def on_click(self, event: events.Click) -> None:
+        await self.post_message(FocusTodo(self))
+        return await super().on_click(event)
 
     def render(self):
         return self._tree
 
     async def focus_node(self) -> None:
         await self.post_message(ChangeStatus(self, "INSERT"))
-        return super().focus_node()
+        await super().focus_node()
 
     async def unfocus_node(self):
         await self.post_message(ChangeStatus(self, "NORMAL"))
-        return super().unfocus_node()
+        await super().unfocus_node()
 
     async def modify_due_status(self, event: ModifyDue):
         self.nodes[self.highlighted].data.todo.status = event.status
         self.refresh()
 
-    async def on_key(self, event: events.Key):
+    async def key_press(self, event: events.Key):
         if self.editing:
             match event.key:
                 case "escape":

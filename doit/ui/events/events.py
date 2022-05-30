@@ -27,3 +27,7 @@ class ModifyDue(Message, bubble=True):
     def __init__(self, sender: MessageTarget, status: DueType) -> None:
         super().__init__(sender)
         self.status = status
+
+
+class FocusTodo(Message, bubble=True):
+    pass

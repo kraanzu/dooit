@@ -5,9 +5,8 @@ from textual.layouts.dock import DockLayout
 from textual.widgets import ScrollView
 from textual_extras.events.events import ListItemSelected
 
-from doit.ui.events.events import ModifyDue
 
-from .events import ChangeStatus, Statusmessage
+from .events import ChangeStatus, Statusmessage, FocusTodo, ModifyDue
 from ..ui.widgets import (
     Navbar,
     StatusBar,
@@ -210,27 +209,29 @@ class Doit(App):
         if event.key == "ctrl+i":
             if self.current_tab == self.navbar_heading:
                 self.change_current_tab("todos")
+                # await self.todo_list.focus()
             else:
                 self.change_current_tab("navbar")
+                # await self.navbar.focus()
             return
 
         if self.current_tab == self.navbar_heading:
-            await self.navbar.on_key(event)
+            await self.navbar.key_press(event)
         else:
             match self.current_status:
                 case "NORMAL":
-                    await self.todo_list.on_key(event)
-                    await self.urgency_tree.on_key(event)
-                    await self.date_tree.on_key(event)
+                    await self.todo_list.key_press(event)
+                    await self.date_tree.key_press(event)
+                    await self.urgency_tree.key_press(event)
 
                 case "INSERT":
-                    await self.todo_list.on_key(event)
+                    await self.todo_list.key_press(event)
 
                 case "SEARCH":
                     pass
 
                 case "DATE":
-                    await self.date_tree.on_key(event)
+                    await self.date_tree.key_press(event)
 
         self.refresh()
 

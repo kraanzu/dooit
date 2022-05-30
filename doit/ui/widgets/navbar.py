@@ -3,9 +3,8 @@ from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
 from textual_extras.events import ListItemSelected
-from textual_extras.widgets import NestedListEdit
 
-from doit.ui.widgets.entry import Entry
+from doit.ui.widgets import Entry, NestedListEdit
 
 
 class Navbar(NestedListEdit):
@@ -19,13 +18,12 @@ class Navbar(NestedListEdit):
     def render(self):
         return self._tree
 
-    async def on_key(self, event: events.Key):
+    async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":
             await self.emit(
                 ListItemSelected(self, self.nodes[self.highlighted].data.value)
             )
-
-        return await super().on_key(event)
+        await super().key_press(event)
 
     async def add_child(self):
         node = self.nodes[self.highlighted]

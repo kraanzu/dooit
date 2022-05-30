@@ -1,257 +1,215 @@
-from typing import Literal
-from rich.text import TextType
-from textual.widgets import TreeControl, NodeID, TreeNode
-from textual.events import Key, MouseMove
-from textual.messages import CursorMove
+from rich.console import RenderableType
+from rich.padding import PaddingDimensions
+from rich.style import StyleType
+from rich.text import Text, TextType
+from textual import events
+from textual.widgets import TreeControl, TreeNode, NodeID
+from textual_extras.widgets.single_level_tree_edit import SimpleInput
+from textual_extras.widgets.text_input import View
 
-from ...ui.widgets.entry import Entry
 
-
-class TreeEdit(TreeControl):
-    """
-    A Class that allows editing while displaying trees
-    """
-
-    def __init__(self, label: TextType = "", data: Entry = Entry()) -> None:
-        super().__init__(label, data)
+class NestedListEdit(TreeControl):
+    def __init__(
+        self,
+        label: TextType,
+        data: RenderableType = SimpleInput(),
+        name: str | None = None,
+        padding: PaddingDimensions = (1, 1),
+        style_unfocus: StyleType = "d white",
+        style_focus: StyleType = "b blue",
+        style_editing: StyleType = "b cyan",
+    ) -> None:
+        super().__init__(label, data, name=name, padding=padding)
         self._tree.hide_root = True
-        self._tree.guide_style = "conceal"
-        self.root._tree.expanded = True
+        self._tree.expanded = True
+        self.style_focus = style_focus
+        self.style_unfocus = style_unfocus
+        self.style_editing = style_editing
+        self.editing = False
+        self.highlight(self.root.id)
 
-        self.current_line = 0
-        self.highlighted = NodeID(0)
-        self.editing = None
-
-    async def on_mouse_move(self, event: MouseMove) -> None:
-        """
-        Highlights the node under cursor
-        """
-
-        self.highlight(event.style.meta.get("tree_node"))
-
-    async def reset(self) -> None:
-        """
-        Turns off both highlight and editing
-        """
-
-        await self.clear_select()
-        self.highlighted = NodeID(0)
-
-    async def move_cursor_line(self, delta: int = 0, pos: int = 0) -> None:
-        """
-        Moves the cursor for scrollable view
-        """
-        if delta:
-            self.current_line += delta
-        else:
-            self.current_line = pos
-        self.emit_no_wait(CursorMove(self, self.current_line))
-
-    async def clear_select(self) -> None:
-        """
-        Leave editing mode
-        """
-
-        if self.editing:
-            self.nodes[self.editing].data._has_focus = False
-
-        self.editing = None
-        self.refresh()
-
-    async def select(self, id: NodeID = NodeID(0)) -> None:
-        """
-        Selects the node to be edited
-        """
-
-        await self.clear_select()
+    def highlight(self, id: NodeID) -> None:
         self.highlighted = id
-        self.editing = id
-        if self.editing:
-            self.nodes[self.editing].data._has_focus = True
-
-        self.hover_node = None  # Not to block due to still mouse pointer
+        self.cursor = id
         self.refresh()
+
+    async def focus_node(self) -> None:
+        self.nodes[self.highlighted].data.on_focus()
+        self.editing = True
+
+    async def unfocus_node(self) -> None:
+        self.nodes[self.highlighted].data.on_blur()
+        self.editing = False
 
     async def remove_node(self, id: NodeID | None = None) -> None:
-        """
-        Removes the specified node
-        removes highlighted node by default
-        """
 
-        if id:
-            node = self.nodes[id]
-        else:
-            node = self.nodes[self.highlighted]
+        node = self.nodes[id or self.highlighted]
 
         if node.expanded:
             await node.toggle()
 
         if node.next_node:
-            await self.move_highlight_down()
+            await self.cursor_down()
         elif prev_node := node.previous_node:
             if prev_node == self.root:
-                await self.reset()
+                self.highlight(self.root.id)
             else:
-                await self.move_highlight_up()
+                await self.cursor_up()
 
         parent = node.parent or self.root
         for index, child in enumerate(parent.children):
-            if child.id == id:
+            if child == node:
                 parent.children.pop(index)
                 parent.tree.children.pop(index)
 
-        self.refresh()
+        self.refresh(layout=True)
 
-    async def handle_click(self) -> None:
-        # Yeah I know this is weird. BUT IT WORKS DAMMIT!
-        await self.handle_keypress(Key(self, "enter"))
+    async def key_down(self, _: events.Key) -> None:
+        pass
 
-    async def move_highlight_down(self) -> None:
+    async def key_up(self, _: events.Key) -> None:
+        pass
+
+    async def cursor_down(self) -> None:
         node = self.nodes[self.highlighted]
+
         if next_node := node.next_node:
             self.highlight(next_node.id)
-            await self.move_cursor_line(delta=1)
-        elif node == self.root and self.root.children:
-            self.highlight(self.root.children[0].id)
+        elif node == self.root:
+            if node.children:
+                self.highlight(node.children[0].id)
+        else:
+            return
 
-    async def move_highlight_up(self) -> None:
-        prev_node = self.nodes[self.highlighted].previous_node
-        if prev_node and prev_node != self.root:
-            self.highlight(prev_node.id)
-            await self.move_cursor_line(delta=-1)
+        self.cursor_line += 1
 
-    def highlight(self, id: NodeID = NodeID(0)) -> None:
-        """
-        Highlights the node
-        """
+    async def cursor_up(self) -> None:
+        next_node = self.nodes[self.highlighted]
 
-        self.highlighted = id
-        self.refresh()
-
-    async def reach_to_node(
-        self, node: TreeNode | None, direction: Literal["up", "down"]
-    ) -> None:
-        node = node or self.root
-        while self.highlighted != node.id:
-            await self.handle_key(direction)
+        if next_node := next_node.previous_node:
+            if next_node != self.root:
+                self.highlight(next_node.id)
+                self.cursor_line += 1
 
     async def move_to_top(self) -> None:
-        """
-        Takes highlight to the top of the tree
-        """
-
-        while self.highlighted != self.root.children[0].id:
-            await self.move_highlight_up()
+        if children := self.root.children:
+            self.highlight(children[0].id)
 
     async def move_to_bottom(self) -> None:
-        """
-        Takes highlight to the top of the tree
-        """
+        if children := self.root.children:
+            self.highlight(children[-1].id)
 
-        while self.highlighted != self.root.children[-1].id:
-            await self.move_highlight_down()
+    async def toggle_expand(self) -> None:
+        if self.highlighted != self.root.id:
+            await self.nodes[self.highlighted].toggle()
 
-    async def edit_current_node(self):
-        await self.select(self.highlighted)
+    async def toggle_expand_parent(self) -> None:
+        if (
+            self.highlighted != self.root.id
+            and self.nodes[self.highlighted].parent != self.root
+        ):
+            await self.reach_to_parent()
+            await self.nodes[self.highlighted].toggle()
 
-    async def add_to_current_parent(self):
-        """
-        Adds node in the same indent
-        """
-
-        node = self.nodes[self.highlighted]
-        await node.add("", Entry())
-        await node.expand()
-        await self.reach_to_node(node.children[-1], "down")
-        await self.edit_current_node()
-
-    async def add_child(self):
-        """
-        Adds a child node to current highlighted node
-        """
-
-        node = self.nodes[self.highlighted]
-        if node.parent == self.root:
-            await self.root.add("", Entry())
-            await self.move_to_bottom()
-            await self.edit_current_node()
-        else:
-            # SAFETY: root parent case has already been handled above
-            await self.reach_to_node(node.parent, "up")
-            await self.handle_key("A")
-
-    async def toggle_current_node(self) -> None:
-        """
-        Toggles between expansion of node
-        """
-
-        if self.highlighted:
-            node = self.nodes[self.highlighted]
-            await node.toggle()
-
-    async def toggle_current_parent(self) -> None:
-        """
-        Toggles between expansion of parent node
-        """
-
+    async def reach_to_parent(self) -> None:
         if parent := self.nodes[self.highlighted].parent:
-            if parent != self.root:
-                while self.nodes[self.highlighted].previous_node != parent:
-                    await self.handle_key("k")
+            while self.highlighted != parent.id:
+                await self.cursor_up()
 
-                await self.handle_key("k")
-                await self.handle_key("z")
+    async def reach_to_last_child(self) -> None:
+        if children := self.nodes[self.highlighted].children:
+            while self.highlighted != children[-1].id:
+                await self.cursor_down()
 
-    async def handle_key(self, key: str) -> None:
-        match key:
-            case "g":
-                await self.move_to_top()
+    async def add_child(self) -> None:
+        node = self.nodes[self.highlighted]
+        await node.add("child", SimpleInput())
+        await node.expand()
+        await self.reach_to_last_child()
+        await self.focus_node()
 
-            case "G":
-                await self.move_to_bottom()
+    async def add_sibling(self) -> None:
+        if self.nodes[self.highlighted].parent == self.root:
+            await self.root.add("child", SimpleInput())
+            await self.move_to_bottom()
+        else:
+            await self.reach_to_parent()
+            await self.add_child()
+        await self.focus_node()
 
-            case "A":
-                await self.add_to_current_parent()
+    async def send_key_to_selected(self, event: events.Key) -> None:
+        await self.nodes[self.highlighted].data.on_key(event)
 
-            case "a":
-                await self.add_child()
-
-            case "c":
-                self.nodes[self.highlighted].data.mark_complete()
-
-            case "x":
-                await self.remove_node(self.highlighted)
-
-            case "z":
-                await self.toggle_current_node()
-
-            case "Z":
-                await self.toggle_current_parent()
-
-            case "j" | "down":
-                await self.move_highlight_down()
-
-            case "k" | "up":
-                await self.move_highlight_up()
-
-        self.refresh(layout=True)
-
-    async def handle_keypress(self, event: Key) -> None:
-        """
-        Handle incoming kepresses
-        """
-
-        if event.key == "escape":
-            if self.editing:
-                await self.clear_select()
-            else:
-                await self.reset()
-
-        elif not self.editing:
-            await self.handle_key(event.key)
+    async def key_press(self, event: events.Key):
+        if self.editing:
+            match event.key:
+                case "escape":
+                    await self.unfocus_node()
+                case _:
+                    await self.send_key_to_selected(event)
 
         else:
-            if self.editing:
-                await self.nodes[self.editing].data.handle_keypress(event.key)
+            match event.key:
+                case "j" | "down":
+                    await self.cursor_down()
+                case "k" | "up":
+                    await self.cursor_up()
+                case "g":
+                    await self.move_to_top()
+                case "G":
+                    await self.move_to_bottom()
+                case "z":
+                    await self.toggle_expand()
+                case "Z":
+                    await self.toggle_expand_parent()
+                case "A":
+                    await self.add_child()
+                case "a":
+                    await self.add_sibling()
+                case "i":
+                    await self.focus_node()
+                case "x":
+                    await self.remove_node()
 
-        self.refresh(layout=True)
+        self.refresh()
+
+    async def on_mouse_move(self, event: events.MouseMove) -> None:
+        """
+        Move the highlight along with mouse hover
+        """
+        if not self.editing:
+            if id := event.style.meta.get("tree_node"):
+                self.highlight(id)
+
+    def render_node(self, node: TreeNode) -> RenderableType:
+
+        if not hasattr(node.data, "view"):
+            node.data.view = View(0, self.size.width - 6)
+
+        return self.render_custom_node(node)
+
+    def render_custom_node(self, node) -> RenderableType:
+
+        label = (
+            Text(str(node.data.render()), no_wrap=True)
+            if isinstance(node.label, str)
+            else node.label
+        )
+        label.pad_right(self.size.width)
+
+        if node.id == self.highlighted:
+            label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
+
+        meta = {
+            "@click": f"click_label({node.id})",
+            "tree_node": node.id,
+        }
+
+        label.apply_meta(meta)
+        return label
+
+    async def handle_tree_click(self, _) -> None:
+        if not self.editing:
+            await self.focus_node()

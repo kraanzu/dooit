@@ -1,4 +1,4 @@
-from .tree_edit import TreeEdit
+from .tree_edit import NestedListEdit
 from .todo_list import TodoList
 from .entry import Entry
 from .navbar import Navbar
@@ -18,7 +18,7 @@ from .border import (
 )
 
 __all__ = [
-    "TreeEdit",
+    "NestedListEdit",
     "TodoList",
     "Entry",
     "Navbar",
@@ -32,5 +32,5 @@ __all__ = [
     "Connector4",
     "DateTree",
     "UrgencyTree",
-    "StatusBar"
+    "StatusBar",
 ]

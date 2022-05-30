@@ -1,4 +1,11 @@
-from .events import MenuOptionChange, ChangeStatus, Statusmessage, ModifyDue, FocusTodo
+from .events import (
+    MenuOptionChange,
+    ChangeStatus,
+    Statusmessage,
+    ModifyDue,
+    FocusTodo,
+    ModifyTopic,
+)
 
 __all__ = [
     "MenuOptionChange",
@@ -6,4 +13,5 @@ __all__ = [
     "Statusmessage",
     "ModifyDue",
     "FocusTodo",
+    "ModifyTopic",
 ]

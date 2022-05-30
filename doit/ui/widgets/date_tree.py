@@ -149,7 +149,7 @@ class DateTree(TodoList):
         )
 
         if not label.plain:
-            label = Text("No due date")
+            label = Text("Until You Die")
 
         # fix padding
         label.pad_right(self.size.width)

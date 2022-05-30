@@ -2,11 +2,14 @@ from collections import defaultdict
 from textual import events
 from textual.app import App
 from textual.layouts.dock import DockLayout
-from textual.widgets import ScrollView
 from textual_extras.events.events import ListItemSelected
 
+from doit.ui.widgets.minimal_scrollview import MinimalScrollView
 
-from .events import ChangeStatus, Statusmessage, FocusTodo, ModifyDue
+from doit.ui.events.events import ModifyTopic
+
+
+from .events import ChangeStatus, Statusmessage, ModifyDue
 from ..ui.widgets import (
     Navbar,
     StatusBar,
@@ -39,6 +42,7 @@ class Doit(App):
         self.todos_heading = Box("Todos")
 
         self.navbar = Navbar()
+        self.navbar_scroll = MinimalScrollView(self.navbar)
         self.todo_lists = defaultdict(TodoList)
         self.date_trees = defaultdict(DateTree)
         self.urgency_trees = defaultdict(UrgencyTree)
@@ -179,7 +183,7 @@ class Doit(App):
         self.urgency_tree = self.urgency_trees[self.current_menu]
 
         placements = {
-            "0b": ScrollView(self.navbar),
+            "0b": (self.navbar_scroll),
             "1b": self.todo_list,
             "2b": self.date_tree,
             "3b": self.urgency_tree,
@@ -253,3 +257,7 @@ class Doit(App):
         await self.todo_list.modify_due_status(event)
         await self.date_tree.modify_due_status(event)
         await self.urgency_tree.modify_due_status(event)
+
+    async def handle_modify_topic(self, event: ModifyTopic):
+        self.todo_lists[event.new] = self.todo_lists[event.old]
+        del self.todo_lists[event.old]

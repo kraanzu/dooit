@@ -6,6 +6,7 @@ from textual import events
 from textual.widgets import TreeControl, TreeNode, NodeID
 from textual_extras.widgets.single_level_tree_edit import SimpleInput
 from textual_extras.widgets.text_input import View
+from textual.messages import CursorMove
 
 
 class NestedListEdit(TreeControl):
@@ -82,6 +83,7 @@ class NestedListEdit(TreeControl):
             return
 
         self.cursor_line += 1
+        await self.post_message(CursorMove(self, self.cursor_line))
 
     async def cursor_up(self) -> None:
         next_node = self.nodes[self.highlighted]
@@ -89,7 +91,8 @@ class NestedListEdit(TreeControl):
         if next_node := next_node.previous_node:
             if next_node != self.root:
                 self.highlight(next_node.id)
-                self.cursor_line += 1
+                self.cursor_line -= 1
+                await self.post_message(CursorMove(self, self.cursor_line))
 
     async def move_to_top(self) -> None:
         if children := self.root.children:
@@ -213,3 +216,4 @@ class NestedListEdit(TreeControl):
     async def handle_tree_click(self, _) -> None:
         if not self.editing:
             await self.focus_node()
+            self.refresh()

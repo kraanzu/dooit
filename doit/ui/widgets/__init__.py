@@ -6,6 +6,7 @@ from .box import Box
 from .date_tree import DateTree
 from .urgency_tree import UrgencyTree
 from .status_bar import StatusBar
+from .minimal_scrollview import MinimalScrollView
 
 from .border import (
     Empty,
@@ -33,4 +34,5 @@ __all__ = [
     "DateTree",
     "UrgencyTree",
     "StatusBar",
+    "MinimalScrollView",
 ]

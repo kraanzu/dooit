@@ -31,3 +31,10 @@ class ModifyDue(Message, bubble=True):
 
 class FocusTodo(Message, bubble=True):
     pass
+
+
+class ModifyTopic(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, old: str, new: str) -> None:
+        super().__init__(sender)
+        self.old = old
+        self.new = new

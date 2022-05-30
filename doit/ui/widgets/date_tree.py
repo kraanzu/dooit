@@ -6,7 +6,7 @@ from textual import events
 from textual.widgets import TreeNode
 
 from ...ui.widgets import TodoList
-from ...ui.events.events import ChangeStatus, Statusmessage
+from ...ui.events.events import ChangeStatus, ModifyDue, Statusmessage
 
 
 class DateTree(TodoList):
@@ -26,6 +26,9 @@ class DateTree(TodoList):
             await self.add_child()
 
     async def focus_node(self) -> None:
+        if self.highlighted == self.root.id:
+            return
+
         self.prev_value = self.nodes[self.highlighted].data.value
         self.nodes[self.highlighted].data.on_focus()
         self.editing = True
@@ -90,6 +93,16 @@ class DateTree(TodoList):
 
         return due < present
 
+    async def update_due_status(self, date):
+        status = self.nodes[self.highlighted].data.todo.status
+        if status == "COMPLETED":
+            return
+
+        if self._is_expired(date):
+            await self.post_message(ModifyDue(self, status="OVERDUE"))
+        else:
+            await self.post_message(ModifyDue(self, status="PENDING"))
+
     async def check_node(self):
         date = self.nodes[self.highlighted].data.value
 
@@ -107,6 +120,7 @@ class DateTree(TodoList):
                     await self.post_message(
                         Statusmessage(self, message="You due date was updated")
                     )
+                    await self.update_due_status(date)
                     return
 
         else:
@@ -121,11 +135,10 @@ class DateTree(TodoList):
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
 
-        color = "yellow"
         match node.data.todo.status:
             case "PENDING":
                 color = "yellow"
-            case "COMPLETE":
+            case "COMPLETED":
                 color = "green"
             case "OVERDUE":
                 color = "red"
@@ -139,7 +152,6 @@ class DateTree(TodoList):
             label = Text("No due date")
 
         # fix padding
-        label = Text(" ") + label
         label.pad_right(self.size.width)
 
         if node.id == self.highlighted:
@@ -150,7 +162,14 @@ class DateTree(TodoList):
         else:
             label.stylize(self.style_unfocus)
 
-        # setup pre-icons
-        label = Text.from_markup(f"[{color}]  [/{color}]") + label
+        label = label[:13]
+
+        # SAFETY: color will never be unbound
+        # because the match statement in exhaustive
+        if color == "green":
+            label.stylize("strike")
+
+        label = Text.from_markup(f"[{color}]  [/{color}]") + label
+        label.justify = "center"
 
         return label

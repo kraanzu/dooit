@@ -17,7 +17,13 @@ class TodoList(NestedListEdit):
     """
 
     def __init__(self):
-        super().__init__("", Entry(), style_focus="bold magenta")
+        super().__init__(
+            "",
+            Entry(),
+            style_focus="bold grey85",
+            style_editing="bold cyan",
+            style_unfocus= "bold grey50"
+        )
 
     def render(self):
         return self._tree
@@ -29,6 +35,10 @@ class TodoList(NestedListEdit):
     async def unfocus_node(self):
         await self.post_message(ChangeStatus(self, "NORMAL"))
         return super().unfocus_node()
+
+    async def modify_due_status(self, event: ModifyDue):
+        self.nodes[self.highlighted].data.todo.status = event.status
+        self.refresh()
 
     async def on_key(self, event: events.Key):
         if self.editing:
@@ -61,8 +71,13 @@ class TodoList(NestedListEdit):
                     await self.focus_node()
                 case "x":
                     await self.remove_node()
+                case "c":
+                    await self.mark_complete()
 
         self.refresh()
+
+    async def mark_complete(self):
+        await self.post_message(ModifyDue(self, "COMPLETED"))
 
     async def check_node(self):
         node = self.nodes[self.highlighted]
@@ -107,10 +122,6 @@ class TodoList(NestedListEdit):
         else:
             label = Text()
 
-        # fix padding
-        label.plain = " " + label.plain
-        label.pad_right(self.size.width, " ")
-
         # setup highlight
         if node.id == self.highlighted:
             if self.editing:
@@ -120,21 +131,26 @@ class TodoList(NestedListEdit):
         else:
             label.stylize(self.style_unfocus)
 
-        # setup pre-icons
-        if node != self.root:
-            match node.data.todo.status:
-                case "COMPLETE":
-                    label = Text.from_markup(" [b green] [/b green]") + label
-                case "PENDING":
-                    label = Text.from_markup(" [b yellow] [/b yellow]") + label
-                case "OVERDUE":
-                    label = Text.from_markup(" [b yellow] [/b yellow]") + label
-
         # setup milestone
         if children := node.children:
             total = len(children)
             done = sum(child.data.todo.status == "COMPLETE" for child in children)
-            label.append(Text.from_markup(f" ( [green][/green] {done}/{total} )"))
+            label += Text.from_markup(f" ( [green][/green] {done}/{total} )")
+
+        # setup pre-icons
+        if node != self.root:
+            match node.data.todo.status:
+                case "COMPLETED":
+                    label.stylize("strike")
+                    label = Text.from_markup("[b green] [/b green]") + label
+                case "PENDING":
+                    label = Text.from_markup("[b yellow] [/b yellow]") + label
+                case "OVERDUE":
+                    label = Text.from_markup("[b yellow] [/b yellow]") + label
+
+        # fix padding
+        label.pad_right(self.size.width, " ")
+
         meta = {
             "@click": f"click_label({node.id})",
             "tree_node": node.id,

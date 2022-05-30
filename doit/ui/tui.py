@@ -5,6 +5,8 @@ from textual.layouts.dock import DockLayout
 from textual.widgets import ScrollView
 from textual_extras.events.events import ListItemSelected
 
+from doit.ui.events.events import ModifyDue
+
 from .events import ChangeStatus, Statusmessage
 from ..ui.widgets import (
     Navbar,
@@ -245,3 +247,8 @@ class Doit(App):
     async def on_list_item_selected(self, event: ListItemSelected):
         self.current_menu = event.selected
         await self.reset_screen()
+
+    async def handle_modify_due(self, event: ModifyDue):
+        await self.todo_list.modify_due_status(event)
+        await self.date_tree.modify_due_status(event)
+        await self.urgency_tree.modify_due_status(event)

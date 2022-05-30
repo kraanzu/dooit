@@ -56,11 +56,10 @@ class UrgencyTree(TodoList):
     #
     def render_node(self, node: TreeNode) -> RenderableType:
 
-        color = "yellow"
         match node.data.todo.status:
             case "PENDING":
                 color = "yellow"
-            case "COMPLETE":
+            case "COMPLETED":
                 color = "green"
             case "OVERDUE":
                 color = "red"
@@ -81,5 +80,12 @@ class UrgencyTree(TodoList):
         else:
             label.stylize(self.style_unfocus)
 
-        label = Text.from_markup(f"[{color}][/{color}]") + label
+        # SAFETY: color will never be unbound
+        # because the match statement in exhaustive
+
+        if color == "green":
+            label.stylize("strike")
+
+        label = Text.from_markup(f"[{color}] [/{color}]") + label
+
         return label

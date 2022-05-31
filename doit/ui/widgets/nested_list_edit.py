@@ -29,6 +29,9 @@ class NestedListEdit(TreeControl):
         self.editing = False
         self.highlight(self.root.id)
 
+    def watch_cursor_line(self, value: int) -> None:
+        self.emit_no_wait(CursorMove(self, value + self.gutter.top))
+
     def highlight(self, id: NodeID) -> None:
         self.highlighted = id
         self.cursor = id
@@ -43,7 +46,6 @@ class NestedListEdit(TreeControl):
         self.editing = False
 
     async def remove_node(self, id: NodeID | None = None) -> None:
-
         node = self.nodes[id or self.highlighted]
 
         if node.expanded:
@@ -75,32 +77,30 @@ class NestedListEdit(TreeControl):
         node = self.nodes[self.highlighted]
 
         if next_node := node.next_node:
+            self.cursor_line += 1
             self.highlight(next_node.id)
         elif node == self.root:
             if node.children:
+                self.cursor_line += 1
                 self.highlight(node.children[0].id)
-        else:
-            return
-
-        self.cursor_line += 1
-        await self.post_message(CursorMove(self, self.cursor_line))
 
     async def cursor_up(self) -> None:
-        next_node = self.nodes[self.highlighted]
+        node = self.nodes[self.highlighted]
 
-        if next_node := next_node.previous_node:
-            if next_node != self.root:
-                self.highlight(next_node.id)
+        if prev_node := node.previous_node:
+            if prev_node != self.root:
                 self.cursor_line -= 1
-                await self.post_message(CursorMove(self, self.cursor_line))
+                self.highlight(prev_node.id)
 
     async def move_to_top(self) -> None:
         if children := self.root.children:
             self.highlight(children[0].id)
+            self.cursor_line = 0
 
     async def move_to_bottom(self) -> None:
         if children := self.root.children:
-            self.highlight(children[-1].id)
+            while self.highlighted != children[-1].id:
+                await self.cursor_down()
 
     async def toggle_expand(self) -> None:
         if self.highlighted != self.root.id:
@@ -115,14 +115,16 @@ class NestedListEdit(TreeControl):
             await self.nodes[self.highlighted].toggle()
 
     async def reach_to_parent(self) -> None:
-        if parent := self.nodes[self.highlighted].parent:
-            while self.highlighted != parent.id:
-                await self.cursor_up()
+        node = self.nodes[self.highlighted]
+        if parent := node.parent:
+            index = parent.children.index(node) + 1
+            self.cursor_line -= index
+            self.highlight(parent.id)
 
     async def reach_to_last_child(self) -> None:
         if children := self.nodes[self.highlighted].children:
-            while self.highlighted != children[-1].id:
-                await self.cursor_down()
+            self.cursor_line += len(children)
+            self.highlight(children[-1].id)
 
     async def add_child(self) -> None:
         node = self.nodes[self.highlighted]

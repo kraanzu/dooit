@@ -4,7 +4,7 @@ from textual import events
 from textual.widgets import TreeNode
 from textual_extras.widgets.text_input import View
 
-from doit.ui.widgets.tree_edit import NestedListEdit
+from doit.ui.widgets.nested_list_edit import NestedListEdit
 
 from ...ui.widgets.entry import Entry
 from ...ui.events import *

@@ -1,4 +1,4 @@
-from .tree_edit import NestedListEdit
+from .nested_list_edit import NestedListEdit
 from .todo_list import TodoList
 from .entry import Entry
 from .navbar import Navbar

@@ -22,8 +22,8 @@ class Navbar(NestedListEdit):
     def render(self):
         return self._tree
 
-    async def cursor_down(self) -> None:
-        return await super().cursor_down()
+    # async def cursor_down(self) -> None:
+    #     return await super().cursor_down()
 
     def _get_node_path(self):
 

@@ -42,7 +42,19 @@ class TodoList(NestedListEdit):
         await super().unfocus_node()
 
     async def modify_due_status(self, event: ModifyDue):
-        self.nodes[self.highlighted].data.todo.status = event.status
+        node = self.nodes[self.highlighted]
+        node.data.todo.status = event.status
+
+        parent = node.parent
+        if parent and parent != self.root:
+            if all(child.data.todo.status == "COMPLETED" for child in parent.children):
+                parent.data.todo.status = "COMPLETED"
+
+        elif parent == self.root:
+            if event.status == "COMPLETED":
+                for i in node.children:
+                    i.data.todo.status = "COMPLETED"
+
         self.refresh()
 
     async def key_press(self, event: events.Key):
@@ -139,7 +151,7 @@ class TodoList(NestedListEdit):
         # setup milestone
         if children := node.children:
             total = len(children)
-            done = sum(child.data.todo.status == "COMPLETE" for child in children)
+            done = sum(child.data.todo.status == "COMPLETED" for child in children)
             label += Text.from_markup(f" ( [green][/green] {done}/{total} )")
 
         # setup pre-icons
@@ -151,10 +163,10 @@ class TodoList(NestedListEdit):
                 case "PENDING":
                     label = Text.from_markup("[b yellow]  [/b yellow]") + label
                 case "OVERDUE":
-                    label = Text.from_markup("[b yellow]  [/b yellow]") + label
+                    label = Text.from_markup("[b red]  [/b red]") + label
 
         # fix padding
-        label.pad_right(self.size.width, " ")
+        label.pad_right(self.size.width)
 
         meta = {
             "@click": f"click_label({node.id})",

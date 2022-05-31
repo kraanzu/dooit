@@ -112,16 +112,11 @@ class DateTree(TodoList):
                     Statusmessage(self, message="Please enter a valid date")
                 )
             else:
-                if self._is_expired(date):
-                    await self.post_message(
-                        Statusmessage(self, message="This date has already expired")
-                    )
-                else:
-                    await self.post_message(
-                        Statusmessage(self, message="You due date was updated")
-                    )
-                    await self.update_due_status(date)
-                    return
+                await self.post_message(
+                    Statusmessage(self, message="You due date was updated")
+                )
+                await self.update_due_status(date)
+                return
 
         else:
             await self.post_message(

@@ -47,6 +47,10 @@ class Doit(App):
         self.date_trees = defaultdict(DateTree)
         self.urgency_trees = defaultdict(UrgencyTree)
 
+        self.todo_scroll = dict()
+        self.date_scroll = dict()
+        self.urgency_scroll = dict()
+
         self.status_bar = StatusBar()
 
     async def reset_screen(self):
@@ -182,11 +186,18 @@ class Doit(App):
         self.date_tree = self.date_trees[self.current_menu]
         self.urgency_tree = self.urgency_trees[self.current_menu]
 
+        if self.current_menu not in self.todo_scroll:
+            self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
+            self.date_scroll[self.current_menu] = MinimalScrollView(self.date_tree)
+            self.urgency_scroll[self.current_menu] = MinimalScrollView(
+                self.urgency_tree
+            )
+
         placements = {
             "0b": (self.navbar_scroll),
-            "1b": self.todo_list,
-            "2b": self.date_tree,
-            "3b": self.urgency_tree,
+            "1b": self.todo_scroll[self.current_menu],
+            "2b": self.date_scroll[self.current_menu],
+            "3b": self.urgency_scroll[self.current_menu],
         }
         self.grid.place(**placements)
 
@@ -213,10 +224,8 @@ class Doit(App):
         if event.key == "ctrl+i":
             if self.current_tab == self.navbar_heading:
                 self.change_current_tab("todos")
-                # await self.todo_list.focus()
             else:
                 self.change_current_tab("navbar")
-                # await self.navbar.focus()
             return
 
         if self.current_tab == self.navbar_heading:

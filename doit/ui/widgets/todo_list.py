@@ -39,8 +39,6 @@ class TodoList(NestedListEdit):
 
     async def unfocus_node(self):
         await self.post_message(ChangeStatus(self, "NORMAL"))
-        node = self.nodes[self.highlighted]
-        await self.root.add(node.label, node.data)
         await super().unfocus_node()
 
     async def modify_due_status(self, event: ModifyDue):

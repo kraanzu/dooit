@@ -22,9 +22,6 @@ class Navbar(NestedListEdit):
     def render(self):
         return self._tree
 
-    # async def cursor_down(self) -> None:
-    #     return await super().cursor_down()
-
     def _get_node_path(self):
 
         path = ""
@@ -35,15 +32,27 @@ class Navbar(NestedListEdit):
 
         return path
 
+    def render_node(self, node: TreeNode) -> RenderableType:
+
+        if not hasattr(node.data, "view"):
+            node.data.view = View(0, self.size.width - 6)
+
+        return self.render_custom_node(node)
+
     async def focus_node(self) -> None:
         self._last_path = self._get_node_path()
-        return await super().focus_node()
+        self.nodes[self.highlighted].data.on_focus()
+        self.editing = True
 
     async def unfocus_node(self) -> None:
         await self.post_message(
             ModifyTopic(self, self._last_path, self._get_node_path())
         )
-        return await super().unfocus_node()
+        self.nodes[self.highlighted].data.on_blur()
+        self.editing = False
+
+    async def send_key_to_selected(self, event: events.Key) -> None:
+        await self.nodes[self.highlighted].data.on_key(event)
 
     async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":

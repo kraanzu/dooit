@@ -14,6 +14,10 @@ from ...ui.events import *
 NodeDataTye = Entry
 
 
+def percentage(percent, total):
+    return round(percent * total / 100)
+
+
 class TodoList(NestedListEdit):
     """
     A Class that allows editing while displaying trees
@@ -114,9 +118,9 @@ class TodoList(NestedListEdit):
     def render(self):
         return self._tree
 
-    async def focus_node(self) -> None:
-        await self.post_message(ChangeStatus(self, "INSERT"))
-        await super().focus_node()
+    async def focus_node(self, part="about", status="INSERT") -> None:
+        await self.post_message(ChangeStatus(self, status))
+        await super().focus_node(part)
 
     async def unfocus_node(self):
         await self.post_message(ChangeStatus(self, "NORMAL"))
@@ -143,7 +147,7 @@ class TodoList(NestedListEdit):
             match event.key:
                 case "escape":
                     await self.unfocus_node()
-                    await self.check_node()
+                    await self.check_node_about()
                 case _:
                     await self.send_key_to_selected(event)
 
@@ -168,7 +172,9 @@ class TodoList(NestedListEdit):
                 case "a":
                     await self.add_sibling()
                 case "i":
-                    await self.focus_node()
+                    await self.focus_node("about", "INSERT")
+                case "d":
+                    await self.focus_node("due", "DATE")
                 case "x":
                     await self.remove_node()
                 case "c":
@@ -183,14 +189,15 @@ class TodoList(NestedListEdit):
     async def mark_complete(self):
         await self.post_message(ModifyDue(self, "COMPLETED"))
 
-    async def check_node(self):
+    async def check_node_about(self):
         node = self.nodes[self.highlighted]
-        if not str(node.data.render()).strip():
+        if not str(node.data.about.render()).strip():
             await self.emit(events.Key(self, "x"))
 
     def get_box(self):
         a = NodeDataTye()
-        a.view = View(0, self.size.width - 6)
+        a.about.view = View(0, percentage(60, self.size.width) - 6)
+        a.due.view = View(0, percentage(30, self.size.width) - 6)
         return a
 
     async def add_child(self):
@@ -210,19 +217,35 @@ class TodoList(NestedListEdit):
             await self.add_child()
         await self.focus_node()
 
-    def render_custom_node(self, node: TreeNode) -> RenderableType:
+    def render_node(self, node: TreeNode) -> RenderableType:
         """
         Renders styled node
         """
 
+        from rich.table import Table
+
+        table = Table.grid(padding=(0, 1), expand=True)
+        table.add_column("about", justify="left", ratio=60)
+        table.add_column("due", justify="left", ratio=30)
+        table.add_column("urgency", justify="left", ratio=10)
+
+        table.add_row(
+            self.render_about(node),
+            self.render_date(node),
+            self.render_urgency(node),
+        )
+
+        return table
+
+    def render_about(self, node) -> RenderableType:
         # Setting up text
         if data := node.data:
             try:
                 label = Text.from_markup(
-                    str(data.render()),
+                    str(data.about.render()),
                 )
             except:
-                label = Text(str(data.render()))
+                label = Text(str(data.about.render()))
         else:
             label = Text()
 
@@ -253,7 +276,7 @@ class TodoList(NestedListEdit):
                     label = Text.from_markup("[b red]  [/b red]") + label
 
         # fix padding
-        label.pad_right(self.size.width)
+        # label.pad_right(self.size.width)
 
         meta = {
             "@click": f"click_label({node.id})",
@@ -262,5 +285,75 @@ class TodoList(NestedListEdit):
         }
 
         label.apply_meta(meta)
+
+        return label
+
+    def render_date(self, node: TreeNode) -> RenderableType:
+        color = "yellow"
+        match node.data.status:
+            case "COMPLETED":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
+
+        # Setting up text
+        label = Text.from_markup(
+            str(node.data.due.render()),
+        )
+
+        if not label.plain:
+            label = Text("Until You Die")
+
+        if node.id == self.highlighted:
+            if self.editing:
+                label.stylize(self.style_editing)
+            else:
+                label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
+
+        # label = label[:13]
+
+        # SAFETY: color will never be unbound
+        # because the match statement in exhaustive
+        if color == "green":
+            label.stylize("strike")
+
+        label = Text.from_markup(f"[{color}]  [/{color}]") + label
+
+        return label
+
+    def render_urgency(self, node: TreeNode) -> RenderableType:
+
+        color = "yellow"
+        match node.data.status:
+            case "COMPLETED":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
+
+        # Setting up text
+        label = Text.from_markup(
+            str(node.data.urgency),
+        )
+
+        label.plain = label.plain.rjust(3, "0")
+        label = Text(" ") + label + " "
+
+        if node.id == self.highlighted:
+            if self.editing:
+                label.stylize(self.style_editing)
+            else:
+                label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
+
+        # SAFETY: color will never be unbound
+        # because the match statement in exhaustive
+
+        if color == "green":
+            label.stylize("strike")
+
+        label = Text.from_markup(f"[{color}] [/{color}]") + label
 
         return label

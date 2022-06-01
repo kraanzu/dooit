@@ -102,8 +102,8 @@ class Doit(App):
 
         # WIDGET SPACES
         middle_areas = dict()
-        for i in "0123":
-            middle_areas[f"{i}b"] = f"{i},b"
+        middle_areas["0b"] = "0,b"
+        middle_areas["1b"] = "1-start|3-end,b"
 
         self.grid.add_areas(**middle_areas)
 
@@ -196,8 +196,6 @@ class Doit(App):
         placements = {
             "0b": (self.navbar_scroll),
             "1b": self.todo_scroll[self.current_menu],
-            "2b": self.date_scroll[self.current_menu],
-            "3b": self.urgency_scroll[self.current_menu],
         }
         self.grid.place(**placements)
 
@@ -232,19 +230,11 @@ class Doit(App):
             await self.navbar.key_press(event)
         else:
             match self.current_status:
-                case "NORMAL":
-                    await self.todo_list.key_press(event)
-                    await self.date_tree.key_press(event)
-                    await self.urgency_tree.key_press(event)
-
-                case "INSERT":
-                    await self.todo_list.key_press(event)
-
                 case "SEARCH":
                     pass
 
-                case "DATE":
-                    await self.date_tree.key_press(event)
+                case _:
+                    await self.todo_list.key_press(event)
 
         self.refresh()
 

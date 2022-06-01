@@ -37,12 +37,12 @@ class NestedListEdit(TreeControl):
         self.cursor = id
         self.refresh()
 
-    async def focus_node(self) -> None:
-        self.nodes[self.highlighted].data.on_focus()
+    async def focus_node(self, part: str = "about") -> None:
+        self.nodes[self.highlighted].data.make_focus(part)
         self.editing = True
 
     async def unfocus_node(self) -> None:
-        self.nodes[self.highlighted].data.on_blur()
+        self.nodes[self.highlighted].data.remove_focus()
         self.editing = False
 
     async def remove_node(self, id: NodeID | None = None) -> None:
@@ -143,7 +143,8 @@ class NestedListEdit(TreeControl):
         await self.focus_node()
 
     async def send_key_to_selected(self, event: events.Key) -> None:
-        await self.nodes[self.highlighted].data.on_key(event)
+        await self.nodes[self.highlighted].data.send_key(event)
+        # await self.nodes[self.highlighted].data.send_key(event)
 
     async def key_press(self, event: events.Key):
         if self.editing:
@@ -188,15 +189,15 @@ class NestedListEdit(TreeControl):
 
     def render_node(self, node: TreeNode) -> RenderableType:
 
-        if not hasattr(node.data, "view"):
-            node.data.view = View(0, self.size.width - 6)
+        if not hasattr(node.data.about, "view"):
+            node.data.about.view = View(0, self.size.width - 6)
 
         return self.render_custom_node(node)
 
     def render_custom_node(self, node) -> RenderableType:
 
         label = (
-            Text(str(node.data.render()), no_wrap=True)
+            Text(str(node.data.about.render()), no_wrap=True)
             if isinstance(node.label, str)
             else node.label
         )

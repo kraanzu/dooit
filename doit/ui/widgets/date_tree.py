@@ -137,7 +137,7 @@ class DateTree(TodoList):
 
         # Setting up text
         label = Text.from_markup(
-            str(node.data.render()),
+            str(node.data.about.render()),
         )
 
         if not label.plain:
@@ -162,5 +162,76 @@ class DateTree(TodoList):
             label.stylize("strike")
 
         label = Text.from_markup(f"[{color}]  [/{color}]") + label
+
+        return label
+
+    def render_urgency(self, node):
+        match node.data.status:
+            case "PENDING":
+                color = "yellow"
+            case "COMPLETED":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
+
+        # Setting up text
+        label = Text.from_markup(
+            str(node.data.urgency),
+        )
+
+        label.plain = label.plain.rjust(3, "0")
+        label = Text(" ") + label + " "
+
+        if node.id == self.highlighted:
+            if self.editing:
+                label.stylize(self.style_editing)
+            else:
+                label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
+
+        # SAFETY: color will never be unbound
+        # because the match statement in exhaustive
+
+        if color == "green":
+            label.stylize("strike")
+
+        label = Text.from_markup(f"[{color}] [/{color}]") + label
+
+        return label
+
+    def render_urgency(self, node: TreeNode) -> RenderableType:
+
+        match node.data.status:
+            case "PENDING":
+                color = "yellow"
+            case "COMPLETED":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
+
+        # Setting up text
+        label = Text.from_markup(
+            str(node.data.urgency),
+        )
+
+        label.plain = label.plain.rjust(3, "0")
+        label = Text(" ") + label + " "
+
+        if node.id == self.highlighted:
+            if self.editing:
+                label.stylize(self.style_editing)
+            else:
+                label.stylize(self.style_focus)
+        else:
+            label.stylize(self.style_unfocus)
+
+        # SAFETY: color will never be unbound
+        # because the match statement in exhaustive
+
+        if color == "green":
+            label.stylize("strike")
+
+        label = Text.from_markup(f"[{color}] [/{color}]") + label
 
         return label

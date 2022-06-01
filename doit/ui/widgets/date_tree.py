@@ -6,7 +6,7 @@ from textual import events
 from textual.widgets import TreeNode
 
 from ...ui.widgets import TodoList
-from ...ui.events.events import ChangeStatus, ModifyDue, Statusmessage
+from ...ui.events.events import ChangeStatus, ModifyDue, Statusmessage, UpdateDate
 
 
 class DateTree(TodoList):
@@ -108,6 +108,9 @@ class DateTree(TodoList):
                 await self.post_message(
                     Statusmessage(self, message="You due date was updated")
                 )
+                await self.post_message(
+                    UpdateDate(self, self.nodes[self.highlighted].data.value)
+                )
                 await self.update_due_status(date)
                 return
 
@@ -119,6 +122,7 @@ class DateTree(TodoList):
             )
 
         self.nodes[self.highlighted].data.value = self.prev_value
+
         self.refresh()
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:

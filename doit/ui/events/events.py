@@ -49,3 +49,9 @@ class ApplySortMethod(Message, bubble = True):
     def __init__(self, sender: MessageTarget, method: DueType) -> None:
         super().__init__(sender)
         self.method = method
+
+class UpdateDate(Message, bubble = True):
+    def __init__(self, sender: MessageTarget, date: str) -> None:
+        super().__init__(sender)
+        self.date = date
+

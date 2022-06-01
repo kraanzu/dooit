@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Callable
 from rich.console import RenderableType
 from rich.text import Text
@@ -84,12 +85,18 @@ class TodoList(NestedListEdit):
 
     async def sort_by_name(self):
         await self._sort(
-            func=lambda node: node.data.todo.value,
+            func=lambda node: node.data.value,
         )
 
     # TODO
     async def sort_by_date(self):
-        pass
+        def f(date):
+            if not date:
+                return datetime(1, 1, 1)
+            else:
+                return datetime(*self._parse_date(date))
+
+        await self._sort(func=lambda node: f(node.data.todo.due))
 
     async def sort_by(self, method: str):
         await eval(f"self.sort_by_{method}()")
@@ -100,6 +107,9 @@ class TodoList(NestedListEdit):
         year = int(date[6:])
 
         return year, month, day
+
+    def update_date(self, date):
+        self.nodes[self.highlighted].data.todo.due = date
 
     def render(self):
         return self._tree
@@ -140,7 +150,7 @@ class TodoList(NestedListEdit):
         else:
             match event.key:
                 case "p":
-                    await self.sort_by_urgency()
+                    await self.sort_by_name()
                 case "j" | "down":
                     await self.cursor_down()
                 case "k" | "up":

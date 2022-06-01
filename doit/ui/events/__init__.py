@@ -7,6 +7,7 @@ from .events import (
     ModifyTopic,
     SortNodes,
     ApplySortMethod,
+    UpdateDate,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "ModifyTopic",
     "SortNodes",
     "ApplySortMethod",
+    "UpdateDate",
 ]

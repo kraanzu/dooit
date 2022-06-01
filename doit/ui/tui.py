@@ -15,8 +15,6 @@ from ..ui.widgets import (
     StatusBar,
     Box,
     Empty,
-    DateTree,
-    UrgencyTree,
     TodoList,
     HorizontalLine,
     VerticalLine,
@@ -44,13 +42,7 @@ class Doit(App):
         self.navbar = Navbar()
         self.navbar_scroll = MinimalScrollView(self.navbar)
         self.todo_lists = defaultdict(TodoList)
-        self.date_trees = defaultdict(DateTree)
-        self.urgency_trees = defaultdict(UrgencyTree)
-
         self.todo_scroll = dict()
-        self.date_scroll = dict()
-        self.urgency_scroll = dict()
-
         self.status_bar = StatusBar()
 
     async def reset_screen(self):
@@ -183,15 +175,8 @@ class Doit(App):
 
     async def refresh_screen(self):
         self.todo_list = self.todo_lists[self.current_menu]
-        self.date_tree = self.date_trees[self.current_menu]
-        self.urgency_tree = self.urgency_trees[self.current_menu]
-
         if self.current_menu not in self.todo_scroll:
             self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
-            self.date_scroll[self.current_menu] = MinimalScrollView(self.date_tree)
-            self.urgency_scroll[self.current_menu] = MinimalScrollView(
-                self.urgency_tree
-            )
 
         placements = {
             "0b": (self.navbar_scroll),
@@ -254,8 +239,6 @@ class Doit(App):
 
     async def handle_modify_due(self, event: ModifyDue):
         await self.todo_list.modify_due_status(event)
-        await self.date_tree.modify_due_status(event)
-        await self.urgency_tree.modify_due_status(event)
 
     async def handle_modify_topic(self, event: ModifyTopic):
         self.todo_lists[event.new] = self.todo_lists[event.old]
@@ -263,10 +246,6 @@ class Doit(App):
 
     async def handle_update_date(self, event: UpdateDate):
         self.todo_list.update_date(event.date)
-        self.date_tree.update_date(event.date)
-        self.urgency_tree.update_date(event.date)
 
     async def handle_sort_nodes(self, event: SortNodes):
         await self.todo_list._sort_by_arrangement(event.arrangement)
-        await self.date_tree._sort_by_arrangement(event.arrangement)
-        await self.urgency_tree._sort_by_arrangement(event.arrangement)

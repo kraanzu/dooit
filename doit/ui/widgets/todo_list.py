@@ -32,10 +32,6 @@ class TodoList(NestedListEdit):
             style_unfocus="bold grey50",
         )
 
-    async def on_click(self, event: events.Click) -> None:
-        await self.post_message(FocusTodo(self))
-        return await super().on_click(event)
-
     async def _sort_by_arrangement(self, seq: list[int]):
 
         parent = self.nodes[self.highlighted].parent
@@ -65,7 +61,6 @@ class TodoList(NestedListEdit):
         arrangemnt = [i for i, _ in dup]
 
         await self.post_message(SortNodes(self, arrangemnt))
-        # await self._sort_by_arrangement([i for i, _ in dup])
 
     async def sort_by_urgency(self):
         await self._sort(
@@ -153,8 +148,6 @@ class TodoList(NestedListEdit):
 
         else:
             match event.key:
-                case "p":
-                    await self.sort_by_name()
                 case "j" | "down":
                     await self.cursor_down()
                 case "k" | "up":
@@ -194,23 +187,23 @@ class TodoList(NestedListEdit):
         if not str(node.data.about.render()).strip():
             await self.emit(events.Key(self, "x"))
 
-    def get_box(self):
-        a = NodeDataTye()
-        a.about.view = View(0, percentage(60, self.size.width) - 6)
-        a.due.view = View(0, percentage(30, self.size.width) - 6)
-        return a
+    def _get_entry(self):
+        entry = NodeDataTye()
+        entry.about.view = View(0, percentage(60, self.size.width) - 6)
+        entry.due.view = View(0, percentage(30, self.size.width) - 6)
+        return entry
 
     async def add_child(self):
         node = self.nodes[self.highlighted]
         if node == self.root or node.parent == self.root:
-            await node.add("child", self.get_box())
+            await node.add("child", self._get_entry())
             await node.expand()
             await self.reach_to_last_child()
             await self.focus_node()
 
     async def add_sibling(self):
         if self.nodes[self.highlighted].parent == self.root:
-            await self.root.add("child", self.get_box())
+            await self.root.add("child", self._get_entry())
             await self.move_to_bottom()
         else:
             await self.reach_to_parent()
@@ -229,26 +222,22 @@ class TodoList(NestedListEdit):
         table.add_column("due", justify="left", ratio=30)
         table.add_column("urgency", justify="left", ratio=10)
 
+        color = "yellow"
+        match node.data.status:
+            case "COMPLETED":
+                color = "green"
+            case "OVERDUE":
+                color = "red"
+
         table.add_row(
-            self.render_about(node),
-            self.render_date(node),
-            self.render_urgency(node),
+            self.render_about(node, color),
+            self.render_date(node, color),
+            self.render_priority(node, color),
         )
 
         return table
 
-    def render_about(self, node) -> RenderableType:
-        # Setting up text
-        if data := node.data:
-            try:
-                label = Text.from_markup(
-                    str(data.about.render()),
-                )
-            except:
-                label = Text(str(data.about.render()))
-        else:
-            label = Text()
-
+    def _highlight_node(self, node, label):
         # setup highlight
         if node.id == self.highlighted:
             if self.editing:
@@ -257,6 +246,22 @@ class TodoList(NestedListEdit):
                 label.stylize(self.style_focus)
         else:
             label.stylize(self.style_unfocus)
+
+        if node.data.status == "COMPLETED":
+            label.stylize("strike")
+
+        return label
+
+    def render_about(self, node, _) -> RenderableType:
+        # Setting up text
+        label = (
+            Text.from_markup(
+                str(node.data.about.render()),
+            )
+            or Text()
+        )
+
+        label = self._highlight_node(node, label)
 
         # setup milestone
         if children := node.children:
@@ -268,15 +273,11 @@ class TodoList(NestedListEdit):
         if node != self.root:
             match node.data.status:
                 case "COMPLETED":
-                    label.stylize("strike")
                     label = Text.from_markup("[b green]  [/b green]") + label
                 case "PENDING":
                     label = Text.from_markup("[b yellow]  [/b yellow]") + label
                 case "OVERDUE":
                     label = Text.from_markup("[b red]  [/b red]") + label
-
-        # fix padding
-        # label.pad_right(self.size.width)
 
         meta = {
             "@click": f"click_label({node.id})",
@@ -285,75 +286,19 @@ class TodoList(NestedListEdit):
         }
 
         label.apply_meta(meta)
-
         return label
 
-    def render_date(self, node: TreeNode) -> RenderableType:
-        color = "yellow"
-        match node.data.status:
-            case "COMPLETED":
-                color = "green"
-            case "OVERDUE":
-                color = "red"
+    def render_date(self, node: TreeNode, color) -> RenderableType:
 
-        # Setting up text
-        label = Text.from_markup(
-            str(node.data.due.render()),
-        )
-
-        if not label.plain:
-            label = Text("Until You Die")
-
-        if node.id == self.highlighted:
-            if self.editing:
-                label.stylize(self.style_editing)
-            else:
-                label.stylize(self.style_focus)
-        else:
-            label.stylize(self.style_unfocus)
-
-        # label = label[:13]
-
-        # SAFETY: color will never be unbound
-        # because the match statement in exhaustive
-        if color == "green":
-            label.stylize("strike")
-
-        label = Text.from_markup(f"[{color}]  [/{color}]") + label
-
+        label = Text.from_markup(str(node.data.due.render())) or Text("Until You Die")
+        label = self._highlight_node(node, label)
+        label = Text.from_markup(f"[{color}]    [/{color}]") + label
         return label
 
-    def render_urgency(self, node: TreeNode) -> RenderableType:
+    def render_priority(self, node: TreeNode, color) -> RenderableType:
 
-        color = "yellow"
-        match node.data.status:
-            case "COMPLETED":
-                color = "green"
-            case "OVERDUE":
-                color = "red"
-
-        # Setting up text
-        label = Text.from_markup(
-            str(node.data.urgency),
-        )
-
+        label = Text.from_markup(str(node.data.urgency))
         label.plain = label.plain.rjust(3, "0")
-        label = Text(" ") + label + " "
-
-        if node.id == self.highlighted:
-            if self.editing:
-                label.stylize(self.style_editing)
-            else:
-                label.stylize(self.style_focus)
-        else:
-            label.stylize(self.style_unfocus)
-
-        # SAFETY: color will never be unbound
-        # because the match statement in exhaustive
-
-        if color == "green":
-            label.stylize("strike")
-
+        label = self._highlight_node(node, label)
         label = Text.from_markup(f"[{color}] [/{color}]") + label
-
         return label

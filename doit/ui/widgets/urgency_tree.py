@@ -14,13 +14,13 @@ class UrgencyTree(TodoList):
     async def add_child(self):
         node = self.nodes[self.highlighted]
         if node == self.root or node.parent == self.root:
-            await node.add("child", self.get_box())
+            await node.add("child", self._get_entry())
             await node.expand()
             await self.reach_to_last_child()
 
     async def add_sibling(self):
         if self.nodes[self.highlighted].parent == self.root:
-            await self.root.add("child", self.get_box())
+            await self.root.add("child", self._get_entry())
             await self.move_to_bottom()
         else:
             await self.reach_to_parent()

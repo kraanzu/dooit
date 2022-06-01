@@ -5,6 +5,8 @@ from .events import (
     ModifyDue,
     FocusTodo,
     ModifyTopic,
+    SortNodes,
+    ApplySortMethod,
 )
 
 __all__ = [
@@ -14,4 +16,6 @@ __all__ = [
     "ModifyDue",
     "FocusTodo",
     "ModifyTopic",
+    "SortNodes",
+    "ApplySortMethod",
 ]

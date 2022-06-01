@@ -38,3 +38,14 @@ class ModifyTopic(Message, bubble=True):
         super().__init__(sender)
         self.old = old
         self.new = new
+
+
+class SortNodes(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, arrangement: list[int]) -> None:
+        super().__init__(sender)
+        self.arrangement = arrangement
+
+class ApplySortMethod(Message, bubble = True):
+    def __init__(self, sender: MessageTarget, method: DueType) -> None:
+        super().__init__(sender)
+        self.method = method

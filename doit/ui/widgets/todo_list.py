@@ -1,3 +1,4 @@
+from typing import Callable
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
@@ -29,6 +30,76 @@ class TodoList(NestedListEdit):
     async def on_click(self, event: events.Click) -> None:
         await self.post_message(FocusTodo(self))
         return await super().on_click(event)
+
+    async def _sort_by_arrangement(self, seq: list[int]):
+
+        parent = self.nodes[self.highlighted].parent
+        if not parent:
+            return
+
+        tree = parent.tree.children
+
+        dup_tree = []
+        node_tree = []
+        for i in seq:
+            dup_tree += (tree[i],)
+            node_tree += (parent.children[i],)
+
+        parent.tree.children = dup_tree.copy()
+        parent.children = node_tree.copy()
+        self.refresh()
+
+    async def _sort(self, func: Callable):
+
+        parent = self.nodes[self.highlighted].parent
+        if not parent:
+            return
+
+        dup = list(enumerate(parent.children))
+        dup.sort(key=lambda x: func(x[1]))
+        arrangemnt = [i for i, _ in dup]
+
+        await self.post_message(SortNodes(self, arrangemnt))
+        # await self._sort_by_arrangement([i for i, _ in dup])
+
+    async def sort_by_urgency(self):
+        await self._sort(
+            func=lambda node: node.data.todo.urgency,
+        )
+
+    async def sort_by_status(self):
+        def f(status: str) -> int:
+            match status:
+                case "OVERDUE":
+                    return 1
+                case "PENDING":
+                    return 2
+                case "COMPLETED":
+                    return 3
+            return 0
+
+        await self._sort(
+            func=lambda node: f(node.data.todo.status),
+        )
+
+    async def sort_by_name(self):
+        await self._sort(
+            func=lambda node: node.data.todo.value,
+        )
+
+    # TODO
+    async def sort_by_date(self):
+        pass
+
+    async def sort_by(self, method: str):
+        await eval(f"self.sort_by_{method}()")
+
+    def _parse_date(self, date: str) -> tuple:
+        day = int(date[:2])
+        month = int(date[3:5])
+        year = int(date[6:])
+
+        return year, month, day
 
     def render(self):
         return self._tree
@@ -68,6 +139,8 @@ class TodoList(NestedListEdit):
 
         else:
             match event.key:
+                case "p":
+                    await self.sort_by_urgency()
                 case "j" | "down":
                     await self.cursor_down()
                 case "k" | "up":
@@ -90,6 +163,10 @@ class TodoList(NestedListEdit):
                     await self.remove_node()
                 case "c":
                     await self.mark_complete()
+                case "+" | "=":
+                    self.nodes[self.highlighted].data.increase_urgency()
+                case "_" | "-":
+                    self.nodes[self.highlighted].data.decrease_urgency()
 
         self.refresh()
 

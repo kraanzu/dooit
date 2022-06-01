@@ -73,13 +73,6 @@ class DateTree(TodoList):
 
         self.refresh()
 
-    def _parse_date(self, date: str) -> tuple:
-        day = int(date[:2])
-        month = int(date[3:5])
-        year = int(date[6:])
-
-        return year, month, day
-
     def _is_valid_date(self, date: str) -> bool:
         try:
             datetime(*self._parse_date(date))

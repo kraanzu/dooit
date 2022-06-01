@@ -6,7 +6,7 @@ from textual_extras.events.events import ListItemSelected
 
 from doit.ui.widgets.minimal_scrollview import MinimalScrollView
 
-from doit.ui.events.events import ModifyTopic
+from doit.ui.events.events import ModifyTopic, SortNodes
 
 
 from .events import ChangeStatus, Statusmessage, ModifyDue
@@ -270,3 +270,8 @@ class Doit(App):
     async def handle_modify_topic(self, event: ModifyTopic):
         self.todo_lists[event.new] = self.todo_lists[event.old]
         del self.todo_lists[event.old]
+
+    async def handle_sort_nodes(self, event: SortNodes):
+        await self.todo_list._sort_by_arrangement(event.arrangement)
+        await self.date_tree._sort_by_arrangement(event.arrangement)
+        await self.urgency_tree._sort_by_arrangement(event.arrangement)

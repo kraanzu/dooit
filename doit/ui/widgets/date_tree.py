@@ -87,7 +87,7 @@ class DateTree(TodoList):
         return due < present
 
     async def update_due_status(self, date):
-        status = self.nodes[self.highlighted].data.todo.status
+        status = self.nodes[self.highlighted].data.status
         if status == "COMPLETED":
             return
 
@@ -127,7 +127,7 @@ class DateTree(TodoList):
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
 
-        match node.data.todo.status:
+        match node.data.status:
             case "PENDING":
                 color = "yellow"
             case "COMPLETED":

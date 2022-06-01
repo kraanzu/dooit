@@ -57,7 +57,7 @@ class UrgencyTree(TodoList):
     #
     def render_node(self, node: TreeNode) -> RenderableType:
 
-        match node.data.todo.status:
+        match node.data.status:
             case "PENDING":
                 color = "yellow"
             case "COMPLETED":
@@ -67,7 +67,7 @@ class UrgencyTree(TodoList):
 
         # Setting up text
         label = Text.from_markup(
-            str(node.data.todo.urgency),
+            str(node.data.urgency),
         )
 
         label.plain = label.plain.rjust(3, "0")

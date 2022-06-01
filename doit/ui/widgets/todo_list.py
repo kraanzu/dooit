@@ -65,7 +65,7 @@ class TodoList(NestedListEdit):
 
     async def sort_by_urgency(self):
         await self._sort(
-            func=lambda node: node.data.todo.urgency,
+            func=lambda node: node.data.urgency,
         )
 
     async def sort_by_status(self):
@@ -80,7 +80,7 @@ class TodoList(NestedListEdit):
             return 0
 
         await self._sort(
-            func=lambda node: f(node.data.todo.status),
+            func=lambda node: f(node.data.status),
         )
 
     async def sort_by_name(self):
@@ -96,7 +96,7 @@ class TodoList(NestedListEdit):
             else:
                 return datetime(*self._parse_date(date))
 
-        await self._sort(func=lambda node: f(node.data.todo.due))
+        await self._sort(func=lambda node: f(node.data.due))
 
     async def sort_by(self, method: str):
         await eval(f"self.sort_by_{method}()")
@@ -109,7 +109,7 @@ class TodoList(NestedListEdit):
         return year, month, day
 
     def update_date(self, date):
-        self.nodes[self.highlighted].data.todo.due = date
+        self.nodes[self.highlighted].data.due = date
 
     def render(self):
         return self._tree
@@ -124,17 +124,17 @@ class TodoList(NestedListEdit):
 
     async def modify_due_status(self, event: ModifyDue):
         node = self.nodes[self.highlighted]
-        node.data.todo.status = event.status
+        node.data.status = event.status
 
         parent = node.parent
         if parent and parent != self.root:
-            if all(child.data.todo.status == "COMPLETED" for child in parent.children):
-                parent.data.todo.status = "COMPLETED"
+            if all(child.data.status == "COMPLETED" for child in parent.children):
+                parent.data.status = "COMPLETED"
 
         elif parent == self.root:
             if event.status == "COMPLETED":
                 for i in node.children:
-                    i.data.todo.status = "COMPLETED"
+                    i.data.status = "COMPLETED"
 
         self.refresh()
 
@@ -238,12 +238,12 @@ class TodoList(NestedListEdit):
         # setup milestone
         if children := node.children:
             total = len(children)
-            done = sum(child.data.todo.status == "COMPLETED" for child in children)
+            done = sum(child.data.status == "COMPLETED" for child in children)
             label += Text.from_markup(f" ( [green][/green] {done}/{total} )")
 
         # setup pre-icons
         if node != self.root:
-            match node.data.todo.status:
+            match node.data.status:
                 case "COMPLETED":
                     label.stylize("strike")
                     label = Text.from_markup("[b green]  [/b green]") + label

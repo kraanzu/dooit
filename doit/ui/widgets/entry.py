@@ -1,7 +1,6 @@
 from textual_extras.widgets import TextInput
 from rich.text import TextType
 from textual_extras.events import TextChanged
-from ...src.utils.task import Task
 
 
 class Entry(TextInput):
@@ -11,22 +10,27 @@ class Entry(TextInput):
 
     def __init__(self, name: str | None = None) -> None:
         super().__init__(name, placeholder="")
-        self.todo = Task()
+        self.name = name
+        self.about = ""
+        self.urgency = 1
+        self.tags = []
+        self.status = "PENDING"
+        self.due = ""
 
     def mark_complete(self) -> None:
-        self.todo.status = "COMPLETE"
+        self.status = "COMPLETE"
 
     def mark_pending(self) -> None:
-        self.todo.status = "PENDING"
+        self.status = "PENDING"
 
     def mark_overdue(self) -> None:
-        self.todo.status = "OVERDUE"
+        self.status = "OVERDUE"
 
     def increase_urgency(self) -> None:
-        self.todo.urgency += 1
+        self.urgency += 1
 
     def decrease_urgency(self) -> None:
-        self.todo.urgency = max(self.todo.urgency - 1, 0)
+        self.urgency = max(self.urgency - 1, 0)
 
     def _format_text(self, text: str) -> str:
         return text

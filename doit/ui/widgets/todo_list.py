@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Callable
 from rich.console import RenderableType
 from rich.text import Text
+from rich.tree import Tree
 from textual import events
 from textual.widgets import TreeNode
 from textual_extras.widgets.text_input import View
@@ -31,6 +32,7 @@ class TodoList(NestedListEdit):
             style_editing="bold cyan",
             style_unfocus="bold grey50",
         )
+        self.ok = False
 
     async def _sort_by_arrangement(self, seq: list[int]):
 
@@ -110,6 +112,16 @@ class TodoList(NestedListEdit):
         self.nodes[self.highlighted].data.due = date
 
     def render(self):
+        # if self.ok:
+        #     tree = Tree("")
+        #     tree.hide_root = True
+        #     tree.expanded = True
+        #     for i in self.nodes.values():
+        #         if "a" in i.data.about.value:
+        #             tree.add(self.render_node(i))
+        #
+        #     return tree
+
         return self._tree
 
     async def focus_node(self, part="about", status="INSERT") -> None:

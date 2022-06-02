@@ -80,6 +80,8 @@ class SortOptions(Widget):
         event.stop()
 
         match event.key:
+            case "escape":
+                self.visible = False
             case "j" | "down":
                 self.move_cursor_down()
             case "k" | "up":

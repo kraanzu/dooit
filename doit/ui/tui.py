@@ -7,6 +7,7 @@ from textual_extras.events.events import ListItemSelected
 from doit.ui.widgets.minimal_scrollview import MinimalScrollView
 
 from doit.ui.events.events import ApplySortMethod, ModifyTopic, SortNodes, UpdateDate
+from doit.ui.widgets.search_tree import SearchTree
 from doit.ui.widgets.sort_options import SortOptions
 
 
@@ -15,7 +16,6 @@ from ..ui.widgets import (
     Navbar,
     StatusBar,
     Box,
-    Empty,
     TodoList,
     HorizontalLine,
     VerticalLine,
@@ -32,10 +32,6 @@ class Doit(App):
         await self.init_vars()
         await self.reset_screen()
 
-        self.current_status = "NORMAL"
-        self.navbar_heading.highlight()
-        self.current_tab = self.navbar_heading
-
     async def init_vars(self):
         self.navbar_heading = Box("Menu")
         self.todos_heading = Box("Todos")
@@ -46,8 +42,14 @@ class Doit(App):
         self.todo_scroll = dict()
         self.status_bar = StatusBar()
 
+        self.search_tree = SearchTree()
+
         self.sort_menu = SortOptions(options=["name", "date", "urgency", "status"])
-        # self.sort_menu.visible = False
+        self.sort_menu.visible = False
+
+        self.current_status = "NORMAL"
+        self.navbar_heading.highlight()
+        self.current_tab = self.navbar_heading
 
     async def reset_screen(self):
         await self._clear_screen()
@@ -180,14 +182,17 @@ class Doit(App):
         return await super().on_resize(event)
 
     async def refresh_screen(self):
+
         self.todo_list = self.todo_lists[self.current_menu]
         if self.current_menu not in self.todo_scroll:
             self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
 
-        placements = {
-            "0b": (self.navbar_scroll),
-            "1b": self.todo_scroll[self.current_menu],
-        }
+        if self.current_status == "SEARCH":
+            main_area_widget = self.search_tree
+        else:
+            main_area_widget = self.todo_scroll[self.current_menu]
+
+        placements = {"0b": (self.navbar_scroll), "1b": main_area_widget}
         self.grid.place(**placements)
 
         self.grid.add_areas(**{"bar": "0-start|1-end,bar"})
@@ -209,14 +214,6 @@ class Doit(App):
 
     async def on_key(self, event: events.Key):
 
-        if event.key == "s":
-            await self.toggle_sort_option()
-            return
-
-        if self.sort_menu.visible:
-            await self.sort_menu.key_press(event)
-            return
-
         self.status_bar.clear_message()
 
         if event.key == "ctrl+i":
@@ -231,7 +228,26 @@ class Doit(App):
         else:
             match self.current_status:
                 case "SEARCH":
-                    pass
+                    await self.search_tree.key_press(event)
+                    self.status_bar.set_message(self.search_tree.search.value)
+                    self.refresh()
+                case "NORMAL":
+                    if event.key == "/":
+                        await self.search_tree.set_values(self.todo_list.nodes.values())
+                        await self.handle_change_status(
+                            ChangeStatus(self, "SEARCH"),
+                        )
+                        await self.reset_screen()
+
+                    if event.key == "s":
+                        await self.toggle_sort_option()
+                        return
+
+                    if self.sort_menu.visible:
+                        await self.sort_menu.key_press(event)
+                        return
+
+                    await self.todo_list.key_press(event)
 
                 case _:
                     await self.todo_list.key_press(event)
@@ -243,6 +259,7 @@ class Doit(App):
         status = event.status
         self.current_status = status
         self.status_bar.set_status(status)
+        self.refresh()
 
     # Ik this naming is bad but idk `StatusMessage` was not working :(
     async def handle_statusmessage(self, event: Statusmessage):

@@ -51,7 +51,7 @@ class SortOptions(Widget):
         else:
             self.highlight(min(self.highlighted + 1, len(self.options) - 1))
 
-    def move_cursor_up(self):
+    def move_cursor_up(self) -> None:
         """
         Moves the highlight up
         """

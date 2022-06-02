@@ -6,6 +6,7 @@ from .box import Box
 from .status_bar import StatusBar
 from .minimal_scrollview import MinimalScrollView
 from .sort_options import SortOptions
+from .search_tree import SearchTree
 
 from .border import (
     HorizontalLine,
@@ -31,4 +32,5 @@ __all__ = [
     "StatusBar",
     "MinimalScrollView",
     "SortOptions",
+    "SearchTree"
 ]

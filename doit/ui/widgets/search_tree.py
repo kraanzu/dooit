@@ -6,13 +6,25 @@ from textual.widgets import NodeID, TreeNode
 
 
 class SearchTree(TodoList):
+    """
+    A tree with built in searching
+    """
+
     async def set_values(self, nodes):
+        """
+        Initialize with all the values
+        """
+
         self.all_nodes: dict[NodeID, TreeNode] = nodes
         self.search = SimpleInput()
         self.searching = True
         await self.refresh_search()
 
-    async def refresh_search(self):
+    async def refresh_search(self) -> None:
+        """
+        Refresh tree on search value change
+        """
+
         self.root.children = []
         self.root.tree.children = []
         self.cursor_line = 0
@@ -30,9 +42,10 @@ class SearchTree(TodoList):
         for id, i in self.all_nodes.items():
             if i.data.uuid == uuid:
                 return id
-        exit()
 
-    async def key_press(self, event: events.Key):
+        return NodeID(0)
+
+    async def key_press(self, event: events.Key) -> None:
         if self.searching:
             match event.key:
                 case "escape":
@@ -62,4 +75,5 @@ class SearchTree(TodoList):
                 case "enter":
                     await self.post_message(ChangeStatus(self, "NORMAL"))
                     await self.post_message(HighlightNode(self, await self.find_id()))
+
         self.refresh()

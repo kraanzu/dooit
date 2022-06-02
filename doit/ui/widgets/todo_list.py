@@ -4,18 +4,17 @@ from typing import Callable
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
-from textual.widgets import TreeNode
+from textual.widgets import TreeNode, NodeID
 from textual_extras.widgets.text_input import View
 
-from doit.ui.widgets.nested_list_edit import NestedListEdit
-
+from ...ui.widgets import NestedListEdit
 from ...ui.widgets.entry import Entry
 from ...ui.events import *
 
 NodeDataTye = Entry
 
 
-def percentage(percent, total):
+def percentage(percent, total) -> int:
     return round(percent * total / 100)
 
 
@@ -34,7 +33,7 @@ class TodoList(NestedListEdit):
         )
         self.focused = None
 
-    async def _sort_by_arrangement(self, seq: list[int]):
+    async def _sort_by_arrangement(self, seq: list[int]) -> None:
 
         parent = self.nodes[self.highlighted].parent
         if not parent:
@@ -52,7 +51,7 @@ class TodoList(NestedListEdit):
         parent.children = node_tree.copy()
         self.refresh()
 
-    async def _sort(self, func: Callable):
+    async def _sort(self, func: Callable) -> None:
 
         parent = self.nodes[self.highlighted].parent
         if not parent:
@@ -63,12 +62,12 @@ class TodoList(NestedListEdit):
         arrangemnt = [i for i, _ in dup]
         await self._sort_by_arrangement(arrangemnt)
 
-    async def sort_by_urgency(self):
+    async def sort_by_urgency(self) -> None:
         await self._sort(
             func=lambda node: node.data.urgency,
         )
 
-    async def sort_by_status(self):
+    async def sort_by_status(self) -> None:
         def f(status: str) -> int:
             match status:
                 case "OVERDUE":
@@ -83,13 +82,13 @@ class TodoList(NestedListEdit):
             func=lambda node: f(node.data.status),
         )
 
-    async def sort_by_name(self):
+    async def sort_by_name(self) -> None:
         await self._sort(
             func=lambda node: node.data.value,
         )
 
     # TODO
-    async def sort_by_date(self):
+    async def sort_by_date(self) -> None:
         def f(date):
             if not date:
                 return datetime(1, 1, 1)
@@ -98,7 +97,7 @@ class TodoList(NestedListEdit):
 
         await self._sort(func=lambda node: f(node.data.due))
 
-    async def sort_by(self, method: str):
+    async def sort_by(self, method: str) -> None:
         await eval(f"self.sort_by_{method}()")
 
     def _parse_date(self, date: str) -> tuple:
@@ -108,7 +107,7 @@ class TodoList(NestedListEdit):
 
         return year, month, day
 
-    def render(self):
+    def render(self) -> RenderableType:
         return self._tree
 
     async def focus_node(self, part="about", status="INSERT") -> None:
@@ -117,11 +116,11 @@ class TodoList(NestedListEdit):
         await super().focus_node(part)
         self.prev_value = self.nodes[self.highlighted].data.due.value
 
-    async def unfocus_node(self):
+    async def unfocus_node(self) -> None:
         await self.post_message(ChangeStatus(self, "NORMAL"))
         await super().unfocus_node()
 
-    async def modify_due_status(self, status: str):
+    async def modify_due_status(self, status: str) -> None:
         node = self.nodes[self.highlighted]
         node.data.status = status
 
@@ -137,7 +136,7 @@ class TodoList(NestedListEdit):
 
         self.refresh()
 
-    async def key_press(self, event: events.Key):
+    async def key_press(self, event: events.Key) -> None:
         if self.editing:
             match event.key:
                 case "escape":
@@ -179,16 +178,17 @@ class TodoList(NestedListEdit):
 
         self.refresh()
 
-    async def mark_complete(self):
+    async def mark_complete(self) -> None:
         await self.modify_due_status("COMPLETED")
 
-    async def check_node(self):
+    async def check_node(self) -> None:
         match self.focused:
+
             case "about":
                 node = self.nodes[self.highlighted]
                 if not str(node.data.about.render()).strip():
                     await self.emit(events.Key(self, "x"))
-                    return
+
             case "due":
                 date = self.nodes[self.highlighted].data.due.value
 
@@ -202,7 +202,6 @@ class TodoList(NestedListEdit):
                             Notify(self, message="You due date was updated")
                         )
                         await self.update_due_status()
-                        return
 
                 else:
                     await self.post_message(
@@ -224,13 +223,13 @@ class TodoList(NestedListEdit):
         except ValueError:
             return False
 
-    def _is_expired(self, date):
+    def _is_expired(self, date) -> bool:
         present = datetime.now()
         due = datetime(*self._parse_date(date))
 
         return due < present
 
-    async def update_due_status(self):
+    async def update_due_status(self) -> None:
         date = self.nodes[self.highlighted].data.due.value
         status = self.nodes[self.highlighted].data.status
 
@@ -238,21 +237,20 @@ class TodoList(NestedListEdit):
             return
 
         if self._is_expired(date):
-            await self.modify_due_status('OVERDUE')
+            await self.modify_due_status("OVERDUE")
         else:
-            await self.modify_due_status('PENDING')
+            await self.modify_due_status("PENDING")
 
-    def _get_entry(self):
+    def _get_entry(self) -> Entry:
         entry = NodeDataTye()
         entry.about.view = View(0, percentage(60, self.size.width) - 6)
         entry.due.view = View(0, percentage(30, self.size.width) - 6)
         return entry
 
-    async def reach_to_node(self, id):
-        try:
+    async def reach_to_node(self, id: TreeNode | NodeID) -> None:
+
+        if isinstance(id, TreeNode):
             id = id.id
-        except:
-            pass
 
         if self.nodes[id] in self.root.children:
             await self.move_to_top()
@@ -264,7 +262,7 @@ class TodoList(NestedListEdit):
             while self.highlighted != id:
                 await self.cursor_down()
 
-    async def add_child(self):
+    async def add_child(self) -> None:
         node = self.nodes[self.highlighted]
         if node == self.root or node.parent == self.root:
             await node.add("child", self._get_entry())
@@ -272,7 +270,7 @@ class TodoList(NestedListEdit):
             await self.reach_to_last_child()
             await self.focus_node()
 
-    async def add_sibling(self):
+    async def add_sibling(self) -> None:
         if self.nodes[self.highlighted].parent == self.root:
             await self.root.add("child", self._get_entry())
             await self.move_to_bottom()
@@ -308,7 +306,7 @@ class TodoList(NestedListEdit):
 
         return table
 
-    def _highlight_node(self, node, label):
+    def _highlight_node(self, node: TreeNode, label: Text) -> Text:
         # setup highlight
         if node.id == self.highlighted:
             if self.editing:

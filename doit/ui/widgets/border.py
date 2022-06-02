@@ -30,7 +30,7 @@ class Border(Widget):
 
 class HorizontalLine(Border):
     """
-    Draws a horizontal line wrt to its width
+    Draws a horizontal line w.r.t to its width
     """
 
     def __init__(self) -> None:
@@ -39,7 +39,7 @@ class HorizontalLine(Border):
 
 class VerticalLine(Border):
     """
-    Draws a vertical line wrt to its height
+    Draws a vertical line w.r.t to its height
     """
 
     def __init__(self) -> None:

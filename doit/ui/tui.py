@@ -2,41 +2,24 @@ from collections import defaultdict
 from textual import events
 from textual.app import App
 from textual.layouts.dock import DockLayout
+from textual.widget import Widget
 from textual_extras.events.events import ListItemSelected
 
-from doit.ui.widgets.minimal_scrollview import MinimalScrollView
-
-from doit.ui.events.events import (
-    ApplySortMethod,
-    HighlightNode,
-    ModifyTopic,
-)
-from doit.ui.widgets.search_tree import SearchTree
-from doit.ui.widgets.sort_options import SortOptions
-
-
-from .events import ChangeStatus, Notify
-from ..ui.widgets import (
-    Navbar,
-    StatusBar,
-    Box,
-    TodoList,
-    HorizontalLine,
-    VerticalLine,
-    Connector1,
-    Connector2,
-    Connector3,
-    Connector4,
-)
+from .events import *
+from ..ui.widgets import *
 
 
 class Doit(App):
-    async def on_mount(self):
+    async def on_mount(self) -> None:
         self.current_menu = ""
         await self.init_vars()
         await self.reset_screen()
 
-    async def init_vars(self):
+    async def init_vars(self) -> None:
+        """
+        Init class Vars
+        """
+
         self.navbar_heading = Box("Menu")
         self.todos_heading = Box("Todos")
 
@@ -55,7 +38,11 @@ class Doit(App):
         self.navbar_heading.highlight()
         self.current_tab = self.navbar_heading
 
-    async def reset_screen(self):
+    async def reset_screen(self) -> None:
+        """
+        Reloads the screen
+        """
+
         await self._clear_screen()
         await self.setup_grid()
         self.setup_widgets()
@@ -69,7 +56,11 @@ class Doit(App):
             self.view.layout.docks.clear()
         self.view.widgets.clear()
 
-    async def setup_grid(self):
+    async def setup_grid(self) -> None:
+        """
+        Handle grid placing
+        """
+
         self.grid = await self.view.dock_grid()
         self.grid.add_row("a", size=3)
         self.grid.add_row("sep0", fraction=1)
@@ -95,12 +86,18 @@ class Doit(App):
 
         self.menu_grid.add_areas(menu="mid,mid")
         self.menu_grid.place(menu=self.sort_menu)
-        # self.sort_menu.vi
 
-    async def toggle_sort_option(self):
+    async def toggle_sort_option(self) -> None:
+        """
+        Toggle sort menu
+        """
+
         self.sort_menu.visible = not self.sort_menu.visible
 
-    def setup_widgets(self):
+    def setup_widgets(self) -> None:
+        """
+        Place widgets
+        """
 
         areas = {"nav": "0,a", "todo": "1,a"}
 
@@ -158,13 +155,14 @@ class Doit(App):
                 ]
             )
 
-        self.navbar_box = self.make_box(borders[0])
-        self.todos_box = self.make_box(borders[1])
+        self.navbar_box = self._make_box(borders[0])
+        self.todos_box = self._make_box(borders[1])
 
-    def make_box(
-        self,
-        areas,
-    ):
+    def _make_box(self, areas: dict[str, str]) -> list[Widget]:
+        """
+        Make border for trees
+        """
+
         box = [
             VerticalLine(),
             Connector1(),
@@ -185,7 +183,10 @@ class Doit(App):
         await self.refresh_screen()
         return await super().on_resize(event)
 
-    async def refresh_screen(self):
+    async def refresh_screen(self) -> None:
+        """
+        Re-place all the widgets
+        """
 
         self.todo_list = self.todo_lists[self.current_menu]
         if self.current_menu not in self.todo_scroll:
@@ -216,7 +217,7 @@ class Doit(App):
 
         self.current_tab.highlight()
 
-    async def on_key(self, event: events.Key):
+    async def on_key(self, event: events.Key) -> None:
 
         self.status_bar.clear_message()
 
@@ -244,15 +245,14 @@ class Doit(App):
                         )
                         await self.reset_screen()
 
-                    if event.key == "s":
+                    elif event.key == "s":
                         await self.toggle_sort_option()
-                        return
 
-                    if self.sort_menu.visible:
+                    elif self.sort_menu.visible:
                         await self.sort_menu.key_press(event)
-                        return
 
-                    await self.todo_list.key_press(event)
+                    else:
+                        await self.todo_list.key_press(event)
 
                 case _:
                     await self.todo_list.key_press(event)
@@ -260,26 +260,26 @@ class Doit(App):
         self.refresh()
 
     # HANDLING EVENTS
-    async def handle_change_status(self, event: ChangeStatus):
+    async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
         self.current_status = status
         self.status_bar.set_status(status)
         await self.reset_screen()
 
-    async def handle_notify(self, event: Notify):
+    async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)
 
-    async def on_list_item_selected(self, event: ListItemSelected):
+    async def on_list_item_selected(self, event: ListItemSelected) -> None:
         self.current_menu = event.selected
         await self.reset_screen()
 
-    async def handle_modify_topic(self, event: ModifyTopic):
+    async def handle_modify_topic(self, event: ModifyTopic) -> None:
         self.todo_lists[event.new] = self.todo_lists[event.old]
         del self.todo_lists[event.old]
 
-    async def handle_apply_sort_method(self, event: ApplySortMethod):
+    async def handle_apply_sort_method(self, event: ApplySortMethod) -> None:
         await self.todo_list.sort_by(event.method)
         self.sort_menu.visible = False
 
-    async def handle_highlight_node(self, event: HighlightNode):
+    async def handle_highlight_node(self, event: HighlightNode) -> None:
         await self.todo_list.reach_to_node(event.id)

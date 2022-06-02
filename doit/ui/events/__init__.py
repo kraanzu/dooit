@@ -5,6 +5,8 @@ from .events import (
     ModifyTopic,
     ApplySortMethod,
     HighlightNode,
+    StatusType,
+    SortMethodType,
 )
 
 __all__ = [
@@ -14,4 +16,6 @@ __all__ = [
     "ModifyTopic",
     "ApplySortMethod",
     "HighlightNode",
+    "StatusType",
+    "SortMethodType",
 ]

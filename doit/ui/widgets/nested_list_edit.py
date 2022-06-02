@@ -10,6 +10,10 @@ from textual.messages import CursorMove
 
 
 class NestedListEdit(TreeControl):
+    """
+    A editable & nested list
+    """
+
     def __init__(
         self,
         label: TextType,
@@ -34,7 +38,7 @@ class NestedListEdit(TreeControl):
 
     def highlight(self, id: NodeID) -> None:
         self.highlighted = id
-        self.cursor = id
+        # self.cursor = id
         self.refresh()
 
     async def focus_node(self, part: str = "about") -> None:
@@ -144,7 +148,6 @@ class NestedListEdit(TreeControl):
 
     async def send_key_to_selected(self, event: events.Key) -> None:
         await self.nodes[self.highlighted].data.send_key(event)
-        # await self.nodes[self.highlighted].data.send_key(event)
 
     async def key_press(self, event: events.Key):
         if self.editing:
@@ -183,6 +186,7 @@ class NestedListEdit(TreeControl):
         """
         Move the highlight along with mouse hover
         """
+
         if not self.editing:
             if id := event.style.meta.get("tree_node"):
                 self.highlight(id)
@@ -216,7 +220,7 @@ class NestedListEdit(TreeControl):
         label.apply_meta(meta)
         return label
 
-    async def handle_tree_click(self, _) -> None:
+    async def handle_tree_click(self, *_) -> None:
         if not self.editing:
             await self.focus_node()
             self.refresh()

@@ -4,6 +4,10 @@ from textual.widgets import ScrollView
 
 
 class MinimalScrollView(ScrollView):
+    """
+    Just a ScrollView without bars
+    """
+
     async def handle_window_change(self, message: Message) -> None:
         message.stop()
 

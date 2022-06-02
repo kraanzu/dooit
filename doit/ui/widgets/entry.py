@@ -8,11 +8,14 @@ from string import printable as chars
 from random import choice
 
 
-def ok():
-    s = ""
+def generate_uuid() -> str:
+    """
+    Generates a unique id for entries
+    """
+    uuid = ""
     for _ in range(32):
-        s += choice(chars)
-    return s
+        uuid += choice(chars)
+    return uuid
 
 
 class Entry(TextInput):
@@ -29,17 +32,17 @@ class Entry(TextInput):
         self.status = "PENDING"
         self.due = SimpleInput()
         self.focused = None
-        self.uuid = ok()
+        self.uuid = generate_uuid()
 
-    def make_focus(self, part: Literal["about", "due"]):
+    def make_focus(self, part: Literal["about", "due"]) -> None:
         eval(f"self.{part}.on_focus()")
         self.focused = part
 
-    def remove_focus(self):
+    def remove_focus(self) -> None:
         if self.focused:
             eval(f"self.{self.focused}.on_blur()")
 
-    async def send_key(self, event: events.Key):
+    async def send_key(self, event: events.Key) -> None:
         if self.focused:
             await eval(f"self.{self.focused}.on_key(event)")
 

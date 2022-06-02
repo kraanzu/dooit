@@ -14,14 +14,16 @@ class Doit(App):
         self.current_menu = ""
         await self.init_vars()
         await self.reset_screen()
+        for widget in self.navbar_box:
+            widget.toggle_highlight()
 
     async def init_vars(self) -> None:
         """
         Init class Vars
         """
 
-        self.navbar_heading = Box("Menu")
-        self.todos_heading = Box("Todos")
+        self.navbar_heading = Box([" Menu"])
+        self.todos_heading = Box([" Todos"])
 
         self.navbar = Navbar()
         self.navbar_scroll = MinimalScrollView(self.navbar)
@@ -209,6 +211,11 @@ class Doit(App):
         """
 
         self.current_tab.lowlight()
+        for widget in self.navbar_box:
+            widget.toggle_highlight()
+        for widget in self.todos_box:
+            widget.toggle_highlight()
+
         match new_tab:
             case "navbar":
                 self.current_tab = self.navbar_heading

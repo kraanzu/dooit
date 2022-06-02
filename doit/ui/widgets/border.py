@@ -22,10 +22,9 @@ class Border(Widget):
         self.refresh()
 
     def render(self) -> RenderableType:
-
         count = self.size.width if self.measure == "width" else self.size.height
-        style = "bold " if self.highlight else "dim "
-        return Text(self.item * count, style=style + self.color)
+        style = "bold blue" if self.highlight else "dim white"
+        return Text(self.item * count, style=style)
 
 
 class HorizontalLine(Border):
@@ -62,8 +61,8 @@ class Connector1(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold " if self.highlight else "dim "
-        return Text(self.item, style=style + self.color)
+        style = "bold blue" if self.highlight else "dim white"
+        return Text(self.item, style=style)
 
 
 class Connector2(Border):
@@ -82,8 +81,8 @@ class Connector2(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold " if self.highlight else "dim "
-        return Text(self.item, style=style + self.color)
+        style = "bold blue" if self.highlight else "dim white"
+        return Text(self.item, style=style)
 
 
 class Connector3(Border):
@@ -102,8 +101,8 @@ class Connector3(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold " if self.highlight else "dim "
-        return Text(self.item, style=style + self.color)
+        style = "bold blue" if self.highlight else "dim white"
+        return Text(self.item, style=style)
 
 
 class Connector4(Border):
@@ -122,5 +121,5 @@ class Connector4(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold " if self.highlight else "dim "
-        return Text(self.item, style=style + self.color)
+        style = "bold blue" if self.highlight else "dim white"
+        return Text(self.item, style=style)

@@ -45,13 +45,14 @@ class SortNodes(Message, bubble=True):
         super().__init__(sender)
         self.arrangement = arrangement
 
-class ApplySortMethod(Message, bubble = True):
-    def __init__(self, sender: MessageTarget, method: DueType) -> None:
+
+class ApplySortMethod(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, method: str) -> None:
         super().__init__(sender)
         self.method = method
 
-class UpdateDate(Message, bubble = True):
+
+class UpdateDate(Message, bubble=True):
     def __init__(self, sender: MessageTarget, date: str) -> None:
         super().__init__(sender)
         self.date = date
-

@@ -59,8 +59,7 @@ class TodoList(NestedListEdit):
         dup = list(enumerate(parent.children))
         dup.sort(key=lambda x: func(x[1]))
         arrangemnt = [i for i, _ in dup]
-
-        await self.post_message(SortNodes(self, arrangemnt))
+        await self._sort_by_arrangement(arrangemnt)
 
     async def sort_by_urgency(self):
         await self._sort(
@@ -297,7 +296,7 @@ class TodoList(NestedListEdit):
 
     def render_priority(self, node: TreeNode, color) -> RenderableType:
 
-        label = Text.from_markup(str(node.data.urgency))
+        label = Text(str(node.data.urgency))
         label.plain = label.plain.rjust(3, "0")
         label = self._highlight_node(node, label)
         label = Text.from_markup(f"[{color}] [/{color}]") + label

@@ -1,4 +1,4 @@
-from rich.box import HEAVY
+from rich.box import SQUARE_DOUBLE_HEAD
 from rich.console import RenderableType
 from rich.panel import Panel
 from rich.style import StyleType
@@ -26,11 +26,11 @@ class Box(Widget):
         table = Table.grid(padding=(0, 1), expand=True)
         style = "bold blue" if self.highlighted else "dim white"
         for i in self.names:
-            table.add_column(Text(i, style=style), justify="center", ratio=1)
+            table.add_column(i, justify="center", ratio=1)
 
-        table.add_row(*self.names)
+        table.add_row(*[Text(name, style=style) for name in self.names])
 
-        return Panel(table, border_style=style, height=3, box=HEAVY)
+        return Panel(table, border_style=style, height=3, box=SQUARE_DOUBLE_HEAD)
 
     def highlight(self) -> None:
         self.highlighted = True

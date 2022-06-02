@@ -18,20 +18,10 @@ class ChangeStatus(Message, bubble=True):
         self.status = status
 
 
-class Statusmessage(Message, bubble=True):
+class Notify(Message, bubble=True):
     def __init__(self, sender: MessageTarget, message: str) -> None:
         super().__init__(sender)
         self.message = message
-
-
-class ModifyDue(Message, bubble=True):
-    def __init__(self, sender: MessageTarget, status: DueType) -> None:
-        super().__init__(sender)
-        self.status = status
-
-
-class FocusTodo(Message, bubble=True):
-    pass
 
 
 class ModifyTopic(Message, bubble=True):
@@ -41,22 +31,10 @@ class ModifyTopic(Message, bubble=True):
         self.new = new
 
 
-class SortNodes(Message, bubble=True):
-    def __init__(self, sender: MessageTarget, arrangement: list[int]) -> None:
-        super().__init__(sender)
-        self.arrangement = arrangement
-
-
 class ApplySortMethod(Message, bubble=True):
     def __init__(self, sender: MessageTarget, method: str) -> None:
         super().__init__(sender)
         self.method = method
-
-
-class UpdateDate(Message, bubble=True):
-    def __init__(self, sender: MessageTarget, date: str) -> None:
-        super().__init__(sender)
-        self.date = date
 
 
 class HighlightNode(Message, bubble=True):

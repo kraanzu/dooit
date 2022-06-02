@@ -28,15 +28,6 @@ class Border(Widget):
         return Text(self.item * count, style=style + self.color)
 
 
-class Empty(Border):
-    """
-    Space consuimg widget
-    """
-
-    def __init__(self) -> None:
-        super().__init__(item=" ")
-
-
 class HorizontalLine(Border):
     """
     Draws a horizontal line wrt to its width

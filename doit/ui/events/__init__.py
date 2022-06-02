@@ -1,25 +1,17 @@
 from .events import (
     MenuOptionChange,
     ChangeStatus,
-    Statusmessage,
-    ModifyDue,
-    FocusTodo,
+    Notify,
     ModifyTopic,
-    SortNodes,
     ApplySortMethod,
-    UpdateDate,
     HighlightNode,
 )
 
 __all__ = [
     "MenuOptionChange",
     "ChangeStatus",
-    "Statusmessage",
-    "ModifyDue",
-    "FocusTodo",
+    "Notify",
     "ModifyTopic",
-    "SortNodes",
     "ApplySortMethod",
-    "UpdateDate",
     "HighlightNode",
 ]

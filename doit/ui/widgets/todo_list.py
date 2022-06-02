@@ -1,10 +1,10 @@
+import re
 from datetime import datetime
 from typing import Callable
 from rich.console import RenderableType
 from rich.text import Text
-from rich.tree import Tree
 from textual import events
-from textual.widgets import TreeNode, NodeID
+from textual.widgets import TreeNode
 from textual_extras.widgets.text_input import View
 
 from doit.ui.widgets.nested_list_edit import NestedListEdit
@@ -32,7 +32,7 @@ class TodoList(NestedListEdit):
             style_editing="bold cyan",
             style_unfocus="bold grey50",
         )
-        self.ok = False
+        self.focused = None
 
     async def _sort_by_arrangement(self, seq: list[int]):
 
@@ -108,33 +108,22 @@ class TodoList(NestedListEdit):
 
         return year, month, day
 
-    def update_date(self, date):
-        self.nodes[self.highlighted].data.due = date
-
     def render(self):
-        # if self.ok:
-        #     tree = Tree("")
-        #     tree.hide_root = True
-        #     tree.expanded = True
-        #     for i in self.nodes.values():
-        #         if "a" in i.data.about.value:
-        #             tree.add(self.render_node(i))
-        #
-        #     return tree
-
         return self._tree
 
     async def focus_node(self, part="about", status="INSERT") -> None:
+        self.focused = part
         await self.post_message(ChangeStatus(self, status))
         await super().focus_node(part)
+        self.prev_value = self.nodes[self.highlighted].data.due.value
 
     async def unfocus_node(self):
         await self.post_message(ChangeStatus(self, "NORMAL"))
         await super().unfocus_node()
 
-    async def modify_due_status(self, event: ModifyDue):
+    async def modify_due_status(self, status: str):
         node = self.nodes[self.highlighted]
-        node.data.status = event.status
+        node.data.status = status
 
         parent = node.parent
         if parent and parent != self.root:
@@ -142,7 +131,7 @@ class TodoList(NestedListEdit):
                 parent.data.status = "COMPLETED"
 
         elif parent == self.root:
-            if event.status == "COMPLETED":
+            if status == "COMPLETED":
                 for i in node.children:
                     i.data.status = "COMPLETED"
 
@@ -153,7 +142,7 @@ class TodoList(NestedListEdit):
             match event.key:
                 case "escape":
                     await self.unfocus_node()
-                    await self.check_node_about()
+                    await self.check_node()
                 case _:
                     await self.send_key_to_selected(event)
 
@@ -191,12 +180,67 @@ class TodoList(NestedListEdit):
         self.refresh()
 
     async def mark_complete(self):
-        await self.post_message(ModifyDue(self, "COMPLETED"))
+        await self.modify_due_status("COMPLETED")
 
-    async def check_node_about(self):
-        node = self.nodes[self.highlighted]
-        if not str(node.data.about.render()).strip():
-            await self.emit(events.Key(self, "x"))
+    async def check_node(self):
+        match self.focused:
+            case "about":
+                node = self.nodes[self.highlighted]
+                if not str(node.data.about.render()).strip():
+                    await self.emit(events.Key(self, "x"))
+                    return
+            case "due":
+                date = self.nodes[self.highlighted].data.due.value
+
+                if len(date) == 10 and re.findall("^\d\d-\d\d-\d\d\d\d$", date):
+                    if not self._is_valid_date(date):
+                        await self.post_message(
+                            Notify(self, message="Please enter a valid date")
+                        )
+                    else:
+                        await self.post_message(
+                            Notify(self, message="You due date was updated")
+                        )
+                        await self.update_due_status()
+                        return
+
+                else:
+                    await self.post_message(
+                        Notify(
+                            self,
+                            message="Invalid date format! Enter in format: dd-mm-yyyy",
+                        )
+                    )
+
+                self.nodes[self.highlighted].data.due.value = self.prev_value
+
+        self.focused = None
+        self.refresh()
+
+    def _is_valid_date(self, date: str) -> bool:
+        try:
+            datetime(*self._parse_date(date))
+            return True
+        except ValueError:
+            return False
+
+    def _is_expired(self, date):
+        present = datetime.now()
+        due = datetime(*self._parse_date(date))
+
+        return due < present
+
+    async def update_due_status(self):
+        date = self.nodes[self.highlighted].data.due.value
+        status = self.nodes[self.highlighted].data.status
+
+        if status == "COMPLETED":
+            return
+
+        if self._is_expired(date):
+            await self.modify_due_status('OVERDUE')
+        else:
+            await self.modify_due_status('PENDING')
 
     def _get_entry(self):
         entry = NodeDataTye()
@@ -204,7 +248,7 @@ class TodoList(NestedListEdit):
         entry.due.view = View(0, percentage(30, self.size.width) - 6)
         return entry
 
-    async def reach_to_node(self, id: NodeID):
+    async def reach_to_node(self, id):
         try:
             id = id.id
         except:

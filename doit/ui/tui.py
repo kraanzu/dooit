@@ -10,14 +10,12 @@ from doit.ui.events.events import (
     ApplySortMethod,
     HighlightNode,
     ModifyTopic,
-    SortNodes,
-    UpdateDate,
 )
 from doit.ui.widgets.search_tree import SearchTree
 from doit.ui.widgets.sort_options import SortOptions
 
 
-from .events import ChangeStatus, Statusmessage, ModifyDue
+from .events import ChangeStatus, Notify
 from ..ui.widgets import (
     Navbar,
     StatusBar,
@@ -268,26 +266,16 @@ class Doit(App):
         self.status_bar.set_status(status)
         await self.reset_screen()
 
-    # Ik this naming is bad but idk `StatusMessage` was not working :(
-    async def handle_statusmessage(self, event: Statusmessage):
+    async def handle_notify(self, event: Notify):
         self.status_bar.set_message(event.message)
 
     async def on_list_item_selected(self, event: ListItemSelected):
         self.current_menu = event.selected
         await self.reset_screen()
 
-    async def handle_modify_due(self, event: ModifyDue):
-        await self.todo_list.modify_due_status(event)
-
     async def handle_modify_topic(self, event: ModifyTopic):
         self.todo_lists[event.new] = self.todo_lists[event.old]
         del self.todo_lists[event.old]
-
-    async def handle_update_date(self, event: UpdateDate):
-        self.todo_list.update_date(event.date)
-
-    async def handle_sort_nodes(self, event: SortNodes):
-        await self.todo_list._sort_by_arrangement(event.arrangement)
 
     async def handle_apply_sort_method(self, event: ApplySortMethod):
         await self.todo_list.sort_by(event.method)

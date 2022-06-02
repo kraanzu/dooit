@@ -6,7 +6,8 @@ from textual_extras.events.events import ListItemSelected
 
 from doit.ui.widgets.minimal_scrollview import MinimalScrollView
 
-from doit.ui.events.events import ModifyTopic, SortNodes, UpdateDate
+from doit.ui.events.events import ApplySortMethod, ModifyTopic, SortNodes, UpdateDate
+from doit.ui.widgets.sort_options import SortOptions
 
 
 from .events import ChangeStatus, Statusmessage, ModifyDue
@@ -45,6 +46,9 @@ class Doit(App):
         self.todo_scroll = dict()
         self.status_bar = StatusBar()
 
+        self.sort_menu = SortOptions(options=["name", "date", "urgency", "status"])
+        # self.sort_menu.visible = False
+
     async def reset_screen(self):
         await self._clear_screen()
         await self.setup_grid()
@@ -71,18 +75,28 @@ class Doit(App):
         self.grid.add_column("0", fraction=20)
         self.grid.add_column("sep1", fraction=1)
         self.grid.add_column("sep2", fraction=1)
-        self.grid.add_column("1", fraction=45)
+        self.grid.add_column("1", fraction=77)
         self.grid.add_column("sep3", fraction=1)
-        self.grid.add_column("sep4", fraction=1)
-        self.grid.add_column("2", fraction=17)
-        self.grid.add_column("sep5", fraction=1)
-        self.grid.add_column("sep6", fraction=1)
-        self.grid.add_column("3", fraction=10)
-        self.grid.add_column("sep7", fraction=1)
+
+        self.menu_grid = await self.view.dock_grid(z=1)
+        self.menu_grid.add_column("_1", fraction=30)
+        self.menu_grid.add_column("mid", fraction=40)
+        self.menu_grid.add_column("_2", fraction=30)
+
+        self.menu_grid.add_row("_1", fraction=30)
+        self.menu_grid.add_row("mid", fraction=40)
+        self.menu_grid.add_row("_2", fraction=30)
+
+        self.menu_grid.add_areas(menu="mid,mid")
+        self.menu_grid.place(menu=self.sort_menu)
+        # self.sort_menu.vi
+
+    async def toggle_sort_option(self):
+        self.sort_menu.visible = not self.sort_menu.visible
 
     def setup_widgets(self):
 
-        areas = {"nav": "0,a", "todo": "1-start|3-end,a"}
+        areas = {"nav": "0,a", "todo": "1,a"}
 
         self.grid.add_areas(**areas)
         placements = {
@@ -95,36 +109,36 @@ class Doit(App):
         # WIDGET SPACES
         middle_areas = dict()
         middle_areas["0b"] = "0,b"
-        middle_areas["1b"] = "1-start|3-end,b"
+        middle_areas["1b"] = "1,b"
 
         self.grid.add_areas(**middle_areas)
 
         # WIDGET BORDERS
 
         # MIDDLE SEPERATORS
-        middle_areas = {f"middle{i}": f"sep{i},b" for i in range(8)}
+        middle_areas = {f"middle{i}": f"sep{i},b" for i in range(4)}
         self.grid.add_areas(**middle_areas)
 
         # TOP SEPERATORS
-        top_areas = {f"top{i}": f"{i},sep0" for i in range(4)}
+        top_areas = {f"top{i}": f"{i},sep0" for i in range(2)}
         self.grid.add_areas(**top_areas)
 
         # BOTTOM SEPERATORS
-        bottom_areas = {f"bottom{i}": f"{i},sep1" for i in range(4)}
+        bottom_areas = {f"bottom{i}": f"{i},sep1" for i in range(2)}
         self.grid.add_areas(**bottom_areas)
 
         # TOP CONNECTORS
-        top_connector_areas = {f"top_connector{i}": f"sep{i},sep0" for i in range(8)}
+        top_connector_areas = {f"top_connector{i}": f"sep{i},sep0" for i in range(4)}
         self.grid.add_areas(**top_connector_areas)
 
         # BOTTOM CONNECTORS
         bottom_connector_areas = {
-            f"bottom_connector{i}": f"sep{i},sep1" for i in range(8)
+            f"bottom_connector{i}": f"sep{i},sep1" for i in range(4)
         }
         self.grid.add_areas(**bottom_connector_areas)
 
         borders = []
-        for i in range(4):
+        for i in range(2):
             borders.append(
                 [
                     f"middle{2 * i}",
@@ -138,30 +152,22 @@ class Doit(App):
                 ]
             )
 
-        self.navbar_box = self.make_box(
-            borders[0],
-        )
-        self.todos_box = self.make_box(borders[1], right=False)
-        self.due_date_box = self.make_box(borders[2], left=False, right=False)
-        self.urgency_box = self.make_box(borders[3], left=False)
+        self.navbar_box = self.make_box(borders[0])
+        self.todos_box = self.make_box(borders[1])
 
     def make_box(
         self,
         areas,
-        left: bool = True,
-        top: bool = True,
-        bottom: bool = True,
-        right: bool = True,
     ):
         box = [
-            VerticalLine() if left else Empty(),
-            Connector1() if left and top else HorizontalLine(),
-            HorizontalLine() if top else Empty(),
-            Connector2() if top and right else HorizontalLine(),
-            VerticalLine() if right else Empty(),
-            Connector4() if right and bottom else HorizontalLine(),
-            HorizontalLine() if bottom else Empty(),
-            Connector3() if bottom and left else HorizontalLine(),
+            VerticalLine(),
+            Connector1(),
+            HorizontalLine(),
+            Connector2(),
+            VerticalLine(),
+            Connector4(),
+            HorizontalLine(),
+            Connector3(),
         ]
 
         for area, widget in zip(areas, box):
@@ -184,7 +190,7 @@ class Doit(App):
         }
         self.grid.place(**placements)
 
-        self.grid.add_areas(**{"bar": "0-start|3-end,bar"})
+        self.grid.add_areas(**{"bar": "0-start|1-end,bar"})
         self.grid.place(bar=self.status_bar)
 
     def change_current_tab(self, new_tab: str) -> None:
@@ -202,6 +208,15 @@ class Doit(App):
         self.current_tab.highlight()
 
     async def on_key(self, event: events.Key):
+
+        if event.key == "s":
+            await self.toggle_sort_option()
+            return
+
+        if self.sort_menu.visible:
+            await self.sort_menu.key_press(event)
+            return
+
         self.status_bar.clear_message()
 
         if event.key == "ctrl+i":
@@ -249,3 +264,7 @@ class Doit(App):
 
     async def handle_sort_nodes(self, event: SortNodes):
         await self.todo_list._sort_by_arrangement(event.arrangement)
+
+    async def handle_apply_sort_method(self, event: ApplySortMethod):
+        await self.todo_list.sort_by(event.method)
+        self.sort_menu.visible = False

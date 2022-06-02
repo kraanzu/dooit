@@ -1,4 +1,5 @@
 from typing import Literal
+from textual.widgets import NodeID
 from textual.message import Message, MessageTarget
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH"]
@@ -56,3 +57,9 @@ class UpdateDate(Message, bubble=True):
     def __init__(self, sender: MessageTarget, date: str) -> None:
         super().__init__(sender)
         self.date = date
+
+
+class HighlightNode(Message, bubble=True):
+    def __init__(self, sender: MessageTarget, id: NodeID) -> None:
+        super().__init__(sender)
+        self.id = id

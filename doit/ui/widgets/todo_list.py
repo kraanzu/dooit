@@ -4,7 +4,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from rich.tree import Tree
 from textual import events
-from textual.widgets import TreeNode
+from textual.widgets import TreeNode, NodeID
 from textual_extras.widgets.text_input import View
 
 from doit.ui.widgets.nested_list_edit import NestedListEdit
@@ -203,6 +203,22 @@ class TodoList(NestedListEdit):
         entry.about.view = View(0, percentage(60, self.size.width) - 6)
         entry.due.view = View(0, percentage(30, self.size.width) - 6)
         return entry
+
+    async def reach_to_node(self, id: NodeID):
+        try:
+            id = id.id
+        except:
+            pass
+
+        if self.nodes[id] in self.root.children:
+            await self.move_to_top()
+            while self.highlighted != id:
+                await self.cursor_down()
+        else:
+            await self.reach_to_node(self.nodes[id].parent)
+            await self.nodes[self.highlighted].expand()
+            while self.highlighted != id:
+                await self.cursor_down()
 
     async def add_child(self):
         node = self.nodes[self.highlighted]

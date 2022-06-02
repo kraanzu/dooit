@@ -1,12 +1,13 @@
 from textual import events
 from textual_extras.widgets.single_level_tree_edit import SimpleInput
-from doit.ui.events.events import ChangeStatus
+from doit.ui.events.events import ChangeStatus, HighlightNode
 from doit.ui.widgets.todo_list import TodoList
+from textual.widgets import NodeID, TreeNode
 
 
 class SearchTree(TodoList):
     async def set_values(self, nodes):
-        self.all_nodes = list(nodes)
+        self.all_nodes: dict[NodeID, TreeNode] = nodes
         self.search = SimpleInput()
         self.searching = True
         await self.refresh_search()
@@ -17,11 +18,19 @@ class SearchTree(TodoList):
         self.cursor_line = 0
         self.highlighted = self.root.id
 
-        for i in self.all_nodes:
+        for id, i in self.all_nodes.items():
             if i.data.about.value and self.search.value in i.data.about.value:
+                i.data.id = id
                 await self.root.add("", i.data)
 
         self.refresh()
+
+    async def find_id(self) -> NodeID:
+        uuid = self.nodes[self.highlighted].data.uuid
+        for id, i in self.all_nodes.items():
+            if i.data.uuid == uuid:
+                return id
+        exit()
 
     async def key_press(self, event: events.Key):
         if self.searching:
@@ -51,6 +60,6 @@ class SearchTree(TodoList):
                 case "G":
                     await self.move_to_bottom()
                 case "enter":
-                    pass
-
+                    await self.post_message(ChangeStatus(self, "NORMAL"))
+                    await self.post_message(HighlightNode(self, await self.find_id()))
         self.refresh()

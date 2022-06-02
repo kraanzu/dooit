@@ -4,6 +4,15 @@ from textual_extras.widgets import TextInput
 from rich.text import TextType
 from textual_extras.events import TextChanged
 from textual_extras.widgets.single_level_tree_edit import SimpleInput
+from string import printable as chars
+from random import choice
+
+
+def ok():
+    s = ""
+    for _ in range(32):
+        s += choice(chars)
+    return s
 
 
 class Entry(TextInput):
@@ -20,6 +29,7 @@ class Entry(TextInput):
         self.status = "PENDING"
         self.due = SimpleInput()
         self.focused = None
+        self.uuid = ok()
 
     def make_focus(self, part: Literal["about", "due"]):
         eval(f"self.{part}.on_focus()")

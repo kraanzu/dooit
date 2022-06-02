@@ -8,6 +8,7 @@ from .events import (
     SortNodes,
     ApplySortMethod,
     UpdateDate,
+    HighlightNode,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "SortNodes",
     "ApplySortMethod",
     "UpdateDate",
+    "HighlightNode",
 ]

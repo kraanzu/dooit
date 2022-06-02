@@ -6,7 +6,13 @@ from textual_extras.events.events import ListItemSelected
 
 from doit.ui.widgets.minimal_scrollview import MinimalScrollView
 
-from doit.ui.events.events import ApplySortMethod, ModifyTopic, SortNodes, UpdateDate
+from doit.ui.events.events import (
+    ApplySortMethod,
+    HighlightNode,
+    ModifyTopic,
+    SortNodes,
+    UpdateDate,
+)
 from doit.ui.widgets.search_tree import SearchTree
 from doit.ui.widgets.sort_options import SortOptions
 
@@ -231,9 +237,10 @@ class Doit(App):
                     await self.search_tree.key_press(event)
                     self.status_bar.set_message(self.search_tree.search.value)
                     self.refresh()
+
                 case "NORMAL":
                     if event.key == "/":
-                        await self.search_tree.set_values(self.todo_list.nodes.values())
+                        await self.search_tree.set_values(self.todo_list.nodes)
                         await self.handle_change_status(
                             ChangeStatus(self, "SEARCH"),
                         )
@@ -259,7 +266,7 @@ class Doit(App):
         status = event.status
         self.current_status = status
         self.status_bar.set_status(status)
-        self.refresh()
+        await self.reset_screen()
 
     # Ik this naming is bad but idk `StatusMessage` was not working :(
     async def handle_statusmessage(self, event: Statusmessage):
@@ -285,3 +292,6 @@ class Doit(App):
     async def handle_apply_sort_method(self, event: ApplySortMethod):
         await self.todo_list.sort_by(event.method)
         self.sort_menu.visible = False
+
+    async def handle_highlight_node(self, event: HighlightNode):
+        await self.todo_list.reach_to_node(event.id)

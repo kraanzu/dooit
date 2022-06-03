@@ -34,7 +34,7 @@ class Navbar(NestedListEdit):
     def render_node(self, node: TreeNode) -> RenderableType:
 
         if not hasattr(node.data, "view"):
-            node.data.view = View(0, self.size.width - 6)
+            node.data.view = View(0, self._get_width(node.parent == self.root))
 
         return self.render_custom_node(node)
 
@@ -58,9 +58,16 @@ class Navbar(NestedListEdit):
             await self.emit(ListItemSelected(self, self._get_node_path()))
         await super().key_press(event)
 
-    def get_ibox(self):
+    def _get_width(self, child: bool):
+        width = self.size.width - 6
+        if child:
+            width -= 3
+        return width
+
+    def get_ibox(self, child: bool = False):
         ibox = SimpleInput()
-        ibox.view = View(0, self.size.width - 6)
+        width = self._get_width(child)
+        ibox.view = View(0, width)
         return ibox
 
     async def add_child(self) -> None:
@@ -71,7 +78,10 @@ class Navbar(NestedListEdit):
         node = self.nodes[self.highlighted]
         if node == self.root or node.parent == self.root:
             node = self.nodes[self.highlighted]
-            await node.add("child", self.get_ibox())
+            await node.add(
+                "child",
+                self.get_ibox(child=node != self.root),
+            )
             await node.expand()
             await self.reach_to_last_child()
             await self.focus_node()
@@ -84,7 +94,7 @@ class Navbar(NestedListEdit):
         """
 
         if self.nodes[self.highlighted].parent == self.root:
-            await self.root.add("child", self.get_ibox())
+            await self.root.add("child", self.get_ibox(child=False))
             await self.move_to_bottom()
         else:
             await self.reach_to_parent()

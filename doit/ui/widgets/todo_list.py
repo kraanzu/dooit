@@ -241,10 +241,10 @@ class TodoList(NestedListEdit):
         else:
             await self.modify_due_status("PENDING")
 
-    def _get_entry(self) -> Entry:
+    def _get_entry(self, child: bool) -> Entry:
         entry = NodeDataTye()
-        entry.about.view = View(0, percentage(60, self.size.width) - 6)
-        entry.due.view = View(0, percentage(30, self.size.width) - 6)
+        entry.about.view = View(0, percentage(60, self.size.width) - 6 - (child * 3))
+        entry.due.view = View(0, percentage(30, self.size.width) - 6 - (child * 3))
         return entry
 
     async def reach_to_node(self, id: TreeNode | NodeID) -> None:
@@ -265,14 +265,14 @@ class TodoList(NestedListEdit):
     async def add_child(self) -> None:
         node = self.nodes[self.highlighted]
         if node == self.root or node.parent == self.root:
-            await node.add("child", self._get_entry())
+            await node.add("child", self._get_entry(node != self.root))
             await node.expand()
             await self.reach_to_last_child()
             await self.focus_node()
 
     async def add_sibling(self) -> None:
         if self.nodes[self.highlighted].parent == self.root:
-            await self.root.add("child", self._get_entry())
+            await self.root.add("child", self._get_entry(False))
             await self.move_to_bottom()
         else:
             await self.reach_to_parent()
@@ -323,13 +323,7 @@ class TodoList(NestedListEdit):
 
     def render_about(self, node, _) -> RenderableType:
         # Setting up text
-        label = (
-            Text.from_markup(
-                str(node.data.about.render()),
-            )
-            or Text()
-        )
-
+        label = Text.from_markup(str(node.data.about.render())) or Text()
         label = self._highlight_node(node, label)
 
         # setup milestone

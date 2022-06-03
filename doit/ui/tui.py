@@ -14,6 +14,7 @@ class Doit(App):
         self.current_menu = ""
         await self.init_vars()
         await self.reset_screen()
+
         for widget in self.navbar_box:
             widget.toggle_highlight()
 
@@ -56,45 +57,33 @@ class Doit(App):
 
         if isinstance(self.view.layout, DockLayout):
             self.view.layout.docks.clear()
+
         self.view.widgets.clear()
+
+    async def _make_grid(self, grid):
+        grid.add_row("a", size=3)
+        grid.add_row("sep0", fraction=1)
+        grid.add_row("b", fraction=95)
+        grid.add_row("sep1", fraction=1)
+        grid.add_row("bar", fraction=3)
+
+        grid.add_column("sep0", fraction=1)
+        grid.add_column("0", fraction=20)
+        grid.add_column("sep1", fraction=1)
+        grid.add_column("sep2", fraction=1)
+        grid.add_column("1", fraction=77)
+        grid.add_column("sep3", fraction=1)
 
     async def setup_grid(self) -> None:
         """
         Handle grid placing
         """
 
-        self.grid = await self.view.dock_grid()
-        self.grid.add_row("a", size=3)
-        self.grid.add_row("sep0", fraction=1)
-        self.grid.add_row("b", fraction=95)
-        self.grid.add_row("sep1", fraction=1)
-        self.grid.add_row("bar", fraction=3)  # A bar at the bottom for looooks :)
-
-        self.grid.add_column("sep0", fraction=1)  # seperator lines
-        self.grid.add_column("0", fraction=20)
-        self.grid.add_column("sep1", fraction=1)
-        self.grid.add_column("sep2", fraction=1)
-        self.grid.add_column("1", fraction=77)
-        self.grid.add_column("sep3", fraction=1)
+        self.grid = await self.view.dock_grid(z=2)
+        await self._make_grid(self.grid)
 
         self.menu_grid = await self.view.dock_grid(z=1)
-        self.menu_grid.add_column("_1", fraction=30)
-        self.menu_grid.add_column("mid", fraction=40)
-        self.menu_grid.add_column("_2", fraction=30)
-
-        self.menu_grid.add_row("_1", fraction=30)
-        self.menu_grid.add_row("mid", fraction=40)
-        self.menu_grid.add_row("_2", fraction=30)
-
-        self.menu_grid.add_areas(menu="mid,mid")
-        self.menu_grid.place(menu=self.sort_menu)
-
-    async def toggle_sort_option(self) -> None:
-        """
-        Toggle sort menu
-        """
-
-        self.sort_menu.visible = not self.sort_menu.visible
+        await self._make_grid(self.menu_grid)
 
     def setup_widgets(self) -> None:
         """
@@ -160,6 +149,9 @@ class Doit(App):
         self.navbar_box = self._make_box(borders[0])
         self.todos_box = self._make_box(borders[1])
 
+        # SORT MENU
+        self.menu_grid.add_areas(menu="1,b")
+
     def _make_box(self, areas: dict[str, str]) -> list[Widget]:
         """
         Make border for trees
@@ -205,15 +197,15 @@ class Doit(App):
         self.grid.add_areas(**{"bar": "0-start|1-end,bar"})
         self.grid.place(bar=self.status_bar)
 
+        self.menu_grid.place(menu=self.sort_menu)
+
     def change_current_tab(self, new_tab: str) -> None:
         """
         Changes the current tab
         """
 
         self.current_tab.lowlight()
-        for widget in self.navbar_box:
-            widget.toggle_highlight()
-        for widget in self.todos_box:
+        for widget in self.navbar_box + self.todos_box:
             widget.toggle_highlight()
 
         match new_tab:
@@ -223,6 +215,11 @@ class Doit(App):
                 self.current_tab = self.todos_heading
 
         self.current_tab.highlight()
+
+    async def show_sort_menu(self):
+        await self.handle_change_status(ChangeStatus(self, "SORT"))
+        self.sort_menu.visible = True
+        self.refresh()
 
     async def on_key(self, event: events.Key) -> None:
 
@@ -244,6 +241,9 @@ class Doit(App):
                     self.status_bar.set_message(self.search_tree.search.value)
                     self.refresh()
 
+                case "SORT":
+                    await self.sort_menu.key_press(event)
+
                 case "NORMAL":
                     if event.key == "/":
                         await self.search_tree.set_values(self.todo_list.nodes)
@@ -253,10 +253,7 @@ class Doit(App):
                         await self.reset_screen()
 
                     elif event.key == "s":
-                        await self.toggle_sort_option()
-
-                    elif self.sort_menu.visible:
-                        await self.sort_menu.key_press(event)
+                        await self.show_sort_menu()
 
                     else:
                         await self.todo_list.key_press(event)
@@ -271,7 +268,8 @@ class Doit(App):
         status = event.status
         self.current_status = status
         self.status_bar.set_status(status)
-        await self.reset_screen()
+        if status in ["SEARCH"]:
+            await self.reset_screen()
 
     async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)
@@ -286,7 +284,6 @@ class Doit(App):
 
     async def handle_apply_sort_method(self, event: ApplySortMethod) -> None:
         await self.todo_list.sort_by(event.method)
-        self.sort_menu.visible = False
 
     async def handle_highlight_node(self, event: HighlightNode) -> None:
         await self.todo_list.reach_to_node(event.id)

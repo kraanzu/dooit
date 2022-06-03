@@ -8,7 +8,7 @@ from rich.style import StyleType
 from textual.widget import Widget
 from textual import events
 
-from doit.ui.events.events import ApplySortMethod
+from doit.ui.events.events import ApplySortMethod, ChangeStatus
 
 
 class SortOptions(Widget):
@@ -20,8 +20,8 @@ class SortOptions(Widget):
         self,
         name: str | None = None,
         options: list[str] = [],
-        style_unfocused: StyleType = "",
-        style_focused: StyleType = "bold green",
+        style_unfocused: StyleType = "white",
+        style_focused: StyleType = "bold reverse green ",
         pad: bool = True,
         rotate: bool = False,
         wrap: bool = True,
@@ -40,6 +40,9 @@ class SortOptions(Widget):
     def highlight(self, id: int) -> None:
         self.highlighted = id
         self.refresh(layout=True)
+
+    async def hide(self):
+        await self.key_press(events.Key(self, "escape"))
 
     def move_cursor_down(self) -> None:
         """
@@ -82,6 +85,8 @@ class SortOptions(Widget):
         match event.key:
             case "escape":
                 self.visible = False
+                self.refresh()
+                await self.post_message(ChangeStatus(self, "NORMAL"))
             case "j" | "down":
                 self.move_cursor_down()
             case "k" | "up":
@@ -92,12 +97,7 @@ class SortOptions(Widget):
                 self.move_cursor_to_bottom()
             case "enter":
                 await self.emit(ApplySortMethod(self, self.options[self.highlighted]))
-
-    async def on_mouse_move(self, event: events.MouseMove) -> None:
-        """
-        Move the highlight along with mouse hover
-        """
-        self.highlight(event.style.meta.get("selected"))
+                await self.hide()
 
     def add_option(self, option: str) -> None:
         self.options.append(option)
@@ -106,40 +106,42 @@ class SortOptions(Widget):
     def render(self) -> RenderableType:
 
         # 1 borders + 1 space padding on each side
-        width = self.size.width - 4
-
         tree = Tree("")
         tree.hide_root = True
         tree.expanded = True
 
         for index, option in enumerate(self.options):
-            if isinstance(option, str):
-                option = Text(option)
+            label = Text(option)
+            match option:
+                case "name":
+                    label = Text("    ") + label
+                case "date":
+                    label = Text("    ") + label
+                case "urgency":
+                    label = Text("    ") + label
+                case "status":
+                    label = Text("    ") + label
 
-            option.pad_right(width - len(option) - 1)
-            option = Text(" ") + option
-
-            if self.wrap:
-                option.plain = option.plain[:width]
-
+            label.pad_right(self.size.width)
+            label.plain = label.plain.ljust(20)
             if index != self.highlighted:
-                option.stylize(self.style_unfocused)
+                label.stylize(self.style_unfocused)
             else:
-                option.stylize(self.style_focused)
+                label.stylize(self.style_focused)
 
             meta = {
                 "@click": f"click_label({index})",
                 "selected": index,
             }
-            option.apply_meta(meta)
-            tree.add(option)
+            label.apply_meta(meta)
+            tree.add(label)
 
         return self.render_panel(tree)
 
     def render_panel(self, tree):
         return Panel(
             Align.center(
-                Panel.fit(tree, width=15),
+                Panel.fit(tree, title="Sort By"),
                 vertical="middle",
             ),
             box=MINIMAL,
@@ -148,3 +150,4 @@ class SortOptions(Widget):
     async def action_click_label(self, id):
         self.highlight(id)
         await self.emit(ApplySortMethod(self, self.options[self.highlighted]))
+        await self.hide()

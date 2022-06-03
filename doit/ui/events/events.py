@@ -2,7 +2,7 @@ from typing import Literal
 from textual.widgets import NodeID
 from textual.message import Message, MessageTarget
 
-StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH"]
+StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT"]
 SortMethodType = Literal["name", "status", "date", "urgency"]
 
 

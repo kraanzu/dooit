@@ -50,6 +50,8 @@ class StatusBar(Widget):
                 self.color = "yellow"
             case "SEARCH":
                 self.color = "magenta"
+            case "SORT":
+                self.color = "green"
         self.refresh()
 
     def render(self) -> RenderableType:

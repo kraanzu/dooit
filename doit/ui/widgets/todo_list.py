@@ -95,7 +95,7 @@ class TodoList(NestedListEdit):
             else:
                 return datetime(*self._parse_date(date))
 
-        await self._sort(func=lambda node: f(node.data.due))
+        await self._sort(func=lambda node: f(node.data.due.value))
 
     async def sort_by(self, method: str) -> None:
         await eval(f"self.sort_by_{method}()")

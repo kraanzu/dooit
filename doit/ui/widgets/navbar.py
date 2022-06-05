@@ -6,8 +6,6 @@ from textual_extras.events import ListItemSelected
 from textual_extras.widgets import SimpleInput
 from textual_extras.widgets.text_input import View
 
-from doit.ui.events.events import Notify
-
 from ...ui.events import ModifyTopic
 from ...ui.widgets import Entry, NestedListEdit
 
@@ -62,7 +60,6 @@ class Navbar(NestedListEdit):
     async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":
             await self.emit(ListItemSelected(self, self._get_node_path()))
-            await self.post_message(Notify(self, self._get_node_path()))
 
         await super().key_press(event)
 

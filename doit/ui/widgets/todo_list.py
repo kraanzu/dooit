@@ -111,6 +111,9 @@ class TodoList(NestedListEdit):
         return self._tree
 
     async def focus_node(self, part="about", status="INSERT") -> None:
+        if self.highlighted == self.root.id:
+            return
+
         self.focused = part
         await self.post_message(ChangeStatus(self, status))
         await super().focus_node(part)

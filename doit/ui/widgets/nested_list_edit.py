@@ -50,6 +50,9 @@ class NestedListEdit(TreeControl):
         self.editing = False
 
     async def remove_node(self, id: NodeID | None = None) -> None:
+        if id == self.root.id:
+            return
+
         node = self.nodes[id or self.highlighted]
 
         if node.expanded:
@@ -176,9 +179,11 @@ class NestedListEdit(TreeControl):
                 case "a":
                     await self.add_sibling()
                 case "i":
-                    await self.focus_node()
+                    if self.highlighted != self.root.id:
+                        await self.focus_node()
                 case "x":
-                    await self.remove_node()
+                    if self.highlighted != self.root.id:
+                        await self.remove_node()
 
         self.refresh()
 

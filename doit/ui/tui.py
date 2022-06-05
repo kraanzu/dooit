@@ -295,12 +295,16 @@ class Doit(App):
 
     async def on_list_item_selected(self, event: ListItemSelected) -> None:
         self.current_menu = event.selected
+        self.status_bar.set_message(f"{self.current_menu in self.todo_lists}")
         await self.reset_screen()
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:
+        if event.old == event.new:
+            return
+
         self.todo_lists[event.new] = self.todo_lists[event.old]
         self.todo_lists_copy[event.new] = self.todo_lists_copy[event.old]
-        if event.old != '/':
+        if event.old != "/":
             del self.todo_lists[event.old]
             del self.todo_lists_copy[event.old]
 
@@ -309,4 +313,3 @@ class Doit(App):
 
     async def handle_highlight_node(self, event: HighlightNode) -> None:
         await self.todo_list.reach_to_node(event.id)
-

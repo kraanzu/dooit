@@ -241,6 +241,12 @@ class TodoList(NestedListEdit):
         else:
             await self.modify_due_status("PENDING")
 
+    def _about_width(self, child: bool):
+        return percentage(60, self.size.width) - 6 - (child * 3)
+
+    def _due_width(self, child: bool):
+        return percentage(30, self.size.width) - 6 - (child * 3)
+
     def _get_entry(self, child: bool) -> Entry:
         entry = NodeDataTye()
         entry.about.view = View(0, percentage(60, self.size.width) - 6 - (child * 3))
@@ -323,7 +329,14 @@ class TodoList(NestedListEdit):
 
     def render_about(self, node, _) -> RenderableType:
         # Setting up text
-        label = Text.from_markup(str(node.data.about.value())) or Text()
+
+        width = self._about_width(node.parent != self.root)
+        if (
+            not hasattr(node.data.about, "view")
+        ) or node.data.about.view.end - node.data.about.view.start != width:
+            node.data.about.view = View(0, width)
+
+        label = Text.from_markup(str(node.data.about.render())) or Text()
         label = self._highlight_node(node, label)
 
         # setup milestone
@@ -352,6 +365,12 @@ class TodoList(NestedListEdit):
         return label
 
     def render_date(self, node: TreeNode, color) -> RenderableType:
+
+        width = self._due_width(node.parent != self.root)
+        if (
+            not hasattr(node.data.due, "view")
+        ) or node.data.due.view.end - node.data.due.view.start != width:
+            node.data.due.view = View(0, width)
 
         label = Text.from_markup(str(node.data.due.render())) or Text("Until You Die")
         label = self._highlight_node(node, label)

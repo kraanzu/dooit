@@ -36,10 +36,10 @@ class Navbar(NestedListEdit):
     def render_node(self, node: TreeNode) -> RenderableType:
 
         width = self._get_width(node.parent != self.root)
-        if not hasattr(node.data, "view"):
-            node.data.view = View(0, width)
-
-        if node.data.view.end - node.data.view.start != width:
+        if (
+            not hasattr(node.data, "view")
+            or node.data.view.end - node.data.view.start != width
+        ):
             node.data.view = View(0, width)
 
         return self.render_custom_node(node)
@@ -74,6 +74,7 @@ class Navbar(NestedListEdit):
 
     def get_ibox(self, child: bool = False):
         ibox = SimpleInput()
+        return ibox
         width = self._get_width(child)
         ibox.view = View(0, width)
         return ibox

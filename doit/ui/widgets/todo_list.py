@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from typing import Callable
+from rich.align import Align
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
@@ -12,6 +13,12 @@ from ...ui.widgets.entry import Entry
 from ...ui.events import *
 
 NodeDataTye = Entry
+
+EMPTY_TODO = """
+              [b blue][/b blue]
+        [d white]Wow! so empty?
+You can add todo by pressing '[b green]a[/b green]'[/d white]
+"""
 
 
 def percentage(percent, total) -> int:
@@ -109,7 +116,13 @@ class TodoList(NestedListEdit):
         return year, month, day
 
     def render(self) -> RenderableType:
-        return self._tree
+        if self.root.tree.children:
+            return self._tree
+        else:
+            return Align.center(
+                EMPTY_TODO,
+                vertical="middle",
+            )
 
     async def focus_node(self, part="about", status="INSERT") -> None:
         if self.highlighted == self.root.id:

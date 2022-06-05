@@ -296,9 +296,11 @@ class Doit(App):
     # HANDLING EVENTS
     async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
+        reset = self.current_status == "SEARCH"
         self.current_status = status
         self.status_bar.set_status(status)
-        if status in ["SEARCH"]:
+
+        if reset:
             await self.reset_screen()
 
     async def handle_notify(self, event: Notify) -> None:

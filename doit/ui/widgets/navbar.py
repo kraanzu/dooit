@@ -1,7 +1,7 @@
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
-from textual.widgets import TreeNode
+from textual.widgets import TreeNode, NodeID
 from textual_extras.events import ListItemSelected
 from textual_extras.widgets import SimpleInput
 from textual_extras.widgets.text_input import View
@@ -20,6 +20,11 @@ class Navbar(NestedListEdit):
 
     def render(self) -> RenderableType:
         return self._tree
+
+    def highlight(self, id: NodeID) -> None:
+        if id != self.root.id:
+            pass
+        return super().highlight(id)
 
     def _get_node_path(self):
 
@@ -49,7 +54,7 @@ class Navbar(NestedListEdit):
 
     async def unfocus_node(self) -> None:
         await self.post_message(
-            ModifyTopic(self, self._last_path, self._get_node_path())
+            ModifyTopic(self, self._last_path, self._get_node_path()),
         )
         self.nodes[self.highlighted].data.on_blur()
         self.editing = False
@@ -59,9 +64,26 @@ class Navbar(NestedListEdit):
 
     async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":
-            await self.emit(ListItemSelected(self, self._get_node_path()))
+            await self.emit(
+                ListItemSelected(
+                    self,
+                    self._get_node_path(),
+                    focus=True,
+                )
+            )
+            self.refresh()
+            return
 
         await super().key_press(event)
+        if self.highlighted != self.root.id:
+            await self.emit(
+                ListItemSelected(
+                    self,
+                    self._get_node_path(),
+                    focus=False,
+                )
+            )
+        self.refresh()
 
     def _get_width(self, child: bool):
         width = self.size.width - 6

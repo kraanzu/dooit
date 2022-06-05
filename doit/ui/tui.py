@@ -90,7 +90,7 @@ class Doit(App):
         Handle grid placing
         """
 
-        self.grid = await self.view.dock_grid(z=2)
+        self.grid = await self.view.dock_grid()
         await self._make_grid(self.grid)
 
         self.menu_grid = await self.view.dock_grid(z=1)
@@ -193,12 +193,13 @@ class Doit(App):
         Re-place all the widgets
         """
 
-        if self.current_menu not in self.todo_lists:
+        if self.current_menu not in self.todo_lists.keys():
             self.todo_lists[self.current_menu] = TodoList()
             self.todo_lists_copy[self.current_menu] = TodoList()
 
         self.todo_list = self.todo_lists[self.current_menu]
         self.todo_list_copy = self.todo_lists_copy[self.current_menu]
+
         if self.current_menu not in self.todo_scroll:
             self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
 
@@ -221,14 +222,24 @@ class Doit(App):
         """
 
         self.current_tab.lowlight()
-        for widget in self.navbar_box + self.todos_box:
-            widget.toggle_highlight()
+
+        def dim(var):
+            for i in var:
+                i.dim()
+
+        def illuminate(var):
+            for i in var:
+                i.illuminate()
 
         match new_tab:
             case "navbar":
                 self.current_tab = self.navbar_heading
+                illuminate(self.navbar_box)
+                dim(self.todos_box)
             case "todos":
                 self.current_tab = self.todos_heading
+                dim(self.navbar_box)
+                illuminate(self.todos_box)
 
         self.current_tab.highlight()
 
@@ -295,18 +306,22 @@ class Doit(App):
 
     async def on_list_item_selected(self, event: ListItemSelected) -> None:
         self.current_menu = event.selected
-        self.status_bar.set_message(f"{self.current_menu in self.todo_lists}")
         await self.reset_screen()
+
+        if event.focus:
+            self.change_current_tab("todos")
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:
         if event.old == event.new:
             return
 
+        if event.old == "/":
+            return
+
         self.todo_lists[event.new] = self.todo_lists[event.old]
         self.todo_lists_copy[event.new] = self.todo_lists_copy[event.old]
-        if event.old != "/":
-            del self.todo_lists[event.old]
-            del self.todo_lists_copy[event.old]
+        del self.todo_lists[event.old]
+        del self.todo_lists_copy[event.old]
 
     async def handle_apply_sort_method(self, event: ApplySortMethod) -> None:
         await self.todo_list.sort_by(event.method)

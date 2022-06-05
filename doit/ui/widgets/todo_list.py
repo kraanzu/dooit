@@ -23,10 +23,11 @@ class TodoList(NestedListEdit):
     A Class that allows editing while displaying trees
     """
 
-    def __init__(self):
+    def __init__(self, name: str | None = None):
         super().__init__(
             "",
             Entry(),
+            name = name,
             style_focus="bold grey85",
             style_editing="bold cyan",
             style_unfocus="bold grey50",

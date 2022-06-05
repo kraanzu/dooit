@@ -21,6 +21,14 @@ class Border(Widget):
         self.highlight = not self.highlight
         self.refresh()
 
+    def illuminate(self) -> None:
+        self.highlight = True
+        self.refresh()
+
+    def dim(self) -> None:
+        self.highlight = False
+        self.refresh()
+
     def render(self) -> RenderableType:
         count = self.size.width if self.measure == "width" else self.size.height
         style = "bold blue" if self.highlight else "dim white"

@@ -1,4 +1,3 @@
-from collections import defaultdict
 from textual import events
 from textual.app import App
 from textual.layouts.dock import DockLayout
@@ -7,6 +6,9 @@ from textual_extras.events.events import ListItemSelected
 
 from .events import *
 from ..ui.widgets import *
+from ..utils import Parser
+
+parser = Parser()
 
 
 class Doit(App):
@@ -18,6 +20,11 @@ class Doit(App):
         for widget in self.navbar_box:
             widget.toggle_highlight()
 
+    async def action_quit(self) -> None:
+        await super().action_quit()
+        parser.save_todo(self.todo_lists_copy)
+        parser.save_topic(self.navbar_copy)
+
     async def init_vars(self) -> None:
         """
         Init class Vars
@@ -26,9 +33,13 @@ class Doit(App):
         self.navbar_heading = Box([" Menu"])
         self.todos_heading = Box([" Todos"])
 
-        self.navbar = Navbar()
+        self.navbar = parser.parse_topic()
+        self.navbar_copy = parser.parse_topic()  # copy for storage
+
         self.navbar_scroll = MinimalScrollView(self.navbar)
-        self.todo_lists = defaultdict(TodoList)
+        self.todo_lists = parser.parse_todo()
+        self.todo_lists_copy = parser.parse_todo()
+
         self.todo_scroll = dict()
         self.status_bar = StatusBar()
 
@@ -182,7 +193,12 @@ class Doit(App):
         Re-place all the widgets
         """
 
+        if self.current_menu not in self.todo_lists:
+            self.todo_lists[self.current_menu] = TodoList()
+            self.todo_lists_copy[self.current_menu] = TodoList()
+
         self.todo_list = self.todo_lists[self.current_menu]
+        self.todo_list_copy = self.todo_lists_copy[self.current_menu]
         if self.current_menu not in self.todo_scroll:
             self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
 
@@ -234,6 +250,7 @@ class Doit(App):
 
         if self.current_tab == self.navbar_heading:
             await self.navbar.key_press(event)
+            await self.navbar_copy.key_press(event)
         else:
             match self.current_status:
                 case "SEARCH":
@@ -257,9 +274,11 @@ class Doit(App):
 
                     else:
                         await self.todo_list.key_press(event)
+                        await self.todo_list_copy.key_press(event)
 
                 case _:
                     await self.todo_list.key_press(event)
+                    await self.todo_list_copy.key_press(event)
 
         self.refresh()
 
@@ -280,10 +299,14 @@ class Doit(App):
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:
         self.todo_lists[event.new] = self.todo_lists[event.old]
-        del self.todo_lists[event.old]
+        self.todo_lists_copy[event.new] = self.todo_lists_copy[event.old]
+        if event.old != '/':
+            del self.todo_lists[event.old]
+            del self.todo_lists_copy[event.old]
 
     async def handle_apply_sort_method(self, event: ApplySortMethod) -> None:
         await self.todo_list.sort_by(event.method)
 
     async def handle_highlight_node(self, event: HighlightNode) -> None:
         await self.todo_list.reach_to_node(event.id)
+

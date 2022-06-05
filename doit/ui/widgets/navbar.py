@@ -6,6 +6,8 @@ from textual_extras.events import ListItemSelected
 from textual_extras.widgets import SimpleInput
 from textual_extras.widgets.text_input import View
 
+from doit.ui.events.events import Notify
+
 from ...ui.events import ModifyTopic
 from ...ui.widgets import Entry, NestedListEdit
 
@@ -33,8 +35,12 @@ class Navbar(NestedListEdit):
 
     def render_node(self, node: TreeNode) -> RenderableType:
 
+        width = self._get_width(node.parent != self.root)
         if not hasattr(node.data, "view"):
-            node.data.view = View(0, self._get_width(node.parent == self.root))
+            node.data.view = View(0, width)
+
+        if node.data.view.end - node.data.view.start != width:
+            node.data.view = View(0, width)
 
         return self.render_custom_node(node)
 
@@ -56,6 +62,8 @@ class Navbar(NestedListEdit):
     async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":
             await self.emit(ListItemSelected(self, self._get_node_path()))
+            await self.post_message(Notify(self, self._get_node_path()))
+
         await super().key_press(event)
 
     def _get_width(self, child: bool):
@@ -103,6 +111,7 @@ class Navbar(NestedListEdit):
         self.refresh()
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
+        # return str(node.data.view)
 
         label = Text.from_markup(str(node.data.render()) or "")
         label.plain = label.plain[: self.size.width - 2]

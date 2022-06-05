@@ -323,7 +323,7 @@ class TodoList(NestedListEdit):
 
     def render_about(self, node, _) -> RenderableType:
         # Setting up text
-        label = Text.from_markup(str(node.data.about.render())) or Text()
+        label = Text.from_markup(str(node.data.about.value())) or Text()
         label = self._highlight_node(node, label)
 
         # setup milestone

@@ -25,14 +25,12 @@ class SortOptions(Widget):
         pad: bool = True,
         rotate: bool = False,
         wrap: bool = True,
-        panel: Panel = Panel(""),
     ) -> None:
         super().__init__(name)
         self.options = options
         self.style_unfocused = style_unfocused
         self.style_focused = style_focused
         self.pad = pad
-        self.panel = panel
         self.rotate = rotate
         self.wrap = wrap
         self.highlighted = 0
@@ -84,8 +82,8 @@ class SortOptions(Widget):
 
         match event.key:
             case "escape":
-                self.visible = False
-                self.refresh()
+                # self.visible = False
+                # self.refresh()
                 await self.post_message(ChangeStatus(self, "NORMAL"))
             case "j" | "down":
                 self.move_cursor_down()
@@ -117,10 +115,10 @@ class SortOptions(Widget):
                     label = Text("    ") + label
                 case "date":
                     label = Text("    ") + label
-                case "urgency":
-                    label = Text("    ") + label
                 case "status":
-                    label = Text("    ") + label
+                    label = Text("    ") + label
+                case "urgency":
+                    label = Text("    ") + label
 
             label.pad_right(self.size.width)
             label.plain = label.plain.ljust(20)
@@ -141,7 +139,11 @@ class SortOptions(Widget):
     def render_panel(self, tree):
         return Panel(
             Align.center(
-                Panel.fit(tree, title="Sort By"),
+                Panel.fit(
+                    tree,
+                    title="Sort By",
+                    width=20,
+                ),
                 vertical="middle",
             ),
             box=MINIMAL,

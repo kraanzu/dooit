@@ -46,7 +46,7 @@ class Doit(App):
         self.search_tree = SearchTree()
 
         self.sort_menu = SortOptions(options=["name", "date", "urgency", "status"])
-        self.sort_menu.visible = False
+        # self.sort_menu.visible = False
 
         self.current_status = "NORMAL"
         self.navbar_heading.highlight()
@@ -92,9 +92,6 @@ class Doit(App):
 
         self.grid = await self.view.dock_grid()
         await self._make_grid(self.grid)
-
-        self.menu_grid = await self.view.dock_grid(z=1)
-        await self._make_grid(self.menu_grid)
 
     def setup_widgets(self) -> None:
         """
@@ -160,9 +157,6 @@ class Doit(App):
         self.navbar_box = self._make_box(borders[0])
         self.todos_box = self._make_box(borders[1])
 
-        # SORT MENU
-        self.menu_grid.add_areas(menu="1,b")
-
     def _make_box(self, areas: dict[str, str]) -> list[Widget]:
         """
         Make border for trees
@@ -203,18 +197,19 @@ class Doit(App):
         if self.current_menu not in self.todo_scroll:
             self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
 
-        if self.current_status == "SEARCH":
-            main_area_widget = self.search_tree
-        else:
-            main_area_widget = self.todo_scroll[self.current_menu]
+        match self.current_status:
+            case "SEARCH":
+                main_area_widget = self.search_tree
+            case "SORT":
+                main_area_widget = self.sort_menu
+            case _:
+                main_area_widget = self.todo_scroll[self.current_menu]
 
         placements = {"0b": (self.navbar_scroll), "1b": main_area_widget}
         self.grid.place(**placements)
 
         self.grid.add_areas(**{"bar": "0-start|1-end,bar"})
         self.grid.place(bar=self.status_bar)
-
-        self.menu_grid.place(menu=self.sort_menu)
 
     def change_current_tab(self, new_tab: str) -> None:
         """
@@ -281,7 +276,9 @@ class Doit(App):
                         await self.reset_screen()
 
                     elif event.key == "s":
-                        await self.show_sort_menu()
+                        await self.handle_change_status(
+                            ChangeStatus(self, "SORT"),
+                        )
 
                     else:
                         await self.todo_list.key_press(event)
@@ -296,7 +293,7 @@ class Doit(App):
     # HANDLING EVENTS
     async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
-        reset = self.current_status == "SEARCH"
+        reset = (self.current_status in ["SEARCH", "SORT"]) or status == "SORT"
         self.current_status = status
         self.status_bar.set_status(status)
 

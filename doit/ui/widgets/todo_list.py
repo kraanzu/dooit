@@ -27,7 +27,7 @@ class TodoList(NestedListEdit):
         super().__init__(
             "",
             Entry(),
-            name = name,
+            name=name,
             style_focus="bold grey85",
             style_editing="bold cyan",
             style_unfocus="bold grey50",
@@ -85,7 +85,7 @@ class TodoList(NestedListEdit):
 
     async def sort_by_name(self) -> None:
         await self._sort(
-            func=lambda node: node.data.value,
+            func=lambda node: node.data.about.value,
         )
 
     # TODO
@@ -201,6 +201,7 @@ class TodoList(NestedListEdit):
                         await self.post_message(
                             Notify(self, message="Please enter a valid date")
                         )
+                        self.nodes[self.highlighted].data.due.value = self.prev_value
                     else:
                         await self.post_message(
                             Notify(self, message="You due date was updated")
@@ -215,7 +216,7 @@ class TodoList(NestedListEdit):
                         )
                     )
 
-                self.nodes[self.highlighted].data.due.value = self.prev_value
+                    self.nodes[self.highlighted].data.due.value = self.prev_value
 
         self.focused = None
         self.refresh()
@@ -376,7 +377,7 @@ class TodoList(NestedListEdit):
         ) or node.data.due.view.end - node.data.due.view.start != width:
             node.data.due.view = View(0, width)
 
-        label = Text.from_markup(str(node.data.due.render())) or Text("Until You Die")
+        label = Text.from_markup(str(node.data.due.render())) or Text("No Due Date")
         label = self._highlight_node(node, label)
         label = Text.from_markup(f"[{color}]    [/{color}]") + label
         return label
@@ -386,5 +387,5 @@ class TodoList(NestedListEdit):
         label = Text(str(node.data.urgency))
         label.plain = label.plain.rjust(3, "0")
         label = self._highlight_node(node, label)
-        label = Text.from_markup(f"[{color}] [/{color}]") + label
+        label = Text.from_markup(f"[{color}] [/{color}]") + label
         return label

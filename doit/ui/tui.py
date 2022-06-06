@@ -304,6 +304,9 @@ class Doit(App):
         self.status_bar.set_message(event.message)
 
     async def on_list_item_selected(self, event: ListItemSelected) -> None:
+        self.status_bar.set_message(
+            f"{event.selected} | {event.selected in self.todo_lists}"
+        )
         self.current_menu = event.selected
         await self.reset_screen()
 
@@ -311,16 +314,24 @@ class Doit(App):
             self.change_current_tab("todos")
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:
+        self.status_bar.set_message(
+            f"{event.old} to {event.new} | {event.old in self.todo_lists}"
+        )
+
         if event.old == event.new:
             return
 
-        if event.old == "/":
+        if event.old == "/" or event.old.endswith("//"):
             return
 
-        self.todo_lists[event.new] = self.todo_lists[event.old]
-        self.todo_lists_copy[event.new] = self.todo_lists_copy[event.old]
-        del self.todo_lists[event.old]
-        del self.todo_lists_copy[event.old]
+        self.todo_lists[event.new] = self.todo_lists.get(event.old, TodoList())
+        self.todo_lists_copy[event.new] = self.todo_lists_copy.get(
+            event.old, TodoList()
+        )
+
+        if event.old in self.todo_lists:
+            del self.todo_lists[event.old]
+            del self.todo_lists_copy[event.old]
 
     async def handle_apply_sort_method(self, event: ApplySortMethod) -> None:
         await self.todo_list.sort_by(event.method)

@@ -21,11 +21,6 @@ class Navbar(NestedListEdit):
     def render(self) -> RenderableType:
         return self._tree
 
-    def highlight(self, id: NodeID) -> None:
-        if id != self.root.id:
-            pass
-        return super().highlight(id)
-
     def _get_node_path(self):
 
         path = ""
@@ -75,7 +70,7 @@ class Navbar(NestedListEdit):
             return
 
         await super().key_press(event)
-        if self.highlighted != self.root.id:
+        if self.highlighted != self.root.id and not self.editing:
             await self.emit(
                 ListItemSelected(
                     self,

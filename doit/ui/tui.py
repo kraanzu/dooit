@@ -310,8 +310,7 @@ class Doit(App):
         self.current_menu = event.selected
         await self.reset_screen()
 
-        if event.focus:
-            self.change_current_tab("todos")
+        self.change_current_tab("todos" if event.focus else "navbar")
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:
         self.status_bar.set_message(

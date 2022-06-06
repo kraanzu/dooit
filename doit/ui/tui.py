@@ -30,8 +30,8 @@ class Doit(App):
         Init class Vars
         """
 
-        self.navbar_heading = Box([" Menu"])
-        self.todos_heading = Box([" Todos"])
+        self.navbar_heading = Box(name="navbar", options=[" Menu"])
+        self.todos_heading = Box(name="todos", options=[" Todos"])
 
         self.navbar = parser.parse_topic()
         self.navbar_copy = parser.parse_topic()  # copy for storage
@@ -300,26 +300,19 @@ class Doit(App):
         if reset:
             await self.reset_screen()
 
-        # if status in ["NORMAL"]:
-        #     self.change_current_tab(self.current_tab)
+        if status in ["NORMAL"]:
+            self.change_current_tab(self.current_tab.name)
 
     async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)
 
     async def on_list_item_selected(self, event: ListItemSelected) -> None:
-        self.status_bar.set_message(
-            f"{event.selected} | {event.selected in self.todo_lists}"
-        )
         self.current_menu = event.selected
         await self.reset_screen()
 
         self.change_current_tab("todos" if event.focus else "navbar")
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:
-        self.status_bar.set_message(
-            f"{event.old} to {event.new} | {event.old in self.todo_lists}"
-        )
-
         if event.old == event.new:
             return
 

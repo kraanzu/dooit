@@ -136,17 +136,14 @@ class SortOptions(Widget):
 
         return self.render_panel(tree)
 
-    def render_panel(self, tree):
-        return Panel(
-            Align.center(
-                Panel.fit(
-                    tree,
-                    title="Sort By",
-                    width=20,
-                ),
-                vertical="middle",
+    def render_panel(self, tree) -> RenderableType:
+        return Align.center(
+            Panel.fit(
+                tree,
+                title="Sort By",
+                width=20,
             ),
-            box=MINIMAL,
+            vertical="middle",
         )
 
     async def action_click_label(self, id):

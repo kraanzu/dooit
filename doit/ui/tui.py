@@ -300,6 +300,9 @@ class Doit(App):
         if reset:
             await self.reset_screen()
 
+        # if status in ["NORMAL"]:
+        #     self.change_current_tab(self.current_tab)
+
     async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)
 

@@ -46,7 +46,6 @@ class Doit(App):
         self.search_tree = SearchTree()
 
         self.sort_menu = SortOptions(options=["name", "date", "urgency", "status"])
-        # self.sort_menu.visible = False
 
         self.current_status = "NORMAL"
         self.navbar_heading.highlight()
@@ -59,7 +58,8 @@ class Doit(App):
 
         await self._clear_screen()
         await self.setup_grid()
-        self.setup_widgets()
+        self.setup_areas()
+        self.place_widgets()
         await self.refresh_screen()
 
     async def _clear_screen(self) -> None:
@@ -93,7 +93,40 @@ class Doit(App):
         self.grid = await self.view.dock_grid()
         await self._make_grid(self.grid)
 
-    def setup_widgets(self) -> None:
+    def place_widgets(self):
+        placements = {
+            "nav": self.navbar_heading,
+            "todo": self.todos_heading,
+        }
+
+        self.grid.place(**placements)
+
+        borders = []
+        for i in range(2):
+            borders.append(
+                [
+                    f"middle{2 * i}",
+                    f"top_connector{2 * i}",
+                    f"top{i}",
+                    f"top_connector{2 * i + 1}",
+                    f"middle{2 * i + 1}",
+                    f"bottom_connector{2 * i + 1}",
+                    f"bottom{i}",
+                    f"bottom_connector{2 * i}",
+                ]
+            )
+
+        self.navbar_box = self._make_box(borders[0])
+        self.todos_box = self._make_box(borders[1])
+
+        self.grid.place(bar=self.status_bar)
+        self.grid.place(
+            **{
+                "0b": (self.navbar_scroll),
+            }
+        )
+
+    def setup_areas(self) -> None:
         """
         Place widgets
         """
@@ -101,12 +134,6 @@ class Doit(App):
         areas = {"nav": "0,a", "todo": "1,a"}
 
         self.grid.add_areas(**areas)
-        placements = {
-            "nav": self.navbar_heading,
-            "todo": self.todos_heading,
-        }
-
-        self.grid.place(**placements)
 
         # WIDGET SPACES
         middle_areas = dict()
@@ -139,23 +166,7 @@ class Doit(App):
         }
         self.grid.add_areas(**bottom_connector_areas)
 
-        borders = []
-        for i in range(2):
-            borders.append(
-                [
-                    f"middle{2 * i}",
-                    f"top_connector{2 * i}",
-                    f"top{i}",
-                    f"top_connector{2 * i + 1}",
-                    f"middle{2 * i + 1}",
-                    f"bottom_connector{2 * i + 1}",
-                    f"bottom{i}",
-                    f"bottom_connector{2 * i}",
-                ]
-            )
-
-        self.navbar_box = self._make_box(borders[0])
-        self.todos_box = self._make_box(borders[1])
+        self.grid.add_areas(**{"bar": "0-start|1-end,bar"})
 
     def _make_box(self, areas: dict[str, str]) -> list[Widget]:
         """
@@ -205,11 +216,8 @@ class Doit(App):
             case _:
                 main_area_widget = self.todo_scroll[self.current_menu]
 
-        placements = {"0b": (self.navbar_scroll), "1b": main_area_widget}
+        placements = {"1b": main_area_widget}
         self.grid.place(**placements)
-
-        self.grid.add_areas(**{"bar": "0-start|1-end,bar"})
-        self.grid.place(bar=self.status_bar)
 
     def change_current_tab(self, new_tab: str) -> None:
         """

@@ -38,7 +38,6 @@ class NestedListEdit(TreeControl):
 
     def highlight(self, id: NodeID) -> None:
         self.highlighted = id
-        # self.cursor = id
         self.refresh()
 
     async def focus_node(self, part: str = "about") -> None:

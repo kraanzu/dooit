@@ -2,7 +2,6 @@ from textual import events
 from textual.app import App
 from textual.layouts.dock import DockLayout
 from textual.widget import Widget
-from textual_extras.events.events import ListItemSelected
 
 from .events import *
 from ..ui.widgets import *
@@ -314,10 +313,9 @@ class Doit(App):
     async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)
 
-    async def on_list_item_selected(self, event: ListItemSelected) -> None:
+    async def handle_list_item_selected(self, event: ListItemSelected) -> None:
         self.current_menu = event.selected
         await self.reset_screen()
-
         self.change_current_tab("todos" if event.focus else "navbar")
 
     async def handle_modify_topic(self, event: ModifyTopic) -> None:

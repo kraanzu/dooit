@@ -2,11 +2,10 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode, NodeID
-from textual_extras.events import ListItemSelected
 from textual_extras.widgets import SimpleInput
 from textual_extras.widgets.text_input import View
 
-from ...ui.events import ModifyTopic
+from ...ui.events import ModifyTopic, ListItemSelected
 from ...ui.widgets import Entry, NestedListEdit
 
 
@@ -59,7 +58,7 @@ class Navbar(NestedListEdit):
 
     async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":
-            await self.emit(
+            await self.post_message(
                 ListItemSelected(
                     self,
                     self._get_node_path(),

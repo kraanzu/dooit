@@ -66,3 +66,14 @@ class HighlightNode(Message, bubble=True):
     def __init__(self, sender: MessageTarget, id: NodeID) -> None:
         super().__init__(sender)
         self.id = id
+
+
+class ListItemSelected(Message, bubble=True):
+    """
+    Emitted when the user selects a todo from search list
+    """
+
+    def __init__(self, sender: MessageTarget, selected: str, focus: bool) -> None:
+        super().__init__(sender)
+        self.selected = selected
+        self.focus = focus

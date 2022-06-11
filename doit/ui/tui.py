@@ -13,7 +13,11 @@ parser = Parser()
 class Doit(App):
     async def on_mount(self) -> None:
         self.current_menu = ""
+        self.main_area_scroll = MinimalScrollView()
         await self.init_vars()
+        await self.setup_grid()
+        self.setup_areas()
+        self.place_widgets()
         await self.reset_screen()
 
         for widget in self.navbar_box:
@@ -39,11 +43,8 @@ class Doit(App):
         self.todo_lists = parser.parse_todo()
         self.todo_lists_copy = parser.parse_todo()
 
-        self.todo_scroll = dict()
         self.status_bar = StatusBar()
-
         self.search_tree = SearchTree()
-
         self.sort_menu = SortOptions(options=["name", "date", "urgency", "status"])
 
         self.current_status = "NORMAL"
@@ -54,21 +55,7 @@ class Doit(App):
         """
         Reloads the screen
         """
-
-        await self._clear_screen()
-        await self.setup_grid()
-        self.setup_areas()
-        self.place_widgets()
         await self.refresh_screen()
-
-    async def _clear_screen(self) -> None:
-        # clears all the widgets from the screen..and re render them all
-        # Why? you ask? this was the only way at the time of this writing
-
-        if isinstance(self.view.layout, DockLayout):
-            self.view.layout.docks.clear()
-
-        self.view.widgets.clear()
 
     async def _make_grid(self, grid):
         grid.add_row("a", size=3)
@@ -124,6 +111,9 @@ class Doit(App):
                 "0b": (self.navbar_scroll),
             }
         )
+
+        placements = {"1b": self.main_area_scroll}
+        self.grid.place(**placements)
 
     def setup_areas(self) -> None:
         """
@@ -204,19 +194,15 @@ class Doit(App):
         self.todo_list = self.todo_lists[self.current_menu]
         self.todo_list_copy = self.todo_lists_copy[self.current_menu]
 
-        if self.current_menu not in self.todo_scroll:
-            self.todo_scroll[self.current_menu] = MinimalScrollView(self.todo_list)
-
         match self.current_status:
             case "SEARCH":
                 main_area_widget = self.search_tree
             case "SORT":
                 main_area_widget = self.sort_menu
             case _:
-                main_area_widget = self.todo_scroll[self.current_menu]
+                main_area_widget = self.todo_lists[self.current_menu]
 
-        placements = {"1b": main_area_widget}
-        self.grid.place(**placements)
+        await self.main_area_scroll.update(main_area_widget)
 
     def change_current_tab(self, new_tab: str) -> None:
         """

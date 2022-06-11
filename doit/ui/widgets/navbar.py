@@ -71,15 +71,15 @@ class Navbar(NestedListEdit):
         await super().key_press(event)
 
         # REASON: RENDERING ISSUES
-        # if self.highlighted != self.root.id and not self.editing:
-        #     await self.emit(
-        #         ListItemSelected(
-        #             self,
-        #             self._get_node_path(),
-        #             focus=False,
-        #         )
-        #     )
-        # self.refresh()
+        if self.highlighted != self.root.id and not self.editing:
+            await self.emit(
+                ListItemSelected(
+                    self,
+                    self._get_node_path(),
+                    focus=False,
+                )
+            )
+        self.refresh()
 
     def _get_width(self, child: bool):
         width = self.size.width - 6

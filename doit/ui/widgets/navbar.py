@@ -15,7 +15,7 @@ class Navbar(NestedListEdit):
     """
 
     def __init__(self):
-        super().__init__("", Entry())
+        super().__init__("", SimpleInput())
 
     def render(self) -> RenderableType:
         return self._tree

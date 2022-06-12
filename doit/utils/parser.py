@@ -1,40 +1,83 @@
 from pathlib import Path
 from os import mkdir
 from dill import dump, load, HIGHEST_PROTOCOL
+from textual_extras.widgets.single_level_tree_edit import SimpleInput
+from doit.ui.widgets.entry import Entry
 from doit.ui.widgets.navbar import Navbar
 from doit.ui.widgets.todo_list import TodoList
 
-DEFAULT = {'/': TodoList()}
-
 
 class Parser:
-    def parse_todo(self) -> dict[str, TodoList]:
+    async def parse_todo(self) -> dict[str, TodoList]:
         self.check_files()
-        return self.load_todo()
+        return await self.load_todo()
 
-    def parse_topic(self) -> Navbar:
+    async def parse_topic(self) -> Navbar:
         self.check_files()
-        return self.load_topic()
+        return await self.load_topic()
 
     # --------------------------------
 
-    def load_topic(self):
+    async def load_topic(self) -> Navbar:
         with open(self.topic_path, "rb") as f:
-            return load(f)
+            return await self.convert_topic(load(f))
 
-    def load_todo(self):
+    async def load_todo(self) -> dict[str, TodoList]:
         with open(self.todo_path, "rb") as f:
-            return load(f)
+            return {i: await self.convert_todo(j) for i, j in load(f).items()}
 
     # --------------------------------
 
-    def save_todo(self, todo):
-        with open(self.todo_path, "wb") as f:
-            dump(todo, f)
+    async def convert_todo(self, e) -> TodoList:
+        x = TodoList()
+        for i, j in e:
+            s = Entry.from_encoded(i)
+            await x.root.add("", s)
+            for k in j:
+                s = Entry.from_encoded(k)
+                await x.root.children[-1].add("", s)
 
-    def save_topic(self, topic):
+        return x
+
+    async def convert_topic(self, e) -> Navbar:
+        x = Navbar()
+        for i, j in e:
+            s = SimpleInput()
+            s.value = i
+            await x.root.add("", s)
+            for k in j:
+                s = SimpleInput()
+                s.value = i
+                await x.root.children[-1].add("", s)
+
+        return x
+
+    # --------------------------------
+
+    def fetch_usable_info_todo(self, todo: TodoList) -> list:
+        x = []
+        for i in todo.root.children:
+            x.append([i.data.encode(), [j.data.encode() for j in i.children]])
+
+        return x
+
+    def fetch_usable_info_topic(self, topic: Navbar) -> list:
+        x = []
+        for i in topic.root.children:
+            x.append([i.data.value, [j.data.value for j in i.children]])
+
+        return x
+
+    # --------------------------------
+
+    def save_todo(self, todo: dict[str, TodoList]) -> None:
+        with open(self.todo_path, "wb") as f:
+            x = {i: self.fetch_usable_info_todo(j) for i, j in todo.items()}
+            dump(x, f)
+
+    def save_topic(self, topic) -> None:
         with open(self.topic_path, "wb") as f:
-            dump(topic, f)
+            dump(self.fetch_usable_info_topic(topic), f)
 
     # --------------------------------
 
@@ -51,7 +94,7 @@ class Parser:
         if not Path.is_file(self.todo_path):
             with open(self.todo_path, "wb") as f:
                 dump(
-                    DEFAULT,
+                    {"/": []},
                     f,
                     protocol=HIGHEST_PROTOCOL,
                 )
@@ -60,8 +103,7 @@ class Parser:
         if not Path.is_file(self.topic_path):
             with open(self.topic_path, "wb") as f:
                 dump(
-                    Navbar(),
+                    [],
                     f,
                     protocol=HIGHEST_PROTOCOL,
                 )
-

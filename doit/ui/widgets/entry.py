@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 from textual import events
 from textual_extras.widgets import TextInput
 from rich.text import TextType
@@ -28,7 +28,6 @@ class Entry(TextInput):
         self.name = name
         self.about = SimpleInput()
         self.urgency = 1
-        self.tags = []
         self.status = "PENDING"
         self.due = SimpleInput()
         self.focused = None
@@ -71,3 +70,20 @@ class Entry(TextInput):
         await super().handle_keypress(key)
         await self.emit(TextChanged(self))
         self.refresh()
+
+    def encode(self) -> dict[str, Any]:
+        return {
+            "about": self.about.value,
+            "urgency": self.urgency,
+            "due": self.due.value,
+            "status": self.status,
+        }
+
+    @classmethod
+    def from_encoded(cls, data: dict[str, Any]) -> "Entry":
+        entry = cls()
+        entry.about.value = data["about"]
+        entry.urgency = data["urgency"]
+        entry.due.value = data["due"]
+        entry.status = data["status"]
+        return entry

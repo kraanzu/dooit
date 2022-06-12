@@ -36,12 +36,12 @@ class Doit(App):
         self.navbar_heading = Box(name="navbar", options=[" Menu"])
         self.todos_heading = Box(name="todos", options=[" Todos"])
 
-        self.navbar = parser.parse_topic()
-        self.navbar_copy = parser.parse_topic()  # copy for storage
+        self.navbar = await parser.parse_topic()
+        self.navbar_copy = await parser.parse_topic()  # copy for storage
 
         self.navbar_scroll = MinimalScrollView(self.navbar)
-        self.todo_lists = parser.parse_todo()
-        self.todo_lists_copy = parser.parse_todo()
+        self.todo_lists = await parser.parse_todo()
+        self.todo_lists_copy = await parser.parse_todo()
 
         self.status_bar = StatusBar()
         self.search_tree = SearchTree()

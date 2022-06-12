@@ -33,8 +33,8 @@ class NestedListEdit(TreeControl):
         self.editing = False
         self.highlight(self.root.id)
 
-    def watch_cursor_line(self, value: int) -> None:
-        self.emit_no_wait(CursorMove(self, value + self.gutter.top))
+    async def watch_cursor_line(self, value: int) -> None:
+        await self.post_message(CursorMove(self, value + self.gutter.top))
 
     def highlight(self, id: NodeID) -> None:
         self.highlighted = id

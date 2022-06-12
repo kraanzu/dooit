@@ -1,3 +1,4 @@
+from rich.console import RenderableType
 from textual.layouts.grid import GridLayout
 from textual.message import Message
 from textual.widgets import ScrollView
@@ -7,6 +8,9 @@ class MinimalScrollView(ScrollView):
     """
     Just a ScrollView without bars
     """
+
+    async def update(self, renderable: RenderableType, home: bool = False) -> None:
+        return await super().update(renderable, home)
 
     async def handle_window_change(self, message: Message) -> None:
         message.stop()

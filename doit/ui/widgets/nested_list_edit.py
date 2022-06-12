@@ -70,6 +70,7 @@ class NestedListEdit(TreeControl):
             if child == node:
                 parent.children.pop(index)
                 parent.tree.children.pop(index)
+                del self.nodes[node.id]
 
         self.refresh(layout=True)
 

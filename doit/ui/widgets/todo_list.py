@@ -1,4 +1,5 @@
 import re
+from os import get_terminal_size
 from datetime import datetime
 from typing import Callable
 from rich.align import Align
@@ -122,6 +123,7 @@ class TodoList(NestedListEdit):
             return Align.center(
                 EMPTY_TODO,
                 vertical="middle",
+                height=round(get_terminal_size()[1] * 0.8),
             )
 
     async def focus_node(self, part="about", status="INSERT") -> None:

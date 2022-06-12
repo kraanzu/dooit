@@ -1,12 +1,12 @@
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
-from textual.widgets import TreeNode, NodeID
+from textual.widgets import TreeNode
 from textual_extras.widgets import SimpleInput
 from textual_extras.widgets.text_input import View
 
 from ...ui.events import ModifyTopic, ListItemSelected
-from ...ui.widgets import Entry, NestedListEdit
+from ...ui.widgets import NestedListEdit
 
 
 class Navbar(NestedListEdit):
@@ -89,7 +89,6 @@ class Navbar(NestedListEdit):
 
     def get_ibox(self, child: bool = False):
         ibox = SimpleInput()
-        return ibox
         width = self._get_width(child)
         ibox.view = View(0, width)
         return ibox

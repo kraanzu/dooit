@@ -1,3 +1,4 @@
+from os import get_terminal_size
 from rich.align import Align
 from rich.box import MINIMAL
 from rich.console import RenderableType
@@ -144,6 +145,7 @@ class SortOptions(Widget):
                 width=20,
             ),
             vertical="middle",
+            height=round(get_terminal_size()[1] * 0.8),
         )
 
     async def action_click_label(self, id):

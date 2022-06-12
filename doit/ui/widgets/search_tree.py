@@ -1,14 +1,31 @@
+from os import get_terminal_size
+from rich.align import Align
+from rich.console import RenderableType
 from textual import events
 from textual_extras.widgets.single_level_tree_edit import SimpleInput
 from doit.ui.events.events import ChangeStatus, HighlightNode
 from doit.ui.widgets.todo_list import TodoList
 from textual.widgets import NodeID, TreeNode
 
+NO_MATCH = """
+                    [blue][/blue]
+                [d white]0 matches
+Nothing showed up?! Maybe try somthing different?[/d white]
+"""
+
 
 class SearchTree(TodoList):
     """
     A tree with built in searching
     """
+
+    def render(self) -> RenderableType:
+        if self.any:
+            return super().render()
+        else:
+            return Align.center(
+                NO_MATCH, vertical="middle", height=round(get_terminal_size()[1] * 0.8)
+            )
 
     async def set_values(self, nodes):
         """
@@ -25,7 +42,13 @@ class SearchTree(TodoList):
         Refresh tree on search value change
         """
 
+        self.any = False
         self.root.children = []
+
+        for i in list(self.nodes.keys()):
+            if i != self.root.id:
+                self.nodes.pop(i)
+
         self.root.tree.children = []
         self.cursor_line = 0
         self.highlighted = self.root.id
@@ -34,8 +57,9 @@ class SearchTree(TodoList):
             if i.data.about.value and self.search.value in i.data.about.value:
                 i.data.id = id
                 await self.root.add("", i.data)
+                self.any = True
 
-        self.refresh()
+        self.refresh(layout=True)
 
     async def find_id(self) -> NodeID:
         uuid = self.nodes[self.highlighted].data.uuid

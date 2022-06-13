@@ -139,6 +139,7 @@ class TodoList(NestedListEdit):
     async def unfocus_node(self) -> None:
         await self.post_message(ChangeStatus(self, "NORMAL"))
         await super().unfocus_node()
+        await self.update_due_status()
 
     async def modify_due_status(self, status: str) -> None:
         node = self.highlighted_node
@@ -148,6 +149,8 @@ class TodoList(NestedListEdit):
         if parent and parent != self.root:
             if all(child.data.status == "COMPLETED" for child in parent.children):
                 parent.data.status = "COMPLETED"
+            else:
+                parent.data.status = "PENDING"
 
         elif parent == self.root:
             if status == "COMPLETED":
@@ -259,7 +262,7 @@ class TodoList(NestedListEdit):
         if status == "COMPLETED":
             return
 
-        if self._is_expired(date):
+        if date and self._is_expired(date):
             await self.modify_due_status("OVERDUE")
         else:
             await self.modify_due_status("PENDING")
@@ -298,6 +301,7 @@ class TodoList(NestedListEdit):
             await node.expand()
             await self.reach_to_last_child()
             await self.focus_node()
+            self.refresh(layout=True)
 
     async def add_sibling(self) -> None:
         if self.highlighted_node.parent == self.root:
@@ -307,6 +311,7 @@ class TodoList(NestedListEdit):
             await self.reach_to_parent()
             await self.add_child()
         await self.focus_node()
+        self.refresh(layout=True)
 
     def render_node(self, node: TreeNode) -> RenderableType:
         """

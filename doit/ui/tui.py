@@ -331,3 +331,6 @@ class Doit(App):
 
     async def handle_highlight_node(self, event: HighlightNode) -> None:
         await self.todo_list.reach_to_node(event.id)
+
+    async def handle_switch_tab(self, _: SwitchTab) -> None:
+        self.switch_tabs()

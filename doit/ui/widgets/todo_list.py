@@ -167,6 +167,8 @@ class TodoList(NestedListEdit):
 
         else:
             match event.key:
+                case "escape":
+                    await self.post_message(SwitchTab(self))
                 case "j" | "down":
                     await self.cursor_down()
                 case "k" | "up":

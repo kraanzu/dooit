@@ -244,13 +244,6 @@ class Doit(App):
 
         self.status_bar.clear_message()
 
-        if event.key == "ctrl+i":
-            if self.current_tab == self.navbar_heading:
-                self.change_current_tab("todos")
-            else:
-                self.change_current_tab("navbar")
-            return
-
         if self.current_tab == self.navbar_heading:
             await self.navbar.key_press(event)
             await self.navbar_copy.key_press(event)
@@ -265,7 +258,13 @@ class Doit(App):
                     await self.sort_menu.key_press(event)
 
                 case "NORMAL":
-                    if event.key == "/":
+                    if event.key == "ctrl+i":
+                        if self.current_tab == self.navbar_heading:
+                            self.change_current_tab("todos")
+                        else:
+                            self.change_current_tab("navbar")
+
+                    elif event.key == "/":
                         await self.search_tree.set_values(self.todo_list.nodes)
                         await self.handle_change_status(
                             ChangeStatus(self, "SEARCH"),

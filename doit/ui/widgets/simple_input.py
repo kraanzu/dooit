@@ -325,6 +325,9 @@ class SimpleInput(Widget):
             case "end":
                 self._cursor_position = len(self.value)
 
+            case "ctrl+i":
+                await self._insert_text("\t")
+
             # COPY-PASTA
             case "ctrl+v":
                 try:

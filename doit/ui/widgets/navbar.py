@@ -23,7 +23,7 @@ class Navbar(NestedListEdit):
     def _get_node_path(self):
 
         path = ""
-        node = self.nodes[self.highlighted]
+        node = self.highlighted_node
         while node.parent:
             path = f"{node.data.value}/{path}"
             node = node.parent
@@ -43,18 +43,18 @@ class Navbar(NestedListEdit):
 
     async def focus_node(self) -> None:
         self._last_path = self._get_node_path()
-        self.nodes[self.highlighted].data.on_focus()
+        self.highlighted_node.data.on_focus()
         self.editing = True
 
     async def unfocus_node(self) -> None:
         await self.post_message(
             ModifyTopic(self, self._last_path, self._get_node_path()),
         )
-        self.nodes[self.highlighted].data.on_blur()
+        self.highlighted_node.data.on_blur()
         self.editing = False
 
     async def send_key_to_selected(self, event: events.Key) -> None:
-        await self.nodes[self.highlighted].data.on_key(event)
+        await self.highlighted_node.data.on_key(event)
 
     async def key_press(self, event: events.Key):
         if not self.editing and event.key == "enter":
@@ -98,9 +98,9 @@ class Navbar(NestedListEdit):
         Adds child to current selected node
         """
 
-        node = self.nodes[self.highlighted]
+        node = self.highlighted_node
         if node == self.root or node.parent == self.root:
-            node = self.nodes[self.highlighted]
+            node = self.highlighted_node
             await node.add(
                 "child",
                 self.get_ibox(child=node != self.root),
@@ -116,7 +116,7 @@ class Navbar(NestedListEdit):
         Adds sibling for the currently selected node
         """
 
-        if self.nodes[self.highlighted].parent == self.root:
+        if self.highlighted_node.parent == self.root:
             await self.root.add("child", self.get_ibox(child=False))
             await self.move_to_bottom()
         else:

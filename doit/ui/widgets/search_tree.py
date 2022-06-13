@@ -2,8 +2,8 @@ from os import get_terminal_size
 from rich.align import Align
 from rich.console import RenderableType
 from textual import events
-from textual_extras.widgets.single_level_tree_edit import SimpleInput
 from doit.ui.events.events import ChangeStatus, HighlightNode
+from doit.ui.widgets.simple_input import SimpleInput
 from doit.ui.widgets.todo_list import TodoList
 from textual.widgets import NodeID, TreeNode
 

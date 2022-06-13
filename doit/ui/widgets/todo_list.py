@@ -7,7 +7,8 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode, NodeID
-from textual_extras.widgets.text_input import View
+
+from doit.ui.widgets.simple_input import View
 
 from ...ui.widgets import NestedListEdit
 from ...ui.widgets.entry import Entry

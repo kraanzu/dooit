@@ -4,9 +4,9 @@ from rich.style import StyleType
 from rich.text import Text, TextType
 from textual import events
 from textual.widgets import TreeControl, TreeNode, NodeID
-from textual_extras.widgets.single_level_tree_edit import SimpleInput
-from textual_extras.widgets.text_input import View
 from textual.messages import CursorMove
+
+from doit.ui.widgets.simple_input import SimpleInput, View
 
 
 class NestedListEdit(TreeControl):

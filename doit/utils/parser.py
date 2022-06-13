@@ -1,9 +1,9 @@
 from pathlib import Path
 from os import mkdir
 from dill import dump, load, HIGHEST_PROTOCOL
-from textual_extras.widgets.single_level_tree_edit import SimpleInput
 from doit.ui.widgets.entry import Entry
 from doit.ui.widgets.navbar import Navbar
+from doit.ui.widgets.simple_input import SimpleInput
 from doit.ui.widgets.todo_list import TodoList
 
 

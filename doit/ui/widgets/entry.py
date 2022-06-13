@@ -1,11 +1,9 @@
 from typing import Any, Literal
 from textual import events
-from textual_extras.widgets import TextInput
 from rich.text import TextType
-from textual_extras.events import TextChanged
-from textual_extras.widgets.single_level_tree_edit import SimpleInput
 from string import printable as chars
 from random import choice
+from .simple_input import SimpleInput
 
 
 def generate_uuid() -> str:
@@ -18,7 +16,7 @@ def generate_uuid() -> str:
     return uuid
 
 
-class Entry(TextInput):
+class Entry(SimpleInput):
     """
     A Simple subclass of TextInput widget with no borders
     """
@@ -68,7 +66,6 @@ class Entry(TextInput):
 
     async def handle_keypress(self, key: str) -> None:
         await super().handle_keypress(key)
-        await self.emit(TextChanged(self))
         self.refresh()
 
     def encode(self) -> dict[str, Any]:

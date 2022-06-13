@@ -1,6 +1,6 @@
 from pathlib import Path
 from os import mkdir
-from dill import dump, load, HIGHEST_PROTOCOL
+from pickle import dump, load, HIGHEST_PROTOCOL
 from doit.ui.widgets.entry import Entry
 from doit.ui.widgets.navbar import Navbar
 from doit.ui.widgets.simple_input import SimpleInput

@@ -90,7 +90,7 @@ class Parser:
         if not Path.is_dir(doit):
             mkdir(doit)
 
-        self.todo_path = doit / "history"
+        self.todo_path = doit / "todos.pkl"
         if not Path.is_file(self.todo_path):
             with open(self.todo_path, "wb") as f:
                 dump(
@@ -99,7 +99,7 @@ class Parser:
                     protocol=HIGHEST_PROTOCOL,
                 )
 
-        self.topic_path = doit / "topics"
+        self.topic_path = doit / "topics.pkl"
         if not Path.is_file(self.topic_path):
             with open(self.topic_path, "wb") as f:
                 dump(

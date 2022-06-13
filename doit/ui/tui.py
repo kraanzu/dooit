@@ -25,8 +25,8 @@ class Doit(App):
 
     async def action_quit(self) -> None:
         await super().action_quit()
-        parser.save_todo(self.todo_lists_copy)
-        parser.save_topic(self.navbar_copy)
+        parser.save_todo(self.todo_lists)
+        parser.save_topic(self.navbar)
 
     async def init_vars(self) -> None:
         """
@@ -37,11 +37,9 @@ class Doit(App):
         self.todos_heading = Box(name="todos", options=[" Todos"])
 
         self.navbar = await parser.parse_topic()
-        self.navbar_copy = await parser.parse_topic()  # copy for storage
 
         self.navbar_scroll = MinimalScrollView(self.navbar)
         self.todo_lists = await parser.parse_todo()
-        self.todo_lists_copy = await parser.parse_todo()
 
         self.status_bar = StatusBar()
         self.search_tree = SearchTree()
@@ -193,10 +191,8 @@ class Doit(App):
 
         if self.current_menu not in self.todo_lists.keys():
             self.todo_lists[self.current_menu] = TodoList()
-            self.todo_lists_copy[self.current_menu] = TodoList()
 
         self.todo_list = self.todo_lists[self.current_menu]
-        self.todo_list_copy = self.todo_lists_copy[self.current_menu]
 
         match self.current_status:
             case "SEARCH":
@@ -252,13 +248,11 @@ class Doit(App):
 
         if self.current_tab == self.navbar_heading:
             await self.navbar.key_press(event)
-            await self.navbar_copy.key_press(event)
         else:
             match self.current_status:
                 case "SEARCH":
                     await self.search_tree.key_press(event)
                     self.status_bar.set_message(self.search_tree.search.value)
-                    self.refresh()
 
                 case "SORT":
                     await self.sort_menu.key_press(event)
@@ -281,11 +275,9 @@ class Doit(App):
 
                     else:
                         await self.todo_list.key_press(event)
-                        await self.todo_list_copy.key_press(event)
 
                 case _:
                     await self.todo_list.key_press(event)
-                    await self.todo_list_copy.key_press(event)
 
         self.refresh(layout=True)
 
@@ -318,13 +310,9 @@ class Doit(App):
             return
 
         self.todo_lists[event.new] = self.todo_lists.get(event.old, TodoList())
-        self.todo_lists_copy[event.new] = self.todo_lists_copy.get(
-            event.old, TodoList()
-        )
 
         if event.old in self.todo_lists:
             del self.todo_lists[event.old]
-            del self.todo_lists_copy[event.old]
 
     async def handle_apply_sort_method(self, event: ApplySortMethod) -> None:
         await self.todo_list.sort_by(event.method)

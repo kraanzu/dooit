@@ -1,6 +1,5 @@
 from textual import events
 from textual.app import App
-from textual.layouts.dock import DockLayout
 from textual.layouts.grid import GridLayout
 from textual.widget import Widget
 
@@ -61,15 +60,16 @@ class Doit(App):
     async def _make_grid(self, grid: GridLayout) -> None:
         grid.add_row("a", size=3)
         grid.add_row("sep0", size=1)
-        grid.add_row("b", fraction=95)
+        grid.add_row("b")
         grid.add_row("sep1", size=1)
-        grid.add_row("bar", fraction=3)
+        grid.add_row("bar", size=1)
 
         grid.add_column("sep0", size=1)
         grid.add_column("0", fraction=20)
         grid.add_column("sep1", size=1)
+        grid.add_column("padding", size=1)
         grid.add_column("sep2", size=1)
-        grid.add_column("1", fraction=77)
+        grid.add_column("1", fraction=80)
         grid.add_column("sep3", size=1)
 
     async def setup_grid(self) -> None:
@@ -121,7 +121,10 @@ class Doit(App):
         Place widgets
         """
 
-        areas = {"nav": "0,a", "todo": "1,a"}
+        areas = {
+            "nav": "sep0-start|sep1-end,a",
+            "todo": "sep2-start|sep3-end,a",
+        }
 
         self.grid.add_areas(**areas)
 

@@ -77,3 +77,11 @@ class ListItemSelected(Message, bubble=True):
         super().__init__(sender)
         self.selected = selected
         self.focus = focus
+
+
+class SwitchTab(Message, bubble=True):
+    """
+    Emitted when user presses `Esc` while in normal mode in todo
+    """
+
+    pass

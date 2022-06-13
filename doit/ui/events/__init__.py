@@ -8,6 +8,7 @@ from .events import (
     StatusType,
     SortMethodType,
     ListItemSelected,
+    SwitchTab,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "StatusType",
     "SortMethodType",
     "ListItemSelected",
+    "SwitchTab",
 ]

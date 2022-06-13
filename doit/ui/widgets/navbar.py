@@ -2,6 +2,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
+from doit.ui.events.events import ChangeStatus
 
 from doit.ui.widgets.simple_input import SimpleInput, View
 
@@ -44,12 +45,14 @@ class Navbar(NestedListEdit):
     async def focus_node(self) -> None:
         self._last_path = self._get_node_path()
         self.highlighted_node.data.on_focus()
+        await self.post_message(ChangeStatus(self, "INSERT"))
         self.editing = True
 
     async def unfocus_node(self) -> None:
         await self.post_message(
             ModifyTopic(self, self._last_path, self._get_node_path()),
         )
+        await self.post_message(ChangeStatus(self, "NORMAL"))
         self.highlighted_node.data.on_blur()
         self.editing = False
 

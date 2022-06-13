@@ -240,6 +240,12 @@ class Doit(App):
         self.sort_menu.visible = True
         self.refresh()
 
+    def switch_tabs(self):
+        if self.current_tab == self.navbar_heading:
+            self.change_current_tab("todos")
+        else:
+            self.change_current_tab("navbar")
+
     async def on_key(self, event: events.Key) -> None:
 
         self.status_bar.clear_message()
@@ -259,10 +265,7 @@ class Doit(App):
 
                 case "NORMAL":
                     if event.key == "ctrl+i":
-                        if self.current_tab == self.navbar_heading:
-                            self.change_current_tab("todos")
-                        else:
-                            self.change_current_tab("navbar")
+                        self.switch_tabs()
 
                     elif event.key == "/":
                         await self.search_tree.set_values(self.todo_list.nodes)

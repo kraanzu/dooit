@@ -17,14 +17,10 @@ class Doit(App):
         self.current_menu = ""
         self.main_area_scroll = MinimalScrollView()
         await self.init_vars()
-        await self.setup_grid()
-        self.setup_areas()
-        self.place_widgets()
-        await self.reset_screen()
 
-        self.help_menu = HelpMenu()
-        await self.view.dock((self.help_menu), z=10)
-        self.help_menu.visible = False
+        await self.setup_screen()
+
+        self.help = False
 
         for widget in self.navbar_box:
             widget.toggle_highlight()
@@ -34,16 +30,30 @@ class Doit(App):
         parser.save_todo(self.todo_lists)
         parser.save_topic(self.navbar)
 
-    def toggle_help(self):
-        self.help_menu.visible = not self.help_menu.visible
+    async def toggle_help(self):
+        self.help = not self.help
 
-    async def setup_screen(self) -> None:
+        await self._clear_screen()
+        if self.help:
+            self.help_menu = MinimalScrollView(HelpMenu())
+            await self.view.dock(self.help_menu)
+        else:
+            await self.setup_screen()
+
+    async def setup_screen(self):
+        await self.setup_grid()
+        self.setup_areas()
+        self.place_widgets()
+        await self.reset_screen()
+
+    async def _clear_screen(self) -> None:
         """
         Removes all the widgets and clears the window
         """
 
         if isinstance(self.view.layout, DockLayout):
             self.view.layout.docks.clear()
+        self.view.widgets.clear()
 
     async def init_vars(self) -> None:
         """
@@ -259,13 +269,28 @@ class Doit(App):
         else:
             self.change_current_tab("navbar")
 
+    async def handle_help_key(self, event: events.Key):
+        match event.key:
+            case "j" | "down":
+                await self.help_menu.key_down()
+            case "k" | "up":
+                await self.help_menu.key_up()
+            case " " | "pagedown":
+                await self.help_menu.key_down()
+            case "pageup":
+                await self.help_menu.key_pageup()
+            case "g" | "home":
+                await self.help_menu.key_home()
+            case "G" | "end":
+                await self.help_menu.key_end()
+
     async def on_key(self, event: events.Key) -> None:
         if event.key == "ctrl+p":
-            self.toggle_help()
+            await self.toggle_help()
             return
 
-        if self.help_menu.visible:
-            await self.help_menu.key_press(event)
+        if self.help:
+            await self.handle_help_key(event)
             return
 
         self.status_bar.clear_message()

@@ -1,7 +1,9 @@
 from textual import events
 from textual.app import App
+from textual.layouts.dock import DockLayout
 from textual.layouts.grid import GridLayout
 from textual.widget import Widget
+from textual.widgets import ScrollView
 
 from .events import *
 from ..ui.widgets import *
@@ -20,6 +22,10 @@ class Doit(App):
         self.place_widgets()
         await self.reset_screen()
 
+        self.help_menu = HelpMenu()
+        await self.view.dock((self.help_menu), z=10)
+        self.help_menu.visible = False
+
         for widget in self.navbar_box:
             widget.toggle_highlight()
 
@@ -27,6 +33,17 @@ class Doit(App):
         await super().action_quit()
         parser.save_todo(self.todo_lists)
         parser.save_topic(self.navbar)
+
+    def toggle_help(self):
+        self.help_menu.visible = not self.help_menu.visible
+
+    async def setup_screen(self) -> None:
+        """
+        Removes all the widgets and clears the window
+        """
+
+        if isinstance(self.view.layout, DockLayout):
+            self.view.layout.docks.clear()
 
     async def init_vars(self) -> None:
         """
@@ -243,6 +260,13 @@ class Doit(App):
             self.change_current_tab("navbar")
 
     async def on_key(self, event: events.Key) -> None:
+        if event.key == "ctrl+p":
+            self.toggle_help()
+            return
+
+        if self.help_menu.visible:
+            await self.help_menu.key_press(event)
+            return
 
         self.status_bar.clear_message()
 

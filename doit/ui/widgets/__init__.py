@@ -8,6 +8,7 @@ from .minimal_scrollview import MinimalScrollView
 from .sort_options import SortOptions
 from .search_tree import SearchTree
 from .simple_input import View, SimpleInput
+from .help_menu import HelpMenu
 
 from .border import (
     HorizontalLine,
@@ -36,4 +37,5 @@ __all__ = [
     "SearchTree",
     "View",
     "SimpleInput",
+    "HelpMenu",
 ]

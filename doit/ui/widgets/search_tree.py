@@ -78,8 +78,8 @@ class SearchTree(TodoList):
                     if self.searching:
                         self.searching = False
                         self.search.on_blur()
-                        if children := self.root.children:
-                            self.highlighted = children[0].id
+                        self.highlight(self.root.id)
+                        await self.cursor_down()
 
                 case _:
                     await self.search.handle_keypress(event.key)
@@ -89,7 +89,7 @@ class SearchTree(TodoList):
             match event.key:
                 case "/":
                     self.searching = True
-                    self.search.on_blur()
+                    self.search.on_focus()
                 case "escape":
                     await self.post_message(ChangeStatus(self, "NORMAL"))
                 case "j" | "down":

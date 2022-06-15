@@ -3,7 +3,7 @@ from rich.align import Align
 from rich.console import RenderableType
 from textual import events
 from doit.ui.events.events import ChangeStatus, HighlightNode
-from doit.ui.widgets.simple_input import SimpleInput
+from doit.ui.widgets.simple_input import SimpleInput, View
 from doit.ui.widgets.todo_list import TodoList
 from textual.widgets import NodeID, TreeNode
 
@@ -34,6 +34,8 @@ class SearchTree(TodoList):
 
         self.all_nodes: dict[NodeID, TreeNode] = nodes
         self.search = SimpleInput()
+        self.search.view = View(0, 100)
+        self.search.on_focus()
         self.searching = True
         await self.refresh_search()
 
@@ -75,6 +77,7 @@ class SearchTree(TodoList):
                 case "escape":
                     if self.searching:
                         self.searching = False
+                        self.search.on_blur()
                         if children := self.root.children:
                             self.highlighted = children[0].id
 
@@ -86,6 +89,7 @@ class SearchTree(TodoList):
             match event.key:
                 case "/":
                     self.searching = True
+                    self.search.on_blur()
                 case "escape":
                     await self.post_message(ChangeStatus(self, "NORMAL"))
                 case "j" | "down":

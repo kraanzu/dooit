@@ -3,7 +3,7 @@ from textual.app import App
 from textual.layouts.dock import DockLayout
 from textual.layouts.grid import GridLayout
 from textual.widget import Widget
-from textual.widgets import ScrollView
+
 
 from .events import *
 from ..ui.widgets import *
@@ -301,7 +301,7 @@ class Doit(App):
             match self.current_status:
                 case "SEARCH":
                     await self.search_tree.key_press(event)
-                    self.status_bar.set_message(self.search_tree.search.value)
+                    self.status_bar.set_message(self.search_tree.search.render())
 
                 case "SORT":
                     await self.sort_menu.key_press(event)

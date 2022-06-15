@@ -25,7 +25,7 @@ class Box(Widget):
 
     def render(self) -> RenderableType:
         table = Table.grid(padding=(0, 1), expand=True)
-        style = "bold blue" if self.highlighted else "dim white"
+        style = "blue" if self.highlighted else "dim white"
         for i in self.options:
             table.add_column(i, justify="center", ratio=1)
 

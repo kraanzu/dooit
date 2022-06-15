@@ -307,10 +307,7 @@ class Doit(App):
                     await self.sort_menu.key_press(event)
 
                 case "NORMAL":
-                    if event.key == "ctrl+i":
-                        self.switch_tabs()
-
-                    elif event.key == "/":
+                    if event.key == "/":
                         await self.search_tree.set_values(self.todo_list.nodes)
                         await self.handle_change_status(
                             ChangeStatus(self, "SEARCH"),

@@ -2,11 +2,10 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
-from doit.ui.events.events import ChangeStatus
 
 from doit.ui.widgets.simple_input import SimpleInput, View
 
-from ...ui.events import ModifyTopic, ListItemSelected
+from ...ui.events import ModifyTopic, ListItemSelected, ChangeStatus
 from ...ui.widgets import NestedListEdit
 
 
@@ -17,6 +16,9 @@ class Navbar(NestedListEdit):
 
     def __init__(self):
         super().__init__("", SimpleInput())
+        from doit.utils.config import Config
+
+        self.config = Config().load_config("menu")
 
     def render(self) -> RenderableType:
         return self._tree
@@ -131,23 +133,32 @@ class Navbar(NestedListEdit):
     def render_custom_node(self, node: TreeNode) -> RenderableType:
         # return str(node.data.view)
 
+        icons = self.config["icons"]
+        colors = self.config["theme"]
+
         label = Text.from_markup(str(node.data.render()) or "")
         label.plain = label.plain[: self.size.width - 2]
 
         # Setup pre-icons
         if node.children:
             if node.expanded:
-                icon = "ﱮ"
+                icon = icons["nested_close"]
             else:
-                icon = ""
+                icon = icons["nested_open"]
         else:
-            icon = ""
+            icon = icons["single_topic"]
 
         # Padding adjustment
         label.plain = f" {icon} " + label.plain + " "
         label.pad_right(self.size.width)
+
         if node.id == self.highlighted:
-            label.stylize("bold reverse red")
+            if self.editing:
+                label.stylize(colors["style_editing"])
+            else:
+                label.stylize(colors["style_focused"])
+        else:
+            label.stylize(colors["style_unfocused"])
 
         meta = {
             "@click": f"click_label({node.id})",

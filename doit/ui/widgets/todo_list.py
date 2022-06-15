@@ -43,6 +43,11 @@ class TodoList(NestedListEdit):
         )
         self.focused = None
 
+        from doit.utils.config import Config
+
+        self.config = Config().load_config("todos")
+        self.icons = self.config["icons"]
+
     async def _sort_by_arrangement(self, seq: list[int]) -> None:
 
         parent = self.highlighted_node.parent
@@ -381,11 +386,26 @@ class TodoList(NestedListEdit):
         if node != self.root:
             match node.data.status:
                 case "COMPLETED":
-                    label = Text.from_markup("[b green]  [/b green]") + label
+                    label = (
+                        Text.from_markup(
+                            f"[b green]{self.icons['todo_completed']}  [/b green]"
+                        )
+                        + label
+                    )
                 case "PENDING":
-                    label = Text.from_markup("[b yellow]  [/b yellow]") + label
+                    label = (
+                        Text.from_markup(
+                            f"[b yellow]{self.icons['todo_pending']}  [/b yellow]"
+                        )
+                        + label
+                    )
                 case "OVERDUE":
-                    label = Text.from_markup("[b red]  [/b red]") + label
+                    label = (
+                        Text.from_markup(
+                            f"[b red]{self.icons['todo_overdue']}  [/b red]"
+                        )
+                        + label
+                    )
 
         meta = {
             "@click": f"click_label({node.id})",
@@ -398,6 +418,8 @@ class TodoList(NestedListEdit):
 
     def render_date(self, node: TreeNode, color) -> RenderableType:
 
+        icon = self.icons["due_date"]
+
         width = self._due_width(node.parent != self.root)
         if (
             not hasattr(node.data.due, "view")
@@ -406,13 +428,15 @@ class TodoList(NestedListEdit):
 
         label = Text.from_markup(str(node.data.due.render())) or Text("No Due Date")
         label = self._highlight_node(node, label)
-        label = Text.from_markup(f"[{color}]    [/{color}]") + label
+        label = Text.from_markup(f"[{color}]  {icon}  [/{color}]") + label
         return label
 
     def render_priority(self, node: TreeNode, color) -> RenderableType:
 
+        icon = self.icons["urgency"]
+
         label = Text(str(node.data.urgency))
         label.plain = label.plain.rjust(3, "0")
         label = self._highlight_node(node, label)
-        label = Text.from_markup(f"[{color}] [/{color}]") + label
+        label = Text.from_markup(f"[{color}]{icon} [/{color}]") + label
         return label

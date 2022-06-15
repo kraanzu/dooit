@@ -6,6 +6,8 @@ from rich.table import Table
 from rich.text import Text
 from textual.widget import Widget
 
+from doit.utils.config import Config
+
 
 class Box(Widget):
     """
@@ -22,10 +24,14 @@ class Box(Widget):
         self.options = options
         self.color = color
         self.highlighted = False
+        config = Config().load_config()
+        self.style_highlighted = config["header_highlight"]
+        self.style_dim = config["header_dim"]
 
     def render(self) -> RenderableType:
         table = Table.grid(padding=(0, 1), expand=True)
-        style = "blue" if self.highlighted else "dim white"
+        style = self.style_highlighted if self.highlighted else self.style_dim
+
         for i in self.options:
             table.add_column(i, justify="center", ratio=1)
 

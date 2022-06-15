@@ -8,12 +8,13 @@ from doit.ui.widgets.todo_list import TodoList
 
 
 class Parser:
-    async def parse_todo(self) -> dict[str, TodoList]:
+    def __init__(self) -> None:
         self.check_files()
+
+    async def parse_todo(self) -> dict[str, TodoList]:
         return await self.load_todo()
 
     async def parse_topic(self) -> Navbar:
-        self.check_files()
         return await self.load_topic()
 
     # --------------------------------
@@ -47,7 +48,7 @@ class Parser:
             await x.root.add("", s)
             for k in j:
                 s = SimpleInput()
-                s.value = i
+                s.value = k
                 await x.root.children[-1].add("", s)
 
         return x

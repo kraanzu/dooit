@@ -1,43 +1,46 @@
-# For color information refer:
-# https://rich.readthedocs.io/en/stable/appendix/colors.html
-
 main:
-  header_highlight: bold blue
-  header_dim: dim white
-  body_highlight: bold blue
   body_dim: dim white
+  body_highlight: blue
+  header_dim: dim white
+  header_highlight: blue
 
 menu:
+
   icons:
     nested_close: 
     nested_open: ﱮ
     single_topic: 
 
   theme:
-    style_editing: bold reverse red
-    style_focused: bold reverse red
+    style_editing: reverse red
+    style_focused: reverse red
     style_unfocused: white
 
+status_bar:
+
+  theme:
+    clock: reverse yellow
+    date: reverse green
+    insert: cyan
+    message: purple1
+    normal: blue
+    search: magenta
+    sort: green
+
+  icons:
+    calendar: 
+    clock: 
+
 todos:
+
+  icons:
+    due_date: 
+    todo_completed: 
+    todo_overdue: 
+    todo_pending: 
+    urgency: 
+
   theme:
     style_editing: bold cyan
     style_focused: bold grey85
     style_unfocused: bold grey50
-
-  icons:
-    todo_completed: 
-    todo_pending: 
-    todo_overdue: 
-    due_date: 
-    urgency: 
-
-status_bar:
-  theme:
-    clock: reverse yellow
-    date: reverse green
-    normal: blue
-    insert: cyan
-    sort: green
-    date: yellow
-    search: magenta
-    message: purple1

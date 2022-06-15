@@ -2,6 +2,8 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual.widget import Widget
 
+from doit.utils.config import Config
+
 
 class Border(Widget):
     """
@@ -16,6 +18,9 @@ class Border(Widget):
         self.color = color
         self.item = item
         self.measure = measure
+        config = Config().load_config()
+        self.style_highlight = config["body_highlight"]
+        self.style_dim = config["body_dim"]
 
     def toggle_highlight(self) -> None:
         self.highlight = not self.highlight
@@ -31,7 +36,7 @@ class Border(Widget):
 
     def render(self) -> RenderableType:
         count = self.size.width if self.measure == "width" else self.size.height
-        style = "bold blue" if self.highlight else "dim white"
+        style = self.style_highlight if self.highlight else self.style_dim
         return Text(self.item * count, style=style)
 
 

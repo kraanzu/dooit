@@ -1,9 +1,10 @@
-from typing import Literal
 from datetime import datetime
 from rich.console import RenderableType
 from rich.text import Text
 from rich.table import Table
 from textual.widget import Widget
+
+from doit.utils.config import Config
 
 from ..events import StatusType
 
@@ -19,6 +20,10 @@ class StatusBar(Widget):
         self.status = "NORMAL"
         self.color = "blue"
         self.set_interval(1, self.refresh)
+        config = Config().load_config("status_bar")
+        self.theme = config["theme"]
+        self.clock_icon = config["icons"]["clock"]
+        self.calendar_icon = config["icons"]["calendar"]
 
     def set_message(self, message) -> None:
         self.message = message
@@ -31,30 +36,33 @@ class StatusBar(Widget):
         """
         Returns current time
         """
-        return f"{datetime.now().time().strftime('   %X ')}"
+        return f"{datetime.now().time().strftime(f' {self.clock_icon}  %X ')}"
 
     def get_date(self) -> str:
         """
         Returns current time
         """
-        return f"{datetime.today().strftime('   %D ')}"
+        return f"{datetime.today().strftime(f' {self.calendar_icon}  %D ')}"
 
     def set_status(self, status: StatusType) -> None:
         self.status = status
         match status:
             case "NORMAL":
-                self.color = "blue"
+                self.color = self.theme["normal"]
             case "INSERT":
-                self.color = "cyan"
+                self.color = self.theme["insert"]
             case "DATE":
-                self.color = "yellow"
+                self.color = self.theme["date"]
             case "SEARCH":
-                self.color = "magenta"
+                self.color = self.theme["search"]
             case "SORT":
-                self.color = "green"
+                self.color = self.theme["sort"]
         self.refresh()
 
     def render(self) -> RenderableType:
+
+        style_clock = self.theme["clock"]
+        style_date = self.theme["date"]
 
         bar = Table.grid(padding=(0, 1), expand=True)
         bar.add_column("status", justify="center", width=len(self.status) + 1)
@@ -71,11 +79,11 @@ class StatusBar(Widget):
             message,
             Text(
                 self.get_date(),
-                style="reverse green",
+                style=style_date,
             ),
             Text(
                 self.get_clock(),
-                style="reverse yellow",
+                style=style_clock,
             ),
         )
         return bar

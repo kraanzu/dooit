@@ -2,6 +2,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode
+from doit.ui.events.events import Notify
 
 from doit.ui.widgets.simple_input import SimpleInput, View
 
@@ -51,6 +52,24 @@ class Navbar(NestedListEdit):
         await self.post_message(ChangeStatus(self, "INSERT"))
         self.editing = True
 
+    async def check_node(self):
+        val = self.highlighted_node.data.value.strip()
+        if not val:
+            await self.remove_node()
+            await self.post_message(Notify(self, "Can't leave topic name empty :("))
+            return
+
+        if (
+            sum(
+                i.data.value == val
+                for i in (self.highlighted_node.parent or self.root).children
+            )
+            > 1
+        ):
+            await self.remove_node()
+            await self.post_message(Notify(self, "Duplicate sibling topic!"))
+            return
+
     async def unfocus_node(self) -> None:
         await self.post_message(
             ModifyTopic(self, self._last_path, self._get_node_path()),
@@ -58,6 +77,7 @@ class Navbar(NestedListEdit):
         await self.post_message(ChangeStatus(self, "NORMAL"))
         await self.highlighted_node.data.handle_keypress("home")
         self.highlighted_node.data.on_blur()
+        await self.check_node()
         self.editing = False
 
     async def send_key_to_selected(self, event: events.Key) -> None:

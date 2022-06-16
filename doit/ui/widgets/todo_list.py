@@ -12,7 +12,7 @@ from doit.ui.widgets.simple_input import View
 
 from ...ui.widgets import NestedListEdit
 from ...ui.widgets.entry import Entry
-from ...ui.events import * # NOQA
+from ...ui.events import *  # NOQA
 
 NodeDataTye = Entry
 
@@ -219,9 +219,24 @@ class TodoList(NestedListEdit):
         match self.focused:
 
             case "about":
-                node = self.highlighted_node
-                if not str(node.data.about.render()).strip():
-                    await self.emit(events.Key(self, "x"))
+                val = self.highlighted_node.data.about.value.strip()
+                if not val:
+                    await self.remove_node()
+                    await self.post_message(
+                        Notify(self, "Can't leave todo's about empty :(")
+                    )
+                    return
+
+                if (
+                    sum(
+                        i.data.about.value == val
+                        for i in (self.highlighted_node.parent or self.root).children
+                    )
+                    > 1
+                ):
+                    await self.remove_node()
+                    await self.post_message(Notify(self, "Duplicate todo sibling !"))
+                    return
 
             case "due":
                 date = self.highlighted_node.data.due.value

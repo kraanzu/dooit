@@ -1,2 +1,1 @@
-# doit
-A TUI todo manager
+<div align="center"> <h1> Doit </h1> </div>

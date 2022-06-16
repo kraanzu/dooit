@@ -147,8 +147,8 @@ class TodoList(NestedListEdit):
 
     async def unfocus_node(self) -> None:
         await self.post_message(ChangeStatus(self, "NORMAL"))
+        await self.check_node()
         await super().unfocus_node()
-        await self.update_due_status()
 
     async def modify_due_status(self, status: str) -> None:
         node = self.highlighted_node
@@ -226,7 +226,7 @@ class TodoList(NestedListEdit):
             case "due":
                 date = self.highlighted_node.data.due.value
 
-                if len(date) == 10 and re.findall("^\d\d-\d\d-\d\d\d\d$", date):
+                if len(date) == 10 and re.findall(r"^\d\d-\d\d-\d\d\d\d$", date):
                     if not self._is_valid_date(date):
                         await self.post_message(
                             Notify(self, message="Please enter a valid date")

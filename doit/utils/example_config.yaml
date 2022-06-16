@@ -1,3 +1,6 @@
+# rich colors: https://rich.readthedocs.io/en/stable/appendix/colors.html
+# nerd fonts: https://www.nerdfonts.com/
+
 main:
   body_dim: dim white
   body_highlight: blue

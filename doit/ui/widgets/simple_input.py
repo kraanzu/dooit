@@ -204,10 +204,8 @@ class SimpleInput(Widget):
 
     async def on_key(self, event: events.Key) -> None:
         """Send the key to the Input"""
-        prev = self._cursor_position
 
         await self.handle_keypress(event.key)
-        self.update_view(prev, self._cursor_position)
         self.refresh()
 
     async def _move_cursor_backward(self, word=False, delete=False) -> None:
@@ -234,6 +232,7 @@ class SimpleInput(Widget):
 
         if delete:
             self.value = self.value[: self._cursor_position] + self.value[prev:]
+            self.view.shift_left(prev - self._cursor_position)
 
     async def _move_cursor_forward(self, word=False, delete=False) -> None:
         """
@@ -287,6 +286,8 @@ class SimpleInput(Widget):
         """
         Handles Keypresses
         """
+        prev = self._cursor_position
+
         match key:
 
             # Moving backward
@@ -337,3 +338,6 @@ class SimpleInput(Widget):
 
         if len(key) == 1:
             await self._insert_text(key)
+
+        self.update_view(prev, self._cursor_position)
+        self.refresh()

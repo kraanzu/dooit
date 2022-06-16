@@ -1,6 +1,5 @@
 from os import get_terminal_size
 from rich.align import Align
-from rich.box import MINIMAL
 from rich.console import RenderableType
 from rich.tree import Tree
 from rich.panel import Panel

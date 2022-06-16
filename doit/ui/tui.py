@@ -5,8 +5,8 @@ from textual.layouts.grid import GridLayout
 from textual.widget import Widget
 
 
-from .events import *
-from ..ui.widgets import *
+from .events import *  # NOQA
+from ..ui.widgets import *  # NOQA
 from ..utils import Parser
 
 parser = Parser()

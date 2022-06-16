@@ -12,7 +12,7 @@ from doit.ui.widgets.simple_input import View
 
 from ...ui.widgets import NestedListEdit
 from ...ui.widgets.entry import Entry
-from ...ui.events import *
+from ...ui.events import * # NOQA
 
 NodeDataTye = Entry
 

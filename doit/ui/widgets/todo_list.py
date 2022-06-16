@@ -366,13 +366,17 @@ class TodoList(NestedListEdit):
 
     def _highlight_node(self, node: TreeNode, label: Text) -> Text:
         # setup highlight
+        style_editing = self.config["theme"]["style_editing"]
+        style_focused = self.config["theme"]["style_focused"]
+        style_unfocused = self.config["theme"]["style_unfocused"]
+
         if node.id == self.highlighted:
             if self.editing:
-                label.stylize(self.style_editing)
+                label.stylize(style_editing)
             else:
-                label.stylize(self.style_focus)
+                label.stylize(style_focused)
         else:
-            label.stylize(self.style_unfocus)
+            label.stylize(style_unfocused)
 
         if node.data.status == "COMPLETED":
             label.stylize("strike")

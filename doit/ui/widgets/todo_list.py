@@ -142,7 +142,7 @@ class TodoList(NestedListEdit):
         self.prev_value = self.highlighted_node.data.due.value
 
         await self.post_message(
-            events.Key(self, "left")
+            events.Key(self, "right")
         )  # handle scrollview late update
 
     async def unfocus_node(self) -> None:

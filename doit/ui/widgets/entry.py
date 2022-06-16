@@ -31,13 +31,15 @@ class Entry(SimpleInput):
         self.focused = None
         self.uuid = generate_uuid()
 
-    def make_focus(self, part: Literal["about", "due"]) -> None:
+    async def make_focus(self, part: Literal["about", "due"]) -> None:
         eval(f"self.{part}.on_focus()")
+        await eval(f"self.{part}.handle_keypress('end')")
         self.focused = part
 
-    def remove_focus(self) -> None:
+    async def remove_focus(self) -> None:
         if self.focused:
             eval(f"self.{self.focused}.on_blur()")
+            await eval(f"self.{self.focused}.handle_keypress('home')")
 
     async def send_key(self, event: events.Key) -> None:
         if self.focused:

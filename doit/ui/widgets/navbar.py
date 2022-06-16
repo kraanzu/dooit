@@ -47,6 +47,7 @@ class Navbar(NestedListEdit):
     async def focus_node(self) -> None:
         self._last_path = self._get_node_path()
         self.highlighted_node.data.on_focus()
+        await self.highlighted_node.data.handle_keypress("end")
         await self.post_message(ChangeStatus(self, "INSERT"))
         self.editing = True
 
@@ -55,6 +56,7 @@ class Navbar(NestedListEdit):
             ModifyTopic(self, self._last_path, self._get_node_path()),
         )
         await self.post_message(ChangeStatus(self, "NORMAL"))
+        await self.highlighted_node.data.handle_keypress("home")
         self.highlighted_node.data.on_blur()
         self.editing = False
 

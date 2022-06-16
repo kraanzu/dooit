@@ -42,11 +42,11 @@ class NestedListEdit(TreeControl):
         self.refresh()
 
     async def focus_node(self, part: str = "about") -> None:
-        self.highlighted_node.data.make_focus(part)
+        await self.highlighted_node.data.make_focus(part)
         self.editing = True
 
     async def unfocus_node(self) -> None:
-        self.highlighted_node.data.remove_focus()
+        await self.highlighted_node.data.remove_focus()
         self.editing = False
 
     async def remove_node(self, id: NodeID | None = None) -> None:

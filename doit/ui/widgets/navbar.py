@@ -190,3 +190,12 @@ class Navbar(NestedListEdit):
 
         label.apply_meta(meta)
         return label
+
+    async def handle_tree_click(self, *_) -> None:
+        await self.post_message(
+            ListItemSelected(
+                self,
+                self._get_node_path(),
+                focus=True,
+            )
+        )

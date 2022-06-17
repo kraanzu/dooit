@@ -314,7 +314,7 @@ class Doit(App):
                         )
                         await self.reset_screen()
 
-                    elif event.key == "s":
+                    elif event.key == "ctrl+s":
                         await self.handle_change_status(
                             ChangeStatus(self, "SORT"),
                         )

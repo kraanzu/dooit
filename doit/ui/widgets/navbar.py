@@ -143,18 +143,25 @@ class Navbar(NestedListEdit):
         Adds sibling for the currently selected node
         """
 
-        if self.highlighted_node.parent == self.root:
-            await self.root.add("child", self.get_ibox(child=False))
-            await self.move_to_bottom()
-        else:
-            await self.reach_to_parent()
+        parent = self.highlighted_node.parent
+
+        if not parent:
             await self.add_child()
+            return
+        else:
+            children = parent.children
+            tree = parent.tree.children
+
+            await parent.add("", self.get_ibox(child=parent != self.root))
+            i = children.index(self.highlighted_node)
+            children.insert(i + 1, children.pop())
+            tree.insert(i + 1, tree.pop())
+            await self.cursor_down()
+
         await self.focus_node()
         self.refresh()
 
     def render_custom_node(self, node: TreeNode) -> RenderableType:
-        # return str(node.data.view)
-
         icons = self.config["icons"]
         colors = self.config["theme"]
 

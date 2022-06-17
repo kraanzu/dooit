@@ -46,6 +46,7 @@ class Navbar(NestedListEdit):
         return self.render_custom_node(node)
 
     async def focus_node(self) -> None:
+        self.prev_value = self.highlighted_node.data.value
         self._last_path = self._get_node_path()
         self.highlighted_node.data.on_focus()
         await self.highlighted_node.data.handle_keypress("end")
@@ -55,7 +56,10 @@ class Navbar(NestedListEdit):
     async def check_node(self):
         val = self.highlighted_node.data.value.strip()
         if not val:
-            await self.remove_node()
+            if not self.prev_value:
+                await self.remove_node()
+            else:
+                self.highlighted_node.data.value = self.prev_value
             await self.post_message(Notify(self, "Can't leave topic name empty :("))
             return
 

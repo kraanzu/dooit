@@ -138,9 +138,11 @@ class TodoList(NestedListEdit):
             return
 
         self.focused = part
+        self.prev_about = self.highlighted_node.data.about.value
+        self.prev_date = self.highlighted_node.data.due.value
+
         await self.post_message(ChangeStatus(self, status))
         await super().focus_node(part)
-        self.prev_value = self.highlighted_node.data.due.value
 
         await self.post_message(
             events.Key(self, "right")
@@ -227,7 +229,10 @@ class TodoList(NestedListEdit):
             case "about":
                 val = self.highlighted_node.data.about.value.strip()
                 if not val:
-                    await self.remove_node()
+                    if not self.prev_about:
+                        await self.remove_node()
+                    else:
+                        self.highlighted_node.data.about.value = self.prev_about
                     await self.post_message(
                         Notify(self, "Can't leave todo's about empty :(")
                     )
@@ -252,7 +257,7 @@ class TodoList(NestedListEdit):
                         await self.post_message(
                             Notify(self, message="Please enter a valid date")
                         )
-                        self.highlighted_node.data.due.value = self.prev_value
+                        self.highlighted_node.data.due.value = self.prev_date
                     else:
                         await self.post_message(
                             Notify(self, message="You due date was updated")
@@ -267,7 +272,7 @@ class TodoList(NestedListEdit):
                         )
                     )
 
-                    self.highlighted_node.data.due.value = self.prev_value
+                    self.highlighted_node.data.due.value = self.prev_date
 
         self.focused = None
         self.refresh()

@@ -1,6 +1,7 @@
 from os import get_terminal_size
 from rich.align import Align
 from rich.console import RenderableType
+from rich.text import Text
 from textual import events
 from doit.ui.events.events import ChangeStatus, HighlightNode
 from doit.ui.widgets.simple_input import SimpleInput, View
@@ -21,11 +22,21 @@ class SearchTree(TodoList):
 
     def render(self) -> RenderableType:
         if self.any:
-            return super().render()
+            return self._tree
         else:
             return Align.center(
                 NO_MATCH, vertical="middle", height=round(get_terminal_size()[1] * 0.8)
             )
+
+    def render_about(self, node, _) -> RenderableType:
+        label: Text = super().render_about(node, _)
+        if self.highlighted_node == node:
+            label.append(" <=")
+
+        if val := self.search.value:
+            label.highlight_regex(val, style="red")
+
+        return label
 
     async def set_values(self, nodes):
         """

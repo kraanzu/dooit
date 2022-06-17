@@ -204,7 +204,7 @@ class NestedListEdit(TreeControl):
 
         return self.render_custom_node(node)
 
-    def render_custom_node(self, node) -> RenderableType:
+    def render_custom_node(self, node) -> Text:
 
         label = (
             Text(str(node.data.about.render()), no_wrap=True)

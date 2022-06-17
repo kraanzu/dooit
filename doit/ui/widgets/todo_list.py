@@ -383,7 +383,7 @@ class TodoList(NestedListEdit):
 
         return label
 
-    def render_about(self, node, _) -> RenderableType:
+    def render_about(self, node, _) -> Text:
         # Setting up text
 
         width = self._about_width(node.parent != self.root)
@@ -435,7 +435,7 @@ class TodoList(NestedListEdit):
         label.apply_meta(meta)
         return label
 
-    def render_date(self, node: TreeNode, color) -> RenderableType:
+    def render_date(self, node: TreeNode, color) -> Text:
 
         icon = self.icons["due_date"]
 
@@ -450,7 +450,7 @@ class TodoList(NestedListEdit):
         label = Text.from_markup(f"[{color}]  {icon}  [/{color}]") + label
         return label
 
-    def render_priority(self, node: TreeNode, color) -> RenderableType:
+    def render_priority(self, node: TreeNode, color) -> Text:
 
         icon = self.icons["urgency"]
 

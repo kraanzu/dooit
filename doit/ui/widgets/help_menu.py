@@ -22,11 +22,11 @@ def colored(text: str, color: StyleType) -> str:
 def generate_kb_table(
     kb: dict[str, str], topic: str, notes: list[str] = []
 ) -> RenderableType:
-    table = Table.grid(expand=True, padding=(0, -1))
+    table = Table.grid(expand=True)
     table.add_column("mode", width=12)
-    table.add_column("cmd", width=10)
+    table.add_column("cmd", width=15)
     table.add_column("colon", width=2)
-    table.add_column("help")
+    table.add_column("help", width=50)
 
     table.add_row(Text.from_markup(f" [r green] {topic} [/r green]"), "", "", "")
     for cmd, help in kb.items():
@@ -55,7 +55,9 @@ seperator = f"{colored('─' * 60, 'bold dim black')}"
 # --------------------------------------------
 NORMAL_KB = {
     "j/down": "Move down in list",
+    "J/shift+down": "Shift todo down in list",
     "k/up": "Move up in list",
+    "K/shift+up": "Shift todo up in list",
     "i": "Edit todo/topic",
     "d": "Edit date ⃰ ",
     "g": "Move to top of list",

@@ -429,7 +429,7 @@ class TodoList(NestedListEdit):
                     )
 
         meta = {
-            "@click": f"click_label({node.id})",
+            "@click": "click_about()",
             "tree_node": node.id,
             "cursor": node.is_cursor,
         }
@@ -450,6 +450,14 @@ class TodoList(NestedListEdit):
         label = Text.from_markup(str(node.data.due.render())) or Text("No Due Date")
         label = self._highlight_node(node, label)
         label = Text.from_markup(f"[{color}]  {icon}  [/{color}]") + label
+
+        meta = {
+            "@click": "click_date()",
+            "tree_node": node.id,
+            "cursor": node.is_cursor,
+        }
+
+        label.apply_meta(meta)
         return label
 
     def render_priority(self, node: TreeNode, color) -> Text:
@@ -461,3 +469,9 @@ class TodoList(NestedListEdit):
         label = self._highlight_node(node, label)
         label = Text.from_markup(f"[{color}]{icon} [/{color}]") + label
         return label
+
+    async def action_click_date(self) -> None:
+        await self.focus_node("due", "DATE")
+
+    async def action_click_about(self) -> None:
+        await self.focus_node("about", "INSERT")

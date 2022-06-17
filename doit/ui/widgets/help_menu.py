@@ -65,6 +65,8 @@ NORMAL_KB = {
     "x": "Remove highlighted node",
     "a": "Add sibling todo/topic",
     "A": "Add child todo/topic",
+    "ctrl+s": "Launch sort menu",
+    "/": "Start Search Mode ⃰ ⃰ ",
     "enter": "Select topic ⃰ ",
     "escape": "Move focus to Menu ⃰ ⃰ ",
 }

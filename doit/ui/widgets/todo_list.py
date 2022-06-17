@@ -66,20 +66,21 @@ class TodoList(NestedListEdit):
         parent.children = node_tree.copy()
         self.refresh()
 
-    async def _sort(self, func: Callable) -> None:
+    async def _sort(self, func: Callable, reverse: bool = False) -> None:
 
         parent = self.highlighted_node.parent
         if not parent:
             return
 
         dup = list(enumerate(parent.children))
-        dup.sort(key=lambda x: func(x[1]))
+        dup.sort(key=lambda x: func(x[1]), reverse=reverse)
         arrangemnt = [i for i, _ in dup]
         await self._sort_by_arrangement(arrangemnt)
 
     async def sort_by_urgency(self) -> None:
         await self._sort(
             func=lambda node: node.data.urgency,
+            reverse=True,
         )
 
     async def sort_by_status(self) -> None:
@@ -106,7 +107,7 @@ class TodoList(NestedListEdit):
     async def sort_by_date(self) -> None:
         def f(date):
             if not date:
-                return datetime(1, 1, 1)
+                return datetime.max
             else:
                 return datetime(*self._parse_date(date))
 
@@ -179,8 +180,6 @@ class TodoList(NestedListEdit):
 
         else:
             match event.key:
-                case "escape":
-                    await self.post_message(SwitchTab(self))
                 case "j" | "down":
                     await self.cursor_down()
                 case "k" | "up":
@@ -209,6 +208,9 @@ class TodoList(NestedListEdit):
                     self.highlighted_node.data.increase_urgency()
                 case "_" | "-":
                     self.highlighted_node.data.decrease_urgency()
+                case "ctrl+i":
+                    if not self.editing:
+                        await self.post_message(SwitchTab(self))
 
         self.refresh()
 

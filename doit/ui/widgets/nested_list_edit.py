@@ -100,6 +100,26 @@ class NestedListEdit(TreeControl):
                 self.cursor_line -= 1
                 self.highlight(prev_node.id)
 
+    async def shift_up(self):
+        if prev := self.highlighted_node.previous_node:
+            if prev != self.highlighted_node.parent:
+                parent = self.highlighted_node.parent or self.root
+                children = parent.children
+                tree = parent.tree.children
+                pos = children.index(self.highlighted_node)
+                children[pos], children[pos - 1] = children[pos - 1], children[pos]
+                tree[pos], tree[pos - 1] = tree[pos - 1], tree[pos]
+
+    async def shift_down(self):
+        if node := self.highlighted_node.next_node:
+            if node.parent == self.highlighted_node.parent:
+                parent = self.highlighted_node.parent or self.root
+                children = parent.children
+                tree = parent.tree.children
+                pos = children.index(self.highlighted_node)
+                children[pos], children[pos + 1] = children[pos + 1], children[pos]
+                tree[pos], tree[pos + 1] = tree[pos + 1], tree[pos]
+
     async def move_to_top(self) -> None:
         if children := self.root.children:
             self.highlight(children[0].id)
@@ -165,8 +185,12 @@ class NestedListEdit(TreeControl):
             match event.key:
                 case "j" | "down":
                     await self.cursor_down()
+                case "J" | "shift+down":
+                    await self.shift_down()
                 case "k" | "up":
                     await self.cursor_up()
+                case "K" | "shift+up":
+                    await self.shift_up()
                 case "g":
                     await self.move_to_top()
                 case "G":

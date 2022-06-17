@@ -182,8 +182,12 @@ class TodoList(NestedListEdit):
             match event.key:
                 case "j" | "down":
                     await self.cursor_down()
+                case "J" | "shift+down":
+                    await self.shift_down()
                 case "k" | "up":
                     await self.cursor_up()
+                case "K" | "shift+up":
+                    await self.shift_up()
                 case "g":
                     await self.move_to_top()
                 case "G":

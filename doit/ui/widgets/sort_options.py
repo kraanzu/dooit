@@ -1,5 +1,6 @@
 from os import get_terminal_size
 from rich.align import Align
+from rich.box import HEAVY
 from rich.console import RenderableType
 from rich.tree import Tree
 from rich.panel import Panel
@@ -140,8 +141,9 @@ class SortOptions(Widget):
         return Align.center(
             Panel.fit(
                 tree,
-                title="Sort By",
+                title="Sort",
                 width=20,
+                box=HEAVY,
             ),
             vertical="middle",
             height=round(get_terminal_size()[1] * 0.8),

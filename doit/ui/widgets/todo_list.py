@@ -2,6 +2,7 @@ import re
 from os import get_terminal_size
 from datetime import datetime
 from typing import Callable
+import pyperclip
 from rich.align import Align
 from rich.console import RenderableType
 from rich.text import Text
@@ -214,6 +215,15 @@ class TodoList(NestedListEdit):
                     self.highlighted_node.data.increase_urgency()
                 case "_" | "-":
                     self.highlighted_node.data.decrease_urgency()
+                case "y":
+                    try:
+                        pyperclip.copy(self.highlighted_node.data.about.value)
+                        await self.post_message(Notify(self, "Copied to Clipboard!"))
+                    except:
+                        await self.post_message(
+                            Notify(self, "Cannot copy to Clipboard :(")
+                        )
+
                 case "ctrl+i":
                     if not self.editing:
                         await self.post_message(SwitchTab(self))

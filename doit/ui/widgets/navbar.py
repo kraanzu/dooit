@@ -158,9 +158,12 @@ class Navbar(NestedListEdit):
 
             await parent.add("", self.get_ibox(child=parent != self.root))
             i = children.index(self.highlighted_node)
+            id = children[-1].id
             children.insert(i + 1, children.pop())
             tree.insert(i + 1, tree.pop())
-            await self.cursor_down()
+
+            while self.highlighted != id:
+                await self.cursor_down()
 
         await self.focus_node()
         self.refresh()

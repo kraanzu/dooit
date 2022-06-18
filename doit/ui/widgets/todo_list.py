@@ -419,7 +419,9 @@ class TodoList(NestedListEdit):
         if children := node.children:
             total = len(children)
             done = sum(child.data.status == "COMPLETED" for child in children)
-            label += Text.from_markup(f" ( [green][/green] {done}/{total} )")
+
+            if not (self.highlighted_node == node and self.editing):
+                label += Text.from_markup(f" ( [green][/green] {done}/{total} )")
 
         # setup pre-icons
         if node != self.root:

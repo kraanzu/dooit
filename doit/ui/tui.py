@@ -26,6 +26,7 @@ class Doit(App):
             widget.toggle_highlight()
 
     async def action_quit(self) -> None:
+        await self.on_key(events.Key(self, "escape"))  # incase of empty todo
         await super().action_quit()
         parser.save_todo(self.todo_lists)
         parser.save_topic(self.navbar)

@@ -1,10 +1,8 @@
 <img src="https://user-images.githubusercontent.com/97718086/174438959-d8887b62-76de-4587-9619-91a4ecd6e1d6.png" align="right" alt="Todo Icon" width="150" height="150">
 
 # Doit ✔️
-*A todo manager that you didn't ask for, but needed !*
-
-Doit is a TUI todo application that tries to be clean and minimal while packed with features at the same time \
-to make sure that you complete your tasks on time :) 
+*A todo manager that you didn't ask for, but needed !* \
+to make sure that you complete your tasks on time ;) 
 
 
 # Installation 🔨
@@ -38,9 +36,11 @@ And then simply type `doit` in your terminal to launch it.. ezy pzy
 
 # Demo 🎥
 
+https://user-images.githubusercontent.com/97718086/174479319-638e6d4a-2576-4e88-9eed-2ee53dc958fc.mp4
+
 
 # Contribution 🤝
-- Want to contribute? Feel free to open a PR! 😸 \
+- Want to contribute? Feel free to open a PR! 😸 
 - Got some ideas for improvements? I'm all ears! 👂
 
 ----------------------------

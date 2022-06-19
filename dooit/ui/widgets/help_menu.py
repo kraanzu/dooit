@@ -119,7 +119,7 @@ HEADER = f"""
 
 BODY = f""" {colored(f'Dooit is build to be used from the keyboard,{NL} but mouse can also be used to navigate', 'green')}
 
-Documentation below will wak you through the controls:
+Documentation below will walk you through the controls:
 {seperator}
 """
 

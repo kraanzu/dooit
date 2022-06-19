@@ -181,7 +181,7 @@ class Navbar(NestedListEdit):
 
         # Setup pre-icons
         if node.children:
-            if node.expanded:
+            if not node.expanded:
                 icon = icons["nested_close"]
             else:
                 icon = icons["nested_open"]

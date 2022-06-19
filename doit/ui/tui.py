@@ -371,4 +371,6 @@ class Doit(App):
         self.switch_tabs()
 
     async def handle_remove_topic(self, event: RemoveTopic) -> None:
-        self.todo_lists.pop(event.selected, None)
+        for topic in list(self.todo_lists.keys()):
+            if topic.startswith(event.selected):
+                self.todo_lists.pop(topic, None)

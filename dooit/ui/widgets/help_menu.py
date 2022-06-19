@@ -126,7 +126,7 @@ Documentation below will walk you through the controls:
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
 AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL * 2}{seperator}{NL}"
 
-OUTRO = f"Press {colored('escape', 'green')} or {colored('ctrl+p', 'green')} to exit help menu"
+OUTRO = f"Press {colored('escape', 'green')}, {colored('ctrl+p', 'green')}, or {colored('?', 'green')} to exit help menu"
 
 # ---------------- X -------------------------
 

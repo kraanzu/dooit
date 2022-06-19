@@ -286,7 +286,7 @@ class Doit(App):
                 await self.help_menu.key_end()
 
     async def on_key(self, event: events.Key) -> None:
-        if event.key == "ctrl+p" or (event.key == "escape" and self.help):
+        if (event.key == "ctrl+p") or (event.key == "escape" and self.help) or event.key == "?":
             await self.toggle_help()
             return
 

@@ -35,8 +35,7 @@ And then simply type `doit` in your terminal to launch it.. ezy pzy
 > See Demo Video below in order to get a visual :)
 
 # Demo 🎥
-
-https://user-images.githubusercontent.com/97718086/174479319-638e6d4a-2576-4e88-9eed-2ee53dc958fc.mp4
+https://user-images.githubusercontent.com/97718086/174479591-5fe4f425-c9f3-4db2-969c-df8aa400e103.mp4
 
 
 # Contribution 🤝
@@ -46,7 +45,7 @@ https://user-images.githubusercontent.com/97718086/174479319-638e6d4a-2576-4e88-
 ----------------------------
 ----------------------------
 
-#### Other TUI projects:
+#### Other TUI projects 🤓 :
 If you liked doit then you might wanna try out some of my other TUI projects as well
 - [termtyper](https://github.com/kraanzu/termtyper) - A typing-test app for terminal
 - [gupshup](https://github.com/kraanzu/gupshup) - A localhost TUI chat client

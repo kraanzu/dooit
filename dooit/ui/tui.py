@@ -25,6 +25,9 @@ class Doit(App):
         for widget in self.navbar_box:
             widget.toggle_highlight()
 
+    async def on_load(self) -> None:
+        await self.bind("q", "quit", "Quit")
+
     async def action_quit(self) -> None:
         await self.on_key(events.Key(self, "escape"))  # incase of empty todo
         await super().action_quit()

@@ -59,7 +59,7 @@ NORMAL_KB = {
     "k/up": "Move up in list",
     "K/shift+up": "Shift todo up in list",
     "i": "Edit todo/topic",
-    "c": "Mark todo as complete",
+    "c": "Toggle todo status as complete/incomplete",
     "y": "Copy todo's text",
     "d": "Edit date ⃰ ",
     "g": "Move to top of list",
@@ -72,7 +72,7 @@ NORMAL_KB = {
     "ctrl+s": "Launch sort menu",
     "/": "Start Search Mode ⃰ ⃰ ",
     "enter": "Select topic ⃰ ",
-    "escape": "Move focus to Menu ⃰ ⃰ ",
+    "tab": "Move focus to Menu ⃰ ⃰ ",
 }
 
 NORMAL_NB = [

@@ -231,7 +231,11 @@ class TodoList(NestedListEdit):
         self.refresh()
 
     async def mark_complete(self) -> None:
-        await self.modify_due_status("COMPLETED")
+        if self.highlighted_node.data.status != "COMPLETED":
+            await self.modify_due_status("COMPLETED")
+        else:
+            await self.modify_due_status("PENDING")
+        await self.update_due_status()
 
     async def check_node(self) -> None:
         match self.focused:

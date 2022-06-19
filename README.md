@@ -4,9 +4,9 @@
 *A todo manager that you didn't ask for, but needed !* \
 to make sure that you complete your tasks on time ;)
 
-[![GitHub issues](https://img.shields.io/github/issues/kraanzu/doit?color=red&style=for-the-badge)](https://github.com/kraanzu/doit/issues)
-[![GitHub stars](https://img.shields.io/github/stars/kraanzu/doit?color=green&style=for-the-badge)](https://github.com/kraanzu/doit/stargazers)
-[![GitHub license](https://img.shields.io/github/license/kraanzu/doit?color=yellow&style=for-the-badge)](https://github.com/kraanzu/doit/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/kraanzu/dooit?color=red&style=for-the-badge)](https://github.com/kraanzu/doit/issues)
+[![GitHub stars](https://img.shields.io/github/stars/kraanzu/dooit?color=green&style=for-the-badge)](https://github.com/kraanzu/doit/stargazers)
+[![GitHub license](https://img.shields.io/github/license/kraanzu/dooit?color=yellow&style=for-the-badge)](https://github.com/kraanzu/doit/blob/main/LICENSE)
 
 # Installation 🔨
 > You can install dooit easily using python one-liner

@@ -85,3 +85,13 @@ class SwitchTab(Message, bubble=True):
     """
 
     pass
+
+
+class RemoveTopic(Message, bubble=True):
+    """
+    Emitted when user presses `Esc` while in normal mode in todo
+    """
+
+    def __init__(self, sender: MessageTarget, selected: str) -> None:
+        super().__init__(sender)
+        self.selected = selected

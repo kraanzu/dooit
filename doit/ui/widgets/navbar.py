@@ -1,8 +1,8 @@
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
-from textual.widgets import TreeNode
-from doit.ui.events.events import Notify
+from textual.widgets import TreeNode, NodeID
+from doit.ui.events.events import Notify, RemoveTopic
 
 from doit.ui.widgets.simple_input import SimpleInput, View
 
@@ -52,6 +52,10 @@ class Navbar(NestedListEdit):
         await self.highlighted_node.data.handle_keypress("end")
         await self.post_message(ChangeStatus(self, "INSERT"))
         self.editing = True
+
+    async def remove_node(self, id: NodeID | None = None) -> None:
+        await self.post_message(RemoveTopic(self, self._get_node_path()))
+        await super().remove_node(id)
 
     async def check_node(self):
         val = self.highlighted_node.data.value.strip()

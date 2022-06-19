@@ -369,3 +369,6 @@ class Doit(App):
 
     async def handle_switch_tab(self, _: SwitchTab) -> None:
         self.switch_tabs()
+
+    async def handle_remove_topic(self, event: RemoveTopic) -> None:
+        self.todo_lists.pop(event.selected, None)

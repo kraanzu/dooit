@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "doit"
+name = "dooit"
 version = "0.1.0"
 description = "A TUI todo manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]

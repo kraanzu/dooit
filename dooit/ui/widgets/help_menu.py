@@ -73,6 +73,7 @@ NORMAL_KB = {
     "/": "Start Search Mode ⃰ ⃰ ",
     "enter": "Select topic ⃰ ",
     "tab": "Move focus to Menu ⃰ ⃰ ",
+    "q": "Quit the Application",
 }
 
 NORMAL_NB = [

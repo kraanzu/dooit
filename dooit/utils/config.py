@@ -3,7 +3,7 @@ from pathlib import Path
 
 HOME = Path.home()
 XDG_CONFIG = HOME / ".config"
-CONFIG = XDG_CONFIG / "doit" / "config.yaml"
+CONFIG = XDG_CONFIG / "dooit" / "config.yaml"
 
 SAMPLE = Path(__file__).parent.absolute() / "example_config.yaml"
 

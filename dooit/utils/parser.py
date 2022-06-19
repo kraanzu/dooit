@@ -1,10 +1,10 @@
 from pathlib import Path
 from os import mkdir
 from pickle import dump, load, HIGHEST_PROTOCOL
-from doit.ui.widgets.entry import Entry
-from doit.ui.widgets.navbar import Navbar
-from doit.ui.widgets.simple_input import SimpleInput
-from doit.ui.widgets.todo_list import TodoList
+from dooit.ui.widgets.entry import Entry
+from dooit.ui.widgets.navbar import Navbar
+from dooit.ui.widgets.simple_input import SimpleInput
+from dooit.ui.widgets.todo_list import TodoList
 
 
 class Parser:
@@ -87,11 +87,11 @@ class Parser:
         if not Path.is_dir(config):
             mkdir(config)
 
-        doit = config / "doit"
-        if not Path.is_dir(doit):
-            mkdir(doit)
+        dooit = config / "dooit"
+        if not Path.is_dir(dooit):
+            mkdir(dooit)
 
-        self.todo_path = doit / "todos.pkl"
+        self.todo_path = dooit / "todos.pkl"
         if not Path.is_file(self.todo_path):
             with open(self.todo_path, "wb") as f:
                 dump(
@@ -100,7 +100,7 @@ class Parser:
                     protocol=HIGHEST_PROTOCOL,
                 )
 
-        self.topic_path = doit / "topics.pkl"
+        self.topic_path = dooit / "topics.pkl"
         if not Path.is_file(self.topic_path):
             with open(self.topic_path, "wb") as f:
                 dump(

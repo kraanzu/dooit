@@ -117,13 +117,13 @@ HEADER = f"""
 {seperator}
 """
 
-BODY = f""" {colored(f'Doit is build to be used from the keyboard,{NL} but mouse can also be used to navigate', 'green')}
+BODY = f""" {colored(f'Dooit is build to be used from the keyboard,{NL} but mouse can also be used to navigate', 'green')}
 
 Documentation below will wak you through the controls:
 {seperator}
 """
 
-THANKS = f"{colored('Thanks for using doit :heart:', 'yellow')}"
+THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
 AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL * 2}{seperator}{NL}"
 
 OUTRO = f"Press {colored('escape', 'green')} or {colored('ctrl+p', 'green')} to exit help menu"

@@ -9,7 +9,7 @@ from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode, NodeID
 
-from doit.ui.widgets.simple_input import View
+from dooit.ui.widgets.simple_input import View
 
 from ...ui.widgets import NestedListEdit
 from ...ui.widgets.entry import Entry
@@ -44,7 +44,7 @@ class TodoList(NestedListEdit):
         )
         self.focused = None
 
-        from doit.utils.config import Config
+        from dooit.utils.config import Config
 
         self.config = Config().load_config("todos")
         self.icons = self.config["icons"]

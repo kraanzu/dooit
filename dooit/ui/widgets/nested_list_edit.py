@@ -6,7 +6,7 @@ from textual import events
 from textual.widgets import TreeControl, TreeNode, NodeID
 from textual.messages import CursorMove
 
-from doit.ui.widgets.simple_input import SimpleInput, View
+from dooit.ui.widgets.simple_input import SimpleInput, View
 
 
 class NestedListEdit(TreeControl):

@@ -3,9 +3,9 @@ from rich.align import Align
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
-from doit.ui.events.events import ChangeStatus, HighlightNode
-from doit.ui.widgets.simple_input import SimpleInput, View
-from doit.ui.widgets.todo_list import TodoList
+from dooit.ui.events.events import ChangeStatus, HighlightNode
+from dooit.ui.widgets.simple_input import SimpleInput, View
+from dooit.ui.widgets.todo_list import TodoList
 from textual.widgets import NodeID, TreeNode
 
 NO_MATCH = """

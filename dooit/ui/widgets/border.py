@@ -2,7 +2,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual.widget import Widget
 
-from doit.utils.config import Config
+from dooit.utils.config import Config
 
 
 class Border(Widget):

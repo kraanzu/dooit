@@ -2,9 +2,9 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode, NodeID
-from doit.ui.events.events import Notify, RemoveTopic
+from dooit.ui.events.events import Notify, RemoveTopic
 
-from doit.ui.widgets.simple_input import SimpleInput, View
+from dooit.ui.widgets.simple_input import SimpleInput, View
 
 from ...ui.events import ModifyTopic, ListItemSelected, ChangeStatus
 from ...ui.widgets import NestedListEdit
@@ -17,7 +17,7 @@ class Navbar(NestedListEdit):
 
     def __init__(self):
         super().__init__("", SimpleInput())
-        from doit.utils.config import Config
+        from dooit.utils.config import Config
 
         self.config = Config().load_config("menu")
 

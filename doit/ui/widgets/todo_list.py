@@ -260,7 +260,7 @@ class TodoList(NestedListEdit):
                     return
 
             case "due":
-                date = self.highlighted_node.data.due.value
+                date = self.highlighted_node.data.due.value.strip()
 
                 if len(date) == 10 and re.findall(r"^\d\d-\d\d-\d\d\d\d$", date):
                     if not self._is_valid_date(date):
@@ -272,17 +272,21 @@ class TodoList(NestedListEdit):
                         await self.post_message(
                             Notify(self, message="You due date was updated")
                         )
-                        await self.update_due_status()
 
                 else:
-                    await self.post_message(
-                        Notify(
-                            self,
-                            message="Invalid date format! Enter in format: dd-mm-yyyy",
+                    if date == "":
+                        self.highlighted_node.data.due.value = ""
+                    else:
+                        await self.post_message(
+                            Notify(
+                                self,
+                                message="Invalid date format! Enter in format: dd-mm-yyyy",
+                            )
                         )
-                    )
 
-                    self.highlighted_node.data.due.value = self.prev_date
+                        self.highlighted_node.data.due.value = self.prev_date
+
+                await self.update_due_status()
 
         self.focused = None
         self.refresh()

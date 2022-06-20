@@ -1,8 +1,9 @@
 import yaml
 from pathlib import Path
+from os import environ
 
 HOME = Path.home()
-XDG_CONFIG = HOME / ".config"
+XDG_CONFIG = Path(environ.get("XDG_CONFIG_HOME") or HOME / ".config")
 CONFIG = XDG_CONFIG / "dooit" / "config.yaml"
 
 SAMPLE = Path(__file__).parent.absolute() / "example_config.yaml"

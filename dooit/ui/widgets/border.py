@@ -2,7 +2,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual.widget import Widget
 
-from dooit.utils.config import Config
+from dooit.utils.config import conf
 
 
 class Border(Widget):
@@ -18,7 +18,7 @@ class Border(Widget):
         self.color = color
         self.item = item
         self.measure = measure
-        config = Config().load_config()
+        config = conf.load_config()
         self.style_highlight = config["body_highlight"]
         self.style_dim = config["body_dim"]
 

@@ -4,7 +4,7 @@ from rich.text import Text
 from rich.table import Table
 from textual.widget import Widget
 
-from dooit.utils.config import Config
+from dooit.utils.config import conf
 
 from ..events import StatusType
 
@@ -20,7 +20,7 @@ class StatusBar(Widget):
         self.status = "NORMAL"
         self.color = "blue"
         self.set_interval(1, self.refresh)
-        config = Config().load_config("status_bar")
+        config = conf.load_config("status_bar")
         self.theme = config["theme"]
         self.clock_icon = config["icons"]["clock"]
         self.calendar_icon = config["icons"]["calendar"]

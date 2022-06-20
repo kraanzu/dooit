@@ -6,7 +6,7 @@ from rich.table import Table
 from rich.text import Text
 from textual.widget import Widget
 
-from dooit.utils.config import Config
+from dooit.utils.config import conf
 
 
 class Box(Widget):
@@ -24,7 +24,7 @@ class Box(Widget):
         self.options = options
         self.color = color
         self.highlighted = False
-        config = Config().load_config()
+        config = conf.load_config()
         self.style_highlighted = config["header_highlight"]
         self.style_dim = config["header_dim"]
 

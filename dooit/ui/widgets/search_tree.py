@@ -97,19 +97,20 @@ class SearchTree(TodoList):
                     await self.refresh_search()
 
         else:
+            keys = self.keys
             match event.key:
-                case "/":
+                case i if i in keys.start_search:
                     self.searching = True
                     self.search.on_focus()
                 case "escape":
                     await self.post_message(ChangeStatus(self, "NORMAL"))
-                case "j" | "down":
+                case i if i in keys.move_down:
                     await self.cursor_down()
-                case "k" | "up":
+                case i if i in keys.move_up:
                     await self.cursor_up()
-                case "g":
+                case i if i in keys.move_to_top:
                     await self.move_to_top()
-                case "G":
+                case i if i in keys.move_to_bottom:
                     await self.move_to_bottom()
                 case "enter":
                     await self.post_message(ChangeStatus(self, "NORMAL"))

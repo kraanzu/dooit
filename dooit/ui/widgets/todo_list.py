@@ -44,10 +44,11 @@ class TodoList(NestedListEdit):
         )
         self.focused = None
 
-        from dooit.utils.config import Config
+        from dooit.utils.config import conf
 
-        self.config = Config().load_config("todos")
+        self.config = conf.load_config("todos")
         self.icons = self.config["icons"]
+        self.keys = conf.keys
 
     async def _sort_by_arrangement(self, seq: list[int]) -> None:
 
@@ -182,40 +183,41 @@ class TodoList(NestedListEdit):
                     await self.send_key_to_selected(event)
 
         else:
+            keys = self.keys
             match event.key:
-                case "j" | "down":
+                case i if i in keys.move_down:
                     await self.cursor_down()
-                case "J" | "shift+down":
+                case i if i in keys.shift_down:
                     await self.shift_down()
-                case "k" | "up":
+                case i if i in keys.move_up:
                     await self.cursor_up()
-                case "K" | "shift+up":
+                case i if i in keys.shift_up:
                     await self.shift_up()
-                case "g":
+                case i if i in keys.move_to_top:
                     await self.move_to_top()
-                case "G":
+                case i if i in keys.move_to_bottom:
                     await self.move_to_bottom()
-                case "z":
+                case i if i in keys.toggle_expand:
                     await self.toggle_expand()
-                case "Z":
+                case i if i in keys.toggle_expand_parent:
                     await self.toggle_expand_parent()
-                case "A":
+                case i if i in keys.add_child:
                     await self.add_child()
-                case "a":
+                case i if i in keys.add_sibling:
                     await self.add_sibling()
-                case "i":
+                case i if i in keys.edit_node:
                     await self.focus_node("about", "INSERT")
-                case "d":
+                case i if i in keys.edit_date:
                     await self.focus_node("due", "DATE")
-                case "x":
+                case i if i in keys.remove_node:
                     await self.remove_node()
-                case "c":
+                case i if i in keys.toggle_complete:
                     await self.mark_complete()
-                case "+" | "=":
+                case i if i in keys.increase_urgency:
                     self.highlighted_node.data.increase_urgency()
-                case "_" | "-":
+                case i if i in keys.decrease_urgency:
                     self.highlighted_node.data.decrease_urgency()
-                case "y":
+                case i if i in keys.yank_todo:
                     try:
                         pyperclip.copy(self.highlighted_node.data.about.value)
                         await self.post_message(Notify(self, "Copied to Clipboard!"))
@@ -224,7 +226,7 @@ class TodoList(NestedListEdit):
                             Notify(self, "Cannot copy to Clipboard :(")
                         )
 
-                case "ctrl+i":
+                case i if i in keys.move_focus_to_menu:
                     if not self.editing:
                         await self.post_message(SwitchTab(self))
 

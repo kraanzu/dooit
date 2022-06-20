@@ -1,3 +1,11 @@
+from dooit.utils.parser import Parser
+
+parser = Parser()
+from dooit.utils.config import conf
+
+keys = conf.keys
+
+
 from textual import events
 from textual.app import App
 from textual.layouts.dock import DockLayout
@@ -7,9 +15,6 @@ from textual.widget import Widget
 
 from .events import *  # NOQA
 from ..ui.widgets import *  # NOQA
-from ..utils import Parser
-
-parser = Parser()
 
 
 class Doit(App):
@@ -275,21 +280,17 @@ class Doit(App):
 
     async def handle_help_key(self, event: events.Key):
         match event.key:
-            case "j" | "down":
+            case i if i in keys.move_down:
                 await self.help_menu.key_down()
-            case "k" | "up":
+            case i if i in keys.move_up:
                 await self.help_menu.key_up()
-            case " " | "pagedown":
-                await self.help_menu.key_down()
-            case "pageup":
-                await self.help_menu.key_pageup()
-            case "g" | "home":
+            case i if i in keys.move_to_top:
                 await self.help_menu.key_home()
-            case "G" | "end":
+            case i if i in keys.move_to_bottom:
                 await self.help_menu.key_end()
 
     async def on_key(self, event: events.Key) -> None:
-        if (event.key == "ctrl+p") or (event.key == "escape" and self.help) or event.key == "?":
+        if (event.key in keys.show_help) or (event.key == "escape" and self.help):
             await self.toggle_help()
             return
 
@@ -311,14 +312,14 @@ class Doit(App):
                     await self.sort_menu.key_press(event)
 
                 case "NORMAL":
-                    if event.key == "/":
+                    if event.key in keys.start_search:
                         await self.search_tree.set_values(self.todo_list.nodes)
                         await self.handle_change_status(
                             ChangeStatus(self, "SEARCH"),
                         )
                         await self.reset_screen()
 
-                    elif event.key == "ctrl+s":
+                    elif event.key in keys.spawn_sort_menu:
                         await self.handle_change_status(
                             ChangeStatus(self, "SORT"),
                         )

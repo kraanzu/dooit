@@ -8,6 +8,9 @@ from rich.text import Text
 from rich.tree import Tree
 from textual.widget import Widget
 
+from dooit.utils.config import conf, Key
+
+keys = Key({i: "/".join(j).replace("ctrl+i", "tab") for i, j in conf.keybinds.items()})
 NL = "\n"
 
 
@@ -54,28 +57,28 @@ seperator = f"{colored('─' * 60, 'bold dim black')}"
 # KEYBINDINGS
 # --------------------------------------------
 NORMAL_KB = {
-    "j/down": "Move down in list",
-    "J/shift+down": "Shift todo down in list",
-    "k/up": "Move up in list",
-    "K/shift+up": "Shift todo up in list",
-    "i": "Edit todo/topic",
-    "c": "Toggle todo status as complete/incomplete**",
-    "y": "Copy todo's text",
-    "d": "Edit date**",
-    "+/=": "Increase urgency**",
-    "-/_": "Decrease urgency**",
-    "g": "Move to top of list",
-    "G": "Move to bottom of list",
-    "z": "Toggle-expand highlighted item",
-    "Z": "Toggle-expand parent item",
-    "x": "Remove highlighted node",
-    "a": "Add sibling todo/topic",
-    "A": "Add child todo/topic",
-    "ctrl+s": "Launch sort menu",
-    "/": "Start Search Mode ⃰ ⃰ ",
-    "enter": "Select topic ⃰ ",
-    "tab": "Move focus to Menu ⃰ ⃰ ",
-    "q": "Quit the Application",
+    f"{keys.move_down}": "Move down in list",
+    f"{keys.shift_down}": "Shift todo down in list",
+    f"{keys.move_up}": "Move up in list",
+    f"{keys.shift_up}": "Shift todo up in list",
+    f"{keys.edit_node}": "Edit todo/topic",
+    f"{keys.toggle_complete}": "Toggle todo status as complete/incomplete**",
+    f"{keys.yank_todo}": "Copy todo's text",
+    f"{keys.edit_date}": "Edit date**",
+    f"{keys.increase_urgency}": "Increase urgency**",
+    f"{keys.decrease_urgency}": "Decrease urgency**",
+    f"{keys.move_to_top}": "Move to top of list",
+    f"{keys.move_to_bottom}": "Move to bottom of list",
+    f"{keys.toggle_expand}": "Toggle-expand highlighted item",
+    f"{keys.toggle_expand_parent}": "Toggle-expand parent item",
+    f"{keys.remove_node}": "Remove highlighted node",
+    f"{keys.add_sibling}": "Add sibling todo/topic",
+    f"{keys.add_child}": "Add child todo/topic",
+    f"{keys.spawn_sort_menu}": "Launch sort menu",
+    f"{keys.start_search}": "Start Search Mode ⃰ ⃰ ",
+    f"{keys.select_node}": "Select topic ⃰ ",
+    f"{keys.move_focus_to_menu}": "Move focus to Menu ⃰ ⃰ ",
+    "ctrl+q": "Quit the Application",
 }
 
 NORMAL_NB = [
@@ -101,14 +104,14 @@ SEARCH_KB = {
     "escape": "Navigate in the searched items"
     + "\n"
     + "Goes back to normal mode [i u]if navigating[/i u]",
-    "/": "Go back to search input [i u]if navigating[/i u]",
+    f"{keys.start_search}": "Go back to search input [i u]if navigating[/i u]",
     "any": "Press key to search input",
 }
 
 SORT_KB = {
-    "j": "Move down",
-    "k": "Move up",
-    "enter": "Select the sorting method",
+    f"{keys.move_down}": "Move down",
+    f"{keys.move_up}": "Move up",
+    f"{keys.select_node}": "Select the sorting method",
 }
 # ---------------- X -------------------------
 
@@ -129,7 +132,7 @@ Documentation below will walk you through the controls:
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
 AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL * 2}{seperator}{NL}"
 
-OUTRO = f"Press {colored('escape', 'green')}, {colored('ctrl+p', 'green')}, or {colored('?', 'green')} to exit help menu"
+OUTRO = f"Press {colored('escape', 'green')} or {colored(f'{keys.show_help}', 'green')} to exit help menu"
 
 # ---------------- X -------------------------
 

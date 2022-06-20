@@ -33,6 +33,10 @@ class NestedListEdit(TreeControl):
         self.editing = False
         self.highlight(self.root.id)
 
+        from ...utils import conf
+
+        self.keys = conf.keys
+
     async def watch_cursor_line(self, value: int) -> None:
         await self.post_message(CursorMove(self, value + self.gutter.top))
 
@@ -182,31 +186,32 @@ class NestedListEdit(TreeControl):
                     await self.send_key_to_selected(event)
 
         else:
+            keys = self.keys
             match event.key:
-                case "j" | "down":
+                case i if i in keys.move_down:
                     await self.cursor_down()
-                case "J" | "shift+down":
+                case i if i in keys.shift_down:
                     await self.shift_down()
-                case "k" | "up":
+                case i if i in keys.move_up:
                     await self.cursor_up()
-                case "K" | "shift+up":
+                case i if i in keys.shift_up:
                     await self.shift_up()
-                case "g":
+                case i if i in keys.move_to_top:
                     await self.move_to_top()
-                case "G":
+                case i if i in keys.move_to_bottom:
                     await self.move_to_bottom()
-                case "z":
+                case i if i in keys.toggle_expand:
                     await self.toggle_expand()
-                case "Z":
+                case i if i in keys.toggle_expand_parent:
                     await self.toggle_expand_parent()
-                case "A":
+                case i if i in keys.add_child:
                     await self.add_child()
-                case "a":
+                case i if i in keys.add_sibling:
                     await self.add_sibling()
-                case "i":
+                case i if i in keys.edit_node:
                     if self.highlighted != self.root.id:
                         await self.focus_node()
-                case "x":
+                case i if i in keys.remove_node:
                     if self.highlighted != self.root.id:
                         await self.remove_node()
 

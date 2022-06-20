@@ -17,9 +17,10 @@ class Navbar(NestedListEdit):
 
     def __init__(self):
         super().__init__("", SimpleInput())
-        from dooit.utils.config import Config
+        from dooit.utils.config import conf
 
-        self.config = Config().load_config("menu")
+        self.config = conf.load_config("menu")
+        self.select_key = conf.keys.select_node
 
     def render(self) -> RenderableType:
         return self._tree
@@ -92,7 +93,7 @@ class Navbar(NestedListEdit):
         await self.highlighted_node.data.on_key(event)
 
     async def key_press(self, event: events.Key):
-        if not self.editing and event.key == "enter":
+        if not self.editing and event.key in self.select_key:
             await self.post_message(
                 ListItemSelected(
                     self,

@@ -10,6 +10,7 @@ from textual.widget import Widget
 from textual import events
 
 from dooit.ui.events.events import ApplySortMethod, ChangeStatus
+from dooit.utils.config import conf
 
 
 class SortOptions(Widget):
@@ -35,6 +36,7 @@ class SortOptions(Widget):
         self.rotate = rotate
         self.wrap = wrap
         self.highlighted = 0
+        self.keys = conf.keys
 
     def highlight(self, id: int) -> None:
         self.highlighted = id
@@ -81,18 +83,19 @@ class SortOptions(Widget):
     async def key_press(self, event: events.Key) -> None:
         event.stop()
 
+        key = self.keys
         match event.key:
             case "escape":
                 # self.visible = False
                 # self.refresh()
                 await self.post_message(ChangeStatus(self, "NORMAL"))
-            case "j" | "down":
+            case i if i in key.move_down:
                 self.move_cursor_down()
-            case "k" | "up":
+            case i if i in key.move_up:
                 self.move_cursor_up()
-            case "g" | "home":
+            case i if i in key.move_to_top:
                 self.move_cursor_to_top()
-            case "G" | "end":
+            case i if i in key.move_to_bottom:
                 self.move_cursor_to_bottom()
             case "enter":
                 await self.emit(ApplySortMethod(self, self.options[self.highlighted]))

@@ -8,7 +8,6 @@ main:
   header_highlight: blue
 
 menu:
-
   icons:
     nested_close: 
     nested_open: ﱮ
@@ -20,7 +19,6 @@ menu:
     style_unfocused: white
 
 status_bar:
-
   theme:
     clock: reverse yellow
     date: reverse green
@@ -35,7 +33,6 @@ status_bar:
     clock: 
 
 todos:
-
   icons:
     due_date: 
     todo_completed: 
@@ -47,3 +44,27 @@ todos:
     style_editing: bold cyan
     style_focused: bold grey85
     style_unfocused: bold grey50
+
+keybindings:
+  move_to_top: [g, home]
+  move_to_bottom: [G, end]
+  move_down: [j, down]
+  shift_down: [J, shift+down]
+  move_up: [k, up]
+  shift_up: [K, shift+up]
+  edit_node: i
+  edit_date: d
+  toggle_complete: c
+  yank_todo: y
+  toggle_expand: z
+  toggle_expand_parent: Z
+  remove_node: x
+  add_sibling: a
+  add_child: A
+  spawn_sort_menu: ctrl+s
+  start_search: /
+  select_node: enter
+  move_focus_to_menu: h
+  show_help: "?"
+  increase_urgency: ["+", "="]
+  decrease_urgency: ["-", "_"]

@@ -21,6 +21,7 @@ cd dooit
 pip install .
 ```
 And then simply type `dooit` in your terminal to launch it.. ezy pzy
+> Note: Config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)
 
 # Features 🌟
 

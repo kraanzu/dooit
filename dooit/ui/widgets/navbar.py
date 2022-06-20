@@ -1,3 +1,5 @@
+from os import get_terminal_size
+from rich.align import Align
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
@@ -8,6 +10,14 @@ from dooit.ui.widgets.simple_input import SimpleInput, View
 
 from ...ui.events import ModifyTopic, ListItemSelected, ChangeStatus
 from ...ui.widgets import NestedListEdit
+
+EMPTY_TOPIC = Text.from_markup(
+    """
+Nothing yet?
+Press [b yellow]'a'[/b yellow] to add a topic
+""",
+    style="dim white",
+)
 
 
 class Navbar(NestedListEdit):
@@ -23,7 +33,14 @@ class Navbar(NestedListEdit):
         self.select_key = conf.keys.select_node
 
     def render(self) -> RenderableType:
-        return self._tree
+        if self.root.tree.children:
+            return self._tree
+        else:
+            return Align.center(
+                EMPTY_TOPIC,
+                vertical="middle",
+                height=round(0.8 * get_terminal_size()[1]),
+            )
 
     def _get_node_path(self):
 

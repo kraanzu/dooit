@@ -1,3 +1,7 @@
+from os import get_terminal_size
+from rich.align import Align
+from rich.console import Group
+from rich.text import Text
 from dooit.utils.parser import Parser
 
 parser = Parser()
@@ -15,6 +19,35 @@ from textual.widget import Widget
 
 from .events import *  # NOQA
 from ..ui.widgets import *  # NOQA
+
+BANNER = Text(
+    """
+    ██████╗  ██████╗  ██████╗ ██╗████████╗
+    ██╔══██╗██╔═══██╗██╔═══██╗██║╚══██╔══╝
+    ██║  ██║██║   ██║██║   ██║██║   ██║
+    ██║  ██║██║   ██║██║   ██║██║   ██║
+    ██████╔╝╚██████╔╝╚██████╔╝██║   ██║
+    ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝   ╚═╝
+
+""",
+    style="green",
+)
+
+WELCOME = Text(
+    f"""
+                   
+    JUST DO YOUR CHRORES ALREADY INSTEAD
+OF ORGANIZING SO YOU CAN PROCRASTINATE THEM
+""",
+    style="magenta",
+)
+
+HELP = Text.from_markup(
+    f"""
+    Anyways, Press [bold yellow]`{keys.show_help[0]}`[/bold yellow] to show help menu
+""",
+    style="cyan",
+)
 
 
 class Doit(App):
@@ -230,13 +263,20 @@ class Doit(App):
 
         self.todo_list = self.todo_lists[self.current_menu]
 
-        match self.current_status:
-            case "SEARCH":
-                main_area_widget = self.search_tree
-            case "SORT":
-                main_area_widget = self.sort_menu
-            case _:
-                main_area_widget = self.todo_lists[self.current_menu]
+        if self.current_menu == "":
+            main_area_widget = Align.center(
+                Group(BANNER, WELCOME, HELP),
+                vertical="middle",
+                height=round(get_terminal_size()[1] * 0.8),
+            )
+        else:
+            match self.current_status:
+                case "SEARCH":
+                    main_area_widget = self.search_tree
+                case "SORT":
+                    main_area_widget = self.sort_menu
+                case _:
+                    main_area_widget = self.todo_lists[self.current_menu]
 
         await self.main_area_scroll.update(main_area_widget)
 

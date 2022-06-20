@@ -73,6 +73,7 @@ NORMAL_KB = {
     "/": "Start Search Mode ⃰ ⃰ ",
     "enter": "Select topic ⃰ ",
     "tab": "Move focus to Menu ⃰ ⃰ ",
+    "q": "Quit the Application",
 }
 
 NORMAL_NB = [
@@ -119,14 +120,14 @@ HEADER = f"""
 
 BODY = f""" {colored(f'Dooit is build to be used from the keyboard,{NL} but mouse can also be used to navigate', 'green')}
 
-Documentation below will wak you through the controls:
+Documentation below will walk you through the controls:
 {seperator}
 """
 
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
 AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL * 2}{seperator}{NL}"
 
-OUTRO = f"Press {colored('escape', 'green')} or {colored('ctrl+p', 'green')} to exit help menu"
+OUTRO = f"Press {colored('escape', 'green')}, {colored('ctrl+p', 'green')}, or {colored('?', 'green')} to exit help menu"
 
 # ---------------- X -------------------------
 

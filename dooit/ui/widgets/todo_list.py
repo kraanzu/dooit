@@ -274,7 +274,7 @@ class TodoList(NestedListEdit):
                         self.highlighted_node.data.due.value = self.prev_date
                     else:
                         await self.post_message(
-                            Notify(self, message="You due date was updated")
+                            Notify(self, message="Your due date was updated")
                         )
 
                 else:

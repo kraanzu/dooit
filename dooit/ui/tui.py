@@ -25,6 +25,9 @@ class Doit(App):
         for widget in self.navbar_box:
             widget.toggle_highlight()
 
+    async def on_load(self) -> None:
+        await self.bind("ctrl+q", "quit", "Quit")
+
     async def action_quit(self) -> None:
         await self.on_key(events.Key(self, "escape"))  # incase of empty todo
         await super().action_quit()
@@ -286,7 +289,7 @@ class Doit(App):
                 await self.help_menu.key_end()
 
     async def on_key(self, event: events.Key) -> None:
-        if event.key == "ctrl+p" or (event.key == "escape" and self.help):
+        if (event.key == "ctrl+p") or (event.key == "escape" and self.help) or event.key == "?":
             await self.toggle_help()
             return
 

@@ -26,7 +26,7 @@ class Doit(App):
             widget.toggle_highlight()
 
     async def on_load(self) -> None:
-        await self.bind("q", "quit", "Quit")
+        await self.bind("ctrl+q", "quit", "Quit")
 
     async def action_quit(self) -> None:
         await self.on_key(events.Key(self, "escape"))  # incase of empty todo

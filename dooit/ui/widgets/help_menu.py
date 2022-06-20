@@ -62,6 +62,8 @@ NORMAL_KB = {
     "c": "Toggle todo status as complete/incomplete",
     "y": "Copy todo's text",
     "d": "Edit date ⃰ ",
+    "+/=": "Increase urgency",
+    "-/_": "Decrease urgency",
     "g": "Move to top of list",
     "G": "Move to bottom of list",
     "z": "Toggle-expand highlighted item",

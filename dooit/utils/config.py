@@ -56,13 +56,13 @@ class Config:
         if not CONFIG.is_file():
             self.make_new_config()
 
-        while 1:
-            try:
-                self.keybinds = self.load_keybindings()
-                self.keys = Key(self.keybinds)
-                return
-            except:
-                self.make_new_config()
+        try:
+            self.keybinds = self.load_keybindings()
+            self.keys = Key(self.keybinds)
+        except:
+            self.make_new_config()
+            self.keybinds = self.load_keybindings()
+            self.keys = Key(self.keybinds)
 
     def load_config(self, part: str = "main") -> dict:
         with open(CONFIG, "r") as stream:

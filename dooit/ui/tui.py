@@ -8,6 +8,8 @@ parser = Parser()
 from dooit.utils.config import conf
 
 keys = conf.keys
+message = conf.load_config("welcome_message")
+ascii_art = conf.load_config("ascii_art")
 
 
 from textual import events
@@ -21,13 +23,8 @@ from .events import *  # NOQA
 from ..ui.widgets import *  # NOQA
 
 BANNER = Text(
-    """
-    ██████╗  ██████╗  ██████╗ ██╗████████╗
-    ██╔══██╗██╔═══██╗██╔═══██╗██║╚══██╔══╝
-    ██║  ██║██║   ██║██║   ██║██║   ██║
-    ██║  ██║██║   ██║██║   ██║██║   ██║
-    ██████╔╝╚██████╔╝╚██████╔╝██║   ██║
-    ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝   ╚═╝
+    f"""
+    {ascii_art}
 
 """,
     style="green",
@@ -36,8 +33,7 @@ BANNER = Text(
 WELCOME = Text(
     f"""
                    
-    JUST DO YOUR CHRORES ALREADY INSTEAD
-OF ORGANIZING SO YOU CAN PROCRASTINATE THEM
+    {message}
 """,
     style="magenta",
 )

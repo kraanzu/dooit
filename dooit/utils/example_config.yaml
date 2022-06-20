@@ -68,3 +68,15 @@ keybindings:
   show_help: "?"
   increase_urgency: ["+", "="]
   decrease_urgency: ["-", "_"]
+
+welcome_message: |+
+  JUST DO YOUR CHRORES ALREADY INSTEAD
+  OF ORGANIZING SO YOU CAN PROCRASTINATE THEM
+
+ascii_art: |+
+  ██████╗  ██████╗  ██████╗ ██╗████████╗
+      ██╔══██╗██╔═══██╗██╔═══██╗██║╚══██╔══╝
+      ██║  ██║██║   ██║██║   ██║██║   ██║
+      ██║  ██║██║   ██║██║   ██║██║   ██║
+      ██████╔╝╚██████╔╝╚██████╔╝██║   ██║
+      ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝   ╚═╝

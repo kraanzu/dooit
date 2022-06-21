@@ -45,8 +45,8 @@ class Config:
         self.check_files()
 
     def make_new_config(self):
-        with open(SAMPLE, "r") as f:
-            with open(CONFIG, "w") as stream:
+        with open(SAMPLE, "r", encoding="utf8") as f:
+            with open(CONFIG, "w", encoding="utf8") as stream:
                 stream.write(f.read())
 
     def check_files(self):
@@ -65,7 +65,7 @@ class Config:
             self.keys = Key(self.keybinds)
 
     def load_config(self, part: str = "main") -> dict:
-        with open(CONFIG, "r") as stream:
+        with open(CONFIG, "r", encoding="utf8") as stream:
             try:
                 return yaml.safe_load(stream)[part]
             except yaml.YAMLError:

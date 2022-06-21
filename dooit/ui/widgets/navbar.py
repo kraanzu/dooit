@@ -110,7 +110,11 @@ class Navbar(NestedListEdit):
         await self.highlighted_node.data.on_key(event)
 
     async def key_press(self, event: events.Key):
-        if not self.editing and event.key in self.select_key:
+        if (
+            not self.editing
+            and self.highlighted_node != self.root
+            and event.key in self.select_key
+        ):
             await self.post_message(
                 ListItemSelected(
                     self,
@@ -123,7 +127,6 @@ class Navbar(NestedListEdit):
 
         await super().key_press(event)
 
-        # REASON: RENDERING ISSUES
         if self.highlighted != self.root.id and not self.editing:
             await self.emit(
                 ListItemSelected(

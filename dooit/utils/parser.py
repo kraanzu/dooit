@@ -14,26 +14,11 @@ class Parser:
     def __init__(self) -> None:
         self.check_files()
 
-    async def parse_todo(self) -> dict[str, TodoList]:
-        return await self.load_todo()
-
-    async def parse_topic(self) -> Navbar:
-        return await self.load_topic()
-
     def fix_deprecated(self):
-        remove(self.topic_path)
-        remove(self.todo_path)
+        remove(self.old_topic_path)
+        remove(self.old_todo_path)
 
     # --------------------------------
-
-    # def save_todo(self, todo: dict[str, TodoList]) -> None:
-    #     with open(self.todo_txt, "wb") as f:
-    #         x = {i: self.fetch_usable_info_todo(j) for i, j in todo.items()}
-    #         dump(x, f)
-    #
-    # def save_topic(self, topic) -> None:
-    #     with open(self.topic_path, "wb") as f:
-    #         dump(self.fetch_usable_info_topic(topic), f)
 
     def save(self, todo: dict[str, TodoList]):
         def make_yaml(todolist: TodoList):
@@ -63,7 +48,7 @@ class Parser:
             yaml.safe_dump(todolist, f)
 
     async def load(self):
-        if self.todo_path.is_file() and self.topic_path.is_file():
+        if self.old_todo_path.is_file() and self.old_topic_path.is_file():
             x = (await self.load_topic(), await self.load_todo())
             self.fix_deprecated()
             return x
@@ -90,7 +75,7 @@ class Parser:
                         s = SimpleInput()
                         s.value = subtopic
                         await navbar.root.children[-1].add("", s)
-                        name = "/".join([topic, subtopic])
+                        name = topic + subtopic + "/"
                         todo_tree[name] = TodoList()
                         tree = todo_tree[name]
 
@@ -102,21 +87,21 @@ class Parser:
 
         return navbar, todo_tree
 
-    async def load_items(self):
-        return (await self.parse_topic(), await self.parse_todo())
-
     # --------------------------------
 
+    # NOTE: Will be depracted in v0.3.0
     async def load_topic(self) -> Navbar:
-        with open(self.topic_path, "rb") as f:
+        with open(self.old_topic_path, "rb") as f:
             return await self.convert_topic(load(f))
 
+    # NOTE: Will be depracted in v0.3.0
     async def load_todo(self) -> dict[str, TodoList]:
-        with open(self.todo_path, "rb") as f:
+        with open(self.old_todo_path, "rb") as f:
             return {i: await self.convert_todo(j) for i, j in load(f).items()}
 
     # --------------------------------
 
+    # NOTE: Will be depracted in v0.3.0
     async def convert_todo(self, e) -> TodoList:
         x = TodoList()
         for i, j in e:
@@ -128,6 +113,7 @@ class Parser:
 
         return x
 
+    # NOTE: Will be depracted in v0.3.0
     async def convert_topic(self, e) -> Navbar:
         x = Navbar()
         for i, j in e:
@@ -143,6 +129,7 @@ class Parser:
 
     # --------------------------------
 
+    # NOTE: Will be depracted in v0.3.0
     def fetch_usable_info_todo(self, todo: TodoList) -> list:
         x = []
         for i in todo.root.children:
@@ -150,6 +137,7 @@ class Parser:
 
         return x
 
+    # NOTE: Will be depracted in v0.3.0
     def fetch_usable_info_topic(self, topic: Navbar) -> list:
         x = []
         for i in topic.root.children:
@@ -180,23 +168,8 @@ class Parser:
         dooit_data = share / "dooit"
         check_folder(dooit_data)
 
-        self.todo_path = dooit / "todos.pkl"
-        # if not Path.is_file(self.todo_path):
-        #     with open(self.todo_path, "wb") as f:
-        #         dump(
-        #             {"/": []},
-        #             f,
-        #             protocol=HIGHEST_PROTOCOL,
-        #         )
-
-        self.topic_path = dooit / "topics.pkl"
-        # if not Path.is_file(self.topic_path):
-        #     with open(self.topic_path, "wb") as f:
-        #         dump(
-        #             [],
-        #             f,
-        #             protocol=HIGHEST_PROTOCOL,
-        #         )
+        self.old_todo_path = dooit / "todos.pkl"
+        self.old_topic_path = dooit / "topics.pkl"
 
         self.todo_txt = dooit_data / "todo.yaml"
         if not Path.is_file(self.todo_txt):

@@ -9,7 +9,7 @@ to make sure that you complete your tasks on time ;)
 [![GitHub license](https://img.shields.io/github/license/kraanzu/dooit?color=yellow&style=for-the-badge)](https://github.com/kraanzu/doit/blob/main/LICENSE)
 
 # Installation 🔨
-> You can install dooit easily using python one-liner (must use python version 3.10+)
+> You can install dooit easily using python one-liner (you must use python version 3.10+)
 
 ```bash
 python3 -m pip install git+https://github.com/kraanzu/dooit.git

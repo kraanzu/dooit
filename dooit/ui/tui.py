@@ -65,8 +65,7 @@ class Doit(App):
     async def action_quit(self) -> None:
         await self.on_key(events.Key(self, "escape"))  # incase of empty todo
         await super().action_quit()
-        parser.save_todo(self.todo_lists)
-        parser.save_topic(self.navbar)
+        parser.save(self.todo_lists)
 
     async def toggle_help(self):
         self.help = not self.help
@@ -101,10 +100,9 @@ class Doit(App):
         self.navbar_heading = Box(name="navbar", options=[" Menu"])
         self.todos_heading = Box(name="todos", options=[" Todos"])
 
-        self.navbar = await parser.parse_topic()
+        self.navbar, self.todo_lists = await parser.load()
 
         self.navbar_scroll = MinimalScrollView(self.navbar)
-        self.todo_lists = await parser.parse_todo()
 
         self.status_bar = StatusBar()
         self.search_tree = SearchTree()

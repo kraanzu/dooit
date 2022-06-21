@@ -86,3 +86,24 @@ class Entry(SimpleInput):
         entry.due.value = data["due"]
         entry.status = data["status"]
         return entry
+
+    def to_txt(self) -> str:
+        return f"{self.status} {self.urgency} due:{self.due.value or 'None'} {self.about.value}"
+
+    @classmethod
+    def from_txt(cls, txt: str):
+        status, urgency, due, *about = txt.split()
+        about = ' '.join(about)
+        due = due[4:]
+        if due == "None":
+            due = ""
+
+        urgency = int(urgency)
+
+        entry = cls()
+        entry.about.value = about
+        entry.urgency = urgency
+        entry.due.value = due
+        entry.status = status
+        return entry
+

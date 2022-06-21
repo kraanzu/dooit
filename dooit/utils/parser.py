@@ -1,10 +1,13 @@
+import yaml
 from pathlib import Path
-from os import mkdir
+from os import mkdir, remove
 from pickle import dump, load, HIGHEST_PROTOCOL
+
 from dooit.ui.widgets.entry import Entry
 from dooit.ui.widgets.navbar import Navbar
 from dooit.ui.widgets.simple_input import SimpleInput
 from dooit.ui.widgets.todo_list import TodoList
+from dooit.utils.config import DOOIT, HOME
 
 
 class Parser:
@@ -16,6 +19,91 @@ class Parser:
 
     async def parse_topic(self) -> Navbar:
         return await self.load_topic()
+
+    def fix_deprecated(self):
+        remove(self.topic_path)
+        remove(self.todo_path)
+
+    # --------------------------------
+
+    # def save_todo(self, todo: dict[str, TodoList]) -> None:
+    #     with open(self.todo_txt, "wb") as f:
+    #         x = {i: self.fetch_usable_info_todo(j) for i, j in todo.items()}
+    #         dump(x, f)
+    #
+    # def save_topic(self, topic) -> None:
+    #     with open(self.topic_path, "wb") as f:
+    #         dump(self.fetch_usable_info_topic(topic), f)
+
+    def save(self, todo: dict[str, TodoList]):
+        def make_yaml(todolist: TodoList):
+            arr = {}
+            for parent in todolist.root.children:
+                txt = parent.data.to_txt()
+                arr[txt] = []
+                if children := parent.children:
+                    arr[txt].extend([child.data.to_txt() for child in children])
+
+            return arr
+
+        todolist = {}
+        for topic, task in todo.items():
+            if not topic or topic == "/":
+                continue
+
+            if topic.count("/") == 1:
+                todolist[topic[:-1]] = {"common": make_yaml(task)}
+            else:
+                idx = topic.index("/")
+                super_topic = topic[:idx]
+                sub = topic[idx + 1 : -1]
+                todolist[super_topic][sub] = make_yaml(task)
+
+        with open(self.todo_txt, "w") as f:
+            yaml.safe_dump(todolist, f)
+
+    async def load(self):
+        if self.todo_path.is_file() and self.topic_path.is_file():
+            x = (await self.load_topic(), await self.load_todo())
+            self.fix_deprecated()
+            return x
+
+        with open(self.todo_txt, "r") as f:
+            todos = yaml.safe_load(f) or dict()
+
+        navbar = Navbar()
+        todo_tree = {}
+
+        for topic, subtopics in todos.items():
+            s = SimpleInput()
+            s.value = topic
+            topic += "/"
+            await navbar.root.add("", s)
+
+            todo_tree[topic] = TodoList()
+
+            for subtopic, parents in subtopics.items():
+                for parent, childs in parents.items():
+                    if subtopic == "common":
+                        tree = todo_tree[topic]
+                    else:
+                        s = SimpleInput()
+                        s.value = subtopic
+                        await navbar.root.children[-1].add("", s)
+                        name = "/".join([topic, subtopic])
+                        todo_tree[name] = TodoList()
+                        tree = todo_tree[name]
+
+                    tree = tree.root
+                    await tree.add("", Entry.from_txt(parent))
+
+                    for child in childs:
+                        await tree.children[-1].add("", Entry.from_txt(child))
+
+        return navbar, todo_tree
+
+    async def load_items(self):
+        return (await self.parse_topic(), await self.parse_todo())
 
     # --------------------------------
 
@@ -71,40 +159,49 @@ class Parser:
 
     # --------------------------------
 
-    def save_todo(self, todo: dict[str, TodoList]) -> None:
-        with open(self.todo_path, "wb") as f:
-            x = {i: self.fetch_usable_info_todo(j) for i, j in todo.items()}
-            dump(x, f)
-
-    def save_topic(self, topic) -> None:
-        with open(self.topic_path, "wb") as f:
-            dump(self.fetch_usable_info_topic(topic), f)
-
-    # --------------------------------
-
     def check_files(self) -> None:
+        def check_folder(f):
+
+            if not Path.is_dir(f):
+                mkdir(f)
+
         config = Path.home() / ".config"
-        if not Path.is_dir(config):
-            mkdir(config)
+        check_folder(config)
 
         dooit = config / "dooit"
-        if not Path.is_dir(dooit):
-            mkdir(dooit)
+        check_folder(dooit)
+
+        local = HOME / ".local"
+        check_folder(local)
+
+        share = local / "share"
+        check_folder(share)
+
+        dooit_data = share / "dooit"
+        check_folder(dooit_data)
 
         self.todo_path = dooit / "todos.pkl"
-        if not Path.is_file(self.todo_path):
-            with open(self.todo_path, "wb") as f:
-                dump(
-                    {"/": []},
-                    f,
-                    protocol=HIGHEST_PROTOCOL,
-                )
+        # if not Path.is_file(self.todo_path):
+        #     with open(self.todo_path, "wb") as f:
+        #         dump(
+        #             {"/": []},
+        #             f,
+        #             protocol=HIGHEST_PROTOCOL,
+        #         )
 
         self.topic_path = dooit / "topics.pkl"
-        if not Path.is_file(self.topic_path):
-            with open(self.topic_path, "wb") as f:
-                dump(
-                    [],
+        # if not Path.is_file(self.topic_path):
+        #     with open(self.topic_path, "wb") as f:
+        #         dump(
+        #             [],
+        #             f,
+        #             protocol=HIGHEST_PROTOCOL,
+        #         )
+
+        self.todo_txt = dooit_data / "todo.yaml"
+        if not Path.is_file(self.todo_txt):
+            with open(self.todo_txt, "w") as f:
+                yaml.safe_dump(
+                    dict(),
                     f,
-                    protocol=HIGHEST_PROTOCOL,
                 )

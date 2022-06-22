@@ -70,6 +70,7 @@ class Entry(SimpleInput):
         await super().handle_keypress(key)
         self.refresh()
 
+    # DEPRECATED: will be removed in v0.3.0
     def encode(self) -> dict[str, Any]:
         return {
             "about": self.about.value,
@@ -78,6 +79,7 @@ class Entry(SimpleInput):
             "status": self.status,
         }
 
+    # DEPRECATED: will be removed in v0.3.0
     @classmethod
     def from_encoded(cls, data: dict[str, Any]) -> "Entry":
         entry = cls()
@@ -88,17 +90,35 @@ class Entry(SimpleInput):
         return entry
 
     def to_txt(self) -> str:
-        return f"{self.status} {self.urgency} due:{self.due.value or 'None'} {self.about.value}"
+        match self.status:
+            case "PENDING":
+                status = "x"
+            case "COMPLETED":
+                status = "X"
+            case _:
+                status = "O"  # OVERDUE
+
+        return f"{status} ({self.urgency}) due:{self.due.value or 'None'} {self.about.value}"
 
     @classmethod
     def from_txt(cls, txt: str):
         status, urgency, due, *about = txt.split()
-        about = ' '.join(about)
+
+        match status:
+            case "x":
+                status = "PENDING"
+            case "X":
+                status = "COMPLETED"
+            case _:
+                status = "OVERDUE"
+
+        about = " ".join(about)
+
         due = due[4:]
         if due == "None":
             due = ""
 
-        urgency = int(urgency)
+        urgency = int(urgency[1:-1])
 
         entry = cls()
         entry.about.value = about
@@ -106,4 +126,3 @@ class Entry(SimpleInput):
         entry.due.value = due
         entry.status = status
         return entry
-

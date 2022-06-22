@@ -9,16 +9,16 @@ to make sure that you complete your tasks on time ;)
 [![GitHub license](https://img.shields.io/github/license/kraanzu/dooit?color=yellow&style=for-the-badge)](https://github.com/kraanzu/doit/blob/main/LICENSE)
 
 # Installation 🔨
-> You can install dooit easily using python one-liner
+> You can install dooit easily using python one-liner (you must use python version 3.10+)
 
 ```bash
-python -m pip install git+https://github.com/kraanzu/dooit.git
+python3 -m pip install git+https://github.com/kraanzu/dooit.git
 ```
 > Or the long way?
 ```bash
 git clone https://github.com/kraanzu/dooit.git
 cd dooit
-pip install .
+pip3 install .
 ```
 And then simply type `dooit` in your terminal to launch it.. ezy pzy
 > Note: Config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)

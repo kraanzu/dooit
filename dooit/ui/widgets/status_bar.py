@@ -35,13 +35,14 @@ class StatusBar(Widget):
         """
         Returns current time
         """
-        return f"{datetime.now().time().strftime(f' {self.clock_icon}  %X ')}"
+
+        return f"{datetime.now().time().strftime(' {0}  %X ')}".format(self.clock_icon)
 
     def get_date(self) -> str:
         """
         Returns current time
         """
-        return f"{datetime.today().strftime(f' {self.calendar_icon}  %D ')}"
+        return f"{datetime.today().strftime(' {0}  %D ')}".format(self.calendar_icon)
 
     def set_status(self, status: StatusType) -> None:
         self.status = status

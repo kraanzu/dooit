@@ -1,10 +1,10 @@
 import os
 import yaml
 from pathlib import Path
-from os import environ
+from os import environ, path
 
 HOME = Path.home()
-XDG_CONFIG = Path(environ.get("XDG_CONFIG_HOME") or (HOME / ".config"))
+XDG_CONFIG = Path(path.expanduser(environ.get("XDG_CONFIG_HOME") or (HOME / ".config")))
 DOOIT = XDG_CONFIG / "dooit"
 CONFIG = DOOIT / "config.yaml"
 
@@ -50,8 +50,12 @@ class Config:
                 stream.write(f.read())
 
     def check_files(self):
-        if not DOOIT.is_dir():
-            os.mkdir(DOOIT)
+        def check_folder(f):
+            if not Path.is_dir(f):
+                os.mkdir(f)
+
+        check_folder(XDG_CONFIG)
+        check_folder(DOOIT)
 
         if not CONFIG.is_file():
             self.make_new_config()

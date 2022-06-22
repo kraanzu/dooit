@@ -1,8 +1,8 @@
 <img src="https://user-images.githubusercontent.com/97718086/174438959-d8887b62-76de-4587-9619-91a4ecd6e1d6.png" align="right" alt="Todo Icon" width="150" height="150">
 
 # Dooit ✔️
-*A todo manager that you didn't ask for, but needed !* \
-to make sure that you complete your tasks on time ;)
+*A todo manager that you didn't ask for, but need !* \
+It will help you make sure that you complete your tasks on time ;)
 
 [![GitHub issues](https://img.shields.io/github/issues/kraanzu/dooit?color=red&style=for-the-badge)](https://github.com/kraanzu/doit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/kraanzu/dooit?color=green&style=for-the-badge)](https://github.com/kraanzu/doit/stargazers)

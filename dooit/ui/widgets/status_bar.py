@@ -4,8 +4,7 @@ from rich.text import Text
 from rich.table import Table
 from textual.widget import Widget
 
-from dooit.utils.config import conf
-
+from ...utils.config import conf
 from ..events import StatusType
 
 

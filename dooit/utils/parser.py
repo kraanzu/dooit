@@ -1,13 +1,10 @@
 import yaml
 from pathlib import Path
-from os import mkdir, remove, environ, path
+from os import mkdir, remove, environ
 from pickle import load
 
-from dooit.ui.widgets.entry import Entry
-from dooit.ui.widgets.navbar import Navbar
-from dooit.ui.widgets.simple_input import SimpleInput
-from dooit.ui.widgets.todo_list import TodoList
-from dooit.utils.config import HOME
+from ..ui.widgets import Entry, Navbar, SimpleInput, TodoList
+from ..utils.config import HOME, XDG_CONFIG
 
 
 class Parser:
@@ -158,14 +155,9 @@ class Parser:
             if not Path.is_dir(f):
                 mkdir(f)
 
-        if config := environ.get("XDG_CONFIG_HOME"):
-            config_path = Path(path.expanduser(config))
-        else:
-            config_path = Path.home() / ".config"
+        check_folder(XDG_CONFIG)
 
-        check_folder(config_path)
-
-        dooit = config_path / "dooit"
+        dooit = XDG_CONFIG / "dooit"
         check_folder(dooit)
 
         if data := environ.get("XDG_DATA_HOME"):

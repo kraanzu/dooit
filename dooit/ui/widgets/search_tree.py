@@ -3,10 +3,11 @@ from rich.align import Align
 from rich.console import RenderableType
 from rich.text import Text
 from textual import events
-from dooit.ui.events.events import ChangeStatus, HighlightNode
-from dooit.ui.widgets.simple_input import SimpleInput, View
-from dooit.ui.widgets.todo_list import TodoList
 from textual.widgets import NodeID, TreeNode
+
+from ...ui.events.events import ChangeStatus, HighlightNode
+from ...ui.widgets.simple_input import SimpleInput, View
+from ...ui.widgets.todo_list import TodoList
 
 NO_MATCH = """
                     [blue][/blue]

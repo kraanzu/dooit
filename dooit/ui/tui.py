@@ -1,17 +1,16 @@
+# PARSE DATA
+from ..utils.parser import Parser
+
+parser = Parser()
+from ..utils.config import conf
+
+keys = conf.keys
+
+
 from os import get_terminal_size
 from rich.align import Align
 from rich.console import Group
 from rich.text import Text
-from dooit.utils.parser import Parser
-
-parser = Parser()
-from dooit.utils.config import conf
-
-keys = conf.keys
-message = conf.load_config("welcome_message")
-ascii_art = conf.load_config("ascii_art")
-
-
 from textual import events
 from textual.app import App
 from textual.layouts.dock import DockLayout
@@ -22,6 +21,9 @@ from textual.widget import Widget
 from .events import *  # NOQA
 from ..ui.widgets import *  # NOQA
 
+
+message = conf.load_config("welcome_message")
+ascii_art = conf.load_config("ascii_art")
 BANNER = Text(
     f"""
     {ascii_art}
@@ -367,6 +369,7 @@ class Doit(App):
         self.refresh(layout=True)
 
     # HANDLING EVENTS
+    # ----------------------------
     async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
         reset = (self.current_status in ["SEARCH", "SORT"]) or status == "SORT"

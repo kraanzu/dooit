@@ -4,11 +4,15 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual import events
 from textual.widgets import TreeNode, NodeID
-from dooit.ui.events.events import Notify, RemoveTopic
 
-from dooit.ui.widgets.simple_input import SimpleInput, View
-
-from ...ui.events import ModifyTopic, ListItemSelected, ChangeStatus
+from ...ui.widgets.simple_input import SimpleInput, View
+from ...ui.events import (
+    ModifyTopic,
+    ListItemSelected,
+    ChangeStatus,
+    Notify,
+    RemoveTopic,
+)
 from ...ui.widgets import NestedListEdit
 
 EMPTY_TOPIC = Text.from_markup(

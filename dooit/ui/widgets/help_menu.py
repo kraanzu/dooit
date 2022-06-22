@@ -8,7 +8,7 @@ from rich.text import Text
 from rich.tree import Tree
 from textual.widget import Widget
 
-from dooit.utils.config import conf, Key
+from ...utils.config import conf, Key
 
 keys = Key({i: "/".join(j).replace("ctrl+i", "tab") for i, j in conf.keybinds.items()})
 NL = "\n"

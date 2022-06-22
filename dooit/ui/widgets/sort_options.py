@@ -9,8 +9,8 @@ from rich.style import StyleType
 from textual.widget import Widget
 from textual import events
 
-from dooit.ui.events.events import ApplySortMethod, ChangeStatus
-from dooit.utils.config import conf
+from ...ui.events.events import ApplySortMethod, ChangeStatus
+from ...utils.config import conf
 
 
 class SortOptions(Widget):

@@ -6,7 +6,7 @@ from rich.table import Table
 from rich.text import Text
 from textual.widget import Widget
 
-from dooit.utils.config import conf
+from ...utils.config import conf
 
 
 class Box(Widget):

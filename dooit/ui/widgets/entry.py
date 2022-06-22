@@ -45,15 +45,6 @@ class Entry(SimpleInput):
         if self.focused:
             await eval(f"self.{self.focused}.on_key(event)")
 
-    def mark_complete(self) -> None:
-        self.status = "COMPLETE"
-
-    def mark_pending(self) -> None:
-        self.status = "PENDING"
-
-    def mark_overdue(self) -> None:
-        self.status = "OVERDUE"
-
     def increase_urgency(self) -> None:
         self.urgency += 1
 

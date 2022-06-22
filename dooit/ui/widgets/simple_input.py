@@ -1,14 +1,12 @@
+import pyperclip
+from typing import Literal
 from rich.console import RenderableType
 from rich.panel import Panel
 from rich.style import StyleType
 from rich.text import Text, TextType
-from textual.widget import Widget
-import pyperclip
-from typing import Literal
-
 from rich.box import Box
 from rich.align import AlignMethod
-
+from textual.widget import Widget
 from textual import events
 from textual.reactive import Reactive
 

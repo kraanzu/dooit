@@ -64,7 +64,7 @@ class Doit(App):
 
     async def on_load(self) -> None:
         await self.bind("ctrl+q", "quit", "Quit")
-        self.show_header = conf.load_config()["show_headers"]
+        self.show_header = conf.load_config(sub="show_headers")
         self.working_thread = Thread()
         self.working_thread.start()
 
@@ -210,7 +210,7 @@ class Doit(App):
         self.grid.add_areas(**middle_areas)
 
         sep = "sep0" if self.show_header else "sep"
-        middle_row = 'b' if self.show_header else 'a-start|b-end'
+        middle_row = "b" if self.show_header else "a-start|b-end"
 
         # MIDDLE SEPERATORS
         middle_areas = {f"middle{i}": f"sep{i},{middle_row}" for i in range(4)}

@@ -68,13 +68,16 @@ class Config:
             self.keybinds = self.load_keybindings()
             self.keys = Key(self.keybinds)
 
-    def load_config(self, part: str = "main") -> dict:
+    def load_config(self, part: str = "main", sub: str | None = None) -> dict:
         with open(CONFIG, "r", encoding="utf8") as stream:
             try:
-                return yaml.safe_load(stream)[part]
-            except yaml.YAMLError:
+                if sub:
+                    return yaml.safe_load(stream)[part][sub]
+                else:
+                    return yaml.safe_load(stream)[part]
+            except:
                 self.make_new_config()
-                return self.load_config(part)
+                return self.load_config(part, sub)
 
     def load_keybindings(self) -> dict[str, list[str]]:
         keybinds = self.load_config("keybindings")

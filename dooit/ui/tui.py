@@ -330,7 +330,7 @@ class Doit(App):
             case i if i in keys.move_to_bottom:
                 await self.help_menu.key_end()
 
-    async def on_key(self, event: events.Key) -> None:
+    async def key_press(self, event: events.Key) -> None:
         if (event.key in keys.show_help) or (event.key == "escape" and self.help):
             await self.toggle_help()
             return
@@ -368,6 +368,15 @@ class Doit(App):
 
         self.refresh(layout=True)
 
+    async def on_key(self, e: events.Key):
+        await self.key_press(e)
+        await self.save_data()
+
+    async def save_data(self):
+        self.working_thread.join()
+        self.working_thread = Thread(target=parser.save, args=(self.todo_lists,))
+        self.working_thread.start()
+
     # HANDLING EVENTS
     # ----------------------------
     async def handle_change_status(self, event: ChangeStatus) -> None:
@@ -379,14 +388,8 @@ class Doit(App):
                 "SORT",
             ]
         )
-        save = self.current_status in ["INSERT", "DATE"]
         self.current_status = status
         self.status_bar.set_status(status)
-
-        if save:
-            self.working_thread.join()
-            self.working_thread = Thread(target=parser.save, args=(self.todo_lists,))
-            self.working_thread.start()
 
         if status in ["NORMAL"]:
             self.change_current_tab(self.current_tab.name)

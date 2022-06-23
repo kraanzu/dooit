@@ -3,7 +3,7 @@
 
 main:
   # To show or not show top bars
-  show_headers: true
+  show_headers: false
 
   # Colors for the border on menu and todo lists!
   body_dim: dim white

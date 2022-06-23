@@ -64,6 +64,7 @@ class Doit(App):
 
     async def on_load(self) -> None:
         await self.bind("ctrl+q", "quit", "Quit")
+        self.show_header = conf.load_config()["show_headers"]
         self.working_thread = Thread()
         self.working_thread.start()
 
@@ -71,7 +72,6 @@ class Doit(App):
         await self.on_key(events.Key(self, "escape"))  # incase of empty todo
         self.working_thread.join()
         await super().action_quit()
-        # parser.save(self.todo_lists)
 
     async def toggle_help(self):
         self.help = not self.help
@@ -125,6 +125,7 @@ class Doit(App):
         await self.refresh_screen()
 
     async def _make_grid(self, grid: GridLayout) -> None:
+        grid.add_row("sep", size=1)
         grid.add_row("a", size=3)
         grid.add_row("sep0", size=1)
         grid.add_row("b")
@@ -148,12 +149,13 @@ class Doit(App):
         await self._make_grid(self.grid)
 
     def place_widgets(self):
-        placements = {
-            "nav": self.navbar_heading,
-            "todo": self.todos_heading,
-        }
+        if self.show_header:
+            placements = {
+                "nav": self.navbar_heading,
+                "todo": self.todos_heading,
+            }
 
-        self.grid.place(**placements)
+            self.grid.place(**placements)
 
         borders = []
         for i in range(2):
@@ -188,28 +190,34 @@ class Doit(App):
         Place widgets
         """
 
-        areas = {
-            "nav": "sep0-start|sep1-end,a",
-            "todo": "sep2-start|sep3-end,a",
-        }
+        if self.show_header:
+            areas = {
+                "nav": "sep0-start|sep1-end,a",
+                "todo": "sep2-start|sep3-end,a",
+            }
 
-        self.grid.add_areas(**areas)
+            self.grid.add_areas(**areas)
 
         # WIDGET SPACES
         middle_areas = dict()
-        middle_areas["0b"] = "0,b"
-        middle_areas["1b"] = "1,b"
+        if not self.show_header:
+            middle_areas["0b"] = "0,a-start|b-end"
+            middle_areas["1b"] = "1,a-start|b-end"
+        else:
+            middle_areas["0b"] = "0,b"
+            middle_areas["1b"] = "1,b"
 
         self.grid.add_areas(**middle_areas)
 
-        # WIDGET BORDERS
+        sep = "sep0" if self.show_header else "sep"
+        middle_row = 'b' if self.show_header else 'a-start|b-end'
 
         # MIDDLE SEPERATORS
-        middle_areas = {f"middle{i}": f"sep{i},b" for i in range(4)}
+        middle_areas = {f"middle{i}": f"sep{i},{middle_row}" for i in range(4)}
         self.grid.add_areas(**middle_areas)
 
         # TOP SEPERATORS
-        top_areas = {f"top{i}": f"{i},sep0" for i in range(2)}
+        top_areas = {f"top{i}": f"{i},{sep}" for i in range(2)}
         self.grid.add_areas(**top_areas)
 
         # BOTTOM SEPERATORS
@@ -217,7 +225,7 @@ class Doit(App):
         self.grid.add_areas(**bottom_areas)
 
         # TOP CONNECTORS
-        top_connector_areas = {f"top_connector{i}": f"sep{i},sep0" for i in range(4)}
+        top_connector_areas = {f"top_connector{i}": f"sep{i},{sep}" for i in range(4)}
         self.grid.add_areas(**top_connector_areas)
 
         # BOTTOM CONNECTORS

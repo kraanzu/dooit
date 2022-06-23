@@ -2,6 +2,9 @@
 # nerd fonts: https://www.nerdfonts.com/
 
 main:
+  # To show or not show top bars
+  show_headers: true
+
   # Colors for the border on menu and todo lists!
   body_dim: dim white
   body_highlight: blue

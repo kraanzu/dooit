@@ -323,15 +323,15 @@ class TodoList(NestedListEdit):
             await self.modify_due_status("PENDING")
 
     def _about_width(self, child: bool):
-        return percentage(60, self.size.width) - 6 - (child * 3)
+        return percentage(70, self.size.width - 4) - 6 - (child * 3)
 
     def _due_width(self, child: bool):
-        return percentage(30, self.size.width) - 6 - (child * 3)
+        return percentage(25, self.size.width - 4) - 6 - (child * 3)
 
     def _get_entry(self, child: bool) -> Entry:
         entry = NodeDataTye()
-        entry.about.view = View(0, percentage(60, self.size.width) - 6 - (child * 3))
-        entry.due.view = View(0, percentage(30, self.size.width) - 6 - (child * 3))
+        entry.about.view = View(0, percentage(70, self.size.width - 4) - 6 - (child * 3))
+        entry.due.view = View(0, percentage(25, self.size.width - 4) - 6 - (child * 3))
         return entry
 
     async def reach_to_node(self, id: TreeNode | NodeID) -> None:
@@ -389,9 +389,9 @@ class TodoList(NestedListEdit):
         from rich.table import Table
 
         table = Table.grid(padding=(0, 1), expand=True)
-        table.add_column("about", justify="left", ratio=60)
-        table.add_column("due", justify="left", ratio=30)
-        table.add_column("urgency", justify="left", ratio=10)
+        table.add_column("about", justify="left", ratio=70)
+        table.add_column("due", justify="left", ratio=25)
+        table.add_column("urgency", justify="left", width=4)
 
         color = "yellow"
         match node.data.status:

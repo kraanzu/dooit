@@ -23,27 +23,22 @@ from .events import *  # NOQA
 from ..ui.widgets import *  # NOQA
 
 
-message = conf.load_config("welcome_message")
-ascii_art = conf.load_config("ascii_art")
-BANNER = Text(
-    f"""
-    {ascii_art}
+message: str = conf.load_config(sub="welcome_message")
+ascii_art: str = conf.load_config(sub="ascii_art")
 
-""",
+BANNER = Text(
+    ascii_art,
     style="green",
 )
 
-WELCOME = Text(
-    f"""
-                   
-    {message}
-""",
+WELCOME = Text.from_markup(
+    message,
     style="magenta",
 )
 
 HELP = Text.from_markup(
     f"""
-    Anyways, Press [bold yellow]`{keys.show_help[0]}`[/bold yellow] to show help menu
+    Press [bold yellow]`{keys.show_help[0]}`[/bold yellow] to show help menu
 """,
     style="cyan",
 )
@@ -273,7 +268,7 @@ class Doit(App):
 
         if self.current_menu == "":
             main_area_widget = Align.center(
-                Group(BANNER, WELCOME, HELP),
+                Group(*[Align.center(i) for i in (BANNER, WELCOME, HELP)]),
                 vertical="middle",
                 height=round(get_terminal_size()[1] * 0.8),
             )
@@ -315,10 +310,8 @@ class Doit(App):
 
         self.current_tab.highlight()
 
-    async def show_sort_menu(self):
+    async def popup_sort(self):
         await self.handle_change_status(ChangeStatus(self, "SORT"))
-        self.sort_menu.visible = True
-        self.refresh()
 
     def switch_tabs(self):
         if self.current_tab == self.navbar_heading:
@@ -362,15 +355,10 @@ class Doit(App):
                 case "NORMAL":
                     if event.key in keys.start_search:
                         await self.search_tree.set_values(self.todo_list.nodes)
-                        await self.handle_change_status(
-                            ChangeStatus(self, "SEARCH"),
-                        )
-                        await self.reset_screen()
+                        await self.post_message(ChangeStatus(self, "SEARCH"))
 
                     elif event.key in keys.spawn_sort_menu:
-                        await self.handle_change_status(
-                            ChangeStatus(self, "SORT"),
-                        )
+                        await self.popup_sort()
 
                     else:
                         await self.todo_list.key_press(event)
@@ -384,13 +372,16 @@ class Doit(App):
     # ----------------------------
     async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
-        reset = (self.current_status in ["SEARCH", "SORT"]) or status == "SORT"
+        reset = (self.current_status in ["SEARCH", "SORT",]) or (
+            status
+            in [
+                "SEARCH",
+                "SORT",
+            ]
+        )
         save = self.current_status in ["INSERT", "DATE"]
         self.current_status = status
         self.status_bar.set_status(status)
-
-        if reset:
-            await self.reset_screen()
 
         if save:
             self.working_thread.join()
@@ -399,6 +390,9 @@ class Doit(App):
 
         if status in ["NORMAL"]:
             self.change_current_tab(self.current_tab.name)
+
+        if reset:
+            await self.reset_screen()
 
     async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)

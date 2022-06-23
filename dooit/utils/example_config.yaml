@@ -13,6 +13,17 @@ main:
   header_dim: dim white
   header_highlight: blue
 
+  welcome_message: |+
+    Welcome to doit ! :wave:
+
+  ascii_art: |+
+        ██████╗  ██████╗  ██████╗ ██╗████████╗
+        ██╔══██╗██╔═══██╗██╔═══██╗██║╚══██╔══╝
+        ██║  ██║██║   ██║██║   ██║██║   ██║
+        ██║  ██║██║   ██║██║   ██║██║   ██║
+        ██████╔╝╚██████╔╝╚██████╔╝██║   ██║
+        ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝   ╚═╝
+
 menu:
   # Config for the side menu!
   icons:
@@ -84,15 +95,3 @@ keybindings:
   show_help: "?"
   increase_urgency: ["+", "="]
   decrease_urgency: ["-", "_"]
-
-welcome_message: |+
-  JUST DO YOUR CHRORES ALREADY INSTEAD
-  OF ORGANIZING SO YOU CAN PROCRASTINATE THEM
-
-ascii_art: |+
-  ██████╗  ██████╗  ██████╗ ██╗████████╗
-      ██╔══██╗██╔═══██╗██╔═══██╗██║╚══██╔══╝
-      ██║  ██║██║   ██║██║   ██║██║   ██║
-      ██║  ██║██║   ██║██║   ██║██║   ██║
-      ██████╔╝╚██████╔╝╚██████╔╝██║   ██║
-      ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝   ╚═╝

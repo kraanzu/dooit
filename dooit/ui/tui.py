@@ -8,6 +8,7 @@ keys = conf.keys
 
 
 from os import get_terminal_size
+from threading import Thread
 from rich.align import Align
 from rich.console import Group
 from rich.text import Text
@@ -63,11 +64,14 @@ class Doit(App):
 
     async def on_load(self) -> None:
         await self.bind("ctrl+q", "quit", "Quit")
+        self.working_thread = Thread()
+        self.working_thread.start()
 
     async def action_quit(self) -> None:
         await self.on_key(events.Key(self, "escape"))  # incase of empty todo
+        self.working_thread.join()
         await super().action_quit()
-        parser.save(self.todo_lists)
+        # parser.save(self.todo_lists)
 
     async def toggle_help(self):
         self.help = not self.help
@@ -373,11 +377,17 @@ class Doit(App):
     async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
         reset = (self.current_status in ["SEARCH", "SORT"]) or status == "SORT"
+        save = self.current_status in ["INSERT", "DATE"]
         self.current_status = status
         self.status_bar.set_status(status)
 
         if reset:
             await self.reset_screen()
+
+        if save:
+            self.working_thread.join()
+            self.working_thread = Thread(target=parser.save, args=(self.todo_lists,))
+            self.working_thread.start()
 
         if status in ["NORMAL"]:
             self.change_current_tab(self.current_tab.name)

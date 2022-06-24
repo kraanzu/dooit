@@ -46,10 +46,10 @@ class Entry(SimpleInput):
             await eval(f"self.{self.focused}.on_key(event)")
 
     def increase_urgency(self) -> None:
-        self.urgency += 1
+        self.urgency = min(self.urgency + 1, 7)
 
     def decrease_urgency(self) -> None:
-        self.urgency = max(self.urgency - 1, 0)
+        self.urgency = max(self.urgency - 1, 1)
 
     def _format_text(self, text: str) -> str:
         return text

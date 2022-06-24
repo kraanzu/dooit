@@ -23,6 +23,26 @@ EMPTY_TODO = """
 You can add todo by pressing '[b green]a[/b green]'[/d white]
 """
 
+colors = {
+    1: "medium_purple1",
+    2: "blue",
+    3: "light_sky_blue1",
+    4: "green1",
+    5: "yellow1",
+    6: "orange1",
+    7: "red1",
+}
+
+urgency_icons = {
+    1: "🅐",
+    2: "🅑",
+    3: "🅒",
+    4: "🅓",
+    5: "🅔",
+    6: "🅕",
+    7: "🅖",
+}
+
 
 def percentage(percent, total) -> int:
     return round(percent * total / 100)
@@ -323,15 +343,17 @@ class TodoList(NestedListEdit):
             await self.modify_due_status("PENDING")
 
     def _about_width(self, child: bool):
-        return percentage(70, self.size.width - 4) - 6 - (child * 3)
+        return percentage(70, self.size.width - 2) - 6 - (child * 3)
 
     def _due_width(self, child: bool):
-        return percentage(25, self.size.width - 4) - 6 - (child * 3)
+        return percentage(25, self.size.width - 2) - 6 - (child * 3)
 
     def _get_entry(self, child: bool) -> Entry:
         entry = NodeDataTye()
-        entry.about.view = View(0, percentage(70, self.size.width - 4) - 6 - (child * 3))
-        entry.due.view = View(0, percentage(25, self.size.width - 4) - 6 - (child * 3))
+        entry.about.view = View(
+            0, percentage(70, self.size.width - 2) - 6 - (child * 3)
+        )
+        entry.due.view = View(0, percentage(25, self.size.width - 2) - 6 - (child * 3))
         return entry
 
     async def reach_to_node(self, id: TreeNode | NodeID) -> None:
@@ -391,7 +413,7 @@ class TodoList(NestedListEdit):
         table = Table.grid(padding=(0, 1), expand=True)
         table.add_column("about", justify="left", ratio=70)
         table.add_column("due", justify="left", ratio=25)
-        table.add_column("urgency", justify="left", width=4)
+        table.add_column("urgency", justify="left", width=2)
 
         color = "yellow"
         match node.data.status:
@@ -403,7 +425,7 @@ class TodoList(NestedListEdit):
         table.add_row(
             self.render_about(node, color),
             self.render_date(node, color),
-            self.render_priority(node, color),
+            self.render_urgency(node, color),
         )
 
         return table
@@ -504,14 +526,12 @@ class TodoList(NestedListEdit):
         label.apply_meta(meta)
         return label
 
-    def render_priority(self, node: TreeNode, color) -> Text:
-
-        icon = self.icons["urgency"]
-
-        label = Text(str(node.data.urgency))
-        label.plain = label.plain.rjust(3, "0")
-        label = self._highlight_node(node, label)
-        label = Text.from_markup(f"[{color}]{icon} [/{color}]") + label
+    def render_urgency(self, node: TreeNode, _) -> Text:
+        urgency = max(0, min(node.data.urgency, 7))
+        node.data.urgency = urgency  # for older versions which has >7 support
+        color = colors.get(urgency)
+        icon = urgency_icons.get(urgency)
+        label = Text.from_markup(f"[{color}]{icon}[/{color}]")
         return label
 
     async def action_click_date(self) -> None:

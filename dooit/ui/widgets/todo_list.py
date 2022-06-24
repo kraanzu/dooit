@@ -22,6 +22,7 @@ EMPTY_TODO = """
         [d white]Wow! so empty?
 You can add todo by pressing '[b green]a[/b green]'[/d white]
 """
+WARNING = "[b yellow]WARNING[/b yellow]"
 
 colors = {
     1: "green",
@@ -153,6 +154,7 @@ class TodoList(NestedListEdit):
         if self.highlighted == self.root.id:
             return
 
+        self.warn = False
         self.focused = part
         self.prev_about = self.highlighted_node.data.about.value
         self.prev_date = self.highlighted_node.data.due.value
@@ -165,9 +167,19 @@ class TodoList(NestedListEdit):
         )  # handle scrollview late update
 
     async def unfocus_node(self) -> None:
-        await self.post_message(ChangeStatus(self, "NORMAL"))
-        await self.check_node()
-        await super().unfocus_node()
+
+        ok = await self.check_node()
+        if not ok:
+            if self.warn:
+                await self.remove_node()
+                await self.post_message(ChangeStatus(self, "NORMAL"))
+                await super().unfocus_node()
+            else:
+                self.warn = True
+                return
+        else:
+            await self.post_message(ChangeStatus(self, "NORMAL"))
+            await super().unfocus_node()
 
     async def modify_due_status(self, status: str) -> None:
         node = self.highlighted_node
@@ -192,7 +204,6 @@ class TodoList(NestedListEdit):
             match event.key:
                 case "escape":
                     await self.unfocus_node()
-                    await self.check_node()
                 case _:
                     await self.send_key_to_selected(event)
 
@@ -253,20 +264,22 @@ class TodoList(NestedListEdit):
             await self.modify_due_status("PENDING")
         await self.update_due_status()
 
-    async def check_node(self) -> None:
+    async def check_node(self) -> bool:
         match self.focused:
-
             case "about":
                 val = self.highlighted_node.data.about.value.strip()
                 if not val:
                     if not self.prev_about:
                         await self.remove_node()
+                        return True
                     else:
                         self.highlighted_node.data.about.value = self.prev_about
-                    await self.post_message(
-                        Notify(self, "Can't leave todo's about empty :(")
-                    )
-                    return
+                        await self.post_message(
+                            Notify(
+                                self, f"{WARNING}: Empty todo! Reverting to original"
+                            )
+                        )
+                        return True
 
                 if (
                     sum(
@@ -275,9 +288,15 @@ class TodoList(NestedListEdit):
                     )
                     > 1
                 ):
-                    await self.remove_node()
-                    await self.post_message(Notify(self, "Duplicate todo sibling !"))
-                    return
+                    await self.post_message(
+                        Notify(
+                            self,
+                            f"{WARNING}: Duplicate todo sibling !"
+                            if not self.warn
+                            else "Todo deleted!",
+                        )
+                    )
+                    return False
 
             case "due":
                 date = self.highlighted_node.data.due.value.strip()
@@ -310,6 +329,7 @@ class TodoList(NestedListEdit):
 
         self.focused = None
         self.refresh()
+        return True
 
     def _is_valid_date(self, date: str) -> bool:
         try:

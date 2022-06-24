@@ -22,6 +22,7 @@ Press [b yellow]'a'[/b yellow] to add a topic
 """,
     style="dim white",
 )
+WARNING = "[b yellow]WARNING[/b yellow]"
 
 
 class Navbar(NestedListEdit):
@@ -71,6 +72,7 @@ class Navbar(NestedListEdit):
         self.prev_value = self.highlighted_node.data.value
         self._last_path = self._get_node_path()
         self.highlighted_node.data.on_focus()
+        self.warn = False
         await self.highlighted_node.data.handle_keypress("end")
         await self.post_message(ChangeStatus(self, "INSERT"))
         self.editing = True
@@ -79,15 +81,21 @@ class Navbar(NestedListEdit):
         await self.post_message(RemoveTopic(self, self._get_node_path()))
         await super().remove_node(id)
 
-    async def check_node(self):
+    async def check_node(self) -> bool:
         val = self.highlighted_node.data.value.strip()
         if not val:
             if not self.prev_value:
                 await self.remove_node()
+                await self.post_message(
+                    Notify(self, f"{WARNING}: Empty topic! Deleted")
+                )
+                return True
             else:
                 self.highlighted_node.data.value = self.prev_value
-            await self.post_message(Notify(self, "Can't leave topic name empty :("))
-            return
+                await self.post_message(
+                    Notify(self, f"{WARNING}: Can't leave topic name empty")
+                )
+                return True
 
         if (
             sum(
@@ -96,18 +104,35 @@ class Navbar(NestedListEdit):
             )
             > 1
         ):
-            await self.remove_node()
-            await self.post_message(Notify(self, "Duplicate sibling topic!"))
-            return
+
+            await self.post_message(
+                Notify(
+                    self,
+                    f"{WARNING}: Duplicate sibling topic!"
+                    if not self.warn
+                    else "Topic Deleted!",
+                )
+            )
+            return False
+
+        return True
 
     async def unfocus_node(self) -> None:
         await self.post_message(
             ModifyTopic(self, self._last_path, self._get_node_path()),
         )
+
+        ok = await self.check_node()
+        if not ok:
+            if self.warn:
+                await self.remove_node()
+            else:
+                self.warn = True
+                return
+
         await self.post_message(ChangeStatus(self, "NORMAL"))
         await self.highlighted_node.data.handle_keypress("home")
         self.highlighted_node.data.on_blur()
-        await self.check_node()
         self.editing = False
 
     async def send_key_to_selected(self, event: events.Key) -> None:

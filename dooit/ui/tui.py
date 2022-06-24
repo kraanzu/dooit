@@ -381,7 +381,7 @@ class Doit(App):
     # ----------------------------
     async def handle_change_status(self, event: ChangeStatus) -> None:
         status = event.status
-        reset = (self.current_status in ["SEARCH", "SORT",]) or (
+        reset = (self.current_status in ["SEARCH", "SORT"]) or (
             status
             in [
                 "SEARCH",

@@ -71,7 +71,7 @@ class StatusBar(Widget):
         bar.add_column("clock", justify="center", width=12)
 
         status = Text(f" {self.status}", style=f"reverse {self.color}")
-        message = Text(f" {self.message}", style="magenta on black")
+        message = Text.from_markup(f" {self.message}", style="magenta on black")
         message.pad_right(self.size.width)
 
         bar.add_row(

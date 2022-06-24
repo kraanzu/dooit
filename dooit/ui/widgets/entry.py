@@ -46,7 +46,7 @@ class Entry(SimpleInput):
             await eval(f"self.{self.focused}.on_key(event)")
 
     def increase_urgency(self) -> None:
-        self.urgency = min(self.urgency + 1, 7)
+        self.urgency = min(self.urgency + 1, 4)
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 1)

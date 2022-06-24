@@ -24,23 +24,17 @@ You can add todo by pressing '[b green]a[/b green]'[/d white]
 """
 
 colors = {
-    1: "medium_purple1",
-    2: "blue",
-    3: "light_sky_blue1",
-    4: "green1",
-    5: "yellow1",
-    6: "orange1",
-    7: "red1",
+    1: "green",
+    2: "yellow3",
+    3: "orange1",
+    4: "indian_red",
 }
 
 urgency_icons = {
-    1: "🅐",
-    2: "🅑",
-    3: "🅒",
-    4: "🅓",
-    5: "🅔",
-    6: "🅕",
-    7: "🅖",
+    1: "🅓",
+    2: "🅒",
+    3: "🅑",
+    4: "🅐",
 }
 
 
@@ -527,7 +521,7 @@ class TodoList(NestedListEdit):
         return label
 
     def render_urgency(self, node: TreeNode, _) -> Text:
-        urgency = max(0, min(node.data.urgency, 7))
+        urgency = max(1, min(node.data.urgency, 4))
         node.data.urgency = urgency  # for older versions which has >7 support
         color = colors.get(urgency)
         icon = urgency_icons.get(urgency)

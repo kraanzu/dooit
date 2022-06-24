@@ -88,6 +88,7 @@ NORMAL_NB = [
 
 INSERT_KB = {
     "escape": "Go back to NORMAL mode",
+    "enter": "Continue adding more todos",
     "any": "Push key in the selected item",
 }
 

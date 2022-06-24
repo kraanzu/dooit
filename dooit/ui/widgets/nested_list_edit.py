@@ -182,6 +182,11 @@ class NestedListEdit(TreeControl):
             match event.key:
                 case "escape":
                     await self.unfocus_node()
+                case "enter":
+                    if self.highlighted_node.data.value:
+                        await self.unfocus_node()
+                        if not self.editing:
+                            await self.add_sibling()
                 case _:
                     await self.send_key_to_selected(event)
 

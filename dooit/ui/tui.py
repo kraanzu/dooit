@@ -331,7 +331,9 @@ class Doit(App):
                 await self.help_menu.key_end()
 
     async def key_press(self, event: events.Key) -> None:
-        if (event.key in keys.show_help) or (event.key == "escape" and self.help):
+        if (event.key in keys.show_help and self.current_status == "NORMAL") or (
+            event.key == "escape" and self.help
+        ):
             await self.toggle_help()
             return
 

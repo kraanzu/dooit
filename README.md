@@ -24,6 +24,9 @@ pip3 install .
 And then simply type `dooit` in your terminal to launch it.. ezy pzy
 > Note: Config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)
 
+> Note: The default icons used in the application are a part of [nerd fonts](https://www.nerdfonts.com/).\
+        You can change that in the config file.
+
 # Features 🌟
 
 > Some features that dooit comes with:
@@ -54,3 +57,4 @@ https://user-images.githubusercontent.com/97718086/174479591-5fe4f425-c9f3-4db2-
 If you liked dooit then you might wanna try out some of my other TUI projects as well
 - [termtyper](https://github.com/kraanzu/termtyper) - A typing-test app for terminal
 - [gupshup](https://github.com/kraanzu/gupshup) - A localhost TUI chat client
+

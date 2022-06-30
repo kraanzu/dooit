@@ -65,6 +65,16 @@ class Parser:
             todo_tree[topic] = TodoList()
 
             for subtopic, parents in subtopics.items():
+
+                if subtopic != "common":
+                    s = SimpleInput()
+                    s.value = subtopic
+                    await navbar.root.children[-1].add("", s)
+
+                name = topic + subtopic + "/"
+                if name not in todo_tree:
+                    todo_tree[name] = TodoList()
+
                 for parent in parents:
 
                     children = []
@@ -75,11 +85,6 @@ class Parser:
                     if subtopic == "common":
                         tree = todo_tree[topic]
                     else:
-                        s = SimpleInput()
-                        s.value = subtopic
-                        await navbar.root.children[-1].add("", s)
-                        name = topic + subtopic + "/"
-                        todo_tree[name] = TodoList()
                         tree = todo_tree[name]
 
                     tree = tree.root

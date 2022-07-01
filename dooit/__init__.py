@@ -1,17 +1,15 @@
-from os import getpid
 import pkg_resources
 import argparse
 import psutil
 from .ui.tui import Doit
 
 
-def is_running():
-    PID = getpid()
+def is_running() -> bool:
+    counter = 0
     for process in psutil.process_iter():
-        if process.name() in ["dooit", "dooit.exe"] and process.pid != PID:
-            return True
+        counter += process.name() in ["dooit", "dooit.exe"]
 
-    return False
+    return counter > 1
 
 
 def main():

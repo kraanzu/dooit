@@ -39,7 +39,8 @@ class Parser:
                 idx = topic.index("/")
                 super_topic = topic[:idx]
                 sub = topic[idx + 1 : -1]
-                todolist[super_topic][sub] = make_yaml(task)
+                if sub != "common":
+                    todolist[super_topic] |= {sub: make_yaml(task)}
 
         with open(self.todo_yaml, "w") as f:
             yaml.safe_dump(todolist, f)

@@ -6,8 +6,11 @@ from .ui.tui import Doit
 
 def is_running() -> bool:
     counter = 0
-    for process in psutil.process_iter():
-        counter += process.name() in ["dooit", "dooit.exe"]
+    try:
+        for process in psutil.process_iter():
+            counter += process.name() in ["dooit", "dooit.exe"]
+    except psutil.NoSuchProcess:
+        pass
 
     return counter > 1
 

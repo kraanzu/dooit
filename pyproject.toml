@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "dooit"
-version = "0.2.0"
+version = "0.2.1"
 description = "A TUI todo manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
+maintainers = ["kraanzu <kraanzu@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/kraanzu/dooit"
+repository = "https://github.com/kraanzu/dooit"
 
 [tool.poetry.dependencies]
 python = "^3.10"

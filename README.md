@@ -10,19 +10,44 @@ to make sure that you complete your tasks on time ;)
 [![Support Server](https://img.shields.io/discord/989186205025464390.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge)](https://discord.gg/W6Ax4xXy)
 
 # Installation 🔨
-> You can install dooit easily using python one-liner (you must use python version 3.10+)
+
+Dooit can be installed with either Pip or Homebrew.
+
+## With Pip 🐍
+
+You can install dooit easily using a python one-liner (you must use python version 3.10+):
 
 ```bash
 python3 -m pip install git+https://github.com/kraanzu/dooit.git
 ```
-> Or the long way?
+
+Or the long way:
+
 ```bash
 git clone https://github.com/kraanzu/dooit.git
 cd dooit
 pip3 install .
 ```
-And then simply type `dooit` in your terminal to launch it.. ezy pzy
-> Note: Config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)
+
+## With Homebrew 🍻
+
+You can install the latest stable version of dooit with [Homebrew](https://brew.sh):
+
+```bash
+brew install dooit
+```
+
+Alternatively, you can install the most recent development version of dooit:
+
+```bash
+brew install dooit --HEAD
+```
+
+## Additional Notes 📝
+
+Simply type `dooit` in your terminal to launch it. ezy pzy.
+
+> Note: The config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)
 
 > Note: The default icons used in the application are a part of [nerd fonts](https://www.nerdfonts.com/).\
         You can change that in the config file.
@@ -50,7 +75,6 @@ https://user-images.githubusercontent.com/97718086/174479591-5fe4f425-c9f3-4db2-
 - Want to contribute? Feel free to open a PR! 😸
 - Got some ideas for improvements? I'm all ears! 👂
 
-----------------------------
 ----------------------------
 
 #### Other TUI projects 🤓 :

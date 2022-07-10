@@ -13,9 +13,9 @@ to make sure that you complete your tasks on time ;)
 
 Dooit can be installed with either Pip or Homebrew.
 
-## With Pip 🐍
+### With Pip 🐍
 
-You can install dooit easily using a python one-liner (you must use python version 3.10+):
+You can install dooit easily using a python one-liner:
 
 ```bash
 python3 -m pip install git+https://github.com/kraanzu/dooit.git
@@ -29,7 +29,13 @@ cd dooit
 pip3 install .
 ```
 
-## With Homebrew 🍻
+### With AUR helper 📦
+```
+yay -S dooit-git
+```
+
+
+### With Homebrew 🍻
 
 You can install the latest stable version of dooit with [Homebrew](https://brew.sh):
 
@@ -47,10 +53,12 @@ brew install dooit --HEAD
 
 Simply type `dooit` in your terminal to launch it. ezy pzy.
 
-> Note: The config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)
+> ⚠️ Note: The config file for `dooit` is located at your $XDG_CONFIG_HOME (or ~/.config/dooit)
 
-> Note: The default icons used in the application are a part of [nerd fonts](https://www.nerdfonts.com/).\
-        You can change that in the config file.
+> ⚠️ Note: The default icons used in the application are a part of [nerd fonts](https://www.nerdfonts.com/) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and can be customised by changing the config file
+
+> ⚠️ Note: you must use python version >=3.10 
 
 # Features 🌟
 

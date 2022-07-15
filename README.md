@@ -7,7 +7,7 @@ to make sure that you complete your tasks on time ;)
 [![GitHub issues](https://img.shields.io/github/issues/kraanzu/dooit?color=red&style=for-the-badge)](https://github.com/kraanzu/doit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/kraanzu/dooit?color=green&style=for-the-badge)](https://github.com/kraanzu/doit/stargazers)
 [![GitHub license](https://img.shields.io/github/license/kraanzu/dooit?color=yellow&style=for-the-badge)](https://github.com/kraanzu/doit/blob/main/LICENSE)
-[![Support Server](https://img.shields.io/discord/989186205025464390.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge)](https://discord.gg/W6Ax4xXy)
+[![Support Server](https://img.shields.io/discord/989186205025464390.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge)](https://discord.gg/WA2ER9MBWa)
 
 # Installation 🔨
 
@@ -58,7 +58,7 @@ Simply type `dooit` in your terminal to launch it. ezy pzy.
 > ⚠️ Note: The default icons used in the application are a part of [nerd fonts](https://www.nerdfonts.com/) \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and can be customised by changing the config file
 
-> ⚠️ Note: you must use python version >=3.10 
+> ⚠️ Note: you must use python version >=3.10
 
 # Features 🌟
 

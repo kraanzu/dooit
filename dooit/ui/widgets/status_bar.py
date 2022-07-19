@@ -42,7 +42,7 @@ class StatusBar(Widget):
         """
         Returns current time
         """
-        return f"{datetime.today().strftime(' {0}  %D ')}".format(self.calendar_icon)
+        return f"{self.calendar_icon} {datetime.today().strftime('%d/%m/%Y')}"
 
     def set_status(self, status: StatusType) -> None:
         self.status = status

@@ -330,7 +330,7 @@ class TodoList(NestedListEdit):
                             message="Invalid date format! Enter in format: dd-mm-yyyy",
                         )
                     )
-                
+
                 if len(date) != 0 and not self._is_valid_date(date):
                     date = self.prev_date
                     await self.post_message(

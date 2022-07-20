@@ -313,16 +313,18 @@ class TodoList(NestedListEdit):
 
                 if len(date) == 0:
                     pass
-                elif len(date) <= 2 and re.findall(r"^\d(?:\d?)$", date):
+                elif re.findall(r"^\d(?:\d?)$", date):
                     # just day
                     date = f"{int(date):02}-{today.strftime('%m-%Y')}"
-                elif len(date) <= 5 and re.findall(r"^\d(?:\d?)-\d(?:\d?)$", date):
+                elif re.findall(r"^\d(?:\d?)-\d(?:\d?)$", date):
                     # day and month
                     date = date.split("-")
                     date = f"{int(date[0]):02}-{int(date[1]):02}-{today.strftime('%Y')}"
-                elif len(date) <= 10 and re.findall(r"^\d(?:\d?)-\d(?:\d?)-\d\d\d\d$", date):
+                elif re.findall(r"^\d(?:\d?)-\d(?:\d?)-\d(?:\d?)(?:\d?)(?:\d?)$", date):
                     date = date.split("-")
-                    date = f"{int(date[0]):02}-{int(date[1]):02}-{date[2]}"
+                    year = str(date[2])
+                    y2k = "2000" # assuming this code is not used after the year 2999
+                    date = f"{int(date[0]):02}-{int(date[1]):02}-{y2k[:-len(year)] + year}"
                 else:
                     await self.post_message(
                         Notify(

@@ -309,31 +309,41 @@ class TodoList(NestedListEdit):
 
             case "due":
                 date = self.highlighted_node.data.due.value.strip()
+                today = datetime.today()
 
-                if len(date) == 10 and re.findall(r"^\d\d-\d\d-\d\d\d\d$", date):
-                    if not self._is_valid_date(date):
-                        await self.post_message(
-                            Notify(self, message="Please enter a valid date")
-                        )
-                        self.highlighted_node.data.due.value = self.prev_date
-                    else:
-                        await self.post_message(
-                            Notify(self, message="Your due date was updated")
-                        )
-
+                if len(date) == 0:
+                    pass
+                elif re.findall(r"^\d(?:\d?)$", date):
+                    # just day
+                    date = f"{int(date):02}-{today.strftime('%m-%Y')}"
+                elif re.findall(r"^\d(?:\d?)-\d(?:\d?)$", date):
+                    # day and month
+                    date = date.split("-")
+                    date = f"{int(date[0]):02}-{int(date[1]):02}-{today.strftime('%Y')}"
+                elif re.findall(r"^\d(?:\d?)-\d(?:\d?)-\d(?:\d?)(?:\d?)(?:\d?)$", date):
+                    date = date.split("-")
+                    year = str(date[2])
+                    y2k = "2000"  # assuming this code is not used after the year 2999
+                    date = f"{int(date[0]):02}-{int(date[1]):02}-{y2k[:-len(year)] + year}"
                 else:
-                    if date == "":
-                        self.highlighted_node.data.due.value = ""
-                    else:
-                        await self.post_message(
-                            Notify(
-                                self,
-                                message="Invalid date format! Enter in format: dd-mm-yyyy",
-                            )
+                    await self.post_message(
+                        Notify(
+                            self,
+                            message="Invalid date format! Enter in format: dd-mm-yyyy",
                         )
+                    )
 
-                        self.highlighted_node.data.due.value = self.prev_date
+                if len(date) != 0 and not self._is_valid_date(date):
+                    date = self.prev_date
+                    await self.post_message(
+                        Notify(self, message="Please enter a valid date")
+                    )
+                else:
+                    await self.post_message(
+                        Notify(self, message="Your due date was updated")
+                    )
 
+                self.highlighted_node.data.due.value = date
                 await self.update_due_status()
 
         self.focused = None
@@ -342,7 +352,7 @@ class TodoList(NestedListEdit):
 
     def _is_valid_date(self, date: str) -> bool:
         try:
-            datetime(*self._parse_date(date))
+            datetime.strptime(date, "%d-%m-%Y")
             return True
         except ValueError:
             return False

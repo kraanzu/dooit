@@ -323,7 +323,7 @@ class TodoList(NestedListEdit):
                 elif re.findall(r"^\d(?:\d?)-\d(?:\d?)-\d(?:\d?)(?:\d?)(?:\d?)$", date):
                     date = date.split("-")
                     year = str(date[2])
-                    y2k = "2000" # assuming this code is not used after the year 2999
+                    y2k = "2000"  # assuming this code is not used after the year 2999
                     date = f"{int(date[0]):02}-{int(date[1]):02}-{y2k[:-len(year)] + year}"
                 else:
                     await self.post_message(

@@ -20,19 +20,18 @@ class Todo:
         self,
         about: Optional[str] = None,
         due: Optional[str] = None,
-        urgency: Urgency = Urgency.D,
+        urgency: Optional[Urgency] = None,
     ) -> None:
         self.about = about
         self.due = due
-        self.urgency = urgency
+        self.urgency = urgency or Urgency.D
         self.id = generate_uuid()
 
     def edit(
         self,
-        *,
         about: Optional[str] = None,
         due: Optional[str] = None,
-        urgency: Urgency = Urgency.D,
+        urgency: Optional[Urgency] = None,
     ) -> None:
         if about:
             self.about = about

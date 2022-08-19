@@ -1,4 +1,8 @@
+from typing import Optional
+
+from dooit.api.todo_manager import DateType
 from dooit.utils import Topic
+from dooit.utils.urgency import Urgency
 
 
 class WorkSpace:
@@ -21,3 +25,22 @@ class WorkSpace:
         self.topics[name] = self.topics[topic]
         self.topics[name].rename(name)
         self.remove_topic(topic)
+
+    def add_todo(
+        self,
+        topic: str = "common",
+        about: Optional[str] = None,
+        due: Optional[DateType] = None,
+        urgency: Optional[Urgency] = None,
+    ):
+        self.topics[topic].add_todo(about, due, urgency)
+
+    def edit_todo(
+        self,
+        id_: str,
+        topic: str = "common",
+        about: Optional[str] = None,
+        due: Optional[DateType] = None,
+        urgency: Optional[Urgency] = None,
+    ):
+        self.topics[topic].edit_todo(id_, about, due, urgency)

@@ -19,7 +19,16 @@ class Topic:
         self,
         about: Optional[str] = None,
         due: Optional[str] = None,
-        urgency: Urgency = Urgency.D,
+        urgency: Optional[Urgency] = None,
     ):
         todo = Todo(about, due, urgency)
         self.todos[todo.id] = todo
+
+    def edit_todo(
+        self,
+        id_: str,
+        about: Optional[str] = None,
+        due: Optional[str] = None,
+        urgency: Optional[Urgency] = None,
+    ):
+        self.todos[id_].edit(about, due, urgency)

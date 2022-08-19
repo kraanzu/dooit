@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Literal, Optional, Union
-from ..utils import Urgency, Todo, Topic, WorkSpace
+
+from ..utils import Todo, Topic, Urgency, WorkSpace
 
 DateType = Union[str, datetime]
 SortMethodType = Literal["name", "status", "date", "urgency"]
@@ -13,7 +14,6 @@ class Manager:
     """
 
     def __init__(self) -> None:
-        self.topics: dict[str, Topic] = dict()
         self.workspaces: dict[str, WorkSpace] = dict()
 
     def add_workspace(self, workspace: str):
@@ -43,17 +43,18 @@ class Manager:
         due: Optional[DateType] = None,
         urgency: Optional[Urgency] = None,
     ):
-        ...
+        self.workspaces[workspace].add_todo(topic, about, due, urgency)
 
     def edit_todo(
         self,
+        id_: str,
         workspace: str,
         topic: str = "common",
         about: Optional[str] = None,
         due: Optional[DateType] = None,
         urgency: Optional[Urgency] = None,
     ):
-        ...
+        self.workspaces[workspace].edit_todo(id_, topic, about, due, urgency)
 
     def sort_todos(
         self,

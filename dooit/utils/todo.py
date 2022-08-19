@@ -1,5 +1,14 @@
 from typing import Optional
 from dooit.utils import Urgency
+from string import printable as chars
+from random import choice
+
+
+def generate_uuid() -> str:
+    """
+    Generates a random id for entries
+    """
+    return "".join([choice(chars) for _ in range(32)])
 
 
 class Todo:
@@ -16,6 +25,7 @@ class Todo:
         self.about = about
         self.due = due
         self.urgency = urgency
+        self.id = generate_uuid()
 
     def edit(
         self,

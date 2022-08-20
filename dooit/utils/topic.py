@@ -1,6 +1,7 @@
 from typing import Optional
 
-from dooit.utils import Todo, Urgency
+from dooit.utils.todo import Todo
+from dooit.utils.urgency import Urgency
 
 
 class Topic:

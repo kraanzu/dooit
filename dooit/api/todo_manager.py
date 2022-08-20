@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal, Optional, Union
 
-from ..utils import Todo, Topic, Urgency, WorkSpace
+from dooit.utils import Urgency, WorkSpace
 
 DateType = Union[str, datetime]
 SortMethodType = Literal["name", "status", "date", "urgency"]

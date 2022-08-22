@@ -1,9 +1,8 @@
-from datetime import datetime
-from typing import Literal, Optional, Union
+from typing import Literal, Optional, List
 
-from dooit.utils import Urgency, WorkSpace
+from dooit.utils import Urgency
+from dooit.utils.workspace import WorkSpace
 
-DateType = Union[str, datetime]
 SortMethodType = Literal["name", "status", "date", "urgency"]
 FilterMethod = Literal["about", "date", "urgency"]
 
@@ -14,36 +13,43 @@ class Manager:
     """
 
     def __init__(self) -> None:
-        self.workspaces: dict[str, WorkSpace] = dict()
+        self.workspaces: List[WorkSpace] = []
 
     def add_workspace(self, workspace: str):
-        self.workspaces[workspace] = WorkSpace(workspace)
+        self.workspaces.append(WorkSpace(workspace))
 
-    def rename_workspace(self, workspace: str, name: str):
-        self.workspaces[name] = self.workspaces[workspace]
-        del self.workspaces[workspace]
+    def _get_workspace_index(self, workspace: str) -> int:
+        return [i for i, j in enumerate(self.workspaces) if j.name == workspace][0]
+
+    def workspace(self, workspace: str) -> WorkSpace:
+        idx = self._get_workspace_index(workspace)
+        return self.workspaces[idx]
+
+    def rename_workspace(self, workspace: str, name: str) -> None:
+        self.workspace(workspace).name = name
 
     def remove_workspace(self, workspace: str):
-        del self.workspaces[workspace]
+        idx = self._get_workspace_index(workspace)
+        self.workspaces.pop(idx)
 
     def add_topic(self, workspace: str, topic: str):
-        self.workspaces[workspace].add_topic(topic)
+        self.workspace(workspace).add_topic(topic)
 
     def rename_topic(self, workspace: str, topic: str, name: str):
-        self.workspaces[workspace].rename_topic(topic, name)
+        self.workspace(workspace).rename_topic(topic, name)
 
     def remove_topic(self, workspace: str, topic):
-        self.workspaces[workspace].remove_topic(topic)
+        self.workspace(workspace).remove_topic(topic)
 
     def add_todo(
         self,
         workspace: str,
         topic: str = "common",
         about: Optional[str] = None,
-        due: Optional[DateType] = None,
+        due: Optional[str] = None,
         urgency: Optional[Urgency] = None,
     ):
-        self.workspaces[workspace].add_todo(topic, about, due, urgency)
+        self.workspace(workspace).add_todo(topic, about, due, urgency)
 
     def edit_todo(
         self,
@@ -51,10 +57,10 @@ class Manager:
         workspace: str,
         topic: str = "common",
         about: Optional[str] = None,
-        due: Optional[DateType] = None,
+        due: Optional[str] = None,
         urgency: Optional[Urgency] = None,
     ):
-        self.workspaces[workspace].edit_todo(id_, topic, about, due, urgency)
+        self.workspace(workspace).edit_todo(id_, topic, about, due, urgency)
 
     def sort_todos(
         self,

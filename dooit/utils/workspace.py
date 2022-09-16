@@ -1,17 +1,27 @@
 from typing import Optional, Literal
+from rich.text import Text
 
 from dooit.api.todo_manager import DateType
 from dooit.utils import Topic
 from dooit.utils.urgency import Urgency
 
 
-ResponseType = Literal["OK", "ERROR", "WARNING"]
+ResponseType = Literal["OK", "ERROR", "WARNING", "INFO"]
 
 
 class Response:
     def __init__(self, code: ResponseType, msg: str) -> None:
         self.code = code
         self.msg = msg
+        self.color = {
+            "OK": "green",
+            "INFO": "blue",
+            "WARN": "yellow",
+            "ERROR": "red",
+        }
+
+    def as_text(self) -> Text:
+        return Text(self.msg)
 
 
 class WorkSpace:

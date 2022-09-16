@@ -13,7 +13,7 @@ def generate_uuid() -> str:
 
 class Todo:
     """
-    Singlw todo Manager class
+    Single todo Manager class
     """
 
     def __init__(

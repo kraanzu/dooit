@@ -1,5 +1,5 @@
 import pyperclip
-from typing import Literal
+from typing import Any, Literal
 from rich.console import RenderableType
 from rich.panel import Panel
 from rich.style import StyleType
@@ -11,43 +11,11 @@ from textual import events
 from textual.reactive import Reactive
 
 
-class View:
-    """
-    A class to manage current viewing portion of text input
-    """
-
-    def __init__(self, start: int = 0, end: int = 0) -> None:
-        self.start = start
-        self.end = end
-
-    def shift_left(self, delta: int) -> None:
-        """
-        Shift the view to the left by provided delta
-        """
-
-        delta = min(delta, self.start)
-        self.start -= delta
-        self.end -= delta
-
-    def shift_right(self, delta: int, max_val: int) -> None:
-        """
-        Shift the view to the left by provided delta
-        """
-
-        delta = min(delta, max_val - self.end)
-        self.start += delta
-        self.end += delta
-
-    def __str__(self) -> str:
-        return f"View({self.start}, {self.end})"
-
-
 class SimpleInput(Widget):
     """
     A simple single line Text Input widget
     """
 
-    value: str = ""
     cursor: str = "|"
     _cursor_position: int = 0
     _has_focus: Reactive[bool] = Reactive(False)
@@ -55,6 +23,7 @@ class SimpleInput(Widget):
     def __init__(
         self,
         name: str | None = None,
+        value: Any = "",
         title: TextType = "",
         title_align: AlignMethod = "center",
         border_style: StyleType = "blue",
@@ -65,6 +34,7 @@ class SimpleInput(Widget):
     ) -> None:
         super().__init__(name)
         self.title = title
+        self.value = str(value)
         self.title_align: AlignMethod = title_align  # Silence compiler warning
         self.border_style: StyleType = border_style
         self.placeholder = placeholder
@@ -79,34 +49,10 @@ class SimpleInput(Widget):
     def has_focus(self) -> bool:
         return self._has_focus
 
-    async def on_resize(self, _: events.Resize) -> None:
-        self._set_view()
-        self.update_view(self._cursor_position, 0)
-        self._cursor_position = 0
-        self.refresh()
-
-    def _format_text(self, text: str) -> str:
-        """
-        Trims the non-visible part of the widget
-        """
-        return text[self.view.start : self.view.end]
-
-    def _set_view(self):
-        if self.box:
-            self.width = self.size.width - 4
-        else:
-            self.width = self.size.width
-
-        # self.width = self.size.width - 4
-        self.view = View(0, self.width)
-
     def render(self) -> RenderableType:
         """
         Renders a Panel for the Text Input Box
         """
-
-        if not hasattr(self, "view"):
-            self._set_view()
 
         if self.has_focus:
             text = self._render_text_with_cursor()
@@ -116,7 +62,7 @@ class SimpleInput(Widget):
             else:
                 text = self.value
 
-        formatted_text = Text.from_markup(self._format_text(text))
+        formatted_text = Text.from_markup(text)
         return self.render_panel(formatted_text)
 
     def render_panel(self, text: TextType) -> RenderableType:
@@ -230,7 +176,6 @@ class SimpleInput(Widget):
 
         if delete:
             self.value = self.value[: self._cursor_position] + self.value[prev:]
-            self.view.shift_left(prev - self._cursor_position)
 
     async def _move_cursor_forward(self, word=False, delete=False) -> None:
         """
@@ -262,19 +207,6 @@ class SimpleInput(Widget):
             self.value = self.value[:prev] + self.value[self._cursor_position :]
             self._cursor_position = prev  # Because the cursor never actually moved :)
 
-    def update_view(self, prev: int, curr: int) -> None:
-        """
-        Updates the current view-able part of the text if there is an overflow
-        """
-        if not hasattr(self, "view"):
-            self._set_view()
-
-        if prev >= self.view.start and curr < self.view.start:
-            self.view.shift_left(prev - curr)
-
-        elif prev <= self.view.end and curr >= self.view.end:
-            self.view.shift_right(curr - prev, len(self.value) + 1)
-
     async def clear_input(self):
         await self.handle_keypress("end")
         while self.value:
@@ -284,7 +216,6 @@ class SimpleInput(Widget):
         """
         Handles Keypresses
         """
-        prev = self._cursor_position
 
         match key:
 
@@ -337,5 +268,4 @@ class SimpleInput(Widget):
         if len(key) == 1:
             await self._insert_text(key)
 
-        self.update_view(prev, self._cursor_position)
         self.refresh()

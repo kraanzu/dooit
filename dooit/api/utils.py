@@ -1,5 +1,6 @@
 from typing import Callable, Optional
-from model import Model
+from ..utils import Parser
+from .model import Model
 
 
 class Todo(Model):
@@ -90,9 +91,18 @@ class Manager(Model):
         super().__init__(name, parent)
         self.ctype: Callable = Workspace
 
+    def export(self):
+        data = super().export()
+        Parser.save(data)
+
+    def setup(self):
+        data = Parser.load()
+        self.from_file(data)
+
 
 manager = Manager(name="Manager")
-for i in range(5):
-    manager.add_child()
-    manager.children[-1].add_child()
-    manager.children[-1].children[-1].add_child()
+manager.setup()
+# for i in range(5):
+#     manager.add_child()
+#     manager.children[-1].add_child()
+#     manager.children[-1].children[-1].add_child()

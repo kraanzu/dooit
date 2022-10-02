@@ -1,14 +1,15 @@
 from os import get_terminal_size
-from typing import List
+from typing import List, Tuple
+from rich.console import RenderableType
+from rich.panel import Panel
 from rich.style import StyleType
 from textual import events
-from textual.app import App
 from textual.widget import Widget
-from rich.table import Table
+from rich.table import Table, box
 from rich.text import Text
 
-from simple_input import SimpleInput
-from model import manager, Model
+from .simple_input import SimpleInput
+from ...api import manager, Model
 
 
 class Component:
@@ -105,12 +106,7 @@ class TreeList(Widget):
             self._view[1] -= diff
 
     def _get_table(self) -> Table:
-        table = Table.grid(expand=True)
-        table.add_column("a", ratio=7)
-        table.add_column("b", ratio=2)
-        table.add_column("c", ratio=1)
-
-        return table
+        return Table.grid(expand=True)
 
     def _refresh_rows(self):
         _rows_copy = self._rows
@@ -142,7 +138,6 @@ class TreeList(Widget):
             Text(
                 i,
                 style=self.style_on if highlight else self.style_off,
-                overflow="ignore",
             )
             for i in item
         ]
@@ -197,41 +192,36 @@ class TreeList(Widget):
 
         self.refresh(layout=True)
 
+    def _check_valid(self, depth: int) -> Tuple[int, bool]:
+        return depth, True
+
     def add_row(self, row: Component, highlight: bool):
-        padding = "  " * row.depth
+        depth, ok = self._check_valid(row.depth)
+        if not ok:
+            return
+
+        padding = "  " * depth
         item = [padding + str(i.render()) for i in row.get_field_values()]
         self.table.add_row(*self._stylize_item(item, highlight))
 
-    def render(self):
+    def render(self) -> RenderableType:
         self._refresh_rows()
 
         self.table = self._get_table()
-
         for i in range(self._view[0], self._view[1] + 1):
             try:
                 self.add_row(self.row_vals[i], i == self.current)
             except:
                 pass
 
-        return self.table
+        height = self._size.height
+        return Panel(
+            self.table,
+            expand=True,
+            height=height,
+            box=box.HEAVY,
+        )
 
     async def on_resize(self, event: events.Resize) -> None:
         self._set_view()
         return await super().on_resize(event)
-
-
-class A(App):
-    async def on_mount(self):
-        self.x = TreeList(
-            style_off="dim white",
-            style_on="bold white",
-            style_edit="b cyan",
-        )
-        await self.view.dock(self.x)
-
-    async def on_key(self, event: events.Key):
-        await self.x.handle_key(event)
-        self.refresh()
-
-
-A.run()

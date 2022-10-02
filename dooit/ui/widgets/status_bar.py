@@ -67,10 +67,10 @@ class StatusBar(Widget):
         bar = Table.grid(padding=(0, 1), expand=True)
         bar.add_column("status", justify="center", width=len(self.status) + 1)
         bar.add_column("message", justify="left", ratio=1)
-        bar.add_column("date", justify="center", width=13)
-        bar.add_column("clock", justify="center", width=12)
+        bar.add_column("date", justify="center", width=14)
+        bar.add_column("clock", justify="center", width=13)
 
-        status = Text(f" {self.status}", style=f"reverse {self.color}")
+        status = Text(f" {self.status} ", style=f"reverse {self.color}")
         message = Text.from_markup(f" {self.message}", style="magenta on black")
         message.pad_right(self.size.width)
 

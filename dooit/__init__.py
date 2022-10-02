@@ -1,7 +1,7 @@
 import pkg_resources
 import argparse
 import psutil
-from .ui.tui import Doit
+from .ui.tui import Dooit
 
 
 def is_running() -> bool:
@@ -27,4 +27,4 @@ def main():
         if is_running():
             exit(print("One instance of dooit is already running!\nQuiting..."))
 
-        Doit.run()
+        Dooit.run()

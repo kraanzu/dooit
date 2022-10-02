@@ -1,10 +1,9 @@
-from typing import Callable, Optional
-from functools import partial
+from typing import Callable, List, Optional
 
 
 class Model:
     _ctype_counter: int = 0
-    nomenclature: str = "Workspace"
+    nomenclature: str = "None"
     fields = []
 
     def __init__(
@@ -12,10 +11,10 @@ class Model:
         name: str,
         parent: Optional["Model"] = None,
     ) -> None:
+        self.ctype: Callable = type(self)
         self.name = name
         self.parent = parent
-        self.children: list["Model"] = []
-        self.ctype: Callable = type(self)
+        self.children: List = []
 
     def _get_child_index(self, name: str) -> int:
 
@@ -29,9 +28,7 @@ class Model:
         return self.children[name]
 
     def edit(self, key: str, value: str):
-        func = eval(f"self.set_{key}")
-        callback = partial(func, value)
-        return callback()
+        setattr(self, key, value)
 
     def add_child(self, index: Optional[int] = None):
 
@@ -58,9 +55,12 @@ class Model:
     def sort_children(self, field: str):
         self.children.sort(key=lambda x: getattr(x, field))
 
-    def get_export(self):
-        return {getattr(child, "name"): child.get_export() for child in self.children}
+    def export(self):
+        return {getattr(child, "name"): child.export() for child in self.children}
 
-    @classmethod
-    def from_export(cls):
-        pass
+    def from_file(self, data):
+
+        for i, j in data.items():
+            self.add_child()
+            self.children[-1].edit("name", i)
+            self.children[-1].from_file(j)

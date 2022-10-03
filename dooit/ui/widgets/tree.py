@@ -39,6 +39,7 @@ class Component:
 
 
 class TreeList(Widget):
+    _has_focus = False
     _current = 0
     _rows = {}
 
@@ -62,6 +63,14 @@ class TreeList(Widget):
         self._refresh_rows()
 
     # ------------ INTERNALS ----------------
+
+    def highlight(self):
+        self._has_focus = True
+        self.refresh()
+
+    def dim(self):
+        self._has_focus = False
+        self.refresh()
 
     @property
     def current(self) -> int:
@@ -302,6 +311,7 @@ class TreeList(Widget):
             expand=True,
             height=height,
             box=box.HEAVY,
+            border_style="cyan" if self._has_focus else "dim white",
         )
 
     async def on_resize(self, event: events.Resize) -> None:

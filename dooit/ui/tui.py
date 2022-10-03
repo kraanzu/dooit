@@ -12,6 +12,7 @@ class Dooit(App):
         self.bar = StatusBar()
         self.current_focus = "navbar"
 
+        self.navbar.highlight()
         await self.view.dock(self.bar, edge="bottom", size=1)
         await self.view.dock(self.navbar, size=30, edge="left")
         await self.view.dock(self.todos)

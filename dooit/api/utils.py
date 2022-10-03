@@ -10,7 +10,7 @@ class Todo(Model):
     def __init__(self, name: str, parent: Optional["Model"] = None) -> None:
         super().__init__(name, parent)
 
-        self.about = name
+        self.about = ""
         self.due = "today"
         self.urgency = 4
         self.status = "PENDING"
@@ -44,10 +44,10 @@ class Todo(Model):
         self.date = due
         self.status = status
 
-    def export(self):
-        return [self.to_data(), [child.export() for child in self.children]]
+    def commit(self):
+        return [self.to_data(), [child.commit() for child in self.children]]
 
-    def from_file(self, data):
+    def from_data(self, data):
         for i, j in data:
             self.add_child()
             self.children[-1].fill_from_data(i)
@@ -60,17 +60,17 @@ class Topic(Model):
 
     def __init__(self, name: str, parent: Optional["Model"] = None) -> None:
         super().__init__(name, parent)
-        self.about = name
+        self.about = ""
         self.ctype: Callable = Todo
 
-    def export(self):
+    def commit(self):
         return [child.export() for child in self.children]
 
-    def from_file(self, data):
+    def from_data(self, data):
         for i, j in data:
             self.add_child()
             self.children[-1].fill_from_data(i)
-            self.children[-1].from_export(j)
+            self.children[-1].from_data(j)
 
 
 class Workspace(Model):
@@ -79,7 +79,7 @@ class Workspace(Model):
 
     def __init__(self, name: str, parent: Optional["Model"] = None) -> None:
         super().__init__(name, parent)
-        self._about = name
+        self.about = ""
         self.ctype: Callable = Topic
 
 
@@ -91,13 +91,13 @@ class Manager(Model):
         super().__init__(name, parent)
         self.ctype: Callable = Workspace
 
-    def export(self):
-        data = super().export()
+    def commit(self):
+        data = super().commit()
         Parser.save(data)
 
     def setup(self):
         data = Parser.load()
-        self.from_file(data)
+        self.from_data(data)
 
 
 manager = Manager(name="Manager")

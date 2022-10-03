@@ -10,5 +10,5 @@ class NavBar(TreeList):
         return table
 
     def _check_valid(self, depth: int) -> Tuple[int, bool]:
-        ok = depth <= 2
+        ok = depth < 2
         return depth, ok

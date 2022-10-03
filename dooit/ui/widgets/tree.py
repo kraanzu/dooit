@@ -13,10 +13,17 @@ from ...api import manager, Model
 
 
 class Component:
-    def __init__(self, item: Model, depth: int = 0, expanded: bool = False) -> None:
+    def __init__(
+        self,
+        item: Model,
+        depth: int = 0,
+        index: int = 0,
+        expanded: bool = False,
+    ) -> None:
         self.item = item
         self.expanded = expanded
         self.depth = depth
+        self.index = index
         self.fields = {
             field: SimpleInput(
                 value=getattr(item, field),
@@ -38,9 +45,9 @@ class TreeList(Widget):
     def __init__(
         self,
         name: str | None = None,
-        style_off: StyleType = "",
-        style_on: StyleType = "",
-        style_edit: StyleType = "",
+        style_off: StyleType = "dim grey50",
+        style_on: StyleType = "bold white",
+        style_edit: StyleType = "bold cyan",
         model: Model = manager,
     ) -> None:
         super().__init__(name)
@@ -52,6 +59,7 @@ class TreeList(Widget):
 
     async def on_mount(self):
         self._set_screen()
+        self._refresh_rows()
 
     # ------------ INTERNALS ----------------
 
@@ -61,22 +69,28 @@ class TreeList(Widget):
 
     @current.setter
     def current(self, value) -> None:
-        if value < 0 or value >= len(self.row_vals):
-            return
-
+        value = min(max(0, value), len(self.row_vals) - 1)
         self._current = value
         self._fix_view()
         self.refresh()
 
+    @property
+    def component(self):
+        return self.row_vals[self.current]
+
+    @property
+    def item(self):
+        return self.component.item
+
     # --------------------------------------
 
     def _set_screen(self):
-        y = get_terminal_size()[1]
+        y = get_terminal_size()[1] - 3  # Panel
         self._view = [0, y]
 
     def _set_view(self) -> None:
         prev_size = self._view[1] - self._view[0]
-        curr_size = get_terminal_size()[1]
+        curr_size = get_terminal_size()[1] - 3  # Panel
         diff = prev_size - curr_size
 
         if diff <= 0:
@@ -117,7 +131,9 @@ class TreeList(Widget):
             name = item.name
             self._rows[name] = _rows_copy.get(
                 name,
-                Component(item, nest_level),  # defaults to a new Component
+                Component(
+                    item, nest_level, len(self._rows)
+                ),  # defaults to a new Component
             )
 
             if self._rows[name].expanded:
@@ -146,14 +162,53 @@ class TreeList(Widget):
         self.row_vals[self.current].fields[field].on_focus()
         self.editing = field
 
-    def remove_item(self):
-        pass
+    async def _stop_edit(self):
+        curr = self.row_vals[self.current]
+        curr.fields[self.editing].on_blur()
+        curr.item.edit(self.editing, curr.fields[self.editing].value)
+        self.editing = "none"
 
-    def add_sibling(self):
-        pass
+    def remove_item(self):
+        curr = self.row_vals[self.current]
+        curr.item.drop()
+        self._refresh_rows()
+        # self.current = self._current
 
     def add_child(self):
-        pass
+        if not self.row_vals:
+            return
+
+        curr = self.row_vals[self.current]
+        curr.toggle_expand()
+        self.item.add_child()
+        self._refresh_rows()
+        self.move_down()
+        self._start_edit("about")
+
+    def add_sibling(self):
+
+        if not self.row_vals:
+            manager.add_child()
+            self._refresh_rows()
+            self._start_edit("about")
+            return
+
+        curr = self.row_vals[self.current].item
+        curr.add_sibling()
+        self._refresh_rows()
+
+        self.move_down()
+        self._start_edit("about")
+
+    def shift_up(self):
+        self.item.shift_up()
+        self._refresh_rows()
+        self.move_up()
+
+    def shift_down(self):
+        self.item.shift_down()
+        self._refresh_rows()
+        self.move_down()
 
     def move_up(self):
         self.current -= 1
@@ -161,8 +216,21 @@ class TreeList(Widget):
     def move_down(self):
         self.current += 1
 
+    def move_to_top(self):
+        self.current = 0
+
+    def move_to_bottom(self):
+        self.current = len(self.row_vals)
+
     def toggle_expand(self):
         self.row_vals[self.current].toggle_expand()
+        self._refresh_rows()
+
+    def toggle_expand_parent(self):
+        parent = self.item.parent
+        if parent:
+            index = self._rows[parent.name].index
+            self.current = index
 
     async def handle_key(self, event: events.Key):
 
@@ -172,8 +240,7 @@ class TreeList(Widget):
             field = self.row_vals[self.current].fields[self.editing]
 
             if key == "escape":
-                self.editing = "none"
-                field.on_blur()
+                await self._stop_edit()
             else:
                 await field.handle_keypress(event.key)
 
@@ -181,14 +248,30 @@ class TreeList(Widget):
             match key:
                 case "k" | "up":
                     self.move_up()
+                case "K":
+                    self.shift_up()
                 case "j" | "down":
                     self.move_down()
+                case "J":
+                    self.shift_down()
                 case "i":
                     self._start_edit("about")
                 case "d":
                     self._start_edit("date")
                 case "z":
                     self.toggle_expand()
+                case "Z":
+                    self.toggle_expand_parent()
+                case "A":
+                    self.add_child()
+                case "a":
+                    self.add_sibling()
+                case "x":
+                    self.remove_item()
+                case "g":
+                    self.move_to_top()
+                case "G":
+                    self.move_to_bottom()
 
         self.refresh(layout=True)
 
@@ -205,7 +288,6 @@ class TreeList(Widget):
         self.table.add_row(*self._stylize_item(item, highlight))
 
     def render(self) -> RenderableType:
-        self._refresh_rows()
 
         self.table = self._get_table()
         for i in range(self._view[0], self._view[1] + 1):

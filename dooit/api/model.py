@@ -1,7 +1,7 @@
 from typing import List, Optional, Type
 
 class Model:
-    _ctype_counter: int = 0
+    _ctype_counter: int = 1
     nomenclature: str = "None"
     fields = []
 

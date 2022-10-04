@@ -90,7 +90,7 @@ class TreeList(Widget):
 
     @property
     def component(self):
-        if self.current != -1:
+        if self.row_vals:
             return self.row_vals[self.current]
         else:
             return Component(self.model)
@@ -138,6 +138,9 @@ class TreeList(Widget):
 
     def _get_table(self) -> Table:
         return Table.grid(expand=True)
+    
+    def _get_children(self, model: Model):
+        return model.children
 
     def _refresh_rows(self):
         _rows_copy = self._rows
@@ -154,10 +157,10 @@ class TreeList(Widget):
             )
 
             if self._rows[name].expanded:
-                for i in item.children:
+                for i in self._get_children(item):
                     add_rows(i, nest_level + 1)
 
-        for i in self.model.children:
+        for i in self._get_children(self.model):
             add_rows(i)
 
         self.row_vals: List[Component] = list(self._rows.values())

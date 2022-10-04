@@ -51,3 +51,6 @@ class Todo(Model):
             self.add_child()
             self.children[-1].fill_from_data(i)
             self.children[-1].from_export(j)
+
+    def get_todo(self):
+        return self.children

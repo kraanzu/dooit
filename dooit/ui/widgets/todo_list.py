@@ -1,4 +1,3 @@
-from rich.console import RenderableType
 from rich.table import Table
 
 from dooit.api.model import Model
@@ -13,9 +12,13 @@ class TodoList(TreeList):
     def make_table(self):
         if not self._assigned:
             self.table = Table.grid()
-            return
-
-        return super().make_table()
+        else:
+            super().make_table()
+    
+    def _get_children(self, model: Model):
+        if self._assigned:
+            return model.get_todos()
+        return []
 
     def update_table(self, model: Model):
         self._assigned = True

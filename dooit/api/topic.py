@@ -14,10 +14,13 @@ class Topic(Model):
         self.ctype: Callable = Todo
 
     def commit(self):
-        return [child.export() for child in self.children]
+        return [child.commit() for child in self.children]
 
     def from_data(self, data):
         for i, j in data:
             self.add_child()
             self.children[-1].fill_from_data(i)
             self.children[-1].from_data(j)
+
+    def get_todos(self):
+        return self.children

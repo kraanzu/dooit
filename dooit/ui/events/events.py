@@ -68,15 +68,14 @@ class HighlightNode(Message, bubble=True):
         self.id = id
 
 
-class ListItemSelected(Message, bubble=True):
+class TopicSelect(Message, bubble=True):
     """
     Emitted when the user selects a todo from search list
     """
 
-    def __init__(self, sender: MessageTarget, selected: str, focus: bool) -> None:
+    def __init__(self, sender: MessageTarget, item) -> None:
         super().__init__(sender)
-        self.selected = selected
-        self.focus = focus
+        self.item = item
 
 
 class SwitchTab(Message, bubble=True):

@@ -402,7 +402,7 @@ class Doit(App):
     async def handle_notify(self, event: Notify) -> None:
         self.status_bar.set_message(event.message)
 
-    async def handle_list_item_selected(self, event: ListItemSelected) -> None:
+    async def handle_list_item_selected(self, event: TopicSelect) -> None:
         self.current_menu = event.selected
         await self.reset_screen()
         self.change_current_tab("todos" if event.focus else "navbar")

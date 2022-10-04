@@ -1,6 +1,5 @@
 from typing import List, Optional, Type
 
-
 class Model:
     _ctype_counter: int = 0
     nomenclature: str = "None"
@@ -101,3 +100,5 @@ class Model:
             self.add_child()
             self.children[-1].edit("about", i)
             self.children[-1].from_data(j)
+
+

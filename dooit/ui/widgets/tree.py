@@ -9,7 +9,7 @@ from rich.table import Table, box
 from rich.text import Text
 
 from .simple_input import SimpleInput
-from ...api import manager, Model
+from ...api.manager import manager, Model
 
 
 class Component:
@@ -40,7 +40,7 @@ class Component:
 
 class TreeList(Widget):
     _has_focus = False
-    _current = 0
+    _current = -1
     _rows = {}
 
     def __init__(
@@ -64,13 +64,13 @@ class TreeList(Widget):
 
     # ------------ INTERNALS ----------------
 
-    def highlight(self):
-        self._has_focus = True
+    def toggle_highlight(self):
+        self._has_focus = not self._has_focus
         self.refresh()
 
-    def dim(self):
-        self._has_focus = False
-        self.refresh()
+    @property
+    def has_focus(self):
+        return self._has_focus
 
     @property
     def current(self) -> int:
@@ -78,6 +78,11 @@ class TreeList(Widget):
 
     @current.setter
     def current(self, value) -> None:
+
+        if not self.row_vals:
+            self._current = -1
+            return
+
         value = min(max(0, value), len(self.row_vals) - 1)
         self._current = value
         self._fix_view()
@@ -85,7 +90,10 @@ class TreeList(Widget):
 
     @property
     def component(self):
-        return self.row_vals[self.current]
+        if self.current != -1:
+            return self.row_vals[self.current]
+        else:
+            return Component(self.model)
 
     @property
     def item(self):
@@ -168,27 +176,29 @@ class TreeList(Widget):
         ]
 
     def _start_edit(self, field: str):
-        self.row_vals[self.current].fields[field].on_focus()
-        self.editing = field
+        if self.component:
+            self.component.fields[field].on_focus()
+            self.editing = field
 
     async def _stop_edit(self):
-        curr = self.row_vals[self.current]
-        curr.fields[self.editing].on_blur()
-        curr.item.edit(self.editing, curr.fields[self.editing].value)
+        self.component.fields[self.editing].on_blur()
+        self.component.item.edit(
+            self.editing,
+            self.component.fields[self.editing].value,
+        )
         self.editing = "none"
 
     def remove_item(self):
-        curr = self.row_vals[self.current]
-        curr.item.drop()
+        self.item.drop()
         self._refresh_rows()
         # self.current = self._current
 
     def add_child(self):
-        if not self.row_vals:
+
+        if not self.item:
             return
 
-        curr = self.row_vals[self.current]
-        curr.toggle_expand()
+        self.component.toggle_expand()
         self.item.add_child()
         self._refresh_rows()
         self.move_down()
@@ -202,8 +212,7 @@ class TreeList(Widget):
             self._start_edit("about")
             return
 
-        curr = self.row_vals[self.current].item
-        curr.add_sibling()
+        self.item.add_sibling()
         self._refresh_rows()
 
         self.move_down()
@@ -232,7 +241,7 @@ class TreeList(Widget):
         self.current = len(self.row_vals)
 
     def toggle_expand(self):
-        self.row_vals[self.current].toggle_expand()
+        self.component.toggle_expand()
         self._refresh_rows()
 
     def toggle_expand_parent(self):
@@ -241,9 +250,17 @@ class TreeList(Widget):
             index = self._rows[parent.name].index
             self.current = index
 
+    def check_extra_keys(self):
+        pass
+
     async def handle_key(self, event: events.Key):
 
         key = event.key
+
+        if not self.row_vals:
+            if key.lower() == "a":
+                self.add_child()
+            return
 
         if self.editing != "none":
             field = self.row_vals[self.current].fields[self.editing]
@@ -266,7 +283,7 @@ class TreeList(Widget):
                 case "i":
                     self._start_edit("about")
                 case "d":
-                    self._start_edit("date")
+                    self._start_edit("due")
                 case "z":
                     self.toggle_expand()
                 case "Z":
@@ -282,6 +299,7 @@ class TreeList(Widget):
                 case "G":
                     self.move_to_bottom()
 
+        self.check_extra_keys()
         self.refresh(layout=True)
 
     def _check_valid(self, depth: int) -> Tuple[int, bool]:
@@ -296,15 +314,18 @@ class TreeList(Widget):
         item = [padding + str(i.render()) for i in row.get_field_values()]
         self.table.add_row(*self._stylize_item(item, highlight))
 
-    def render(self) -> RenderableType:
-
+    def make_table(self):
         self.table = self._get_table()
-        for i in range(self._view[0], self._view[1] + 1):
+        # for i in range(self._view[0], self._view[1] + 1):
+        for i in range(len(self.row_vals)):
             try:
                 self.add_row(self.row_vals[i], i == self.current)
             except:
                 pass
 
+    def render(self) -> RenderableType:
+
+        self.make_table()
         height = self._size.height
         return Panel(
             self.table,

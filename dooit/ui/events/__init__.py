@@ -7,7 +7,7 @@ from .events import (
     HighlightNode,
     StatusType,
     SortMethodType,
-    ListItemSelected,
+    TopicSelect,
     SwitchTab,
     RemoveTopic,
 )
@@ -21,7 +21,7 @@ __all__ = [
     "HighlightNode",
     "StatusType",
     "SortMethodType",
-    "ListItemSelected",
+    "TopicSelect",
     "SwitchTab",
     "RemoveTopic",
 ]

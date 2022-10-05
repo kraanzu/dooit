@@ -1,6 +1,8 @@
 from rich.table import Table
 
 from dooit.api.model import Model
+
+from dooit.api.workspace import Workspace
 from .tree import TreeList
 
 
@@ -21,6 +23,10 @@ class TodoList(TreeList):
         return []
 
     def update_table(self, model: Model):
+
+        if isinstance(model, Workspace): # common topic
+            model = model.topic
+
         self._assigned = True
         self.model = model
         self._refresh_rows()

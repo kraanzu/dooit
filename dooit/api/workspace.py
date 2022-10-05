@@ -12,9 +12,11 @@ class Workspace(Model):
         super().__init__(name, parent)
         self.about = ""
         self.ctype: Callable = Topic
-        self.topic = Topic(f"{self.name}/Topic#0".lstrip("Manager/"))
+        self.add_child()
+        self.topic = self.children.pop()
 
     def get_todos(self):
+        # exit()
         return self.topic.get_todos()
 
     def commit(self):

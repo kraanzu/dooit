@@ -155,6 +155,7 @@ class TreeList(Widget):
                     item, nest_level, len(self._rows)
                 ),  # defaults to a new Component
             )
+            self._rows[name].index = len(self._rows) - 1
 
             if self._rows[name].expanded:
                 for i in self._get_children(item):

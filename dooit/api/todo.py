@@ -50,7 +50,7 @@ class Todo(Model):
         for i, j in data:
             self.add_child()
             self.children[-1].fill_from_data(i)
-            self.children[-1].from_export(j)
+            self.children[-1].from_data(j)
 
     def get_todos(self):
         return self.children

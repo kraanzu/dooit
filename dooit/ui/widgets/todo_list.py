@@ -29,6 +29,7 @@ class TodoList(TreeList):
 
         self._assigned = True
         self.model = model
+        self.current = -1
         self._refresh_rows()
         self.refresh()
 

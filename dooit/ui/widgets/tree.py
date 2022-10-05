@@ -194,7 +194,7 @@ class TreeList(Widget):
     def remove_item(self):
         self.item.drop()
         self._refresh_rows()
-        # self.current = self._current
+        self.current = self._current
 
     def add_child(self):
 

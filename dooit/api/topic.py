@@ -17,10 +17,11 @@ class Topic(Model):
         return [child.commit() for child in self.children]
 
     def from_data(self, data):
-        for i, j in data:
+        for i in data:
             self.add_child()
-            self.children[-1].fill_from_data(i)
-            self.children[-1].from_data(j)
+            self.children[-1].fill_from_data(i[0])
+            if len(i) > 1:
+                self.children[-1].from_data(i[1])
 
     def get_todos(self):
         return self.children

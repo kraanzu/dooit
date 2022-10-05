@@ -249,7 +249,7 @@ class TreeList(Widget):
 
     def toggle_expand_parent(self):
         parent = self.item.parent
-        if parent:
+        if parent and parent.name != "Manager":
             index = self._rows[parent.name].index
             self.current = index
 

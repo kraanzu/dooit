@@ -7,7 +7,6 @@ from textual.widget import Widget
 from rich.table import Table, box
 from rich.text import Text
 
-
 from .simple_input import SimpleInput
 from ...api.manager import manager, Model
 from ...api.model import MaybeModel
@@ -286,14 +285,12 @@ class TreeList(Widget):
     def check_extra_keys(self):
         pass
 
+    async def handle_tab(self):
+        pass
+
     async def handle_key(self, event: events.Key):
 
         key = event.key
-
-        if not self.row_vals:
-            if key.lower() == "a":
-                self.add_child()
-            return
 
         if self.editing != "none":
             field = self.row_vals[self.current].fields[self.editing]
@@ -304,7 +301,10 @@ class TreeList(Widget):
                 await field.handle_keypress(event.key)
 
         else:
+
             match key:
+                case "ctrl+i":
+                    await self.handle_tab()
                 case "k" | "up":
                     self.move_up()
                 case "K":
@@ -324,7 +324,10 @@ class TreeList(Widget):
                 case "A":
                     self.add_child()
                 case "a":
-                    self.add_sibling()
+                    if self.row_vals:
+                        self.add_sibling()
+                    else:
+                        self.add_child()
                 case "x":
                     self.remove_item()
                 case "g":

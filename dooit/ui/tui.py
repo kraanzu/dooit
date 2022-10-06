@@ -30,15 +30,14 @@ class Dooit(App):
 
     async def on_key(self, event: events.Key) -> None:
 
-        if event.key == "ctrl+i":
-            self.toggle_highlight()
-            return
-
         if self.navbar.has_focus:
             await self.navbar.handle_key(event)
         else:
             await self.todos.handle_key(event)
 
     async def handle_topic_select(self, event: TopicSelect):
-        item = event.item
         self.todos.update_table(event.item)
+
+    async def handle_switch_tab(self, _: SwitchTab):
+        self.toggle_highlight()
+

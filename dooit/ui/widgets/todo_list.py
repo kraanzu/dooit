@@ -1,8 +1,9 @@
 from rich.table import Table
 
-from dooit.api.model import Model
+from dooit.ui.events.events import SwitchTab
 
-from dooit.api.workspace import Workspace
+from ...api.model import Model
+from ...api.workspace import Workspace
 from .tree import TreeList
 
 
@@ -16,15 +17,18 @@ class TodoList(TreeList):
             self.table = Table.grid()
         else:
             super().make_table()
-    
+
     def _get_children(self, model: Model):
         if self._assigned:
-            return model.get_todos()
+            return model.children
         return []
+
+    async def handle_tab(self):
+        await self.emit(SwitchTab(self))
 
     def update_table(self, model: Model):
 
-        if isinstance(model, Workspace): # common topic
+        if isinstance(model, Workspace):  # common topic
             model = model.topic
 
         self._assigned = True

@@ -1,5 +1,7 @@
 from typing import Tuple
 from rich.table import Table
+
+from dooit.ui.events.events import SwitchTab
 from .tree import TreeList
 from ..events import TopicSelect
 
@@ -13,6 +15,12 @@ class NavBar(TreeList):
     def _check_valid(self, depth: int) -> Tuple[int, bool]:
         ok = depth < 2
         return depth, ok
+
+    async def handle_tab(self):
+        if self.current == -1 or not self.row_vals:
+            return
+
+        await self.emit(SwitchTab(self))
 
     @property
     def current(self) -> int:

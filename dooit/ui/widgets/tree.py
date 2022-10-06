@@ -38,6 +38,35 @@ class Component:
         self.expanded = not self.expanded
 
 
+class VerticalView:
+    def __init__(self, a: int, b: int) -> None:
+        self.a = a
+        self.b = b
+
+    def fix_view(self, current: int):
+        if self.a < 0:
+            self.shift(-self.a)
+
+        if current <= self.a:
+            self.shift(current - self.a)
+
+        if self.b <= current:
+            self.shift(current - self.b)
+
+    def shift_upper(self, delta):
+        self.a += delta
+
+    def shift_lower(self, delta):
+        self.b += delta
+
+    def shift(self, delta: int):
+        self.shift_lower(delta)
+        self.shift_upper(delta)
+
+    def height(self):
+        return self.b - self.a
+
+
 class TreeList(Widget):
     _has_focus = False
     _current = -1
@@ -101,44 +130,31 @@ class TreeList(Widget):
 
     # --------------------------------------
 
+    def _fix_view(self):
+        self.view.fix_view(self.current)
+
     def _set_screen(self):
-        y = get_terminal_size()[1] - 3  # Panel
-        self._view = [0, y]
+        y = self._size.height - 3  # Panel
+        self.view = VerticalView(0, y)
 
     def _set_view(self) -> None:
-        prev_size = self._view[1] - self._view[0]
-        curr_size = get_terminal_size()[1] - 3  # Panel
+        prev_size = self.view.height()
+        curr_size = self._size.height - 3  # Panel
         diff = prev_size - curr_size
 
         if diff <= 0:
-            self._view[0] += diff
+            self.view.shift_upper(diff)
         else:
-            bottom = self._view[1] - diff
-            bottom = max(self.current + 1, bottom)
-            self._view[0] = bottom - curr_size
-            self._view[1] = bottom
+            self.view.shift_lower(-diff)
+            bottom = max(self.current + 1, self.view.b)
+            self.view.a = bottom - curr_size
+            self.view.b = bottom
 
         self._fix_view()
 
-    def _fix_view(self):
-        if self._view[0] < 0:
-            diff = abs(self._view[0])
-            self._view[0] += diff
-            self._view[1] += diff
-
-        if self.current >= self._view[1]:
-            diff = self.current - self._view[1] + 1
-            self._view[0] += diff
-            self._view[1] += diff
-
-        if self.current < self._view[0]:
-            diff = self._view[0] - self.current
-            self._view[0] -= diff
-            self._view[1] -= diff
-
     def _get_table(self) -> Table:
         return Table.grid(expand=True)
-    
+
     def _get_children(self, model: Model):
         return model.children
 

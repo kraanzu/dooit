@@ -1,4 +1,7 @@
-from typing import List, Optional, Type
+from typing import List, Optional, Type, Union
+
+MaybeModel = Union["Model", None]
+
 
 class Model:
     _ctype_counter: int = 1
@@ -60,6 +63,25 @@ class Model:
 
         arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
 
+    def prev_sibling(self) -> MaybeModel:
+        if not self.parent:
+            return
+
+        idx = self.parent._get_child_index(self.name)
+
+        if idx:
+            return self.parent.children[idx - 1]
+
+    def next_sibling(self) -> MaybeModel:
+        if not self.parent:
+            return
+
+        idx = self.parent._get_child_index(self.name)
+        total = len(self.parent.children)
+
+        if idx != total - 1:
+            return self.parent.children[idx + 1]
+
     def add_sibling(self):
         if self.parent:
             idx = self.parent._get_child_index(self.name)
@@ -100,5 +122,3 @@ class Model:
             self.add_child()
             self.children[-1].edit("about", i)
             self.children[-1].from_data(j)
-
-

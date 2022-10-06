@@ -1,5 +1,4 @@
-from os import get_terminal_size
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from rich.console import RenderableType
 from rich.panel import Panel
 from rich.style import StyleType
@@ -8,8 +7,10 @@ from textual.widget import Widget
 from rich.table import Table, box
 from rich.text import Text
 
+
 from .simple_input import SimpleInput
 from ...api.manager import manager, Model
+from ...api.model import MaybeModel
 
 
 class Component:
@@ -234,9 +235,21 @@ class TreeList(Widget):
 
         self.item.add_sibling()
         self._refresh_rows()
+        self.to_next_sibling("about")
 
-        self.move_down()
-        self._start_edit("about")
+    def to_next_sibling(self, edit: Optional[str] = None):
+        self._move_to_item(self.item.next_sibling(), edit)
+
+    def to_prev_sibling(self, edit: Optional[str] = None):
+        self._move_to_item(self.item.prev_sibling(), edit)
+
+    def _move_to_item(self, item: MaybeModel, edit: Optional[str]):
+        if not item:
+            return
+
+        self.current = self._rows[item.name].index
+        if edit:
+            self._start_edit(edit)
 
     def shift_up(self):
         self.item.shift_up()

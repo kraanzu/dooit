@@ -1,4 +1,4 @@
-from typing import Optional, Callable
+from typing import List, Optional, Callable
 from .model import Model
 
 
@@ -14,14 +14,15 @@ class Topic(Model):
         self.ctype: Callable = Todo
 
     def commit(self):
+        """
+        Returns obj data to be stored
+        """
+
         return [child.commit() for child in self.children]
 
-    def from_data(self, data):
+    def from_data(self, data: List):
         for i in data:
             self.add_child()
             self.children[-1].fill_from_data(i[0])
             if len(i) > 1:
                 self.children[-1].from_data(i[1])
-
-    def get_todos(self):
-        return self.children

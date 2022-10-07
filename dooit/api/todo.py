@@ -22,11 +22,17 @@ class Todo(Model):
         }
 
     def to_data(self) -> str:
+        """
+        Return todo.txt form of the todo
+        """
 
-        # status = self.opts[self.status]
         return f"{self.status} ({self.urgency}) due:{self.due or 'None'} {self.about}"
 
     def fill_from_data(self, data: str):
+        """
+        Setups obj from provided todo.txt form
+        """
+
         status, urgency, due, *about = data.split()
 
         # status = self.opts[status]
@@ -44,17 +50,22 @@ class Todo(Model):
         self.status = status
 
     def commit(self):
+        """
+        Returns obj data for storage
+        """
+
         if self.children:
             return [self.to_data(), [child.commit() for child in self.children]]
         else:
             return [self.to_data()]
 
     def from_data(self, data):
+        """
+        Setup obj from data
+        """
+
         for i in data:
             self.add_child()
             self.children[-1].fill_from_data(i[0])
             if len(i) > 1:
                 self.children[-1].from_data(i[1])
-
-    def get_todos(self):
-        return self.children

@@ -15,15 +15,18 @@ class Workspace(Model):
         self.add_child()
         self.topic = self.children.pop()
 
-    def get_todos(self):
-        # exit()
-        return self.topic.get_todos()
-
     def commit(self):
+        """
+        Create obj data to be saved
+        """
+
         d = {getattr(child, "about"): child.commit() for child in self.children}
         return {"common": self.topic.commit(), **d}
 
     def from_data(self, data):
+        """
+        Setup object from stored data
+        """
 
         for i, j in data.items():
             if i == "common":

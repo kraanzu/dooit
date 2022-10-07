@@ -1,5 +1,7 @@
 from typing import Tuple
 from rich.table import Table
+from dooit.api.workspace import Workspace
+from textual.events import Key
 
 from dooit.ui.events.events import SwitchTab
 from .tree import TreeList
@@ -21,6 +23,13 @@ class NavBar(TreeList):
             return
 
         await self.emit(SwitchTab(self))
+
+    async def add_child(self):
+        if isinstance(self.item, Workspace):
+            return await super().add_child()
+        else:
+            await self.emit(SwitchTab(self))
+            await self.emit(Key(self, "a"))
 
     @property
     def current(self) -> int:

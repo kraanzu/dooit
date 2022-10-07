@@ -195,7 +195,7 @@ class TreeList(Widget):
             for i in item
         ]
 
-    def _start_edit(self, field: str):
+    async def _start_edit(self, field: str):
         if self.component:
             self.component.fields[field].on_focus()
             self.editing = field
@@ -208,12 +208,12 @@ class TreeList(Widget):
         )
         self.editing = "none"
 
-    def remove_item(self):
+    async def remove_item(self):
         self.item.drop()
         self._refresh_rows()
         self.current = self._current
 
-    def add_child(self):
+    async def add_child(self):
 
         if not self.item:
             return
@@ -221,62 +221,62 @@ class TreeList(Widget):
         self.component.toggle_expand()
         self.item.add_child()
         self._refresh_rows()
-        self.move_down()
-        self._start_edit("about")
+        await self.move_down()
+        await self._start_edit("about")
 
-    def add_sibling(self):
+    async def add_sibling(self):
 
         if not self.row_vals:
             manager.add_child()
             self._refresh_rows()
-            self._start_edit("about")
+            await self._start_edit("about")
             return
 
         self.item.add_sibling()
         self._refresh_rows()
-        self.to_next_sibling("about")
+        await self.to_next_sibling("about")
 
-    def to_next_sibling(self, edit: Optional[str] = None):
-        self._move_to_item(self.item.next_sibling(), edit)
+    async def to_next_sibling(self, edit: Optional[str] = None):
+        await self._move_to_item(self.item.next_sibling(), edit)
 
-    def to_prev_sibling(self, edit: Optional[str] = None):
-        self._move_to_item(self.item.prev_sibling(), edit)
+    async def to_prev_sibling(self, edit: Optional[str] = None):
+        await self._move_to_item(self.item.prev_sibling(), edit)
 
-    def _move_to_item(self, item: MaybeModel, edit: Optional[str]):
+    async def _move_to_item(self, item: MaybeModel, edit: Optional[str]):
         if not item:
             return
 
         self.current = self._rows[item.name].index
         if edit:
-            self._start_edit(edit)
+            await self._start_edit(edit)
 
-    def shift_up(self):
+    async def shift_up(self):
         self.item.shift_up()
         self._refresh_rows()
-        self.move_up()
+        await self.move_up()
 
-    def shift_down(self):
+    async def shift_down(self):
         self.item.shift_down()
         self._refresh_rows()
-        self.move_down()
+        await self.move_down()
 
-    def move_up(self):
+    async def move_up(self):
         self.current -= 1
 
-    def move_down(self):
+    async def move_down(self):
         self.current += 1
 
-    def move_to_top(self):
+    async def move_to_top(self):
         self.current = 0
 
-    def move_to_bottom(self):
+    async def move_to_bottom(self):
         self.current = len(self.row_vals)
 
-    def toggle_expand(self):
+    async def toggle_expand(self):
         self.component.toggle_expand()
         self._refresh_rows()
 
-    def toggle_expand_parent(self):
+    async def toggle_expand_parent(self):
         parent = self.item.parent
         if parent and parent.name != "Manager":
             index = self._rows[parent.name].index
@@ -306,34 +306,34 @@ class TreeList(Widget):
                 case "ctrl+i":
                     await self.handle_tab()
                 case "k" | "up":
-                    self.move_up()
+                    await self.move_up()
                 case "K":
-                    self.shift_up()
+                    await self.shift_up()
                 case "j" | "down":
-                    self.move_down()
+                    await self.move_down()
                 case "J":
-                    self.shift_down()
+                    await self.shift_down()
                 case "i":
-                    self._start_edit("about")
-                case "d":
-                    self._start_edit("due")
+                    await self._start_edit("about")
+                # case "d":
+                #     await self._start_edit("due")
                 case "z":
-                    self.toggle_expand()
+                    await self.toggle_expand()
                 case "Z":
-                    self.toggle_expand_parent()
+                    await self.toggle_expand_parent()
                 case "A":
-                    self.add_child()
+                    await self.add_child()
                 case "a":
                     if self.row_vals:
-                        self.add_sibling()
+                        await self.add_sibling()
                     else:
-                        self.add_child()
+                        await self.add_child()
                 case "x":
-                    self.remove_item()
+                    await self.remove_item()
                 case "g":
-                    self.move_to_top()
+                    await self.move_to_top()
                 case "G":
-                    self.move_to_bottom()
+                    await self.move_to_bottom()
 
         self.check_extra_keys()
         self.refresh(layout=True)

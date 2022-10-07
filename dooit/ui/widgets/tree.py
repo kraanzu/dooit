@@ -37,6 +37,9 @@ class Component:
     def toggle_expand(self):
         self.expanded = not self.expanded
 
+    def expand(self, expand: bool = True):
+        self.expanded = expand
+
 
 class VerticalView:
     def __init__(self, a: int, b: int) -> None:
@@ -218,7 +221,7 @@ class TreeList(Widget):
         if not self.item:
             return
 
-        self.component.toggle_expand()
+        self.component.expand()
         self.item.add_child()
         self._refresh_rows()
         await self.move_down()

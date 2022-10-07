@@ -100,7 +100,7 @@ class Model:
         if index:
             self.children.insert(index, child)
         else:
-            self.children.append(child)
+            self.children.insert(0, child)
 
     def remove_child(self, name: str):
         idx = self._get_child_index(name)

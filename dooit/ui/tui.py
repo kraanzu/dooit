@@ -1,6 +1,5 @@
 from textual import events
 from textual.app import App
-from ..api.workspace import Workspace
 
 from dooit.ui.events.events import * #noqa
 from ..ui.widgets.status_bar import StatusBar

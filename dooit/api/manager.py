@@ -1,6 +1,8 @@
 from .model import Model
-from typing import Optional, Type
+from typing import Any, Dict, Optional
 from ..utils import Parser
+
+WORKSPACE = "workspace"
 
 
 class Manager(Model):
@@ -11,18 +13,39 @@ class Manager(Model):
     fields = []
     nomenclature: str = "Workspace"
 
-    def __init__(self, name: str, parent: Optional["Model"] = None) -> None:
-        from .workspace import Workspace
+    def __init__(self, parent: Optional["Model"] = None) -> None:
+        super().__init__(parent)
 
-        super().__init__(name, parent)
-        self.ctype: Type = Workspace
+    def add_child_workspace(self):
+        return super().add_child(WORKSPACE)
+
+    def add_sibling_workspace(self):
+        return super().add_sibling(WORKSPACE)
+
+    def shift_workspace(self):
+        return super().shift_down(WORKSPACE)
+
+    def next_workspace(self):
+        return super().next_sibling(WORKSPACE)
+
+    def prev_workspace(self):
+        return super().prev_sibling(WORKSPACE)
+
+    def remove_child_workspace(self, name: str):
+        return super().remove_child(WORKSPACE, name)
+
+    def drop_workspace(self):
+        return super().drop(WORKSPACE)
+
+    def sort_workspace(self, attr: str):
+        return super().sort_children(WORKSPACE, attr)
 
     def commit(self):
         """
         Save obj data generated
         """
 
-        data = super().commit()
+        data = {getattr(child, "about"): child.commit() for child in self.workspaces}
         Parser.save(data)
 
     def setup(self):
@@ -33,6 +56,16 @@ class Manager(Model):
         data = Parser.load()
         self.from_data(data)
 
+    def from_data(self, data: Dict[str, Any]):
+        """
+        Fill in the attrs from data provided
+        """
 
-manager = Manager(name="Manager")
+        for i, j in data.items():
+            self.add_child(WORKSPACE)
+            self.workspaces[-1].edit("about", i)
+            self.workspaces[-1].from_data(j)
+
+
+manager = Manager()
 manager.setup()

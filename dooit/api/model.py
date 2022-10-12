@@ -1,5 +1,8 @@
 from typing import Any, Dict, List, Optional, Type, Union
 
+
+from ..utils.uuid import generate_uuid
+
 MaybeModel = Union["Model", None]
 
 
@@ -8,32 +11,36 @@ class Model:
     Model class to for the base tree structure
     """
 
-    _ctype_counter: int = 1
-    nomenclature: str = "None"
     fields = []
 
     def __init__(
         self,
-        name: str,
         parent: Optional["Model"] = None,
     ) -> None:
-        self.ctype: Type = type(self)
-        self.name = name
-        self.parent = parent
-        self.children: List = []
+        from ..api.workspace import Workspace
+        from ..api.todo import Todo
 
-    def _get_child_index(self, name: str) -> int:
+        self.todo_type: Type = None
+        self.name = generate_uuid(self.__class__.__name__)
+        self.parent = parent
+        self.workspaces: List[Workspace] = []
+        self.todos: List[Todo] = []
+
+    def _get_children(self, kind: str) -> List:
+        return self.workspaces if kind == "workspace" else self.todos
+
+    def _get_child_index(self, kind: str, name: str) -> int:
         """
         Get child index by attr
         """
 
-        for i, j in enumerate(self.children):
+        for i, j in enumerate(self._get_children(kind)):
             if j.name == name:
                 return i
 
         return -1
 
-    def _get_index(self) -> int:
+    def _get_index(self, kind: str) -> int:
         """
         Get items's index among it's siblings
         """
@@ -41,7 +48,7 @@ class Model:
         if not self.parent:
             return -1
 
-        return self.parent._get_child_index(self.name)
+        return self.parent._get_child_index(kind, self.name)
 
     def edit(self, key: str, value: str):
         """
@@ -50,38 +57,38 @@ class Model:
 
         setattr(self, key, value)
 
-    def shift_up(self):
+    def shift_up(self, kind: str):
         """
         Shift the item one place up among its siblings
         """
 
-        idx = self._get_index()
+        idx = self._get_index(kind)
 
         if idx in [0, -1]:
             return
 
         # NOTE: parent != None because -1 condition is checked
-        arr = self.parent.children
+        arr = self._get_children(kind)
         arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
 
-    def shift_down(self):
+    def shift_down(self, kind: str):
         """
         Shift the item one place down among its siblings
         """
 
-        idx = self._get_index()
+        idx = self._get_index(kind)
 
         if idx == -1:
             return
 
         # NOTE: parent != None because -1 condition is checked
-        arr = self.parent.children
+        arr = self._get_children(kind)
         if idx == len(arr) - 1:
             return
 
         arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
 
-    def prev_sibling(self) -> MaybeModel:
+    def prev_sibling(self, kind: str) -> MaybeModel:
         """
         Returns previous sibling item, if any, else None
         """
@@ -89,12 +96,12 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(self.name)
+        idx = self.parent._get_child_index(kind, self.name)
 
         if idx:
-            return self.parent.children[idx - 1]
+            return self._get_children(kind)[idx - 1]
 
-    def next_sibling(self) -> MaybeModel:
+    def next_sibling(self, kind: str) -> MaybeModel:
         """
         Returns next sibling item, if any, else None
         """
@@ -102,68 +109,72 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(self.name)
-        total = len(self.parent.children)
+        idx = self.parent._get_child_index(kind, self.name)
+        arr = self.parent._get_children(kind)
 
-        if idx != total - 1:
-            return self.parent.children[idx + 1]
+        if idx < len(arr) - 1:
+            return arr[idx + 1]
 
-    def add_sibling(self):
+    def add_sibling(self, kind: str):
         """
         Add item sibling
         """
 
         if self.parent:
-            idx = self.parent._get_child_index(self.name)
-            self.parent.add_child(idx + 1)
+            idx = self.parent._get_child_index(kind, self.name)
+            self.parent.add_child(kind, idx + 1)
+        else:
+            self.add_child(kind, 0)
 
-    def add_child(self, index: Optional[int] = None):
+
+    def add_child(self, kind: str, index: int = 0):
         """
         Adds a child to specified index (Defaults to first position)
         """
+        from ..api.workspace import Workspace
+        from ..api.todo import Todo
 
-        self._ctype_counter += 1
-        child = self.ctype(
-            name=f"{self.name}/{self.nomenclature}#{self._ctype_counter}".lstrip(
-                "Manager/"
-            ),
-            parent=self,
-        )
+        child = Workspace(parent=self) if kind == "workspace" else Todo(parent=self)
 
-        if index:
-            self.children.insert(index, child)
-        else:
-            self.children.insert(0, child)
+        children = self._get_children(kind)
+        children.insert(index, child)
 
-    def remove_child(self, name: str):
+    def remove_child(self, kind: str, name: str):
         """
         Remove the child based on attr
         """
 
-        idx = self._get_child_index(name)
-        self.children.pop(idx)
+        idx = self._get_child_index(kind, name)
+        self._get_children(kind).pop(idx)
 
-    def drop(self):
+    def drop(self, kind: str):
         """
         Delete the item
         """
 
         if self.parent:
-            self.parent.remove_child(self.name)
+            self.parent.remove_child(kind, self.name)
 
-    def sort_children(self, attr: str):
+    def sort_children(self, kind: str, attr: str):
         """
         Sort the children based on specific attr
         """
 
-        self.children.sort(key=lambda x: getattr(x, attr))
+        children = self._get_children(kind)
+        children.sort(key=lambda x: getattr(x, attr))
 
     def commit(self):
         """
         Get a object summary that can be stored
         """
 
-        return {getattr(child, "about"): child.commit() for child in self.children}
+        return {
+            getattr(
+                child,
+                "about",
+            ): child.commit()
+            for child in self.workspaces
+        }
 
     def from_data(self, data: Dict[str, Any]):
         """
@@ -171,6 +182,6 @@ class Model:
         """
 
         for i, j in data.items():
-            self.add_child()
-            self.children[-1].edit("about", i)
-            self.children[-1].from_data(j)
+            self.add_child("workspace")
+            self.workspaces[-1].edit("about", i)
+            self.workspaces[-1].from_data(j)

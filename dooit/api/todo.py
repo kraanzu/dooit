@@ -1,6 +1,8 @@
 from typing import List, Optional
 from .model import Model
 
+TODO = "todo"
+
 
 class Todo(Model):
     fields = ["about", "due", "urgency"]
@@ -33,7 +35,10 @@ class Todo(Model):
         Setups obj from provided todo.txt form
         """
 
-        status, urgency, due, *about = data.split()
+        try:
+            status, urgency, due, *about = data.split()
+        except:
+            raise TypeError(data)
 
         # status = self.opts[status]
         about = " ".join(about)
@@ -65,39 +70,38 @@ class Todo(Model):
             ]
 
     def add_child_todo(self):
-        return super().add_child(Todo, self.todos)
+        return super().add_child(TODO)
 
     def add_sibling_todo(self):
-        return super().add_sibling(Todo, self.todos)
+        return super().add_sibling(TODO)
 
     def shift_todo_up(self):
-        return super().shift_up(self.todos)
+        return super().shift_up(TODO)
 
     def shift_todo_down(self):
-        return super().shift_down(self.todos)
+        return super().shift_down(TODO)
 
     def next_todo(self):
-        return super().next_sibling(self.todos)
+        return super().next_sibling(TODO)
 
     def prev_todo(self):
-        return super().prev_sibling(self.todos)
+        return super().prev_sibling(TODO)
 
     def remove_child_todo(self, name: str):
-        return super().remove_child(self.todos, name)
+        return super().remove_child(TODO, name)
 
     def drop_todo(self):
-        return super().drop(self.todos)
+        return super().drop(TODO)
 
     def sort_todo(self, attr: str):
-        return super().sort_children(self.todos, attr)
+        return super().sort_children(TODO, attr)
 
-    def from_data(self, data):
+    def from_data(self, data: List):
         """
         Setup obj from data
         """
 
-        for i in data:
-            self.add_child_todo()
-            self.todos[-1].fill_from_data(i[0])
-            if len(i) > 1:
-                self.todos[-1].from_data(i[1])
+        self.fill_from_data(data[0])
+        if len(data) > 1:
+            child_todo: Todo = self.add_child_todo()
+            child_todo.from_data(data[1])

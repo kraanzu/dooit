@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 from .model import Model
 
 WORKSPACE = "workspace"
@@ -72,8 +72,9 @@ class Workspace(Model):
         """
 
         child_workspaces = {
-            getattr(child, "about"): child.commit() for child in self.workspaces
+            getattr(workspace, "about",): workspace.commit() for workspace in self.workspaces
         }
+
         todos = {
             "common": [todo.commit() for todo in self.todos],
         }
@@ -83,17 +84,36 @@ class Workspace(Model):
             **todos,
         }
 
-    def from_data(self, data):
+    def from_data(self, data: Any):
         """
         Setup object from stored data
         """
 
-        for i, j in data.items():
-            if i == "common":
-                for data in j:
-                    self.add_child_todo()
-                    self.todos[-1].from_data(data)
-            else:
-                self.add_child_workspace()
-                self.workspaces[-1].edit("about", i)
-                self.workspaces[-1].from_data(j)
+        if isinstance(data, dict):
+            for i,j in data.items():
+                if i == "common":
+                    for data in j:
+                        todo = self.add_child_todo()
+                        todo.from_data(data)
+                    continue
+
+                workspace = self.add_child_workspace()
+                workspace.edit("about", i)
+                workspace.from_data(j)
+
+        elif isinstance(data, list):
+            # raise TypeError(data)
+            todo = self.add_child_todo()
+            todo.from_data(data)
+
+        # for i, j in data.items():
+        #     if i == "common":
+        #         for data in j:
+        #             todo = self.add_child_todo()
+        #             todo.from_data(data)
+        #         continue
+        #
+        #     if isinstance(j, dict):
+        #         workspace = self.add_child_workspace()
+        #         workspace.edit("about", i)
+        #         workspace.from_data(j)

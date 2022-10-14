@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Optional, Type, Union
 
-
 from ..utils.uuid import generate_uuid
 
 MaybeModel = Union["Model", None]
@@ -23,6 +22,7 @@ class Model:
         self.todo_type: Type = None
         self.name = generate_uuid(self.__class__.__name__)
         self.parent = parent
+
         self.workspaces: List[Workspace] = []
         self.todos: List[Todo] = []
 
@@ -115,19 +115,18 @@ class Model:
         if idx < len(arr) - 1:
             return arr[idx + 1]
 
-    def add_sibling(self, kind: str):
+    def add_sibling(self, kind: str) -> "Model":
         """
         Add item sibling
         """
 
         if self.parent:
             idx = self.parent._get_child_index(kind, self.name)
-            self.parent.add_child(kind, idx + 1)
+            return self.parent.add_child(kind, idx + 1)
         else:
-            self.add_child(kind, 0)
+            return self.add_child(kind, 0)
 
-
-    def add_child(self, kind: str, index: int = 0):
+    def add_child(self, kind: str, index: int = 0) -> "Model":
         """
         Adds a child to specified index (Defaults to first position)
         """
@@ -138,6 +137,8 @@ class Model:
 
         children = self._get_children(kind)
         children.insert(index, child)
+
+        return child
 
     def remove_child(self, kind: str, name: str):
         """

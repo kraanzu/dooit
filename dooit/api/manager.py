@@ -56,15 +56,15 @@ class Manager(Model):
         data = Parser.load()
         self.from_data(data)
 
-    def from_data(self, data: Dict[str, Any]):
+    def from_data(self, data: Any):
         """
         Fill in the attrs from data provided
         """
 
         for i, j in data.items():
-            self.add_child(WORKSPACE)
-            self.workspaces[-1].edit("about", i)
-            self.workspaces[-1].from_data(j)
+            child = self.add_child(WORKSPACE)
+            child.edit("about", i)
+            child.from_data(j)
 
 
 manager = Manager()

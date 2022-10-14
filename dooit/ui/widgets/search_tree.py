@@ -12,7 +12,7 @@ from ...ui.widgets.todo_list import TodoList
 NO_MATCH = """
                     [blue][/blue]
                 [d white]0 matches
-Nothing showed up?! Maybe try somthing different?[/d white]
+Nothing showed up?! Maybe try something different?[/d white]
 """
 
 

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Type
 from .model import Model
 
 TODO = "todo"
@@ -101,7 +101,9 @@ class Todo(Model):
         Setup obj from data
         """
 
+        # raise TypeError(f"{data}\n\n\n{data[1]}\n--------")
         self.fill_from_data(data[0])
         if len(data) > 1:
-            child_todo: Todo = self.add_child_todo()
-            child_todo.from_data(data[1])
+            for i in data[1]:
+                child_todo: Todo = self.add_child_todo()
+                child_todo.from_data(i)

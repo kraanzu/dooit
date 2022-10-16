@@ -1,5 +1,7 @@
 from rich.table import Table
 
+from dooit.api.model import MaybeModel, Model
+
 from ...ui.events.events import SwitchTab
 from ...api.workspace import Workspace
 from .tree import TreeList
@@ -43,27 +45,27 @@ class TodoList(TreeList):
 
     # ##########################################
 
-    def _add_sibling(self):
+    def _add_sibling(self) -> Model:
         if self.item:
-            self.item.add_sibling_todo()
+            return self.item.add_sibling_todo()
         else:
-            self.model.add_child_todo()
+            return self.model.add_child_todo()
 
-    def _add_child(self):
+    def _add_child(self) -> Model:
         if self._assigned and self.item:
-            self.item.add_child_todo()
+            return self.item.add_child_todo()
         else:
-            self.model.add_child_todo()
+            return self.model.add_child_todo()
 
     def _drop(self):
         if self.item:
             self.item.drop_todo()
 
-    def _next_sibling(self):
+    def _next_sibling(self) -> MaybeModel:
         if self.item:
             return self.item.next_todo()
 
-    def _prev_sibling(self):
+    def _prev_sibling(self) -> MaybeModel:
         if self.item:
             return self.item.prev_todo()
 

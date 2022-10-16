@@ -1,6 +1,9 @@
 from rich.table import Table
 
-from ...api.manager import Manager
+from dooit.api.model import MaybeModel
+
+from ...api.manager import Manager, Model
+# from ...api.workspace import Workspace
 from .tree import TreeList
 from ..events import TopicSelect, SwitchTab
 
@@ -41,21 +44,21 @@ class NavBar(TreeList):
         else:
             self.model.add_child_workspace()
 
-    def _add_child(self):
+    def _add_child(self) -> Model:
         if self.item:
-            self.item.add_child_workspace()
+            return self.item.add_child_workspace()
         else:
-            self.model.add_child_workspace()
+            return self.model.add_child_workspace()
 
     def _drop(self):
         if self.item:
             self.item.drop_workspace()
 
-    def _next_sibling(self):
+    def _next_sibling(self) -> MaybeModel:
         if self.item:
             return self.item.next_workspace()
 
-    def _prev_sibling(self):
+    def _prev_sibling(self) -> MaybeModel:
         if self.item:
             return self.item.prev_workspace()
 
@@ -66,4 +69,3 @@ class NavBar(TreeList):
     def _shift_up(self):
         if self.item:
             return self.item.shift_workspace_up()
-

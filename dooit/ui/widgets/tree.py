@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Type
+from typing import List, Optional
 from rich.console import RenderableType
 from rich.panel import Panel
 from rich.style import StyleType
@@ -217,26 +217,26 @@ class TreeList(Widget):
         )
         self.editing = "none"
 
-    def _add_child(self):
-        pass
+    def _add_child(self) -> Model:
+        ...
 
-    def _drop(self):
-        pass
+    def _drop(self) -> None:
+        ...
 
-    def _add_sibling(self):
-        pass
+    def _add_sibling(self) -> Model:
+        ...
 
-    def _next_sibling(self):
-        pass
+    def _next_sibling(self) -> MaybeModel:
+        ...
 
-    def _prev_sibling(self):
-        pass
+    def _prev_sibling(self) -> MaybeModel:
+        ...
 
-    def _shift_up(self):
-        pass
+    def _shift_up(self) -> None:
+        ...
 
-    def _shift_down(self):
-        pass
+    def _shift_down(self) -> None:
+        ...
 
     async def remove_item(self):
         if not self.item:
@@ -259,8 +259,9 @@ class TreeList(Widget):
     async def add_sibling(self):
 
         if not self.item:
-            self._add_child()
+            child = self._add_child()
             self._refresh_rows()
+            self.current = self._rows[child.name].index
             await self._start_edit("about")
             return
 

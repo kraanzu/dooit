@@ -68,7 +68,7 @@ class Model:
             return
 
         # NOTE: parent != None because -1 condition is checked
-        arr = self._get_children(kind)
+        arr = self.parent._get_children(kind)
         arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
 
     def shift_down(self, kind: str):
@@ -82,7 +82,7 @@ class Model:
             return
 
         # NOTE: parent != None because -1 condition is checked
-        arr = self._get_children(kind)
+        arr = self.parent._get_children(kind)
         if idx == len(arr) - 1:
             return
 

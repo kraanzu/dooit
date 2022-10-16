@@ -329,7 +329,7 @@ class TreeList(Widget):
             return
 
         parent = self.item.parent
-        if parent and parent.name != "Manager":
+        if parent and not isinstance(parent, Manager):
             index = self._rows[parent.name].index
             self.current = index
 

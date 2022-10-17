@@ -1,18 +1,22 @@
 from rich.table import Table
+from rich.text import Text
 
-from dooit.api.model import MaybeModel
-
+from ...api.model import MaybeModel
 from ...api.manager import Manager, Model
-# from ...api.workspace import Workspace
 from .tree import TreeList
 from ..events import TopicSelect, SwitchTab
+from dooit.utils.default_config import navbar
 
 
 class NavBar(TreeList):
-    def _get_table(self) -> Table:
-        table = Table.grid()
-        table.add_column("about")
-        return table
+    def set_styles(self):
+        self.style_on = navbar["fmt"]["highlight"]
+        self.style_off = navbar["fmt"]["dim"]
+        self.style_edit = navbar["fmt"]["edit"]
+
+    def _setup_table(self) -> None:
+        self.table = Table.grid(expand=True)
+        self.table.add_column("about")
 
     async def handle_tab(self):
         if self.current == -1:
@@ -34,7 +38,30 @@ class NavBar(TreeList):
             self.emit_no_wait(TopicSelect(self, self.item))
 
     # ##########################################
-    
+
+    def add_row(self, row, highlight: bool):
+        padding = "  " * row.depth
+        items = [str(i.render()) for i in row.get_field_values()]
+        desc = Text(padding) + self._stylize_desc(items[0], highlight)
+
+        self.table.add_row(desc)
+
+    # ##########################################
+
+    def _stylize_desc(self, item, highlight: bool = False) -> Text:
+        fmt = navbar["fmt"]
+
+        if highlight:
+            if self.editing == "none":
+                text: str = fmt["highlight"]
+            else:
+                text: str = fmt["edit"]
+        else:
+            text: str = fmt["dim"]
+
+        text = text.format(desc=item)
+        return Text.from_markup(text)
+
     def _get_children(self, model: Manager):
         return model.workspaces
 

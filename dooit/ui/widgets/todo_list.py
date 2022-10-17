@@ -1,6 +1,7 @@
 from rich.table import Table
 
 from dooit.api.model import MaybeModel, Model
+from rich.text import Text
 
 from ...ui.events.events import SwitchTab
 from ...api.workspace import Workspace
@@ -36,12 +37,32 @@ class TodoList(TreeList):
         self._refresh_rows()
         self.refresh()
 
-    def _get_table(self) -> Table:
-        table = Table.grid()
-        table.add_column("about")
-        table.add_column("due")
-        table.add_column("urgency")
-        return table
+    def _setup_table(self) -> None:
+        self.table = Table.grid(expand=True)
+        self.table.add_column("about", ratio=80)
+        self.table.add_column("due", ratio=15)
+        self.table.add_column("urgency", ratio=5)
+
+    # ##########################################
+
+    def _stylize_urgency(self, item, highlight: bool = False):
+        return item
+
+    def _stylize_date(self, item, highlight: bool = False):
+        return item
+
+    def _stylize_desc(self, item, highlight: bool = False):
+        return item
+
+    def add_row(self, row, highlight: bool):
+
+        padding = "  " * row.depth
+        item = [str(i.render()) for i in row.get_field_values()]
+        desc = Text(padding) + self._stylize_desc(item[0], highlight)
+        date = Text(padding) + self._stylize_date(item[1], highlight)
+        urgency = Text(padding) + self._stylize_urgency(item[2], highlight)
+
+        self.table.add_row(desc, date, urgency)
 
     # ##########################################
 

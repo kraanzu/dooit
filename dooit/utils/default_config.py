@@ -1,18 +1,23 @@
 # NOTE: See rich style documentation for details
+#################################
+#             UTILS             #
+#################################
+def colored(text: str, color: str):
+    return f"[{color}]{text}[/{color}]"
+
 
 #################################
 #            NAVBAR             #
 #################################
 # Vars:
-# name: name of the workspace/topic
+# desc: desc of the workspace/topic
 # icon: icon to show for workspace
 
 navbar = {
-    "icon": "",
     "fmt": {
-        "highlight": "",
-        "dim": "",
-        "edit": "",
+        "highlight": " [b white]{desc}[/b white]",
+        "dim": " [d grey50]{desc}[/d grey50]",
+        "edit": " [b cyan]{desc}[/b cyan]",
     },
 }
 

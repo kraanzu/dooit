@@ -82,17 +82,17 @@ class TreeList(Widget):
     def __init__(
         self,
         name: str | None = None,
-        style_off: StyleType = "dim grey50",
-        style_on: StyleType = "bold white",
-        style_edit: StyleType = "bold cyan",
         model: Manager = manager,
     ) -> None:
         super().__init__(name)
-        self.style_off = style_off
-        self.style_on = style_on
-        self.style_edit = style_edit
         self.model = model
         self.editing = "none"
+        self.set_styles()
+
+    def set_styles(self):
+        self.style_off = "b white"
+        self.style_on = "dim grey50"
+        self.style_edit = "b cyan"
 
     async def on_mount(self):
         self._set_screen()
@@ -158,11 +158,11 @@ class TreeList(Widget):
 
         self._fix_view()
 
-    def _get_table(self) -> Table:
-        return Table.grid(expand=True)
+    def _setup_table(self) -> None:
+        self.table = Table.grid(expand=True)
 
     def _get_children(self, model: Model):
-        return model.children
+        return model.workspaces
 
     def _refresh_rows(self):
         _rows_copy = self._rows
@@ -188,18 +188,26 @@ class TreeList(Widget):
 
         self.row_vals: List[Component] = list(self._rows.values())
 
-    def _stylize_item(
+    def _stylize_desc(
         self,
         item,
         highlight: bool = False,
     ):
-        return [
-            Text(
-                i,
-                style=self.style_on if highlight else self.style_off,
-            )
-            for i in item
-        ]
+        return item
+
+    def _stylize_date(
+        self,
+        item,
+        highlight: bool = False,
+    ):
+        return ""
+
+    def _stylize_urgency(
+        self,
+        item,
+        highlight: bool = False,
+    ):
+        return ""
 
     async def _start_edit(self, field: str):
         if self.component:
@@ -389,11 +397,16 @@ class TreeList(Widget):
     def add_row(self, row: Component, highlight: bool):
 
         padding = "  " * row.depth
-        item = [padding + str(i.render()) for i in row.get_field_values()]
-        self.table.add_row(*self._stylize_item(item, highlight))
+        items = [str(i.render()) for i in row.get_field_values()]
+        desc = [Text(padding) + self._stylize_desc(i, highlight) for i in items]
+        date = [Text(padding) + self._stylize_date(i, highlight) for i in items]
+        urgency = [Text(padding) + self._stylize_urgency(i, highlight) for i in items]
+
+        for i in zip(desc, date, urgency):
+            self.table.add_row(*i)
 
     def make_table(self):
-        self.table = self._get_table()
+        self._setup_table()
 
         # for i in self.view.range():
         for i in range(len(self.row_vals)):

@@ -348,6 +348,8 @@ class TreeList(Widget):
             index = self._rows[parent.name].index
             self.current = index
 
+        await self.toggle_expand()
+
     async def check_extra_keys(self, event: events.Key):
         pass
 
@@ -381,8 +383,6 @@ class TreeList(Widget):
                     await self.shift_down()
                 case "i":
                     await self._start_edit("about")
-                # case "d":
-                #     await self._start_edit("due")
                 case "z":
                     await self.toggle_expand()
                 case "Z":

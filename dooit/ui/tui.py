@@ -6,7 +6,6 @@ from ..ui.widgets.status_bar import StatusBar
 from ..ui.widgets import NavBar, TodoList
 from ..api.manager import manager
 
-
 class Dooit(App):
     async def on_mount(self):
         self.navbar = NavBar()

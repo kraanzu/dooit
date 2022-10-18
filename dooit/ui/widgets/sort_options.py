@@ -10,7 +10,6 @@ from textual.widget import Widget
 from textual import events
 
 from ...ui.events.events import ApplySortMethod, ChangeStatus
-from ...utils.config import conf
 
 
 class SortOptions(Widget):
@@ -36,7 +35,6 @@ class SortOptions(Widget):
         self.rotate = rotate
         self.wrap = wrap
         self.highlighted = 0
-        self.keys = conf.keys
 
     def highlight(self, id: int) -> None:
         self.highlighted = id
@@ -83,19 +81,16 @@ class SortOptions(Widget):
     async def key_press(self, event: events.Key) -> None:
         event.stop()
 
-        key = self.keys
         match event.key:
             case "escape":
-                # self.visible = False
-                # self.refresh()
                 await self.post_message(ChangeStatus(self, "NORMAL"))
-            case i if i in key.move_down:
+            case "j" | "down":
                 self.move_cursor_down()
-            case i if i in key.move_up:
+            case "k" | "up":
                 self.move_cursor_up()
-            case i if i in key.move_to_top:
+            case "g" | "home":
                 self.move_cursor_to_top()
-            case i if i in key.move_to_bottom:
+            case "G" | "end":
                 self.move_cursor_to_bottom()
             case "enter":
                 await self.emit(ApplySortMethod(self, self.options[self.highlighted]))

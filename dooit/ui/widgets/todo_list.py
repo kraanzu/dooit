@@ -1,11 +1,16 @@
+from typing import Union
 from rich.table import Table
-
-from dooit.api.model import MaybeModel, Model
 from rich.text import Text
+from textual import events
 
+from ...api.todo import Todo
+from ...api.model import MaybeModel, Model
 from ...ui.events.events import SwitchTab
 from ...api.workspace import Workspace
 from .tree import TreeList
+from dooit.utils import default_config
+
+todos = default_config.todos
 
 
 class TodoList(TreeList):
@@ -28,9 +33,6 @@ class TodoList(TreeList):
         await self.emit(SwitchTab(self))
 
     def update_table(self, model: Workspace):
-        # if not model:
-        #     return
-
         self._assigned = True
         self.model = model
         self.current = 0 if self._get_children(model) else -1
@@ -45,14 +47,60 @@ class TodoList(TreeList):
 
     # ##########################################
 
+    @property
+    def item(self) -> Union[Todo, None]:
+        return super().item
+
+    async def check_extra_keys(self, event: events.Key):
+        match event.key:
+            case "d":
+                await self._start_edit("due")
+            case "+" | "=":
+                if self.component and self.item:
+                    self.item.increase_urgency()
+                    self.component.refresh_item("urgency")
+            case "-" | "_":
+                if self.component and self.item:
+                    self.item.decrease_urgency()
+                    self.component.refresh_item("urgency")
+
+    # ##########################################
+
     def _stylize_urgency(self, item, highlight: bool = False):
-        return item
+        icons = todos["icon"]["urgency"]
+        colors = ["green", "orange1", "yellow", "red"]
+        colors = {i: j for i, j in enumerate(colors, 1)}
+        style = "b " if highlight else "d "
+        rank = int(item)
+        return Text(icons[rank], style=style + colors[rank])
 
     def _stylize_date(self, item, highlight: bool = False):
-        return item
+        fmt = todos["fmt"]["date"]
+
+        if highlight:
+            if self.editing == "none":
+                text: str = fmt["highlight"]
+            else:
+                text: str = fmt["edit"]
+        else:
+            text: str = fmt["dim"]
+
+        text = text.format(date=item)
+        return Text.from_markup(text)
 
     def _stylize_desc(self, item, highlight: bool = False):
-        return item
+        fmt = todos["fmt"]["about"]
+
+        if highlight:
+            if self.editing == "none":
+                text: str = fmt["highlight"]
+            else:
+                text: str = fmt["edit"]
+        else:
+            text: str = fmt["dim"]
+
+        text = text.format(desc=item)
+        return Text.from_markup(text)
 
     def add_row(self, row, highlight: bool):
 

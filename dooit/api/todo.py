@@ -23,6 +23,12 @@ class Todo(Model):
             "OVERDUE": "O",
         }
 
+    def decrease_urgency(self):
+        self.urgency = max(self.urgency - 1, 0)
+
+    def increase_urgency(self):
+        self.urgency = min(self.urgency + 1, 4)
+
     def to_data(self) -> str:
         """
         Return todo.txt form of the todo

@@ -1,7 +1,6 @@
 from typing import List, Optional
 from rich.console import RenderableType
 from rich.panel import Panel
-from rich.style import StyleType
 from textual import events
 from textual.widget import Widget
 from rich.table import Table, box
@@ -31,6 +30,14 @@ class Component:
             )
             for field in item.fields
         }
+
+    def refresh_item(self, field: str):
+        self.fields[field] = SimpleInput(
+            value=getattr(
+                self.item,
+                field,
+            )
+        )
 
     def get_field_values(self):
         return self.fields.values()
@@ -341,7 +348,7 @@ class TreeList(Widget):
             index = self._rows[parent.name].index
             self.current = index
 
-    def check_extra_keys(self):
+    async def check_extra_keys(self, event: events.Key):
         pass
 
     async def handle_tab(self):
@@ -391,7 +398,7 @@ class TreeList(Widget):
                 case "G":
                     await self.move_to_bottom()
 
-        self.check_extra_keys()
+        await self.check_extra_keys(event)
         self.refresh(layout=True)
 
     def add_row(self, row: Component, highlight: bool):

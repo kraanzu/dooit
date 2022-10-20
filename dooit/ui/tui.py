@@ -1,10 +1,12 @@
 from textual import events
 from textual.app import App
 
-from dooit.ui.events.events import * #noqa
+from dooit.ui.events.events import *
+from dooit.ui.widgets import navbar  # noqa
 from ..ui.widgets.status_bar import StatusBar
 from ..ui.widgets import NavBar, TodoList
 from ..api.manager import manager
+
 
 class Dooit(App):
     async def on_mount(self):
@@ -12,11 +14,28 @@ class Dooit(App):
         self.todos = TodoList()
         self.bar = StatusBar()
         self.current_focus = "navbar"
-
         self.navbar.toggle_highlight()
-        await self.view.dock(self.bar, edge="bottom", size=1)
-        await self.view.dock(self.navbar, size=25, edge="left")
-        await self.view.dock(self.todos)
+
+        await self.setup_grid()
+
+    async def setup_grid(self):
+        self.grid = await self.view.dock_grid()
+        self.grid.add_column("nav", fraction=20)
+        self.grid.add_column("todo", fraction=80)
+        self.grid.add_row("body")
+        self.grid.add_row("bar", size=1)
+
+        self.grid.add_areas(
+            navbar="nav,body",
+            todos="todo,body",
+            bar="nav-start|todo-end,bar",
+        )
+
+        self.grid.place(
+            navbar=self.navbar,
+            todos=self.todos,
+            bar=self.bar,
+        )
 
     async def action_quit(self) -> None:
         manager.commit()
@@ -38,4 +57,3 @@ class Dooit(App):
 
     async def handle_switch_tab(self, _: SwitchTab):
         self.toggle_highlight()
-

@@ -1,5 +1,8 @@
 from rich.table import Table
 from rich.text import Text
+from dooit.api.workspace import Workspace
+
+from dooit.ui.widgets.sort_options import SortOptions
 
 from ...api.model import MaybeModel
 from ...api.manager import Manager, Model
@@ -9,6 +12,15 @@ from dooit.utils.default_config import navbar
 
 
 class NavBar(TreeList):
+    def __init__(self):
+        super().__init__()
+        self.sort_menu = SortOptions(
+            name=f"Sort_{self.name}",
+            options=Workspace.fields,
+            parent_widget=self
+        )
+        self.sort_menu.visible = False
+
     def set_styles(self):
         self.style_on = navbar["fmt"]["highlight"]
         self.style_off = navbar["fmt"]["dim"]

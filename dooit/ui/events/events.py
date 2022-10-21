@@ -53,7 +53,7 @@ class ApplySortMethod(Message, bubble=True):
     Emitted when the user selects a sort method from sort-menu
     """
 
-    def __init__(self, sender: MessageTarget, method: SortMethodType) -> None:
+    def __init__(self, sender: MessageTarget, method: str) -> None:
         super().__init__(sender)
         self.method = method
 

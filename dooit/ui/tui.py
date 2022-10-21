@@ -57,3 +57,6 @@ class Dooit(App):
 
     async def handle_switch_tab(self, _: SwitchTab):
         self.toggle_highlight()
+
+    async def handle_apply_sort_method(self, _: ApplySortMethod):
+        pass

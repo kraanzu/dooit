@@ -10,6 +10,7 @@ from ...api.workspace import Workspace
 from .simple_input import SimpleInput
 from ...api.manager import Manager, manager, Model
 from ...api.model import MaybeModel
+from ...ui.widgets.sort_options import SortOptions
 
 
 class Component:
@@ -92,9 +93,13 @@ class TreeList(Widget):
         model: Manager = manager,
     ) -> None:
         super().__init__(name)
+        self.set_styles()
+
         self.model = model
         self.editing = "none"
-        self.set_styles()
+        self.sort_menu = SortOptions()
+        self.sort_menu.visible = False
+
 
     def set_styles(self):
         self.style_off = "b white"
@@ -370,33 +375,39 @@ class TreeList(Widget):
 
         else:
 
-            match key:
-                case "ctrl+i":
-                    await self.handle_tab()
-                case "k" | "up":
-                    await self.move_up()
-                case "K":
-                    await self.shift_up()
-                case "j" | "down":
-                    await self.move_down()
-                case "J":
-                    await self.shift_down()
-                case "i":
-                    await self._start_edit("about")
-                case "z":
-                    await self.toggle_expand()
-                case "Z":
-                    await self.toggle_expand_parent()
-                case "A":
-                    await self.add_child()
-                case "a":
-                    await self.add_sibling()
-                case "x":
-                    await self.remove_item()
-                case "g":
-                    await self.move_to_top()
-                case "G":
-                    await self.move_to_bottom()
+            if self.sort_menu.visible:
+                await self.sort_menu.handle_key(event)
+
+            else:
+                match key:
+                    case "ctrl+i":
+                        await self.handle_tab()
+                    case "k" | "up":
+                        await self.move_up()
+                    case "K":
+                        await self.shift_up()
+                    case "j" | "down":
+                        await self.move_down()
+                    case "J":
+                        await self.shift_down()
+                    case "i":
+                        await self._start_edit("about")
+                    case "z":
+                        await self.toggle_expand()
+                    case "Z":
+                        await self.toggle_expand_parent()
+                    case "A":
+                        await self.add_child()
+                    case "a":
+                        await self.add_sibling()
+                    case "x":
+                        await self.remove_item()
+                    case "g":
+                        await self.move_to_top()
+                    case "G":
+                        await self.move_to_bottom()
+                    case "s":
+                        self.sort_menu.visible = True
 
         await self.check_extra_keys(event)
         self.refresh(layout=True)
@@ -424,10 +435,15 @@ class TreeList(Widget):
 
     def render(self) -> RenderableType:
 
-        self.make_table()
+        if self.sort_menu.visible:
+            to_render = self.sort_menu.render()
+        else:
+            self.make_table()
+            to_render = self.table
+
         height = self._size.height
         return Panel(
-            self.table,
+            to_render,
             expand=True,
             height=height,
             box=box.HEAVY,

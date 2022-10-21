@@ -3,6 +3,8 @@ from rich.table import Table
 from rich.text import Text
 from textual import events
 
+from dooit.ui.widgets.sort_options import SortOptions
+
 from ...api.todo import Todo
 from ...api.model import MaybeModel, Model
 from ...ui.events.events import SwitchTab
@@ -17,6 +19,12 @@ class TodoList(TreeList):
     def __init__(self):
         super().__init__()
         self._assigned = False
+        self.sort_menu = SortOptions(
+            name=f"Sort_{self.name}",
+            options=Todo.fields,
+            parent_widget=self,
+        )
+        self.sort_menu.visible = False
 
     def make_table(self):
         if not self._assigned:

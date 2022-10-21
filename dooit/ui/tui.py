@@ -1,5 +1,6 @@
 from textual import events
 from textual.app import App
+from dooit.api.model import Model
 
 from dooit.ui.events.events import *
 from dooit.ui.widgets import navbar  # noqa
@@ -58,5 +59,6 @@ class Dooit(App):
     async def handle_switch_tab(self, _: SwitchTab):
         self.toggle_highlight()
 
-    async def handle_apply_sort_method(self, _: ApplySortMethod):
-        pass
+    async def handle_apply_sort_method(self, event: ApplySortMethod):
+        model: Model = event.sender
+        model.sort(event.method)

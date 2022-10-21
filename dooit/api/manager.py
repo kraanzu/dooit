@@ -1,5 +1,5 @@
 from .model import Model
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from ..utils import Parser
 
 WORKSPACE = "workspace"
@@ -38,7 +38,7 @@ class Manager(Model):
         return super().drop(WORKSPACE)
 
     def sort_workspace(self, attr: str):
-        return super().sort_children(WORKSPACE, attr)
+        return super().sort(WORKSPACE, attr)
 
     def commit(self):
         """

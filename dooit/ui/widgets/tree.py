@@ -100,7 +100,6 @@ class TreeList(Widget):
         self.sort_menu = SortOptions()
         self.sort_menu.visible = False
 
-
     def set_styles(self):
         self.style_off = "b white"
         self.style_on = "dim grey50"
@@ -199,6 +198,7 @@ class TreeList(Widget):
             add_rows(i)
 
         self.row_vals: List[Component] = list(self._rows.values())
+        self.refresh()
 
     def _stylize_desc(
         self,
@@ -354,6 +354,13 @@ class TreeList(Widget):
             self.current = index
 
         await self.toggle_expand()
+
+    def sort(self, attr: str):
+        if self.item:
+            curr = self.item.name
+            self.item.sort(attr)
+            self._refresh_rows()
+            self.current = self._rows[curr].index
 
     async def check_extra_keys(self, event: events.Key):
         pass

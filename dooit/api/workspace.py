@@ -36,9 +36,6 @@ class Workspace(Model):
     def drop_todo(self):
         return super().drop(TODO)
 
-    def sort_todo(self, attr: str):
-        return super().sort_children(TODO, attr)
-
     def add_child_workspace(self):
         return super().add_child(WORKSPACE)
 
@@ -63,8 +60,8 @@ class Workspace(Model):
     def drop_workspace(self):
         return super().drop(WORKSPACE)
 
-    def sort_workspace(self, attr: str):
-        return super().sort_children(WORKSPACE, attr)
+    def sort(self, attr: str):
+        super().sort(WORKSPACE, attr)
 
     def commit(self):
         """
@@ -72,7 +69,11 @@ class Workspace(Model):
         """
 
         child_workspaces = {
-            getattr(workspace, "about",): workspace.commit() for workspace in self.workspaces
+            getattr(
+                workspace,
+                "about",
+            ): workspace.commit()
+            for workspace in self.workspaces
         }
 
         todos = {
@@ -90,7 +91,7 @@ class Workspace(Model):
         """
 
         if isinstance(data, dict):
-            for i,j in data.items():
+            for i, j in data.items():
                 if i == "common":
                     for data in j:
                         todo = self.add_child_todo()

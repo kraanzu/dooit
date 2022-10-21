@@ -1,3 +1,4 @@
+from ctypes.wintypes import WORD
 from rich.table import Table
 from rich.text import Text
 from dooit.api.workspace import Workspace
@@ -5,7 +6,7 @@ from dooit.api.workspace import Workspace
 from dooit.ui.widgets.sort_options import SortOptions
 
 from ...api.model import MaybeModel
-from ...api.manager import Manager, Model
+from ...api.manager import WORKSPACE, Manager, Model
 from .tree import TreeList
 from ..events import TopicSelect, SwitchTab
 from dooit.utils.default_config import navbar

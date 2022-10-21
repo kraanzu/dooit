@@ -1,4 +1,4 @@
-from typing import List, Optional, Type
+from typing import List, Optional
 from .model import Model
 
 TODO = "todo"
@@ -99,8 +99,8 @@ class Todo(Model):
     def drop_todo(self):
         return super().drop(TODO)
 
-    def sort_todo(self, attr: str):
-        return super().sort_children(TODO, attr)
+    def sort(self, attr: str):
+        return super().sort(TODO, attr)
 
     def from_data(self, data: List):
         """

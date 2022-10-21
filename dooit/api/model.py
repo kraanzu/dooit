@@ -156,13 +156,14 @@ class Model:
         if self.parent:
             self.parent.remove_child(kind, self.name)
 
-    def sort_children(self, kind: str, attr: str):
+    def sort(self, kind: str, attr: str):
         """
         Sort the children based on specific attr
         """
 
-        children = self._get_children(kind)
-        children.sort(key=lambda x: getattr(x, attr))
+        if self.parent:
+            children = self.parent._get_children(kind)
+            children.sort(key=lambda x: getattr(x, attr))
 
     def commit(self):
         """

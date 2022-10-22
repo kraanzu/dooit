@@ -1,3 +1,6 @@
+from dooit.utils.status_widget import Widget
+from datetime import datetime
+
 # NOTE: See rich style documentation for details
 
 #################################
@@ -5,6 +8,14 @@
 #################################
 def colored(text: str, color: str):
     return f"[{color}]{text}[/{color}]"
+
+
+def get_clock() -> str:
+    return f"{datetime.now().time().strftime(' {0}  %X ')}".format("C")
+
+
+def get_date() -> str:
+    return f"X {datetime.today().strftime('%d/%m/%Y')}"
 
 
 #################################
@@ -66,7 +77,18 @@ todos = {
 #################################
 #          STATUS BAR           #
 #################################
+bar = [
+    Widget(func=lambda: " {status} "),
+    Widget(
+        func=lambda: " {message} ",
+        justify="left",
+        expand=True,
+    ),
+    Widget(func=get_clock),
+    Widget(func=get_date),
+]
 
 #################################
 #          KEYBINDING           #
 #################################
+keys = {}

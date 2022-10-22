@@ -4,13 +4,12 @@ from rich.panel import Panel
 from textual import events
 from textual.widget import Widget
 from rich.table import Table, box
-from rich.text import Text
-
-from ...api.workspace import Workspace
 from .simple_input import SimpleInput
+from ...api.workspace import Workspace
 from ...api.manager import Manager, manager, Model
 from ...api.model import MaybeModel
 from ...ui.widgets.sort_options import SortOptions
+from ...ui.events.events import ChangeStatus
 
 
 class Component:
@@ -31,6 +30,7 @@ class Component:
             )
             for field in item.fields
         }
+        self.filter = SimpleInput()
 
     def refresh_item(self, field: str):
         self.fields[field] = SimpleInput(
@@ -200,36 +200,23 @@ class TreeList(Widget):
         self.row_vals: List[Component] = list(self._rows.values())
         self.refresh()
 
-    def _stylize_desc(
-        self,
-        item,
-        highlight: bool = False,
-    ):
-        return item
-
-    def _stylize_date(
-        self,
-        item,
-        highlight: bool = False,
-    ):
-        return ""
-
-    def _stylize_urgency(
-        self,
-        item,
-        highlight: bool = False,
-    ):
-        return ""
-
     async def _start_edit(self, field: str):
-        if self.component:
-            self.component.fields[field].on_focus()
-            self.editing = field
+        if not self.component:
+            return
+
+        if field == "about":
+            await self.emit(ChangeStatus(self, "INSERT"))
+        else:
+            await self.emit(ChangeStatus(self, "DATE"))
+
+        self.component.fields[field].on_focus()
+        self.editing = field
 
     async def _stop_edit(self):
         if not self.component:
             return
 
+        await self.emit(ChangeStatus(self, "NORMAL"))
         self.component.fields[self.editing].on_blur()
         self.component.item.edit(
             self.editing,
@@ -362,7 +349,7 @@ class TreeList(Widget):
             self._refresh_rows()
             self.current = self._rows[curr].index
 
-    async def check_extra_keys(self, event: events.Key):
+    async def check_extra_keys(self, _: events.Key):
         pass
 
     async def handle_tab(self):
@@ -419,16 +406,8 @@ class TreeList(Widget):
         await self.check_extra_keys(event)
         self.refresh(layout=True)
 
-    def add_row(self, row: Component, highlight: bool):
-
-        padding = "  " * row.depth
-        items = [str(i.render()) for i in row.get_field_values()]
-        desc = [Text(padding) + self._stylize_desc(i, highlight) for i in items]
-        date = [Text(padding) + self._stylize_date(i, highlight) for i in items]
-        urgency = [Text(padding) + self._stylize_urgency(i, highlight) for i in items]
-
-        for i in zip(desc, date, urgency):
-            self.table.add_row(*i)
+    def add_row(self, _: Component, __: bool):
+        ...
 
     def make_table(self):
         self._setup_table()

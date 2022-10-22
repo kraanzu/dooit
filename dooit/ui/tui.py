@@ -1,12 +1,11 @@
-from textual import events
+from typing import Union
 from textual.app import App
-from dooit.api.model import Model
-
-from dooit.ui.events.events import *
-from dooit.ui.widgets import navbar  # noqa
-from ..ui.widgets.status_bar import StatusBar
-from ..ui.widgets import NavBar, TodoList
+from textual import events
+from ..ui.events import *
+from ..ui.widgets import NavBar, TodoList, StatusBar
 from ..api.manager import manager
+from ..api.workspace import Workspace
+from ..api.todo import Todo
 
 
 class Dooit(App):
@@ -60,5 +59,8 @@ class Dooit(App):
         self.toggle_highlight()
 
     async def handle_apply_sort_method(self, event: ApplySortMethod):
-        model: Model = event.sender
+        model: Union[Workspace, Todo] = event.sender
         model.sort(event.method)
+
+    async def handle_change_status(self, event: ChangeStatus):
+        self.bar.set_status(event.status)

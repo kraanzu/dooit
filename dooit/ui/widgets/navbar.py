@@ -23,9 +23,9 @@ class NavBar(TreeList):
         self.sort_menu.visible = False
 
     def set_styles(self):
-        self.style_on = navbar["fmt"]["highlight"]
-        self.style_off = navbar["fmt"]["dim"]
-        self.style_edit = navbar["fmt"]["edit"]
+        self.style_on = navbar["about"]["highlight"]
+        self.style_off = navbar["about"]["dim"]
+        self.style_edit = navbar["about"]["edit"]
 
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
@@ -62,7 +62,7 @@ class NavBar(TreeList):
     # ##########################################
 
     def _stylize_desc(self, item, highlight: bool = False) -> Text:
-        fmt = navbar["fmt"]
+        fmt = navbar["about"]
 
         if highlight:
             if self.editing == "none":

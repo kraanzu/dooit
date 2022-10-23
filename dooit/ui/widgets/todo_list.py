@@ -75,7 +75,7 @@ class TodoList(TreeList):
     # ##########################################
 
     def _stylize_urgency(self, item, highlight: bool = False):
-        icons = todos["icon"]["urgency"]
+        icons = todos["urgency"]
         colors = ["green", "orange1", "yellow", "red"]
         colors = {i: j for i, j in enumerate(colors, 1)}
         style = "b " if highlight else "d "
@@ -83,7 +83,7 @@ class TodoList(TreeList):
         return Text(icons[rank], style=style + colors[rank])
 
     def _stylize_date(self, item, highlight: bool = False):
-        fmt = todos["fmt"]["date"]
+        fmt = todos["date"]
 
         if highlight:
             if self.editing == "none":
@@ -97,7 +97,7 @@ class TodoList(TreeList):
         return Text.from_markup(text)
 
     def _stylize_desc(self, item, highlight: bool = False):
-        fmt = todos["fmt"]["about"]
+        fmt = todos["about"]
 
         if highlight:
             if self.editing == "none":

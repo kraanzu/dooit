@@ -219,6 +219,9 @@ class SimpleInput(Widget):
 
         match key:
 
+            case "escape":
+                self.on_blur()
+
             # Moving backward
             case "left":
                 await self._move_cursor_backward()

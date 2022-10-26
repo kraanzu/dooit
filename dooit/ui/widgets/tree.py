@@ -184,6 +184,11 @@ class TreeList(Widget):
         def add_rows(item: Workspace, nest_level=0):
 
             name = item.name
+
+            if pattern := self.filter.value:
+                if not re.findall(pattern, item.about):
+                    return
+
             self._rows[name] = _rows_copy.get(
                 name,
                 Component(
@@ -384,6 +389,8 @@ class TreeList(Widget):
             elif self.filter.has_focus:
                 await self.filter.handle_keypress(event.key)
                 await self.emit(Notify(self, self.filter.render()))
+                self._refresh_rows()
+                self.current = 0
 
             else:
                 match key:
@@ -435,11 +442,10 @@ class TreeList(Widget):
                 pass
 
     def push_row(self, row: List[Text], padding: int):
-        if self.filter.has_focus:
+        if self.filter.value:
             pattern = self.filter.value
-            row = [i for i in row if re.findall(pattern, i.plain)]
             for i in row:
-                i.highlight_regex(pattern, style = 'b red')
+                i.highlight_regex(pattern, style="b red")
 
         else:
             pad = " " * padding

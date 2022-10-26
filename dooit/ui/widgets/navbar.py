@@ -53,11 +53,11 @@ class NavBar(TreeList):
     # ##########################################
 
     def add_row(self, row, highlight: bool):
-        padding = "  " * row.depth
-        items = [str(i.render()) for i in row.get_field_values()]
-        desc = Text(padding) + self._stylize_desc(items[0], highlight)
 
-        self.table.add_row(desc)
+        items = [str(i.render()) for i in row.get_field_values()]
+        desc = self._stylize_desc(items[0], highlight)
+
+        return self.push_row([desc], row.depth)
 
     # ##########################################
 

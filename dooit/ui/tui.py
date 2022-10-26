@@ -64,3 +64,6 @@ class Dooit(App):
 
     async def handle_change_status(self, event: ChangeStatus):
         self.bar.set_status(event.status)
+
+    async def handle_notify(self, event: Notify):
+        self.bar.set_message(event.message)

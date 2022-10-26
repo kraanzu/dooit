@@ -1,6 +1,8 @@
+import re
 from typing import List, Optional
 from rich.console import RenderableType
 from rich.panel import Panel
+from rich.text import Text
 from textual import events
 from textual.widget import Widget
 from rich.table import Table, box
@@ -9,7 +11,7 @@ from ...api.workspace import Workspace
 from ...api.manager import Manager, manager, Model
 from ...api.model import MaybeModel
 from ...ui.widgets.sort_options import SortOptions
-from ...ui.events.events import ChangeStatus
+from ...ui.events.events import ChangeStatus, Notify
 
 
 class Component:
@@ -30,7 +32,6 @@ class Component:
             )
             for field in item.fields
         }
-        self.filter = SimpleInput()
 
     def refresh_item(self, field: str):
         self.fields[field] = SimpleInput(
@@ -99,6 +100,7 @@ class TreeList(Widget):
         self.editing = "none"
         self.sort_menu = SortOptions()
         self.sort_menu.visible = False
+        self.filter = SimpleInput()
 
     def set_styles(self):
         self.style_off = "b white"
@@ -223,6 +225,13 @@ class TreeList(Widget):
             self.component.fields[self.editing].value,
         )
         self.editing = "none"
+
+    async def _start_filtering(self):
+        self.filter.on_focus()
+        await self.emit(Notify(self, self.filter.render()))
+
+    async def _stop_filtering(self):
+        self.filter.on_blur()
 
     def _add_child(self) -> Model:
         ...
@@ -372,6 +381,10 @@ class TreeList(Widget):
             if self.sort_menu.visible:
                 await self.sort_menu.handle_key(event)
 
+            elif self.filter.has_focus:
+                await self.filter.handle_keypress(event.key)
+                await self.emit(Notify(self, self.filter.render()))
+
             else:
                 match key:
                     case "ctrl+i":
@@ -402,6 +415,8 @@ class TreeList(Widget):
                         await self.move_to_bottom()
                     case "s":
                         self.sort_menu.visible = True
+                    case "/":
+                        await self._start_filtering()
 
         await self.check_extra_keys(event)
         self.refresh(layout=True)
@@ -418,6 +433,20 @@ class TreeList(Widget):
                 self.add_row(self.row_vals[i], i == self.current)
             except:
                 pass
+
+    def push_row(self, row: List[Text], padding: int):
+        if self.filter.has_focus:
+            pattern = self.filter.value
+            row = [i for i in row if re.findall(pattern, i.plain)]
+            for i in row:
+                i.highlight_regex(pattern, style = 'b red')
+
+        else:
+            pad = " " * padding
+            row = [Text(pad) + i for i in row]
+
+        if row:
+            self.table.add_row(*row)
 
     def render(self) -> RenderableType:
 

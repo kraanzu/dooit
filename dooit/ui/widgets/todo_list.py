@@ -112,13 +112,14 @@ class TodoList(TreeList):
 
     def add_row(self, row, highlight: bool):
 
-        padding = "  " * row.depth
+        # padding = "  " * row.depth
         item = [str(i.render()) for i in row.get_field_values()]
-        desc = Text(padding) + self._stylize_desc(item[0], highlight)
-        date = Text(padding) + self._stylize_date(item[1], highlight)
-        urgency = Text(padding) + self._stylize_urgency(item[2], highlight)
+        desc = self._stylize_desc(item[0], highlight)
+        date = self._stylize_date(item[1], highlight)
+        urgency = self._stylize_urgency(item[2], highlight)
 
-        self.table.add_row(desc, date, urgency)
+        self.push_row([desc, date, urgency], row.depth)
+        # self.table.add_row(desc, date, urgency)
 
     # ##########################################
 

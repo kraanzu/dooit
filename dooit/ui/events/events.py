@@ -1,4 +1,5 @@
 from typing import Literal
+from rich.console import RenderableType
 from textual.widgets import NodeID
 from textual.message import Message, MessageTarget
 
@@ -32,7 +33,7 @@ class Notify(Message, bubble=True):
     Emitted when A notification message on status bar is to be shown
     """
 
-    def __init__(self, sender: MessageTarget, message: str) -> None:
+    def __init__(self, sender: MessageTarget, message: RenderableType) -> None:
         super().__init__(sender)
         self.message = message
 

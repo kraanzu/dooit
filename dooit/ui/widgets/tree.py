@@ -185,21 +185,25 @@ class TreeList(Widget):
 
             name = item.name
 
+            def push_item(item: Workspace):
+                self._rows[name] = _rows_copy.get(
+                    name,
+                    Component(
+                        item, nest_level, len(self._rows)
+                    ),  # defaults to a new Component
+                )
+                self._rows[name].index = len(self._rows) - 1
+
             if pattern := self.filter.value:
-                if not re.findall(pattern, item.about):
-                    return
-
-            self._rows[name] = _rows_copy.get(
-                name,
-                Component(
-                    item, nest_level, len(self._rows)
-                ),  # defaults to a new Component
-            )
-            self._rows[name].index = len(self._rows) - 1
-
-            if self._rows[name].expanded:
+                if re.findall(pattern, item.about):
+                    push_item(item)
                 for i in self._get_children(item):
                     add_rows(i, nest_level + 1)
+            else:
+                push_item(item)
+                if self._rows[name].expanded:
+                    for i in self._get_children(item):
+                        add_rows(i, nest_level + 1)
 
         for i in self._get_children(self.model):
             add_rows(i)
@@ -236,7 +240,9 @@ class TreeList(Widget):
         await self.emit(Notify(self, self.filter.render()))
 
     async def _stop_filtering(self):
-        self.filter.on_blur()
+        self.filter.clear()
+        self._refresh_rows()
+        await self.emit(ChangeStatus(self, "NORMAL"))
 
     def _add_child(self) -> Model:
         ...
@@ -394,6 +400,8 @@ class TreeList(Widget):
 
             else:
                 match key:
+                    case "escape":
+                        await self._stop_filtering()
                     case "ctrl+i":
                         await self.handle_tab()
                     case "k" | "up":
@@ -442,8 +450,7 @@ class TreeList(Widget):
                 pass
 
     def push_row(self, row: List[Text], padding: int):
-        if self.filter.value:
-            pattern = self.filter.value
+        if pattern := self.filter.value:
             for i in row:
                 i.highlight_regex(pattern, style="b red")
 

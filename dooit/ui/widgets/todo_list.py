@@ -38,6 +38,9 @@ class TodoList(TreeList):
         return []
 
     async def handle_tab(self):
+        if self.filter.value:
+            await self._stop_filtering()
+
         await self.emit(SwitchTab(self))
 
     def update_table(self, model: Workspace):

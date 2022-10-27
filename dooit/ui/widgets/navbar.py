@@ -16,9 +16,7 @@ class NavBar(TreeList):
     def __init__(self):
         super().__init__()
         self.sort_menu = SortOptions(
-            name=f"Sort_{self.name}",
-            options=Workspace.fields,
-            parent_widget=self
+            name=f"Sort_{self.name}", options=Workspace.fields, parent_widget=self
         )
         self.sort_menu.visible = False
 
@@ -34,6 +32,10 @@ class NavBar(TreeList):
     async def handle_tab(self):
         if self.current == -1:
             return
+
+        if self.filter.value:
+            await self._stop_filtering()
+            # self.current = -1
 
         await self.emit(SwitchTab(self))
 

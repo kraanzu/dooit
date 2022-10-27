@@ -26,6 +26,16 @@ class TodoList(TreeList):
         )
         self.sort_menu.visible = False
 
+    async def watch_current(self, value: int):
+        if not self.row_vals:
+            self.current = -1
+        else:
+            value = min(max(0, value), len(self.row_vals) - 1)
+            self.current = value
+            self._fix_view()
+
+        self.refresh()
+
     def make_table(self):
         if not self._assigned:
             self.table = Table.grid()

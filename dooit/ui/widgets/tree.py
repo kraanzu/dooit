@@ -14,7 +14,6 @@ from ...api.model import MaybeModel
 from ...ui.widgets.sort_options import SortOptions
 from ...ui.events.events import ChangeStatus, Notify
 
-
 class Component:
     def __init__(
         self,
@@ -122,32 +121,6 @@ class TreeList(Widget):
     def has_focus(self):
         return self._has_focus
 
-    async def watch_current(self, value: int):
-        if not self.row_vals:
-            self.current = -1
-        else:
-            value = min(max(0, value), len(self.row_vals) - 1)
-            self.current = value
-            self._fix_view()
-
-        self.refresh()
-
-    # @property
-    # def current(self) -> int:
-    #     return self.current
-    #
-    # @current.setter
-    # def current(self, value) -> None:
-    #
-    #     if not self.row_vals:
-    #         self.current = -1
-    #     else:
-    #         value = min(max(0, value), len(self.row_vals) - 1)
-    #         self.current = value
-    #         self._fix_view()
-    #
-    #     self.refresh()
-
     @property
     def component(self):
         if self.current != -1:
@@ -251,9 +224,8 @@ class TreeList(Widget):
         await self.emit(Notify(self, self.filter.render()))
 
     async def _stop_filtering(self):
-        self.current = -1
-        self._refresh_rows()
         self.filter.clear()
+        self._refresh_rows()
         await self.emit(Notify(self, self.filter.render()))
         await self.emit(ChangeStatus(self, "NORMAL"))
 
@@ -346,7 +318,8 @@ class TreeList(Widget):
         await self.move_down()
 
     async def move_up(self):
-        self.current -= 1
+        if self.current:
+            self.current -= 1
 
     async def move_down(self):
         self.current += 1

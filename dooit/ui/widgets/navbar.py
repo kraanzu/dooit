@@ -1,3 +1,4 @@
+from asyncio import current_task
 from ctypes.wintypes import WORD
 from rich.table import Table
 from rich.text import Text
@@ -34,32 +35,30 @@ class NavBar(TreeList):
             return
 
         if self.filter.value:
-            await self._stop_filtering()
 
-        # item = self.item
-        # self.current = -1
+            if self.item:
+                await self.emit(
+                    TopicSelect(
+                        self,
+                        self.item,
+                    )
+                )
+                
+            await self._stop_filtering()
+            self.current = -1
+
         await self.emit(SwitchTab(self))
-        # await self.emit(TopicSelect(self, item))
 
     async def watch_current(self, value: int):
-        if not self.row_vals:
-            self.current = -1
-        else:
-            if value == -1 and self.filter.value:
-                item = self.item
-                self.current = -1
-                await self.emit(TopicSelect(self, item))
-                self.refresh()
-                return
-            else:
-                value = min(max(0, value), len(self.row_vals) - 1)
-                self.current = value
+        
+        value = min(value, len(self.row_vals) - 1)
+        self.current = value
 
-            self._fix_view()
+        self._fix_view()
+        if self.current != -1 and self.item:
+            await self.emit(TopicSelect(self, self.item))
 
         self.refresh()
-        if self.item:
-            await self.emit(TopicSelect(self, self.item))
 
     # ##########################################
 

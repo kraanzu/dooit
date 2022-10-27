@@ -1,8 +1,10 @@
 import re
 from functools import partial
 from typing import List, Optional
-from rich.console import RenderableType
+from rich.align import Align
+from rich.console import Group, RenderableType
 from rich.panel import Panel
+from rich.columns import Columns
 from rich.text import Text
 from textual import events
 from textual.reactive import Reactive
@@ -103,6 +105,10 @@ class TreeList(Widget):
         self.sort_menu = SortOptions()
         self.sort_menu.visible = False
         self.filter = SimpleInput()
+
+    @property
+    def EMPTY(self):
+        return ""
 
     def set_styles(self):
         self.style_off = "b white"
@@ -450,6 +456,13 @@ class TreeList(Widget):
 
         if self.sort_menu.visible:
             to_render = self.sort_menu.render()
+        elif not self.row_vals:
+            to_render = Align.center(
+                Group(
+                    *[Align.center(i) for i in self.EMPTY],
+                ),
+                vertical="middle",
+            )
         else:
             self.make_table()
             to_render = self.table

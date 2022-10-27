@@ -27,6 +27,18 @@ class TodoList(TreeList):
         )
         self.sort_menu.visible = False
 
+    @property
+    def EMPTY(self):
+        if self._assigned:
+            arr = default_config.EMPTY_TODO
+        else:
+            arr = default_config.dashboard
+
+        return [
+            Text.from_markup(i) if isinstance(i, str) else i
+            for i in arr
+        ]
+
     async def watch_current(self, value: int):
         if not self.row_vals:
             self.current = -1
@@ -128,14 +140,12 @@ class TodoList(TreeList):
 
     def add_row(self, row, highlight: bool):
 
-        # padding = "  " * row.depth
         item = [str(i.render()) for i in row.get_field_values()]
         desc = self._stylize_desc(item[0], highlight)
         date = self._stylize_date(item[1], highlight)
         urgency = self._stylize_urgency(item[2], highlight)
 
         self.push_row([desc, date, urgency], row.depth)
-        # self.table.add_row(desc, date, urgency)
 
     # ##########################################
 

@@ -1,10 +1,11 @@
 from asyncio import current_task
 from ctypes.wintypes import WORD
-from rich.table import Table
+from rich.table import Column, Table
 from rich.text import Text
 from dooit.api.workspace import Workspace
 
 from dooit.ui.widgets.sort_options import SortOptions
+from dooit.utils import default_config
 
 from ...api.model import MaybeModel
 from ...api.manager import WORKSPACE, Manager, Model
@@ -20,6 +21,13 @@ class NavBar(TreeList):
             name=f"Sort_{self.name}", options=Workspace.fields, parent_widget=self
         )
         self.sort_menu.visible = False
+
+    @property
+    def EMPTY(self):
+        return [
+            Text.from_markup(i) if isinstance(i, str) else i
+            for i in default_config.EMPTY_NAVBAR
+        ]
 
     def set_styles(self):
         self.style_on = navbar["about"]["highlight"]
@@ -43,14 +51,14 @@ class NavBar(TreeList):
                         self.item,
                     )
                 )
-                
+
             await self._stop_filtering()
             self.current = -1
 
         await self.emit(SwitchTab(self))
 
     async def watch_current(self, value: int):
-        
+
         value = min(value, len(self.row_vals) - 1)
         self.current = value
 

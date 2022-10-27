@@ -136,7 +136,7 @@ class SimpleInput(Widget):
         # should work just fine on windows and mac
 
         if text is None:
-            text = pyperclip.paste()
+            text = str(pyperclip.paste())
 
         self.value = (
             self.value[: self._cursor_position]

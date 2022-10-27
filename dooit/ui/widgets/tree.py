@@ -360,7 +360,7 @@ class TreeList(Widget):
     async def show_sort_menu(self):
         self.sort_menu.visible = True
 
-    async def check_extra_keys(self, _: events.Key):
+    async def check_extra_keys(self, event: events.Key):
         pass
 
     async def handle_tab(self):

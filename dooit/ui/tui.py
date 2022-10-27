@@ -9,13 +9,14 @@ from ..api.todo import Todo
 
 
 class Dooit(App):
-    async def on_mount(self):
+    async def on_load(self):
         self.navbar = NavBar()
         self.todos = TodoList()
         self.bar = StatusBar()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
 
+    async def on_mount(self):
         await self.setup_grid()
 
     async def setup_grid(self):

@@ -33,16 +33,16 @@ class StatusBar(Widget):
 
     def set_status(self, status: StatusType) -> None:
         self.status = status
-        match status:
-            case "NORMAL":
+        
+        if status ==  "NORMAL":
                 self.color = self.theme["normal"]
-            case "INSERT":
+        elif status ==  "INSERT":
                 self.color = self.theme["insert"]
-            case "DATE":
+        elif status ==  "DATE":
                 self.color = self.theme["date"]
-            case "SEARCH":
+        elif status ==  "SEARCH":
                 self.color = self.theme["search"]
-            case "SORT":
+        elif status ==  "SORT":
                 self.color = self.theme["sort"]
 
         self.refresh()

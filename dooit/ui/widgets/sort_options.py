@@ -83,30 +83,30 @@ class SortOptions(Widget):
 
     async def handle_key(self, event: events.Key) -> None:
         event.stop()
+        key = event.key
 
-        match event.key:
-            case "escape":
-                await self.post_message(ChangeStatus(self, "NORMAL"))
-                self.visible = False
-            case "j" | "down":
-                self.move_cursor_down()
-            case "k" | "up":
-                self.move_cursor_up()
-            case "g" | "home":
-                self.move_cursor_to_top()
-            case "G" | "end":
-                self.move_cursor_to_bottom()
-            case "enter":
-                if self.parent_widget:
-                    await self.parent_widget.emit(
-                        ApplySortMethod(
-                            self.parent_widget,
-                            self.options[self.highlighted],
-                        )
+        if key in ["escape"]:
+            await self.post_message(ChangeStatus(self, "NORMAL"))
+            self.visible = False
+        elif key in ["j", "down"]:
+            self.move_cursor_down()
+        elif key in ["k", "up"]:
+            self.move_cursor_up()
+        elif key in ["g", "home"]:
+            self.move_cursor_to_top()
+        elif key in ["G", "end"]:
+            self.move_cursor_to_bottom()
+        elif key in ["enter"]:
+            if self.parent_widget:
+                await self.parent_widget.emit(
+                    ApplySortMethod(
+                        self.parent_widget,
+                        self.options[self.highlighted],
                     )
-                await self.hide()
-            case "s":
-                await self.hide()
+                )
+            await self.hide()
+        elif key in ["s"]:
+            await self.hide()
 
         self.refresh()
 
@@ -123,17 +123,17 @@ class SortOptions(Widget):
 
         for index, option in enumerate(self.options):
             label = Text(option)
-            match option:
-                case "about":
-                    label = Text("    ") + label
-                case "due":
-                    label = Text("    ") + label
-                case "status":
-                    label = Text("    ") + label
-                case "urgency":
-                    label = Text("    ") + label
-                case _:
-                    label = Text(" X   ") + label
+            
+            if option == "about":
+                label = Text("    ") + label
+            elif option == "due":
+                label = Text("    ") + label
+            elif option == "status":
+                label = Text("    ") + label
+            elif option == "urgency":
+                label = Text("    ") + label
+            else:
+                label = Text(" X   ") + label
 
             label.pad_right(self.size.width)
             label.plain = label.plain.ljust(20)

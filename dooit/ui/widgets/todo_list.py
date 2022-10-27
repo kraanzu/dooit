@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Union
 from rich.table import Table
 from rich.text import Text
@@ -73,17 +74,19 @@ class TodoList(TreeList):
         return super().item
 
     async def check_extra_keys(self, event: events.Key):
-        match event.key:
-            case "d":
-                await self._start_edit("due")
-            case "+" | "=":
-                if self.component and self.item:
-                    self.item.increase_urgency()
-                    self.component.refresh_item("urgency")
-            case "-" | "_":
-                if self.component and self.item:
-                    self.item.decrease_urgency()
-                    self.component.refresh_item("urgency")
+
+        key = event.key
+
+        if key in "d":
+            await self._start_edit("due")
+        elif key in "+=":
+            if self.component and self.item:
+                self.item.increase_urgency()
+                self.component.refresh_item("urgency")
+        elif key in "_-":
+            if self.component and self.item:
+                self.item.decrease_urgency()
+                self.component.refresh_item("urgency")
 
     # ##########################################
 

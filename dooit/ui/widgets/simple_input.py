@@ -217,56 +217,54 @@ class SimpleInput(Widget):
         Handles Keypresses
         """
 
-        match key:
+        if key == "escape":
+            self.on_blur()
 
-            case "escape":
-                self.on_blur()
+        # Moving backward
+        elif key == "left":
+            await self._move_cursor_backward()
 
-            # Moving backward
-            case "left":
-                await self._move_cursor_backward()
+        elif key == "ctrl+left":
+            await self._move_cursor_backward(word=True)
 
-            case "ctrl+left":
-                await self._move_cursor_backward(word=True)
+        elif key == "ctrl+h":  # Backspace
+            await self._move_cursor_backward(delete=True)
 
-            case "ctrl+h":  # Backspace
-                await self._move_cursor_backward(delete=True)
+        elif key == "ctrl+w":
+            await self._move_cursor_backward(word=True, delete=True)
 
-            case "ctrl+w":
-                await self._move_cursor_backward(word=True, delete=True)
+        # Moving forward
+        elif key == "right":
+            await self._move_cursor_forward()
 
-            # Moving forward
-            case "right":
-                await self._move_cursor_forward()
+        elif key == "ctrl+right":
+            await self._move_cursor_forward(word=True)
 
-            case "ctrl+right":
-                await self._move_cursor_forward(word=True)
+        elif key == "delete":
+            await self._move_cursor_forward(delete=True)
 
-            case "delete":
-                await self._move_cursor_forward(delete=True)
+        elif key == "ctrl+delete":
+            await self._move_cursor_forward(word=True, delete=True)
 
-            case "ctrl+delete":
-                await self._move_cursor_forward(word=True, delete=True)
+        elif key == "ctrl+l":
+            await self.clear_input()
 
-            case "ctrl+l":
-                await self.clear_input()
+        # EXTRAS
+        elif key == "home":
+            self._cursor_position = 0
 
-            # EXTRAS
-            case "home":
-                self._cursor_position = 0
+        elif key == "end":
+            self._cursor_position = len(self.value)
 
-            case "end":
-                self._cursor_position = len(self.value)
+        elif key == "ctrl+i":
+            await self._insert_text("\t")
 
-            case "ctrl+i":
-                await self._insert_text("\t")
-
-            # COPY-PASTA
-            case "ctrl+v":
-                try:
-                    await self._insert_text()
-                except:
-                    return
+        # COPY-PASTA
+        elif key == "ctrl+v":
+            try:
+                await self._insert_text()
+            except:
+                return
 
         if len(key) == 1:
             await self._insert_text(key)

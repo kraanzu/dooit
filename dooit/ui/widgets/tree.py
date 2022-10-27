@@ -1,4 +1,5 @@
 import re
+from functools import partial
 from typing import List, Optional
 from rich.console import RenderableType
 from rich.panel import Panel
@@ -13,6 +14,7 @@ from ...api.manager import Manager, manager, Model
 from ...api.model import MaybeModel
 from ...ui.widgets.sort_options import SortOptions
 from ...ui.events.events import ChangeStatus, Notify
+
 
 class Component:
     def __init__(
@@ -355,6 +357,9 @@ class TreeList(Widget):
             self._refresh_rows()
             self.current = self._rows[curr].index
 
+    async def show_sort_menu(self):
+        self.sort_menu.visible = True
+
     async def check_extra_keys(self, _: events.Key):
         pass
 
@@ -385,39 +390,33 @@ class TreeList(Widget):
                 self.current = 0
 
             else:
-                match key:
-                    case "escape":
-                        await self._stop_filtering()
-                    case "ctrl+i":
-                        await self.handle_tab()
-                    case "k" | "up":
-                        await self.move_up()
-                    case "K":
-                        await self.shift_up()
-                    case "j" | "down":
-                        await self.move_down()
-                    case "J":
-                        await self.shift_down()
-                    case "i":
-                        await self._start_edit("about")
-                    case "z":
-                        await self.toggle_expand()
-                    case "Z":
-                        await self.toggle_expand_parent()
-                    case "A":
-                        await self.add_child()
-                    case "a":
-                        await self.add_sibling()
-                    case "x":
-                        await self.remove_item()
-                    case "g":
-                        await self.move_to_top()
-                    case "G":
-                        await self.move_to_bottom()
-                    case "s":
-                        self.sort_menu.visible = True
-                    case "/":
-                        await self._start_filtering()
+
+                keybinds = {
+                    "escape": self._stop_filtering,
+                    "ctrl+i": self.handle_tab,
+                    "k": self.move_up,
+                    "up": self.move_up,
+                    "K": self.shift_up,
+                    "shift+up": self.shift_up,
+                    "j": self.move_down,
+                    "down": self.move_down,
+                    "J": self.shift_down,
+                    "shift+down": self.shift_down,
+                    "i": partial(self._start_edit, "about"),
+                    "z": self.toggle_expand,
+                    "Z": self.toggle_expand_parent,
+                    "A": self.add_child,
+                    "a": self.add_sibling,
+                    "x": self.remove_item,
+                    "g": self.move_to_top,
+                    "home": self.move_to_top,
+                    "G": self.move_to_bottom,
+                    "s": self.show_sort_menu,
+                    "/": self._start_filtering,
+                }
+
+                if key in keybinds:
+                    await keybinds[key]()
 
         await self.check_extra_keys(event)
         self.refresh(layout=True)

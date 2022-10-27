@@ -4,6 +4,7 @@ from rich.console import RenderableType
 from rich.panel import Panel
 from rich.text import Text
 from textual import events
+from textual.reactive import Reactive
 from textual.widget import Widget
 from rich.table import Table, box
 from .simple_input import SimpleInput
@@ -85,7 +86,7 @@ class VerticalView:
 
 class TreeList(Widget):
     _has_focus = False
-    _current = -1
+    current = Reactive(-1)
     _rows = {}
 
     def __init__(
@@ -121,21 +122,31 @@ class TreeList(Widget):
     def has_focus(self):
         return self._has_focus
 
-    @property
-    def current(self) -> int:
-        return self._current
-
-    @current.setter
-    def current(self, value) -> None:
-
+    async def watch_current(self, value: int):
         if not self.row_vals:
-            self._current = -1
+            self.current = -1
         else:
             value = min(max(0, value), len(self.row_vals) - 1)
-            self._current = value
+            self.current = value
             self._fix_view()
 
         self.refresh()
+
+    # @property
+    # def current(self) -> int:
+    #     return self.current
+    #
+    # @current.setter
+    # def current(self, value) -> None:
+    #
+    #     if not self.row_vals:
+    #         self.current = -1
+    #     else:
+    #         value = min(max(0, value), len(self.row_vals) - 1)
+    #         self.current = value
+    #         self._fix_view()
+    #
+    #     self.refresh()
 
     @property
     def component(self):
@@ -240,8 +251,10 @@ class TreeList(Widget):
         await self.emit(Notify(self, self.filter.render()))
 
     async def _stop_filtering(self):
-        self.filter.clear()
+        self.current = -1
         self._refresh_rows()
+        self.filter.clear()
+        await self.emit(Notify(self, self.filter.render()))
         await self.emit(ChangeStatus(self, "NORMAL"))
 
     def _add_child(self) -> Model:
@@ -271,7 +284,7 @@ class TreeList(Widget):
 
         self._drop()
         self._refresh_rows()
-        self.current = self._current
+        self.current = self.current
 
     async def add_child(self):
 

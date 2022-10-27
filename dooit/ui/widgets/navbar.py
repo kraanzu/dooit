@@ -35,22 +35,31 @@ class NavBar(TreeList):
 
         if self.filter.value:
             await self._stop_filtering()
-            # self.current = -1
 
+        # item = self.item
+        # self.current = -1
         await self.emit(SwitchTab(self))
+        # await self.emit(TopicSelect(self, item))
 
-    @property
-    def current(self) -> int:
-        return super().current
+    async def watch_current(self, value: int):
+        if not self.row_vals:
+            self.current = -1
+        else:
+            if value == -1 and self.filter.value:
+                item = self.item
+                self.current = -1
+                await self.emit(TopicSelect(self, item))
+                self.refresh()
+                return
+            else:
+                value = min(max(0, value), len(self.row_vals) - 1)
+                self.current = value
 
-    @current.setter
-    def current(self, value):
-        value = min(max(0, value), len(self.row_vals) - 1)
-        self._current = value
-        self._fix_view()
+            self._fix_view()
+
         self.refresh()
         if self.item:
-            self.emit_no_wait(TopicSelect(self, self.item))
+            await self.emit(TopicSelect(self, self.item))
 
     # ##########################################
 

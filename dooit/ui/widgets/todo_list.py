@@ -33,7 +33,7 @@ class TodoList(TreeList):
             super().make_table()
 
     def _get_children(self, model: Workspace):
-        if self._assigned:
+        if self._assigned and model:
             return model.todos
         return []
 

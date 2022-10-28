@@ -53,4 +53,3 @@ class SwitchTab(Message, bubble=True):
     """
 
     pass
-

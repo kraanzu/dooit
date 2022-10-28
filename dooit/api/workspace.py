@@ -5,6 +5,7 @@ from .model import Model
 WORKSPACE = "workspace"
 TODO = "todo"
 
+
 class Workspace(Model):
     fields = ["about"]
 

@@ -3,6 +3,15 @@ from dooit.api.workspace import Workspace
 from .model import Model
 
 TODO = "todo"
+OPTS = {
+    "PENDING": "x",
+    "COMPLETED": "X",
+    "OVERDUE": "O",
+}
+
+
+def reversed_dict(d):
+    return {j: i for i, j in d.items()}
 
 
 class Todo(Model):
@@ -18,12 +27,6 @@ class Todo(Model):
         self.todo_type = type(self)
         self.todos: List[Todo] = []
 
-        self.opts = {
-            "PENDING": "x",
-            "COMPLETED": "X",
-            "OVERDUE": "O",
-        }
-
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 0)
 
@@ -35,7 +38,7 @@ class Todo(Model):
         Return todo.txt form of the todo
         """
 
-        return f"{self.status} ({self.urgency}) due:{self.due or 'None'} {self.about}"
+        return f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.about}"
 
     def fill_from_data(self, data: str) -> None:
         """
@@ -44,7 +47,7 @@ class Todo(Model):
 
         status, urgency, due, *about = data.split()
 
-        # status = self.opts[status]
+        status = reversed_dict(OPTS)[status]
         about = " ".join(about)
 
         due = due[4:]

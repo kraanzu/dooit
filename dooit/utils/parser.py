@@ -3,7 +3,8 @@ import yaml
 from pathlib import Path
 from os import mkdir, environ
 
-from ..utils.config import HOME, XDG_CONFIG
+HOME = Path.home()
+XDG_CONFIG = HOME / ".config"
 
 
 class Parser:

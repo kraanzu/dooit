@@ -4,7 +4,6 @@ from rich.table import Table
 from textual.widget import Widget
 
 from dooit.utils import default_config
-from ...utils.config import conf
 from ..events import StatusType
 
 bar = default_config.bar
@@ -21,8 +20,6 @@ class StatusBar(Widget):
         self.status = "NORMAL"
         self.color = "blue"
         self.set_interval(1, self.refresh)
-        config = conf.load_config("status_bar")
-        self.theme = config["theme"]
 
     def set_message(self, message) -> None:
         self.message = message
@@ -35,15 +32,15 @@ class StatusBar(Widget):
         self.status = status
 
         if status == "NORMAL":
-            self.color = self.theme["normal"]
+            self.color = "blue"
         elif status == "INSERT":
-            self.color = self.theme["insert"]
+            self.color = "blue"
         elif status == "DATE":
-            self.color = self.theme["date"]
+            self.color = "blue"
         elif status == "SEARCH":
-            self.color = self.theme["search"]
+            self.color = "blue"
         elif status == "SORT":
-            self.color = self.theme["sort"]
+            self.color = "blue"
 
         self.refresh()
 

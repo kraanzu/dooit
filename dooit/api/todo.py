@@ -1,4 +1,5 @@
-from typing import List, Optional
+from typing import Any, List, Optional
+from dooit.api.workspace import Workspace
 from .model import Model
 
 TODO = "todo"
@@ -7,7 +8,7 @@ TODO = "todo"
 class Todo(Model):
     fields = ["about", "due", "urgency"]
 
-    def __init__(self, parent: Optional["Model"] = None) -> None:
+    def __init__(self, parent: Optional[Workspace] = None) -> None:
         super().__init__(parent)
 
         self.about = ""
@@ -23,10 +24,10 @@ class Todo(Model):
             "OVERDUE": "O",
         }
 
-    def decrease_urgency(self):
+    def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 0)
 
-    def increase_urgency(self):
+    def increase_urgency(self) -> None:
         self.urgency = min(self.urgency + 1, 4)
 
     def to_data(self) -> str:
@@ -36,15 +37,12 @@ class Todo(Model):
 
         return f"{self.status} ({self.urgency}) due:{self.due or 'None'} {self.about}"
 
-    def fill_from_data(self, data: str):
+    def fill_from_data(self, data: str) -> None:
         """
         Setups obj from provided todo.txt form
         """
 
-        try:
-            status, urgency, due, *about = data.split()
-        except:
-            raise TypeError(data)
+        status, urgency, due, *about = data.split()
 
         # status = self.opts[status]
         about = " ".join(about)
@@ -60,7 +58,7 @@ class Todo(Model):
         self.due = due
         self.status = status
 
-    def commit(self):
+    def commit(self) -> List[Any]:
         """
         Returns obj data for storage
         """
@@ -75,34 +73,34 @@ class Todo(Model):
                 self.to_data(),
             ]
 
-    def add_child_todo(self):
+    def add_child_todo(self) -> "Todo":
         return super().add_child(TODO)
 
-    def add_sibling_todo(self):
+    def add_sibling_todo(self) -> "Todo":
         return super().add_sibling(TODO)
 
-    def shift_todo_up(self):
+    def shift_todo_up(self) -> None:
         return super().shift_up(TODO)
 
-    def shift_todo_down(self):
+    def shift_todo_down(self) -> None:
         return super().shift_down(TODO)
 
-    def next_todo(self):
+    def next_todo(self) -> Optional["Todo"]:
         return super().next_sibling(TODO)
 
-    def prev_todo(self):
+    def prev_todo(self) -> Optional["Todo"]:
         return super().prev_sibling(TODO)
 
-    def remove_child_todo(self, name: str):
+    def remove_child_todo(self, name: str) -> "Todo":
         return super().remove_child(TODO, name)
 
-    def drop_todo(self):
+    def drop_todo(self) -> None:
         return super().drop(TODO)
 
-    def sort(self, attr: str):
+    def sort(self, attr: str) -> None:
         return super().sort(TODO, attr)
 
-    def from_data(self, data: List):
+    def from_data(self, data: List) -> None:
         """
         Setup obj from data
         """

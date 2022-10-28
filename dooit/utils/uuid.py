@@ -5,4 +5,4 @@ letters = ascii_letters + digits
 
 
 def generate_uuid(name: str = ""):
-    return name + "".join([choice(letters) for _ in range(20)])
+    return name + "#" + "".join([choice(letters) for _ in range(20)])

@@ -1,5 +1,4 @@
 from typing import Any, Dict, List, Optional, Type, Union
-
 from ..utils.uuid import generate_uuid
 
 MaybeModel = Union["Model", None]
@@ -140,15 +139,15 @@ class Model:
 
         return child
 
-    def remove_child(self, kind: str, name: str):
+    def remove_child(self, kind: str, name: str) -> "Model":
         """
         Remove the child based on attr
         """
 
         idx = self._get_child_index(kind, name)
-        self._get_children(kind).pop(idx)
+        return self._get_children(kind).pop(idx)
 
-    def drop(self, kind: str):
+    def drop(self, kind: str) -> None:
         """
         Delete the item
         """
@@ -156,7 +155,7 @@ class Model:
         if self.parent:
             self.parent.remove_child(kind, self.name)
 
-    def sort(self, kind: str, attr: str):
+    def sort(self, kind: str, attr: str) -> None:
         """
         Sort the children based on specific attr
         """
@@ -165,7 +164,7 @@ class Model:
             children = self.parent._get_children(kind)
             children.sort(key=lambda x: getattr(x, attr))
 
-    def commit(self):
+    def commit(self) -> Dict[str, Any]:
         """
         Get a object summary that can be stored
         """
@@ -178,7 +177,7 @@ class Model:
             for child in self.workspaces
         }
 
-    def from_data(self, data: Dict[str, Any]):
+    def from_data(self, data: Dict[str, Any]) -> None:
         """
         Fill in the attrs from data provided
         """

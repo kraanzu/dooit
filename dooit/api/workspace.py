@@ -1,9 +1,9 @@
 from typing import Any, Optional
+
 from .model import Model
 
 WORKSPACE = "workspace"
 TODO = "todo"
-
 
 class Workspace(Model):
     fields = ["about"]
@@ -106,15 +106,3 @@ class Workspace(Model):
             # raise TypeError(data)
             todo = self.add_child_todo()
             todo.from_data(data)
-
-        # for i, j in data.items():
-        #     if i == "common":
-        #         for data in j:
-        #             todo = self.add_child_todo()
-        #             todo.from_data(data)
-        #         continue
-        #
-        #     if isinstance(j, dict):
-        #         workspace = self.add_child_workspace()
-        #         workspace.edit("about", i)
-        #         workspace.from_data(j)

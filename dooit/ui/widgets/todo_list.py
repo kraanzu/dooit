@@ -1,18 +1,15 @@
-from typing import Optional, Union
+from typing import Optional
 from rich.table import Table
 from rich.text import Text
 from textual import events
 
-from dooit.ui.widgets.sort_options import SortOptions
 
-from ...api.todo import Todo
-from ...api.model import MaybeModel, Model
-from ...ui.events.events import SwitchTab
-from ...api.workspace import Workspace
 from .tree import TreeList
-from dooit.utils import default_config
-
-todos = default_config.todos
+from ...api.todo import Todo
+from ...ui.events.events import SwitchTab
+from ...api import Workspace
+from ...ui.widgets.sort_options import SortOptions
+from ...utils.default_config import *
 
 
 class TodoList(TreeList):
@@ -29,9 +26,9 @@ class TodoList(TreeList):
     @property
     def EMPTY(self):
         if self._assigned:
-            arr = default_config.EMPTY_TODO
+            arr = EMPTY_TODO
         else:
-            arr = default_config.dashboard
+            arr = dashboard
 
         return [Text.from_markup(i) if isinstance(i, str) else i for i in arr]
 
@@ -106,8 +103,8 @@ class TodoList(TreeList):
         rank = int(item)
         return Text(icons[rank], style=style + colors[rank])
 
-    def _stylize_date(self, item, highlight: bool = False) -> Text:
-        fmt = todos["date"]
+    def _stylize_due(self, item, highlight: bool = False) -> Text:
+        fmt = todos["due"]
 
         if highlight:
             if self.editing == "none":
@@ -117,7 +114,7 @@ class TodoList(TreeList):
         else:
             text: str = fmt["dim"]
 
-        text = text.format(date=item)
+        text = text.format(due=item)
         return Text.from_markup(text)
 
     def _stylize_desc(self, item, highlight: bool = False) -> Text:
@@ -138,7 +135,7 @@ class TodoList(TreeList):
 
         item = [str(i.render()) for i in row.get_field_values()]
         desc = self._stylize_desc(item[0], highlight)
-        date = self._stylize_date(item[1], highlight)
+        date = self._stylize_due(item[1], highlight)
         urgency = self._stylize_urgency(item[2], highlight)
 
         return self.push_row([desc, date, urgency], row.depth)

@@ -4,10 +4,18 @@ from datetime import datetime
 # NOTE: See rich style documentation for details
 
 #################################
+#            GENERAL            #
+#################################
+theme = {}
+
+colors = theme
+
+
+#################################
 #             UTILS             #
 #################################
-def colored(text: str, color: str):
-    return f"[{color}]{text}[/{color}]"
+def colored(text: str, color: str, pre: str = ""):
+    return f"{pre} [{color}]{text}[/{color}]"
 
 
 def get_clock() -> str:
@@ -42,9 +50,9 @@ dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
 
 navbar = {
     "about": {
-        "highlight": " [b white]{desc}[/b white]",
-        "dim": " [d grey50]{desc}[/d grey50]",
-        "edit": " [b cyan]{desc}[/b cyan]",
+        "dim": colored("{desc}", "d grey50", " "),
+        "highlight": colored("{desc}", "b white", "➜"),
+        "edit": colored("{desc}", "b cyan", "➜"),
     },
     "icons": {  # Special icons for specific Workspaces
         "Welcome": "W",
@@ -59,12 +67,24 @@ EMPTY_NAVBAR = [
 #################################
 #            TODOS              #
 #################################
+
+# Column vars:
+# desc: description
+# due: due date
+# urgency: urgency
+# eta: estimated time
+
+todo_columns = {
+    "desc": 70,
+    "due": 20,
+    "urgency": 10,
+}
+
 # Vars:
 # desc: description of the Todo
 # icon: icon to show for status
 # tags: show tags, if any( modify tag format in extra_fmt )
 # recur: show recurrence, if any ( modify tag format in extra_fmt )
-
 todos = {
     "status": {
         "done": "X",
@@ -82,14 +102,14 @@ todos = {
         "recur": "R {recur}",  # how to show recurrence,
     },
     "about": {
-        "highlight": "[b white]{desc}[/b white]",
-        "dim": "[d grey50]{desc}[/d grey50]",
-        "edit": "[b cyan]{desc}[/b cyan]",
+        "dim": colored("{desc}", "d grey50", " "),
+        "highlight": colored("{desc}", "b white", "➜"),
+        "edit": colored("{desc}", "b cyan", "➜"),
     },
-    "date": {
-        "highlight": "[b white]{date}[/b white]",
-        "dim": "[d grey50]{date}[/d grey50]",
-        "edit": "[b cyan]{date}[/b cyan]",
+    "due": {
+        "dim": colored("{due}", "d grey50"),
+        "highlight": colored("{due}", "b white"),
+        "edit": colored("{due}", "b cyan"),
     },
 }
 

@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Optional, Type, TypeVar
 from uuid import uuid4
 
 T = TypeVar("T", bound = "Model")
-U = TypeVar("U", bound = "Model")
 
 MaybeModel = Optional["Model"]
 

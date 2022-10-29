@@ -1,6 +1,5 @@
 from collections.abc import Callable
 from typing import Any, Dict, Optional
-
 from rich.console import JustifyMethod
 
 

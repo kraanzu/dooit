@@ -1,15 +1,11 @@
+from typing import List, Optional
 from rich.table import Table
 from rich.text import Text
-from dooit.api.workspace import Workspace
-
-from dooit.ui.widgets.sort_options import SortOptions
-from dooit.utils import default_config
-
-from ...api.model import MaybeModel
-from ...api.manager import Manager, Model
 from .tree import TreeList
+from ...ui.widgets.sort_options import SortOptions
+from ...api import Manager, Model, Workspace
 from ..events import TopicSelect, SwitchTab
-from dooit.utils.default_config import navbar
+from ...utils.default_config import *  # noqa
 
 
 class NavBar(TreeList):
@@ -22,21 +18,18 @@ class NavBar(TreeList):
 
     @property
     def EMPTY(self):
-        return [
-            Text.from_markup(i) if isinstance(i, str) else i
-            for i in default_config.EMPTY_NAVBAR
-        ]
+        return [Text.from_markup(i) if isinstance(i, str) else i for i in EMPTY_NAVBAR]
 
-    def set_styles(self):
-        self.style_on = navbar["about"]["highlight"]
-        self.style_off = navbar["about"]["dim"]
-        self.style_edit = navbar["about"]["edit"]
+    @property
+    def item(self) -> Optional[Workspace]:
+        if self.component:
+            return self.component.item
 
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
         self.table.add_column("about")
 
-    async def handle_tab(self):
+    async def handle_tab(self) -> None:
         if self.current == -1:
             return
 
@@ -55,7 +48,7 @@ class NavBar(TreeList):
 
         await self.emit(SwitchTab(self))
 
-    async def watch_current(self, value: int):
+    async def watch_current(self, value: int) -> None:
 
         value = min(value, len(self.row_vals) - 1)
         self.current = value
@@ -68,7 +61,7 @@ class NavBar(TreeList):
 
     # ##########################################
 
-    def add_row(self, row, highlight: bool):
+    def add_row(self, row, highlight: bool) -> None:
 
         items = [str(i.render()) for i in row.get_field_values()]
         desc = self._stylize_desc(items[0], highlight)
@@ -91,7 +84,7 @@ class NavBar(TreeList):
         text = text.format(desc=item)
         return Text.from_markup(text)
 
-    def _get_children(self, model: Manager):
+    def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces
 
     def _add_sibling(self):
@@ -106,22 +99,22 @@ class NavBar(TreeList):
         else:
             return self.model.add_child_workspace()
 
-    def _drop(self):
+    def _drop(self) -> None:
         if self.item:
             self.item.drop()
 
-    def _next_sibling(self) -> MaybeModel:
+    def _next_sibling(self) -> Optional[Model]:
         if self.item:
             return self.item.next_sibling()
 
-    def _prev_sibling(self) -> MaybeModel:
+    def _prev_sibling(self) -> Optional[Model]:
         if self.item:
             return self.item.prev_sibling()
 
-    def _shift_down(self):
+    def _shift_down(self) -> None:
         if self.item:
             return self.item.shift_down()
 
-    def _shift_up(self):
+    def _shift_up(self) -> None:
         if self.item:
             return self.item.shift_up()

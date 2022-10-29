@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 from rich.table import Table
 from rich.text import Text
 from textual import events
@@ -78,8 +78,8 @@ class TodoList(TreeList):
     # ##########################################
 
     @property
-    def item(self) -> Union[Todo, None]:
-        return super().item
+    def item(self) -> Optional[Todo]:
+        return self.item
 
     async def check_extra_keys(self, event: events.Key):
 
@@ -98,7 +98,7 @@ class TodoList(TreeList):
 
     # ##########################################
 
-    def _stylize_urgency(self, item, highlight: bool = False):
+    def _stylize_urgency(self, item, highlight: bool = False) -> Text:
         icons = todos["urgency"]
         colors = ["green", "orange1", "yellow", "red"]
         colors = {i: j for i, j in enumerate(colors, 1)}
@@ -106,7 +106,7 @@ class TodoList(TreeList):
         rank = int(item)
         return Text(icons[rank], style=style + colors[rank])
 
-    def _stylize_date(self, item, highlight: bool = False):
+    def _stylize_date(self, item, highlight: bool = False) -> Text:
         fmt = todos["date"]
 
         if highlight:
@@ -120,7 +120,7 @@ class TodoList(TreeList):
         text = text.format(date=item)
         return Text.from_markup(text)
 
-    def _stylize_desc(self, item, highlight: bool = False):
+    def _stylize_desc(self, item, highlight: bool = False) -> Text:
         fmt = todos["about"]
 
         if highlight:
@@ -134,45 +134,45 @@ class TodoList(TreeList):
         text = text.format(desc=item)
         return Text.from_markup(text)
 
-    def add_row(self, row, highlight: bool):
+    def add_row(self, row, highlight: bool) -> None:
 
         item = [str(i.render()) for i in row.get_field_values()]
         desc = self._stylize_desc(item[0], highlight)
         date = self._stylize_date(item[1], highlight)
         urgency = self._stylize_urgency(item[2], highlight)
 
-        self.push_row([desc, date, urgency], row.depth)
+        return self.push_row([desc, date, urgency], row.depth)
 
     # ##########################################
 
-    def _add_sibling(self) -> Model:
+    def _add_sibling(self) -> Todo:
         if self.item:
             return self.item.add_sibling()
         else:
             return self.model.add_todo()
 
-    def _add_child(self) -> Model:
+    def _add_child(self) -> Todo:
         if self._assigned and self.item:
             return self.item.add_child()
         else:
             return self.model.add_todo()
 
-    def _drop(self):
+    def _drop(self) -> None:
         if self.item:
             self.item.drop()
 
-    def _next_sibling(self) -> MaybeModel:
+    def _next_sibling(self) -> Optional[Todo]:
         if self.item:
             return self.item.next_sibling()
 
-    def _prev_sibling(self) -> MaybeModel:
+    def _prev_sibling(self) -> Optional[Todo]:
         if self.item:
             return self.item.prev_sibling()
 
-    def _shift_down(self):
+    def _shift_down(self) -> None:
         if self.item:
             return self.item.shift_down()
 
-    def _shift_up(self):
+    def _shift_up(self) -> None:
         if self.item:
             return self.item.shift_up()

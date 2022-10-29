@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, Optional, Type, Union
-from ..utils.uuid import generate_uuid
+from uuid import uuid4
 
 MaybeModel = Union["Model", None]
 
@@ -19,7 +19,7 @@ class Model:
         from ..api.todo import Todo
 
         self.todo_type: Type = None
-        self.name = generate_uuid(self.__class__.__name__)
+        self.name = uuid4()
         self.parent = parent
 
         self.workspaces: List[Workspace] = []

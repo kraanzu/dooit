@@ -1,8 +1,10 @@
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Type, TypeVar
 from uuid import uuid4
 
-MaybeModel = Union["Model", None]
+T = TypeVar("T", bound = "Model")
+U = TypeVar("U", bound = "Model")
 
+MaybeModel = Optional["Model"]
 
 class Model:
     """
@@ -19,13 +21,13 @@ class Model:
         from ..api.todo import Todo
 
         self.todo_type: Type = None
-        self.name = uuid4()
+        self.name = str(uuid4())
         self.parent = parent
 
         self.workspaces: List[Workspace] = []
         self.todos: List[Todo] = []
 
-    def _get_children(self, kind: str) -> List:
+    def _get_children(self , kind: str) -> List:
         return self.workspaces if kind == "workspace" else self.todos
 
     def _get_child_index(self, kind: str, name: str) -> int:
@@ -49,14 +51,14 @@ class Model:
 
         return self.parent._get_child_index(kind, self.name)
 
-    def edit(self, key: str, value: str):
+    def edit(self, key: str, value: str) -> None:
         """
         Edit item's attrs
         """
 
         setattr(self, key, value)
 
-    def shift_up(self, kind: str):
+    def shift_up(self, kind: str) -> None:
         """
         Shift the item one place up among its siblings
         """
@@ -66,28 +68,28 @@ class Model:
         if idx in [0, -1]:
             return
 
-        # NOTE: parent != None because -1 condition is checked
+        if not self.parent:
+            return
         arr = self.parent._get_children(kind)
         arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
 
-    def shift_down(self, kind: str):
+    def shift_down(self, kind: str) -> None:
         """
         Shift the item one place down among its siblings
         """
 
         idx = self._get_index(kind)
 
-        if idx == -1:
+        if idx == -1 or not self.parent:
             return
 
-        # NOTE: parent != None because -1 condition is checked
         arr = self.parent._get_children(kind)
         if idx == len(arr) - 1:
             return
 
         arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
 
-    def prev_sibling(self, kind: str) -> MaybeModel:
+    def prev_sibling(self: T, kind: str) -> Optional[T]:
         """
         Returns previous sibling item, if any, else None
         """
@@ -100,7 +102,7 @@ class Model:
         if idx:
             return self._get_children(kind)[idx - 1]
 
-    def next_sibling(self, kind: str) -> MaybeModel:
+    def next_sibling(self: T, kind: str) -> Optional[T]:
         """
         Returns next sibling item, if any, else None
         """
@@ -114,7 +116,7 @@ class Model:
         if idx < len(arr) - 1:
             return arr[idx + 1]
 
-    def add_sibling(self, kind: str) -> "Model":
+    def add_sibling(self: T, kind: str) -> T:
         """
         Add item sibling
         """
@@ -125,21 +127,29 @@ class Model:
         else:
             return self.add_child(kind, 0)
 
-    def add_child(self, kind: str, index: int = 0) -> "Model":
+    def add_child(self, kind: str, index: int = 0) -> Any:
         """
         Adds a child to specified index (Defaults to first position)
         """
         from ..api.workspace import Workspace
         from ..api.todo import Todo
 
-        child = Workspace(parent=self) if kind == "workspace" else Todo(parent=self)
+        child = (
+            Workspace(
+                parent=self,
+            )
+            if kind == "workspace"
+            else Todo(
+                parent=self,
+            )
+        )
 
         children = self._get_children(kind)
         children.insert(index, child)
 
         return child
 
-    def remove_child(self, kind: str, name: str) -> "Model":
+    def remove_child(self , kind: str, name: str) -> Any:
         """
         Remove the child based on attr
         """

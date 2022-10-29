@@ -1,5 +1,4 @@
-from typing import Any, List, Optional
-from dooit.api.workspace import Workspace
+from typing import Any, List, Optional, TypeVar
 from .model import Model
 
 TODO = "todo"
@@ -8,6 +7,7 @@ OPTS = {
     "COMPLETED": "X",
     "OVERDUE": "O",
 }
+T = TypeVar("T", bound="Model")
 
 
 def reversed_dict(d):
@@ -17,7 +17,7 @@ def reversed_dict(d):
 class Todo(Model):
     fields = ["about", "due", "urgency"]
 
-    def __init__(self, parent: Optional[Workspace] = None) -> None:
+    def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
         self.about = ""
@@ -35,16 +35,12 @@ class Todo(Model):
 
     def to_data(self) -> str:
         """
-        Return todo.txt form of the todo
+        Return todo.txt format of the todo
         """
 
         return f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.about}"
 
     def fill_from_data(self, data: str) -> None:
-        """
-        Setups obj from provided todo.txt form
-        """
-
         status, urgency, due, *about = data.split()
 
         status = reversed_dict(OPTS)[status]
@@ -62,10 +58,6 @@ class Todo(Model):
         self.status = status
 
     def commit(self) -> List[Any]:
-        """
-        Returns obj data for storage
-        """
-
         if self.todos:
             return [
                 self.to_data(),
@@ -76,41 +68,33 @@ class Todo(Model):
                 self.to_data(),
             ]
 
-    def add_child_todo(self) -> "Todo":
+    def add_child(self: T) -> T:
         return super().add_child(TODO)
 
-    def add_sibling_todo(self) -> "Todo":
+    def add_sibling(self: T) -> T:
         return super().add_sibling(TODO)
 
-    def shift_todo_up(self) -> None:
+    def shift_up(self) -> None:
         return super().shift_up(TODO)
 
-    def shift_todo_down(self) -> None:
+    def shift_down(self) -> None:
         return super().shift_down(TODO)
 
-    def next_todo(self) -> Optional["Todo"]:
+    def next_sibling(self: T) -> Optional[T]:
         return super().next_sibling(TODO)
 
-    def prev_todo(self) -> Optional["Todo"]:
+    def prev_sibling(self: T) -> Optional[T]:
         return super().prev_sibling(TODO)
 
-    def remove_child_todo(self, name: str) -> "Todo":
-        return super().remove_child(TODO, name)
-
-    def drop_todo(self) -> None:
+    def drop(self) -> None:
         return super().drop(TODO)
 
     def sort(self, attr: str) -> None:
         return super().sort(TODO, attr)
 
     def from_data(self, data: List) -> None:
-        """
-        Setup obj from data
-        """
-
-        # raise TypeError(f"{data}\n\n\n{data[1]}\n--------")
         self.fill_from_data(data[0])
         if len(data) > 1:
             for i in data[1]:
-                child_todo: Todo = self.add_child_todo()
+                child_todo: Todo = self.add_child()
                 child_todo.from_data(i)

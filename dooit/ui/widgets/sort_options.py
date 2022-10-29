@@ -1,4 +1,3 @@
-from os import get_terminal_size
 from typing import Optional
 from rich.align import Align
 from rich.box import HEAVY
@@ -156,7 +155,7 @@ class SortOptions(Widget):
                 tree,
                 title="Sort",
                 width=20,
-                # box=HEAVY,
+                box=HEAVY,
             ),
             vertical="middle",
             height=self._size.height,

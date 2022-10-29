@@ -4,7 +4,6 @@ from typing import List, Optional
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
-from rich.columns import Columns
 from rich.text import Text
 from textual import events
 from textual.reactive import Reactive

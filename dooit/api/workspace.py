@@ -1,5 +1,5 @@
-from typing import Any, Optional
-
+from typing import Any, Dict, Optional
+from ..api.todo import Todo
 from .model import Model
 
 WORKSPACE = "workspace"
@@ -13,62 +13,34 @@ class Workspace(Model):
         super().__init__(parent)
         self.about = ""
 
-    def add_child_todo(self):
+    def add_todo(self) -> Todo:
         return super().add_child(TODO)
 
-    def add_sibling_todo(self):
-        return super().add_sibling(TODO)
-
-    def shift_todo_up(self):
-        return super().shift_up(TODO)
-
-    def shift_todo_down(self):
-        return super().shift_down(TODO)
-
-    def next_todo(self):
-        return super().next_sibling(TODO)
-
-    def prev_todo(self):
-        return super().prev_sibling(TODO)
-
-    def remove_child_todo(self, name: str):
-        return super().remove_child(TODO, name)
-
-    def drop_todo(self):
-        return super().drop(TODO)
-
-    def add_child_workspace(self):
+    def add_workspace(self) -> "Workspace":
         return super().add_child(WORKSPACE)
 
-    def add_sibling_workspace(self):
+    def add_sibling(self) -> "Workspace":
         return super().add_sibling(WORKSPACE)
 
-    def shift_workspace_down(self):
+    def shift_down(self) -> None:
         return super().shift_down(WORKSPACE)
 
-    def shift_workspace_up(self):
+    def shift_up(self) -> None:
         return super().shift_up(WORKSPACE)
 
-    def next_workspace(self):
+    def next_sibling(self) -> Optional["Workspace"]:
         return super().next_sibling(WORKSPACE)
 
-    def prev_workspace(self):
+    def prev_sibling(self) -> Optional["Workspace"]:
         return super().prev_sibling(WORKSPACE)
 
-    def remove_child_workspace(self, name: str):
-        return super().remove_child(WORKSPACE, name)
-
-    def drop_workspace(self):
+    def drop(self) -> None:
         return super().drop(WORKSPACE)
 
-    def sort(self, attr: str):
-        super().sort(WORKSPACE, attr)
+    def sort(self, attr: str) -> None:
+        return super().sort(WORKSPACE, attr)
 
-    def commit(self):
-        """
-        Create obj data to be saved
-        """
-
+    def commit(self) -> Dict[str, Any]:
         child_workspaces = {
             getattr(
                 workspace,
@@ -86,24 +58,19 @@ class Workspace(Model):
             **todos,
         }
 
-    def from_data(self, data: Any):
-        """
-        Setup object from stored data
-        """
-
+    def from_data(self, data: Any) -> None:
         if isinstance(data, dict):
             for i, j in data.items():
                 if i == "common":
                     for data in j:
-                        todo = self.add_child_todo()
+                        todo = self.add_todo()
                         todo.from_data(data)
                     continue
 
-                workspace = self.add_child_workspace()
+                workspace = self.add_workspace()
                 workspace.edit("about", i)
                 workspace.from_data(j)
 
         elif isinstance(data, list):
-            # raise TypeError(data)
-            todo = self.add_child_todo()
+            todo = self.add_todo()
             todo.from_data(data)

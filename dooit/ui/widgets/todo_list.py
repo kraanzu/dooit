@@ -1,4 +1,3 @@
-from functools import partial
 from typing import Union
 from rich.table import Table
 from rich.text import Text
@@ -148,32 +147,32 @@ class TodoList(TreeList):
 
     def _add_sibling(self) -> Model:
         if self.item:
-            return self.item.add_sibling_todo()
+            return self.item.add_sibling()
         else:
-            return self.model.add_child_todo()
+            return self.model.add_todo()
 
     def _add_child(self) -> Model:
         if self._assigned and self.item:
-            return self.item.add_child_todo()
+            return self.item.add_child()
         else:
-            return self.model.add_child_todo()
+            return self.model.add_todo()
 
     def _drop(self):
         if self.item:
-            self.item.drop_todo()
+            self.item.drop()
 
     def _next_sibling(self) -> MaybeModel:
         if self.item:
-            return self.item.next_todo()
+            return self.item.next_sibling()
 
     def _prev_sibling(self) -> MaybeModel:
         if self.item:
-            return self.item.prev_todo()
+            return self.item.prev_sibling()
 
     def _shift_down(self):
         if self.item:
-            return self.item.shift_todo_down()
+            return self.item.shift_down()
 
     def _shift_up(self):
         if self.item:
-            return self.item.shift_todo_up()
+            return self.item.shift_up()

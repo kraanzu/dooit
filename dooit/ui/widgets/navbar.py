@@ -1,6 +1,4 @@
-from asyncio import current_task
-from ctypes.wintypes import WORD
-from rich.table import Column, Table
+from rich.table import Table
 from rich.text import Text
 from dooit.api.workspace import Workspace
 
@@ -8,7 +6,7 @@ from dooit.ui.widgets.sort_options import SortOptions
 from dooit.utils import default_config
 
 from ...api.model import MaybeModel
-from ...api.manager import WORKSPACE, Manager, Model
+from ...api.manager import Manager, Model
 from .tree import TreeList
 from ..events import TopicSelect, SwitchTab
 from dooit.utils.default_config import navbar
@@ -98,32 +96,32 @@ class NavBar(TreeList):
 
     def _add_sibling(self):
         if self.item and self.current >= 0:
-            self.item.add_sibling_workspace()
+            self.item.add_sibling()
         else:
             self.model.add_child_workspace()
 
     def _add_child(self) -> Model:
         if self.item:
-            return self.item.add_child_workspace()
+            return self.item.add_workspace()
         else:
             return self.model.add_child_workspace()
 
     def _drop(self):
         if self.item:
-            self.item.drop_workspace()
+            self.item.drop()
 
     def _next_sibling(self) -> MaybeModel:
         if self.item:
-            return self.item.next_workspace()
+            return self.item.next_sibling()
 
     def _prev_sibling(self) -> MaybeModel:
         if self.item:
-            return self.item.prev_workspace()
+            return self.item.prev_sibling()
 
     def _shift_down(self):
         if self.item:
-            return self.item.shift_workspace_down()
+            return self.item.shift_down()
 
     def _shift_up(self):
         if self.item:
-            return self.item.shift_workspace_up()
+            return self.item.shift_up()

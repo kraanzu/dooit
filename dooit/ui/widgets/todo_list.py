@@ -1,10 +1,8 @@
-from typing import Optional
+from typing import Dict, Optional
 from rich.table import Table
 from rich.text import Text
 from textual import events
-
-
-from .tree import TreeList
+from .tree import Component, TreeList
 from ...api.todo import Todo
 from ...ui.events.events import SwitchTab
 from ...api import Workspace
@@ -68,9 +66,8 @@ class TodoList(TreeList):
 
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
-        self.table.add_column("about", ratio=80)
-        self.table.add_column("due", ratio=15)
-        self.table.add_column("urgency", ratio=5)
+        for name, ratio in todo_columns.items():
+            self.table.add_column(name, ratio=ratio)
 
     # ##########################################
 
@@ -95,17 +92,9 @@ class TodoList(TreeList):
 
     # ##########################################
 
-    def _stylize_urgency(self, item, highlight: bool = False) -> Text:
-        icons = todos["urgency"]
-        colors = ["green", "orange1", "yellow", "red"]
-        colors = {i: j for i, j in enumerate(colors, 1)}
-        style = "b " if highlight else "d "
-        rank = int(item)
-        return Text(icons[rank], style=style + colors[rank])
-
-    def _stylize_due(self, item, highlight: bool = False) -> Text:
-        fmt = todos["due"]
-
+    def _stylize(
+        self, fmt: Dict[str, str], highlight: bool, kwargs: Dict[str, str]
+    ) -> Text:
         if highlight:
             if self.editing == "none":
                 text: str = fmt["highlight"]
@@ -114,31 +103,24 @@ class TodoList(TreeList):
         else:
             text: str = fmt["dim"]
 
-        text = text.format(due=item)
-        return Text.from_markup(text)
-
-    def _stylize_desc(self, item, highlight: bool = False) -> Text:
-        fmt = todos["about"]
-
-        if highlight:
-            if self.editing == "none":
-                text: str = fmt["highlight"]
-            else:
-                text: str = fmt["edit"]
-        else:
-            text: str = fmt["dim"]
-
-        text = text.format(desc=item)
+        text = text.format(**kwargs)
         return Text.from_markup(text)
 
     def add_row(self, row, highlight: bool) -> None:
 
-        item = [str(i.render()) for i in row.get_field_values()]
-        desc = self._stylize_desc(item[0], highlight)
-        date = self._stylize_due(item[1], highlight)
-        urgency = self._stylize_urgency(item[2], highlight)
+        item = {i: str(j.render()) for i, j in row.fields.items()}
 
-        return self.push_row([desc, date, urgency], row.depth)
+        entry = []
+        for col in todo_columns:
+            entry.append(
+                self._stylize(
+                    todos[col],
+                    highlight,
+                    item,
+                )
+            )
+
+        return self.push_row(entry, row.depth)
 
     # ##########################################
 

@@ -47,7 +47,7 @@ class Component:
             )
         )
 
-    def get_field_values(self) -> Iterable[Any]:
+    def get_field_values(self) -> Iterable[SimpleInput]:
         return self.fields.values()
 
     def toggle_expand(self) -> None:

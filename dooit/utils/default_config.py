@@ -68,16 +68,12 @@ EMPTY_NAVBAR = [
 #            TODOS              #
 #################################
 
-# Column vars:
-# desc: description
-# due: due date
-# urgency: urgency
-# eta: estimated time
-
+# A column dict (key, value) => (name, ratio) of the columns
+# see todos var for rendering
 todo_columns = {
-    "desc": 70,
-    "due": 20,
-    "urgency": 10,
+    "desc": 80,
+    "due": 15,
+    # "urgency": 5,
 }
 
 # Vars:
@@ -85,13 +81,17 @@ todo_columns = {
 # icon: icon to show for status
 # tags: show tags, if any( modify tag format in extra_fmt )
 # recur: show recurrence, if any ( modify tag format in extra_fmt )
+# time: show time ( HH:MM )
+# eta: estimated time to complete
+# urgency: urgency ( 1 - 4 )
+
 todos = {
     "status": {
         "done": "X",
         "pending": "o",
         "overdue": "O",
     },
-    "urgency": {
+    "urgency_icons": {
         1: "🅓",
         2: "🅒",
         3: "🅑",
@@ -101,7 +101,7 @@ todos = {
         "tag": "T {tags}",  # how to show tags
         "recur": "R {recur}",  # how to show recurrence,
     },
-    "about": {
+    "desc": {
         "dim": colored("{desc}", "d grey50", " "),
         "highlight": colored("{desc}", "b white", "➜"),
         "edit": colored("{desc}", "b cyan", "➜"),

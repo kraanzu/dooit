@@ -15,12 +15,12 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["about", "due", "urgency"]
+    fields = ["desc", "due", "urgency"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
-        self.about = ""
+        self.desc = ""
         self.due = "today"
         self.urgency = 4
         self.status = "PENDING"
@@ -38,13 +38,13 @@ class Todo(Model):
         Return todo.txt format of the todo
         """
 
-        return f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.about}"
+        return f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.desc}"
 
     def fill_from_data(self, data: str) -> None:
-        status, urgency, due, *about = data.split()
+        status, urgency, due, *desc = data.split()
 
         status = reversed_dict(OPTS)[status]
-        about = " ".join(about)
+        desc = " ".join(desc)
 
         due = due[4:]
         if due == "None":
@@ -52,7 +52,7 @@ class Todo(Model):
 
         urgency = int(urgency[1:-1])
 
-        self.about = about
+        self.desc = desc
         self.urgency = urgency
         self.due = due
         self.status = status

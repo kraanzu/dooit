@@ -1,7 +1,7 @@
 from typing import List, Optional
 from rich.table import Table
 from rich.text import Text
-from .tree import TreeList
+from .tree import Component, TreeList
 from ...ui.widgets.sort_options import SortOptions
 from ...api import Manager, Model, Workspace
 from ..events import TopicSelect, SwitchTab
@@ -27,7 +27,7 @@ class NavBar(TreeList):
 
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
-        self.table.add_column("about")
+        self.table.add_column("desc")
 
     async def handle_tab(self) -> None:
         if self.current == -1:
@@ -59,30 +59,10 @@ class NavBar(TreeList):
 
         self.refresh()
 
-    # ##########################################
-
-    def add_row(self, row, highlight: bool) -> None:
-
-        items = [str(i.render()) for i in row.get_field_values()]
-        desc = self._stylize_desc(items[0], highlight)
-
+    def add_row(self, row: Component, highlight: bool) -> None:
+        kwargs = {i: str(j.render()) for i, j in row.fields.items()}
+        desc = self._stylize(navbar['desc'], highlight, kwargs)
         return self.push_row([desc], row.depth)
-
-    # ##########################################
-
-    def _stylize_desc(self, item, highlight: bool = False) -> Text:
-        fmt = navbar["about"]
-
-        if highlight:
-            if self.editing == "none":
-                text: str = fmt["highlight"]
-            else:
-                text: str = fmt["edit"]
-        else:
-            text: str = fmt["dim"]
-
-        text = text.format(desc=item)
-        return Text.from_markup(text)
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

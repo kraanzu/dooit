@@ -181,7 +181,7 @@ class Model:
         return {
             getattr(
                 child,
-                "about",
+                "desc",
             ): child.commit()
             for child in self.workspaces
         }
@@ -193,5 +193,5 @@ class Model:
 
         for i, j in data.items():
             self.add_child("workspace")
-            self.workspaces[-1].edit("about", i)
+            self.workspaces[-1].edit("desc", i)
             self.workspaces[-1].from_data(j)

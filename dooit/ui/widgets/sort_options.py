@@ -123,7 +123,7 @@ class SortOptions(Widget):
         for index, option in enumerate(self.options):
             label = Text(option)
 
-            if option == "about":
+            if option == "desc":
                 label = Text("    ") + label
             elif option == "due":
                 label = Text("    ") + label

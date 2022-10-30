@@ -1,6 +1,6 @@
 import re
 from functools import partial
-from typing import Any, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -108,8 +108,6 @@ class TreeList(Widget):
         model: Manager = manager,
     ) -> None:
         super().__init__(name)
-        # self.set_styles()
-
         self.model = model
         self.editing = "none"
         self.sort_menu = SortOptions()
@@ -119,11 +117,6 @@ class TreeList(Widget):
     @property
     def EMPTY(self) -> List[RenderableType]:
         return [""]
-
-    # def set_styles(self) -> :
-    #     self.style_off = "b white"
-    #     self.style_on = "dim grey50"
-    #     self.style_edit = "b cyan"
 
     async def on_mount(self) -> None:
         self._set_screen()
@@ -197,7 +190,7 @@ class TreeList(Widget):
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
-                if re.findall(pattern, item.about):
+                if re.findall(pattern, item.desc):
                     push_item(item)
                 for i in self._get_children(item):
                     add_rows(i, nest_level + 1)
@@ -217,7 +210,7 @@ class TreeList(Widget):
         if not self.component:
             return
 
-        if field == "about":
+        if field == "desc":
             await self.emit(ChangeStatus(self, "INSERT"))
         else:
             await self.emit(ChangeStatus(self, "DATE"))
@@ -284,7 +277,7 @@ class TreeList(Widget):
         self._add_child()
         self._refresh_rows()
         await self.move_down()
-        await self._start_edit("about")
+        await self._start_edit("desc")
 
     async def add_sibling(self) -> None:
 
@@ -292,12 +285,12 @@ class TreeList(Widget):
             child = self._add_child()
             self._refresh_rows()
             self.current = self._rows[child.name].index
-            await self._start_edit("about")
+            await self._start_edit("desc")
             return
 
         self._add_sibling()
         self._refresh_rows()
-        await self.to_next_sibling("about")
+        await self.to_next_sibling("desc")
 
     async def to_next_sibling(self, edit: Optional[str] = None) -> None:
         if not self.item:
@@ -420,7 +413,7 @@ class TreeList(Widget):
                     "down": self.move_down,
                     "J": self.shift_down,
                     "shift+down": self.shift_down,
-                    "i": partial(self._start_edit, "about"),
+                    "i": partial(self._start_edit, "desc"),
                     "z": self.toggle_expand,
                     "Z": self.toggle_expand_parent,
                     "A": self.add_child,
@@ -441,6 +434,23 @@ class TreeList(Widget):
 
     def add_row(self, _item: Component, _highlight: bool) -> None:  # noqa
         ...
+
+    def _stylize(
+        self,
+        fmt: Dict[str, str],
+        highlight: bool,
+        kwargs: Dict[str, str],
+    ) -> Text:
+        if highlight:
+            if self.editing == "none":
+                text: str = fmt["highlight"]
+            else:
+                text: str = fmt["edit"]
+        else:
+            text: str = fmt["dim"]
+
+        text = text.format(**kwargs)
+        return Text.from_markup(text)
 
     def make_table(self) -> None:
         self._setup_table()

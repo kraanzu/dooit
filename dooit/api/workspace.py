@@ -7,11 +7,11 @@ TODO = "todo"
 
 
 class Workspace(Model):
-    fields = ["about"]
+    fields = ["desc"]
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)
-        self.about = ""
+        self.desc = ""
 
     def add_todo(self) -> Todo:
         return super().add_child(TODO)
@@ -44,7 +44,7 @@ class Workspace(Model):
         child_workspaces = {
             getattr(
                 workspace,
-                "about",
+                "desc",
             ): workspace.commit()
             for workspace in self.workspaces
         }
@@ -68,7 +68,7 @@ class Workspace(Model):
                     continue
 
                 workspace = self.add_workspace()
-                workspace.edit("about", i)
+                workspace.edit("desc", i)
                 workspace.from_data(j)
 
         elif isinstance(data, list):

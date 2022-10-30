@@ -27,7 +27,7 @@ class Manager(Model):
         return super().sort(WORKSPACE, attr)
 
     def commit(self) -> None:
-        data = {getattr(child, "about"): child.commit() for child in self.workspaces}
+        data = {getattr(child, "desc"): child.commit() for child in self.workspaces}
         Parser.save(data)
 
     def setup(self) -> None:
@@ -37,7 +37,7 @@ class Manager(Model):
     def from_data(self, data: Any) -> None:
         for i, j in data.items():
             child = self.add_child(WORKSPACE)
-            child.edit("about", i)
+            child.edit("desc", i)
             child.from_data(j)
 
 

@@ -49,13 +49,10 @@ dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
 # icon: icon to show for workspace
 
 navbar = {
-    "about": {
+    "desc": {
         "dim": colored("{desc}", "d grey50", " "),
         "highlight": colored("{desc}", "b white", "➜"),
         "edit": colored("{desc}", "b cyan", "➜"),
-    },
-    "icons": {  # Special icons for specific Workspaces
-        "Welcome": "W",
     },
 }
 

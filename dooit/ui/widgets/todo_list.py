@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 from rich.table import Table
 from rich.text import Text
 from textual import events
@@ -90,23 +90,7 @@ class TodoList(TreeList):
                 self.item.decrease_urgency()
                 self.component.refresh_item("urgency")
 
-    # ##########################################
-
-    def _stylize(
-        self, fmt: Dict[str, str], highlight: bool, kwargs: Dict[str, str]
-    ) -> Text:
-        if highlight:
-            if self.editing == "none":
-                text: str = fmt["highlight"]
-            else:
-                text: str = fmt["edit"]
-        else:
-            text: str = fmt["dim"]
-
-        text = text.format(**kwargs)
-        return Text.from_markup(text)
-
-    def add_row(self, row, highlight: bool) -> None:
+    def add_row(self, row: Component, highlight: bool) -> None:
 
         item = {i: str(j.render()) for i, j in row.fields.items()}
 
@@ -121,8 +105,6 @@ class TodoList(TreeList):
             )
 
         return self.push_row(entry, row.depth)
-
-    # ##########################################
 
     def _add_sibling(self) -> Todo:
         if self.item:

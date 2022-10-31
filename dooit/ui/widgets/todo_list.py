@@ -73,7 +73,7 @@ class TodoList(TreeList):
 
     @property
     def item(self) -> Optional[Todo]:
-        return self.item
+        return super().item
 
     async def check_extra_keys(self, event: events.Key):
 
@@ -81,6 +81,8 @@ class TodoList(TreeList):
 
         if key in "d":
             await self._start_edit("due")
+        elif key in "t":
+            await self._start_edit("tags")
         elif key in "+=":
             if self.component and self.item:
                 self.item.increase_urgency()
@@ -96,6 +98,9 @@ class TodoList(TreeList):
 
         if isinstance(row.item, Todo):
             item["urgency"] = todos["urgency_icons"][row.item.urgency]
+
+            if item["tags"]:
+                item["tags"] = todos["extra_fmt"]["tags"].format(tags=item["tags"])
 
         entry = []
         for col in todo_columns:

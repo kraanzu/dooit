@@ -212,6 +212,8 @@ class TreeList(Widget):
 
         if field == "desc":
             await self.emit(ChangeStatus(self, "INSERT"))
+        elif field == "tags":
+            await self.emit(ChangeStatus(self, "TAG"))
         else:
             await self.emit(ChangeStatus(self, "DATE"))
 
@@ -228,6 +230,7 @@ class TreeList(Widget):
             self.editing,
             self.component.fields[self.editing].value,
         )
+        self.component.refresh_item(self.editing)
         self.editing = "none"
 
     async def _start_filtering(self) -> None:

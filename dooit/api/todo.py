@@ -1,6 +1,7 @@
 from typing import Any, List, Optional, TypeVar
 from .model import Model
 
+
 TODO = "todo"
 OPTS = {
     "PENDING": "x",
@@ -15,7 +16,7 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["desc", "due", "urgency"]
+    fields = ["desc", "due", "urgency", "tags"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
@@ -24,8 +25,17 @@ class Todo(Model):
         self.due = "today"
         self.urgency = 4
         self.status = "PENDING"
-        self.todo_type = type(self)
+        self._tags = ""
+
         self.todos: List[Todo] = []
+
+    @property
+    def tags(self):
+        return self._tags
+
+    @tags.setter
+    def tags(self, val: str):
+        self._tags = ", ".join([i.strip() for i in val.split(",")])
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 0)
@@ -38,7 +48,9 @@ class Todo(Model):
         Return todo.txt format of the todo
         """
 
-        return f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.desc}"
+        return (
+            f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.desc}"
+        )
 
     def fill_from_data(self, data: str) -> None:
         status, urgency, due, *desc = data.split()

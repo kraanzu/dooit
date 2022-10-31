@@ -94,6 +94,9 @@ class TodoList(TreeList):
 
         item = {i: str(j.render()) for i, j in row.fields.items()}
 
+        if isinstance(row.item, Todo):
+            item["urgency"] = todos["urgency_icons"][row.item.urgency]
+
         entry = []
         for col in todo_columns:
             entry.append(

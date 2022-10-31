@@ -1,6 +1,6 @@
 import re
 from functools import partial
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Union
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -23,7 +23,7 @@ class Component:
 
     def __init__(
         self,
-        item: Workspace,
+        item: Union[Todo, Workspace],
         depth: int = 0,
         index: int = 0,
         expanded: bool = False,

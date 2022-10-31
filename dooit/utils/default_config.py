@@ -70,7 +70,7 @@ EMPTY_NAVBAR = [
 todo_columns = {
     "desc": 80,
     "due": 15,
-    # "urgency": 5,
+    "urgency": 5,
 }
 
 # Vars:
@@ -107,6 +107,11 @@ todos = {
         "dim": colored("{due}", "d grey50"),
         "highlight": colored("{due}", "b white"),
         "edit": colored("{due}", "b cyan"),
+    },
+    "urgency": {
+        "dim": colored("{urgency}", "d grey50"),
+        "highlight": colored("{urgency}", "b white"),
+        "edit": colored("{urgency}", "b cyan"),
     },
 }
 

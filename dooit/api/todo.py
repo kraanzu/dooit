@@ -63,7 +63,7 @@ class Todo(Model):
         self._done = not self._done
 
     def decrease_urgency(self) -> None:
-        self.urgency = max(self.urgency - 1, 0)
+        self.urgency = max(self.urgency - 1, 1)
 
     def increase_urgency(self) -> None:
         self.urgency = min(self.urgency + 1, 4)

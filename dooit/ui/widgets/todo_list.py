@@ -79,7 +79,7 @@ class TodoList(TreeList):
 
         key = event.key
 
-        if key in "d":
+        if key in "d" and self.editing == "none":
             await self._start_edit("due")
         elif key in "t":
             await self._start_edit("tags")

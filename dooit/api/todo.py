@@ -16,7 +16,7 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["desc", "due", "urgency", "tags"]
+    fields = ["desc", "due", "urgency", "tags", "status"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
@@ -36,6 +36,15 @@ class Todo(Model):
     @tags.setter
     def tags(self, val: str):
         self._tags = ", ".join([i.strip() for i in val.split(",")])
+
+    def toggle_complete(self):
+        if self.status == "COMPLETED":
+            if True:
+                self.status = "PENDING"
+            else:
+                self.status = "OVERDUE"
+        else:
+            self.status = "COMPLETED"
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 0)

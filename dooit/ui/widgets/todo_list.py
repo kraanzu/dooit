@@ -79,10 +79,17 @@ class TodoList(TreeList):
 
         key = event.key
 
-        if key in "d" and self.editing == "none":
+        if self.editing != "none":
+            return
+
+        if key in "d":
             await self._start_edit("due")
         elif key in "t":
             await self._start_edit("tags")
+        elif key in "c":
+            if self.item and self.component:
+                self.item.toggle_complete()
+                self.component.refresh_item("status")
         elif key in "+=":
             if self.component and self.item:
                 self.item.increase_urgency()
@@ -98,6 +105,7 @@ class TodoList(TreeList):
 
         if isinstance(row.item, Todo):
             item["urgency"] = todos["urgency_icons"][row.item.urgency]
+            item["status"] = todos["status"][item["status"].lower()]
 
             if item["tags"]:
                 item["tags"] = todos["extra_fmt"]["tags"].format(tags=item["tags"])

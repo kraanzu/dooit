@@ -75,7 +75,7 @@ todo_columns = {
 
 # Vars:
 # desc: description of the Todo
-# icon: icon to show for status
+# status: icon to show for status
 # tags: show tags, if any( modify tag format in extra_fmt )
 # recur: show recurrence, if any ( modify tag format in extra_fmt )
 # time: show time ( HH:MM )
@@ -84,9 +84,9 @@ todo_columns = {
 
 todos = {
     "status": {
-        "done": "X",
-        "pending": "o",
-        "overdue": "O",
+        "completed": colored("✓", 'b green'),
+        "pending": colored("", 'b yellow'),
+        "overdue": colored("!", 'b red'),
     },
     "urgency_icons": {
         1: "🅓",
@@ -99,9 +99,9 @@ todos = {
         "recur": "R {recur}",  # how to show recurrence,
     },
     "desc": {
-        "dim": colored("{desc} {tags}", "d grey50", " "),
-        "highlight": colored("{desc} {tags}", "b white", "➜"),
-        "edit": colored("{desc} {tags}", "b cyan", "➜"),
+        "dim": colored("{status} {desc} {tags}", "d grey50", " "),
+        "highlight": colored("{status} {desc} {tags}", "b white", "➜"),
+        "edit": colored("{status} {desc} {tags}", "b cyan", "➜"),
     },
     "due": {
         "dim": colored("{due}", "d grey50"),

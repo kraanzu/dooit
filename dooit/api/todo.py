@@ -1,5 +1,8 @@
+from pickle import FALSE
 from typing import Any, List, Optional, TypeVar
 from .model import Model
+from dateparser import parse
+from datetime import datetime
 
 
 TODO = "todo"
@@ -22,12 +25,31 @@ class Todo(Model):
         super().__init__(parent)
 
         self.desc = ""
-        self.due = "today"
+        self._due = "none"
         self.urgency = 4
-        self.status = "PENDING"
+        self._done = False
         self._tags = ""
-
         self.todos: List[Todo] = []
+
+    @property
+    def due(self):
+        return self._due
+    
+    @due.setter
+    def due(self, val: str):
+        if val.lower() == "none":
+            self._due = "none"
+
+        res = parse(val)
+        if res:
+            self._due = res.strftime(r'%m-%d-%y')
+
+    @property
+    def status(self):
+        if self._done:
+            return "COMPLETED"
+        else:
+            return "PENDING"
 
     @property
     def tags(self):
@@ -38,13 +60,7 @@ class Todo(Model):
         self._tags = ", ".join([i.strip() for i in val.split(",")])
 
     def toggle_complete(self):
-        if self.status == "COMPLETED":
-            if True:
-                self.status = "PENDING"
-            else:
-                self.status = "OVERDUE"
-        else:
-            self.status = "COMPLETED"
+        self._done = not self._done
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 0)
@@ -58,13 +74,13 @@ class Todo(Model):
         """
 
         return (
-            f"{OPTS[self.status]} ({self.urgency}) due:{self.due or 'None'} {self.desc}"
+            f"{OPTS[self.status]} ({self.urgency}) due:{self._due or 'None'} {self.desc}"
         )
 
     def fill_from_data(self, data: str) -> None:
         status, urgency, due, *desc = data.split()
 
-        status = reversed_dict(OPTS)[status]
+        status = True if status == "x" else False
         desc = " ".join(desc)
 
         due = due[4:]
@@ -75,8 +91,8 @@ class Todo(Model):
 
         self.desc = desc
         self.urgency = urgency
-        self.due = due
-        self.status = status
+        self._due = due
+        self._done = status
 
     def commit(self) -> List[Any]:
         if self.todos:

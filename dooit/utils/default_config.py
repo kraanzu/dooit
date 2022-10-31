@@ -95,13 +95,13 @@ todos = {
         4: "🅐",
     },
     "extra_fmt": {
-        "tags": colored(" 🖈 {tags} ", "b red", ""),
-        "recur": "R {recur}",  # how to show recurrence,
+        "tags": colored("🖈 {tags} ", "b red", ""),
+        "recur": "🢱 {recur}",
     },
     "desc": {
-        "dim": colored("{status} {desc} {tags}", "d grey50", " "),
-        "highlight": colored("{status} {desc} {tags}", "b white", "➜"),
-        "edit": colored("{status} {desc} {tags}", "b cyan", "➜"),
+        "dim": colored("{status} {desc} {tags} {recur}", "d grey50", " "),
+        "highlight": colored("{status} {desc} {tags} {recur}", "b white", "➜"),
+        "edit": colored("{status} {desc} {tags} {recur}", "b cyan", "➜"),
     },
     "due": {
         "dim": colored("{due}", "d grey50"),

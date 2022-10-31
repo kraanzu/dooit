@@ -86,6 +86,8 @@ class TodoList(TreeList):
             await self._start_edit("due")
         elif key in "t":
             await self._start_edit("tags")
+        elif key in "r":
+            await self._start_edit("recur")
         elif key in "c":
             if self.item and self.component:
                 self.item.toggle_complete()
@@ -109,6 +111,9 @@ class TodoList(TreeList):
 
             if item["tags"]:
                 item["tags"] = todos["extra_fmt"]["tags"].format(tags=item["tags"])
+
+            if item["recur"]:
+                item["recur"] = todos["extra_fmt"]["recur"].format(recur=item["recur"])
 
         entry = []
         for col in todo_columns:

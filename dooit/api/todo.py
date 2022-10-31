@@ -1,5 +1,5 @@
-from pickle import FALSE
-from typing import Any, List, Optional, TypeVar
+import re
+from typing import Any, List, Optional, Tuple, TypeVar
 from .model import Model
 from dateparser import parse
 from datetime import datetime
@@ -19,7 +19,7 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["desc", "due", "urgency", "tags", "status"]
+    fields = ["desc", "due", "urgency", "tags", "status", "recur"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
@@ -29,12 +29,50 @@ class Todo(Model):
         self.urgency = 4
         self._done = False
         self._tags = ""
+        self._recur = ""
         self.todos: List[Todo] = []
+
+        self.recurrence_legend = {
+            "h": "hour",
+            "d": "day",
+            "w": "week",
+            "m": "month",
+        }
+
+    def _split_recur(self, recur: str) -> Tuple[str, str]:
+        return recur[-1], recur[:-1]
+
+    @property
+    def recur(self):
+
+        if not self._recur:
+            return ""
+
+        sign, frequency = self._split_recur(self._recur)
+        name = self.recurrence_legend[sign]
+        if int(frequency) > 1:
+            name += "s"
+
+        return f"Every {frequency} {name}"
+
+    @recur.setter
+    def recur(self, val: str):
+
+        if not val:
+            self._recur = ""
+            return
+
+        sign, frequency = self._split_recur(val)
+
+        if sign not in self.recurrence_legend.keys() or not re.match(r"\d+", frequency):
+            return
+
+        self._recur = val
 
     @property
     def due(self):
         return self._due
-    
+
     @due.setter
     def due(self, val: str):
         if val.lower() == "none":
@@ -42,7 +80,7 @@ class Todo(Model):
 
         res = parse(val)
         if res:
-            self._due = res.strftime(r'%m-%d-%y')
+            self._due = res.strftime(r"%m-%d-%y")
 
     @property
     def status(self):
@@ -73,9 +111,7 @@ class Todo(Model):
         Return todo.txt format of the todo
         """
 
-        return (
-            f"{OPTS[self.status]} ({self.urgency}) due:{self._due or 'None'} {self.desc}"
-        )
+        return f"{OPTS[self.status]} ({self.urgency}) due:{self._due or 'None'} {self.desc}"
 
     def fill_from_data(self, data: str) -> None:
         status, urgency, due, *desc = data.split()

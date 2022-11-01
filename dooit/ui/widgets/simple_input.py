@@ -49,7 +49,7 @@ class SimpleInput(Widget):
     def has_focus(self) -> bool:
         return self._has_focus
 
-    def render(self) -> RenderableType:
+    def render(self) -> TextType:
         """
         Renders a Panel for the Text Input Box
         """
@@ -58,30 +58,12 @@ class SimpleInput(Widget):
             text = self._render_text_with_cursor()
         else:
             if len(self.value) == 0:
-                return self.render_panel(self.placeholder)
+                return self.placeholder
             else:
                 text = self.value
 
         formatted_text = Text.from_markup(text)
-        return self.render_panel(formatted_text)
-
-    def render_panel(self, text: TextType) -> RenderableType:
-        """
-        Builds a panel for the Inpux Box
-        """
-
-        if self.box:
-            return Panel(
-                text,
-                title=self.title,
-                title_align=self.title_align,
-                height=3,
-                border_style=("bold " if self.has_focus else "dim ")
-                + str(self.border_style),
-                box=self.box,
-            )
-        else:
-            return text
+        return formatted_text
 
     def _render_text_with_cursor(self) -> str:
         """

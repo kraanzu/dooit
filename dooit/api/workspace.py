@@ -9,9 +9,20 @@ TODO = "todo"
 class Workspace(Model):
     fields = ["desc"]
 
+    @property
+    def desc(self):
+        return self._desc
+
+    def set_desc(self, value: str):
+        if value:
+            self._desc = value
+            return True
+
+        return False
+
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)
-        self.desc = ""
+        self._desc = ""
 
     def add_todo(self) -> Todo:
         return super().add_child(TODO)

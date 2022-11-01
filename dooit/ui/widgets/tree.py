@@ -190,7 +190,7 @@ class TreeList(Widget):
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
-                if re.findall(pattern, item.desc):
+                if re.findall(pattern, item._desc):
                     push_item(item)
                 for i in self._get_children(item):
                     add_rows(i, nest_level + 1)
@@ -238,10 +238,11 @@ class TreeList(Widget):
                 self.editing,
             )
 
-        self.component.item.edit(
+        res = self.component.item.edit(
             self.editing,
             simple_input.value,
         )
+
         self.component.refresh_item(self.editing)
         self.editing = "none"
 

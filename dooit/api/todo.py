@@ -24,7 +24,7 @@ class Todo(Model):
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
-        self.desc = ""
+        self._desc = ""
         self.urgency = 4
 
         self._est = ""
@@ -67,11 +67,21 @@ class Todo(Model):
         return f"{frequency} {name}"
 
     @property
+    def desc(self):
+        return self._desc
+
+    def set_desc(self, val: str):
+        if not val:
+            return False
+        else:
+            self._desc = val
+            return True
+
+    @property
     def eta(self):
         return self._format_duration(self._est)
 
-    @eta.setter
-    def eta(self, val: str):
+    def set_eta(self, val: str):
         if self._is_valid(val):
             self._est = val
 
@@ -83,8 +93,7 @@ class Todo(Model):
 
         return f"Every {self._format_duration(self._recur)}"
 
-    @recur.setter
-    def recur(self, val: str):
+    def set_recur(self, val: str):
 
         if not val:
             self._recur = ""
@@ -97,8 +106,7 @@ class Todo(Model):
     def due(self):
         return self._due
 
-    @due.setter
-    def due(self, val: str):
+    def set_due(self, val: str):
         if val.lower() == "none":
             self._due = "none"
 
@@ -117,8 +125,7 @@ class Todo(Model):
     def tags(self):
         return self._tags
 
-    @tags.setter
-    def tags(self, val: str):
+    def set_tags(self, val: str):
         self._tags = ", ".join([i.strip() for i in val.split(",")])
 
     def toggle_complete(self):
@@ -134,7 +141,7 @@ class Todo(Model):
                 }
             )
 
-            self.due = datetime.strftime(due + time_to_add, "%m-%d-%y")
+            self.set_due(datetime.strftime(due + time_to_add, "%m-%d-%y"))
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 1)
@@ -147,7 +154,7 @@ class Todo(Model):
         Return todo.txt format of the todo
         """
 
-        return f"{OPTS[self.status]} ({self.urgency}) due:{self._due or 'None'} {self.desc}"
+        return f"{OPTS[self.status]} ({self.urgency}) due:{self._due or 'None'} {self._desc}"
 
     def fill_from_data(self, data: str) -> None:
         status, urgency, due, *desc = data.split()
@@ -161,7 +168,7 @@ class Todo(Model):
 
         urgency = int(urgency[1:-1])
 
-        self.desc = desc
+        self._desc = desc
         self.urgency = urgency
         self._due = due
         self._done = status

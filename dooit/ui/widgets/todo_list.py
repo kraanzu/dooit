@@ -81,8 +81,6 @@ class TodoList(TreeList):
 
         if self.editing != "none":
             return
-
-
         if key in "d":
             await self._start_edit("due")
         elif key in "e":

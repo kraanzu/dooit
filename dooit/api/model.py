@@ -1,3 +1,4 @@
+from sys import path_importer_cache
 from typing import Any, Dict, List, Optional, Type, TypeVar
 from uuid import uuid4
 
@@ -55,7 +56,11 @@ class Model:
         Edit item's attrs
         """
 
-        setattr(self, key, value)
+        func = f"set_{key}"
+        if hasattr(self, func):
+            return getattr(self, func)(value)
+        else:
+            raise TypeError(self, func, value)
 
     def shift_up(self, kind: str) -> None:
         """

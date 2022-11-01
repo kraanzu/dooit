@@ -7,6 +7,8 @@ from textual import message
 T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
 
+def colored(text: str, color: str):
+    return f"[{color}]{text}[/{color}]"
 
 @dataclass
 class Response:
@@ -14,16 +16,16 @@ class Response:
     message: Optional[str] = None
     hint: Optional[str] = None
 
-    def text(self) -> Text:
-        text = Text()
+    def text(self):
+        text = ""
 
         if self.message:
             text += " "
-            text += Text.from_markup(self.message, style="green" if self.ok else "red")
+            text += colored(self.message, "green" if self.ok else "red")
 
         if self.hint:
             text += " "
-            text += Text.from_markup(self.hint, style="yellow")
+            text += colored(self.hint, "yellow")
 
         return text
 

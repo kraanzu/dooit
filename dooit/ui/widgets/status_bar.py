@@ -1,5 +1,5 @@
 from rich.console import RenderableType
-from rich.text import Text
+from rich.text import Text, TextType
 from rich.table import Table
 from textual.widget import Widget
 
@@ -16,17 +16,17 @@ class StatusBar(Widget):
 
     def __init__(self) -> None:
         super().__init__()
-        self.message = ""
+        self.message = Text()
         self.status = "NORMAL"
         self.color = "blue"
         self.set_interval(1, self.refresh)
 
-    def set_message(self, message) -> None:
+    def set_message(self, message: TextType = "") -> None:
         self.message = message
         self.refresh()
 
     def clear_message(self) -> None:
-        self.set_message("")
+        self.set_message()
 
     def set_status(self, status: StatusType) -> None:
         self.status = status
@@ -53,11 +53,11 @@ class StatusBar(Widget):
         row = []
         for i in renderables:
             if isinstance(i, Text):
+                i.plain = i.plain.format(**d)
                 row.append(i)
             else:
-                row.append(Text(str(i)))
-
-            row[-1].plain = row[-1].plain.format(**d)
+                i = str(i).format(**d)
+                row.append(Text.from_markup(i))
 
         [table.add_column(**i) for i in kwargs]
         table.add_row(*row)

@@ -217,7 +217,7 @@ class SimpleInput(Widget):
         Handles Keypresses
         """
 
-        if key == "escape":
+        if key == "enter":
             self.on_blur()
 
         # Moving backward

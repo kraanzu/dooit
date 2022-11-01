@@ -220,15 +220,27 @@ class TreeList(Widget):
         self.component.fields[field].on_focus()
         self.editing = field
 
-    async def _stop_edit(self) -> None:
+    async def _cancel_edit(self):
+        await self._stop_edit(edit=False)
+
+    async def _stop_edit(self, edit: bool = True) -> None:
         if not self.component:
             return
 
         await self.emit(ChangeStatus(self, "NORMAL"))
-        self.component.fields[self.editing].on_blur()
+
+        simple_input = self.component.fields[self.editing]
+        simple_input.on_blur()
+
+        if not edit:
+            simple_input.value = getattr(
+                self.component.item,
+                self.editing,
+            )
+
         self.component.item.edit(
             self.editing,
-            self.component.fields[self.editing].value,
+            simple_input.value,
         )
         self.component.refresh_item(self.editing)
         self.editing = "none"
@@ -270,7 +282,8 @@ class TreeList(Widget):
 
         self._drop()
         self._refresh_rows()
-        self.current = self.current
+        self.current = min(self.current, len(self.row_vals) - 1)
+        self.refresh()
 
     async def add_child(self) -> None:
 
@@ -344,7 +357,7 @@ class TreeList(Widget):
         self.current = 0
 
     async def move_to_bottom(self) -> None:
-        self.current = len(self.row_vals)
+        self.current = len(self.row_vals) - 1
 
     async def toggle_expand(self) -> None:
         if not self.component:
@@ -388,6 +401,8 @@ class TreeList(Widget):
             field = self.row_vals[self.current].fields[self.editing]
 
             if key == "escape":
+                await self._cancel_edit()
+            elif key == "enter":
                 await self._stop_edit()
             else:
                 await field.handle_keypress(event.key)

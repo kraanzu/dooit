@@ -150,4 +150,7 @@ special_keys = {
     "sort menu toggle": "s",
     "search": ["/", "ctrl+s", "S"],
     "quit": "ctrl+q",
+    "edit tag": "t",
+    "edit recurrence": "r",
+    "edit eta": "e",
 }

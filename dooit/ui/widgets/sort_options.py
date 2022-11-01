@@ -42,8 +42,8 @@ class SortOptions(Widget):
         self.highlighted = id
         self.refresh(layout=True)
 
-    async def hide(self):
-        await self.handle_key(events.Key(self, "escape"))
+    def hide(self):
+        self.visible = False
 
     def move_cursor_down(self) -> None:
         """
@@ -103,9 +103,9 @@ class SortOptions(Widget):
                         self.options[self.highlighted],
                     )
                 )
-            await self.hide()
+            self.hide()
         elif key in ["s"]:
-            await self.hide()
+            self.hide()
 
         self.refresh()
 

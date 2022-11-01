@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 from ..api.todo import Todo
-from .model import Model
+from .model import Model, Response
 
 WORKSPACE = "workspace"
 TODO = "todo"
@@ -16,9 +16,13 @@ class Workspace(Model):
     def set_desc(self, value: str):
         if value:
             self._desc = value
-            return True
+            return Response(True)
 
-        return False
+        return Response(
+            False,
+            "Can't leave description empty!",
+            "Press [b cyan]escape[/b cyan] to cancel",
+        )
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)

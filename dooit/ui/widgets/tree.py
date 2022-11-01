@@ -230,7 +230,6 @@ class TreeList(Widget):
         await self.emit(ChangeStatus(self, "NORMAL"))
 
         simple_input = self.component.fields[self.editing]
-        simple_input.on_blur()
 
         if not edit:
             simple_input.value = getattr(
@@ -243,8 +242,12 @@ class TreeList(Widget):
             simple_input.value,
         )
 
-        self.component.refresh_item(self.editing)
-        self.editing = "none"
+        await self.emit(Notify(self, res.text()))
+
+        if res.ok: # Don't stop if there's an eror
+            simple_input.on_blur()
+            self.component.refresh_item(self.editing)
+            self.editing = "none"
 
     async def _start_filtering(self) -> None:
         self.filter.on_focus()

@@ -1,10 +1,32 @@
-from sys import path_importer_cache
 from typing import Any, Dict, List, Optional, Type, TypeVar
 from uuid import uuid4
+from dataclasses import dataclass
+from rich.text import Text
+from textual import message
 
-T = TypeVar("T", bound = "Model")
-
+T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
+
+
+@dataclass
+class Response:
+    ok: bool
+    message: Optional[str] = None
+    hint: Optional[str] = None
+
+    def text(self) -> Text:
+        text = Text()
+
+        if self.message:
+            text += " "
+            text += Text.from_markup(self.message, style="green" if self.ok else "red")
+
+        if self.hint:
+            text += " "
+            text += Text.from_markup(self.hint, style="yellow")
+
+        return text
+
 
 class Model:
     """
@@ -27,7 +49,7 @@ class Model:
         self.workspaces: List[Workspace] = []
         self.todos: List[Todo] = []
 
-    def _get_children(self , kind: str) -> List:
+    def _get_children(self, kind: str) -> List:
         return self.workspaces if kind == "workspace" else self.todos
 
     def _get_child_index(self, kind: str, name: str) -> int:
@@ -51,7 +73,7 @@ class Model:
 
         return self.parent._get_child_index(kind, self.name)
 
-    def edit(self, key: str, value: str) -> None:
+    def edit(self, key: str, value: str) -> Response:
         """
         Edit item's attrs
         """
@@ -60,7 +82,7 @@ class Model:
         if hasattr(self, func):
             return getattr(self, func)(value)
         else:
-            raise TypeError(self, func, value)
+            return Response(False, "Invalid Request!")
 
     def shift_up(self, kind: str) -> None:
         """
@@ -153,7 +175,7 @@ class Model:
 
         return child
 
-    def remove_child(self , kind: str, name: str) -> Any:
+    def remove_child(self, kind: str, name: str) -> Any:
         """
         Remove the child based on attr
         """

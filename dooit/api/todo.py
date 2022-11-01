@@ -1,6 +1,6 @@
 import re
 from typing import Any, List, Optional, Tuple, TypeVar
-from .model import Model
+from .model import Model, Response
 from dateparser import parse
 from datetime import datetime, timedelta
 
@@ -70,20 +70,25 @@ class Todo(Model):
     def desc(self):
         return self._desc
 
-    def set_desc(self, val: str):
+    def set_desc(self, val: str) -> Response:
         if not val:
-            return False
-        else:
-            self._desc = val
-            return True
+            return Response(False, "Can't set empty description")
+
+        self._desc = val
+        return Response(True)
 
     @property
     def eta(self):
         return self._format_duration(self._est)
 
-    def set_eta(self, val: str):
-        if self._is_valid(val):
-            self._est = val
+    def set_eta(self, val: str) -> Response:
+        if not self._is_valid(val):
+            return Response(
+                False, "Invalid Format!", "See help using [b cyan]?[/b cyan]"
+            )
+
+        self._est = val
+        return Response(True)
 
     @property
     def recur(self):
@@ -97,22 +102,38 @@ class Todo(Model):
 
         if not val:
             self._recur = ""
-            return
+            return Response(True, "Recurrence removed for the todo")
 
         if self._is_valid(val):
             self._recur = val
+            return Response(True)
+
+        return Response(False, "Invalid Format!", "See help using [b cyan]?[/b cyan]")
 
     @property
     def due(self):
         return self._due
 
-    def set_due(self, val: str):
-        if val.lower() == "none":
-            self._due = "none"
+    def set_due(self, val: str) -> Response:
+        if val == "":
+            self._due = ""
+            return Response(True, "Due removed for the todo")
 
         res = parse(val)
         if res:
-            self._due = res.strftime(r"%m-%d-%y")
+            try:
+                self._due = res.strftime(r"%m-%d-%y")
+                return Response(
+                    True, f"Due date changed to [b cyan]{self.due}[/b cyan]"
+                )
+            except:
+                return Response(
+                    False,
+                    "Invalid Format!",
+                    "See help using [b cyan]?[/b cyan]",
+                )
+
+        return Response(False, "Cannot parse the string!")
 
     @property
     def status(self):
@@ -125,8 +146,9 @@ class Todo(Model):
     def tags(self):
         return self._tags
 
-    def set_tags(self, val: str):
+    def set_tags(self, val: str) -> Response:
         self._tags = ", ".join([i.strip() for i in val.split(",")])
+        return Response(True)
 
     def toggle_complete(self):
         self._done = not self._done

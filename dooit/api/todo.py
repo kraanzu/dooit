@@ -48,15 +48,14 @@ class Todo(Model):
         if not duration:
             return True
 
-        sign, frequency = self._split_duration(duration)
-        if sign not in self.duration_legend.keys() or not re.match(r"\d+", frequency):
+        if not re.match(r"^(\d+)[mhdw]$", duration):
             return False
 
         return True
 
     def _format_duration(self, duration: str):
 
-        if not duration:
+        if not duration or not self._is_valid(duration):
             return ""
 
         sign, frequency = self._split_duration(duration)

@@ -96,12 +96,13 @@ todos = {
     },
     "extra_fmt": {
         "tags": colored("🖈 {tags} ", "b red", ""),
-        "recur": colored("🢱 {recur}", "b blue"),
+        "recur": colored("🗘 {recur}", "b blue"),
+        "eta": colored("ETA: {eta}", "b r green"),
     },
     "desc": {
-        "dim": colored("{status} {desc} {tags} {recur}", "d grey50", " "),
-        "highlight": colored("{status} {desc} {tags} {recur}", "b white", "➜"),
-        "edit": colored("{status} {desc} {tags} {recur}", "b cyan", "➜"),
+        "dim": colored("{status} {eta} {desc} {tags} {recur}", "d grey50", " "),
+        "highlight": colored("{status} {eta} {desc} {tags} {recur}", "b white", "➜"),
+        "edit": colored("{status} {eta} {desc} {tags} {recur}", "b cyan", "➜"),
     },
     "due": {
         "dim": colored("{due}", "d grey50"),

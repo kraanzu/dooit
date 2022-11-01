@@ -19,28 +19,61 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["desc", "due", "urgency", "tags", "status", "recur"]
+    fields = ["desc", "due", "urgency", "tags", "status", "recur", "eta"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
         self.desc = ""
-        self._due = "none"
         self.urgency = 4
+
+        self._est = ""
+        self._due = "none"
         self._done = False
         self._tags = ""
         self._recur = ""
         self.todos: List[Todo] = []
 
-        self.recurrence_legend = {
+        self.duration_legend = {
+            "m": "minute",
             "h": "hour",
             "d": "day",
             "w": "week",
-            "m": "month",
         }
 
-    def _split_recur(self, recur: str) -> Tuple[str, str]:
-        return recur[-1], recur[:-1]
+    def _split_duration(self, duration: str) -> Tuple[str, str]:
+        return duration[-1], duration[:-1]
+
+    def _is_valid(self, duration: str) -> bool:
+        if not duration:
+            return True
+
+        sign, frequency = self._split_duration(duration)
+        if sign not in self.duration_legend.keys() or not re.match(r"\d+", frequency):
+            return False
+
+        return True
+
+    def _format_duration(self, duration: str):
+
+        if not duration:
+            return ""
+
+        sign, frequency = self._split_duration(duration)
+        name = self.duration_legend[sign]
+        if int(frequency) > 1:
+            name += "s"
+
+        return f"{frequency} {name}"
+
+    @property
+    def eta(self):
+        return self._format_duration(self._est)
+
+    @eta.setter
+    def eta(self, val: str):
+        if self._is_valid(val):
+            self._est = val
 
     @property
     def recur(self):
@@ -48,12 +81,7 @@ class Todo(Model):
         if not self._recur:
             return ""
 
-        sign, frequency = self._split_recur(self._recur)
-        name = self.recurrence_legend[sign]
-        if int(frequency) > 1:
-            name += "s"
-
-        return f"Every {frequency} {name}"
+        return f"Every {self._format_duration(self._recur)}"
 
     @recur.setter
     def recur(self, val: str):
@@ -62,12 +90,8 @@ class Todo(Model):
             self._recur = ""
             return
 
-        sign, frequency = self._split_recur(val)
-
-        if sign not in self.recurrence_legend.keys() or not re.match(r"\d+", frequency):
-            return
-
-        self._recur = val
+        if self._is_valid(val):
+            self._recur = val
 
     @property
     def due(self):
@@ -101,16 +125,12 @@ class Todo(Model):
         self._done = not self._done
         if self._done and self._recur:
             due = datetime.strptime(self._due, "%m-%d-%y")
-            sign, frequency = self._split_recur(self._recur)
+            sign, frequency = self._split_duration(self._recur)
             frequency = int(frequency)
-
-            if sign == "m":
-                sign = "w"
-                frequency *= 4
 
             time_to_add = timedelta(
                 **{
-                    f"{self.recurrence_legend[sign]}s": frequency,
+                    f"{self.duration_legend[sign]}s": frequency,
                 }
             )
 

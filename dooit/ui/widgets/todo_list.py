@@ -42,7 +42,7 @@ class TodoList(TreeList):
 
     def make_table(self):
         if not self._assigned:
-            self.table = Table.grid()
+            self.table = Table.grid(padding=(1,1))
         else:
             super().make_table()
 
@@ -82,8 +82,11 @@ class TodoList(TreeList):
         if self.editing != "none":
             return
 
+
         if key in "d":
             await self._start_edit("due")
+        elif key in "e":
+            await self._start_edit("eta")
         elif key in "t":
             await self._start_edit("tags")
         elif key in "r":
@@ -110,11 +113,9 @@ class TodoList(TreeList):
             item["urgency"] = todos["urgency_icons"][row.item.urgency]
             item["status"] = todos["status"][item["status"].lower()]
 
-            if item["tags"]:
-                item["tags"] = todos["extra_fmt"]["tags"].format(tags=item["tags"])
-
-            if item["recur"]:
-                item["recur"] = todos["extra_fmt"]["recur"].format(recur=item["recur"])
+            for i in ["tags", "recur", "eta"]:  # Extra formatting
+                if item[i]:
+                    item[i] = todos["extra_fmt"][i].format(**{i: item[i]})
 
         entry = []
         for col in todo_columns:

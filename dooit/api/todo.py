@@ -2,7 +2,7 @@ import re
 from typing import Any, List, Optional, Tuple, TypeVar
 from .model import Model
 from dateparser import parse
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 TODO = "todo"
@@ -99,6 +99,22 @@ class Todo(Model):
 
     def toggle_complete(self):
         self._done = not self._done
+        if self._done and self._recur:
+            due = datetime.strptime(self._due, "%m-%d-%y")
+            sign, frequency = self._split_recur(self._recur)
+            frequency = int(frequency)
+
+            if sign == "m":
+                sign = "w"
+                frequency *= 4
+
+            time_to_add = timedelta(
+                **{
+                    f"{self.recurrence_legend[sign]}s": frequency,
+                }
+            )
+
+            self.due = datetime.strftime(due + time_to_add, "%m-%d-%y")
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 1)

@@ -92,6 +92,7 @@ class TodoList(TreeList):
             if self.item and self.component:
                 self.item.toggle_complete()
                 self.component.refresh_item("status")
+                self.component.refresh_item("due")
         elif key in "+=":
             if self.component and self.item:
                 self.item.increase_urgency()

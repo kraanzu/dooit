@@ -84,9 +84,9 @@ todo_columns = {
 
 todos = {
     "status": {
-        "completed": colored("✓", 'b green'),
-        "pending": colored("", 'b yellow'),
-        "overdue": colored("!", 'b red'),
+        "completed": colored("✓", "b green"),
+        "pending": colored("", "b yellow"),
+        "overdue": colored("!", "b red"),
     },
     "urgency_icons": {
         1: "🅓",
@@ -96,7 +96,7 @@ todos = {
     },
     "extra_fmt": {
         "tags": colored("🖈 {tags} ", "b red", ""),
-        "recur": "🢱 {recur}",
+        "recur": colored("🢱 {recur}", "b blue"),
     },
     "desc": {
         "dim": colored("{status} {desc} {tags} {recur}", "d grey50", " "),

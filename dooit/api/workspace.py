@@ -21,7 +21,6 @@ class Workspace(Model):
         return Response(
             False,
             "Can't leave description empty!",
-            "Press [b cyan]escape[/b cyan] to cancel",
         )
 
     def __init__(self, parent: Optional["Model"] = None) -> None:

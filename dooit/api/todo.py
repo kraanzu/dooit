@@ -69,12 +69,15 @@ class Todo(Model):
     def desc(self):
         return self._desc
 
-    def set_desc(self, val: str) -> Response:
-        if not val:
-            return Response(False, "Can't set empty description")
+    def set_desc(self, value: str) -> Response:
+        if value:
+            self._desc = value
+            return Response(True)
 
-        self._desc = val
-        return Response(True)
+        return Response(
+            False,
+            "Can't leave description empty!",
+        )
 
     @property
     def eta(self):

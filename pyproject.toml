@@ -17,6 +17,7 @@ PyYAML = "^6.0"
 poetry = "^1.1.13"
 psutil = "^5.9.1"
 dateparser = "^1.1.2"
+tzlocal = "2.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"

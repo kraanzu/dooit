@@ -18,7 +18,6 @@ poetry = "^1.1.13"
 psutil = "^5.9.1"
 dateparser = "^1.1.2"
 tzlocal = "2.1"
-watchdog = "^2.1.9"
 appdirs = "^1.4.4"
 
 [tool.poetry.dev-dependencies]

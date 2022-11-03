@@ -1,6 +1,8 @@
 from typing import Union
 from textual.app import App
 from textual import events
+
+from dooit.utils.watcher import Watcher
 from ..ui.events import *
 from ..ui.widgets import NavBar, TodoList, StatusBar
 from ..api.manager import manager
@@ -13,11 +15,22 @@ class Dooit(App):
         self.navbar = NavBar()
         self.todos = TodoList()
         self.bar = StatusBar()
+        self.watcher = Watcher()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
 
     async def on_mount(self):
+        self.set_interval(1, self.poll)
         await self.setup_grid()
+
+    async def poll(self):
+        if self.watcher.has_modified():
+            manager.refresh_data()
+            self.navbar._refresh_rows()
+            if item := self.navbar.item:
+                self.todos.update_table(item)
+            self.todos.xx()
+            self.bar.set_message('updated!')
 
     async def setup_grid(self):
         self.grid = await self.view.dock_grid()

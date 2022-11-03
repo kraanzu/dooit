@@ -13,7 +13,7 @@ from rich.table import Table, box
 from .simple_input import SimpleInput
 from ...api import Manager, manager, Model, Workspace, Todo
 from ...ui.widgets.sort_options import SortOptions
-from ...ui.events.events import ChangeStatus, Notify
+from ...ui.events.events import ChangeStatus, Notify, Xxx
 
 
 class Component:
@@ -243,7 +243,6 @@ class TreeList(Widget):
             simple_input.value,
         )
 
-        await self.emit(Notify(self, res.text()))
 
         simple_input.on_blur()
         self.component.refresh_item(self.editing)
@@ -251,6 +250,9 @@ class TreeList(Widget):
 
         if not simple_input.value:
             await self.remove_item()
+
+        await self.emit(Notify(self, res.text()))
+        manager.commit()
 
     async def _start_filtering(self) -> None:
         self.filter.on_focus()

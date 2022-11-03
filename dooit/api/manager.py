@@ -40,6 +40,11 @@ class Manager(Model):
             child.edit("desc", i)
             child.from_data(j)
 
+    def refresh_data(self):
+        self.workspaces.clear()
+        self.todos.clear()
+        self.setup()
+
 
 manager = Manager()
 manager.setup()

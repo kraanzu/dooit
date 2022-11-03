@@ -6,6 +6,9 @@ from textual.message import Message, MessageTarget
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG"]
 SortMethodType = Literal["desc", "status", "date", "urgency"]
 
+class Xxx(Message, bubble = True):
+    pass
+
 
 class ChangeStatus(Message, bubble=True):
     """

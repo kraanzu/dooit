@@ -6,9 +6,11 @@ from .events import (
     SortMethodType,
     TopicSelect,
     SwitchTab,
+    Xxx,
 )
 
 __all__ = [
+    "Xxx",
     "ChangeStatus",
     "Notify",
     "ApplySortMethod",

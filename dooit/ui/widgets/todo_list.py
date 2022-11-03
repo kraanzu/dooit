@@ -57,6 +57,9 @@ class TodoList(TreeList):
 
         await self.emit(SwitchTab(self))
 
+    def xx(self):
+        self.update_table(self.model)
+
     def update_table(self, model: Workspace):
         self._assigned = True
         self.model = model

@@ -1,10 +1,12 @@
 from typing import Dict
+import appdirs
 import yaml
 from pathlib import Path
-from os import mkdir, environ
+from os import mkdir
 
 HOME = Path.home()
-XDG_CONFIG = HOME / ".config"
+XDG_CONFIG = Path(appdirs.user_config_dir("dooit"))
+XDG_DATA = Path(appdirs.user_data_dir("dooit"))
 
 
 class Parser:
@@ -26,27 +28,15 @@ class Parser:
         return data
 
     def check_files(self) -> None:
-        def check_folder(f):
+        def check_folder(f: Path):
             if not Path.is_dir(f):
                 mkdir(f)
 
         check_folder(XDG_CONFIG)
+        check_folder(XDG_DATA)
 
-        dooit = XDG_CONFIG / "dooit"
-        check_folder(dooit)
+        self.todo_yaml = XDG_DATA / "todo.yaml"
 
-        if data := environ.get("XDG_DATA_HOME"):
-            data_path = Path(data)
-        else:
-            local = HOME / ".local"
-            check_folder(local)
-            data_path = local / "share"
-            check_folder(data_path)
-
-        dooit_data = data_path / "dooit"
-        check_folder(dooit_data)
-
-        self.todo_yaml = dooit_data / "todo.yaml"
         if not Path.is_file(self.todo_yaml):
             with open(self.todo_yaml, "w") as f:
                 yaml.safe_dump(dict(), f)

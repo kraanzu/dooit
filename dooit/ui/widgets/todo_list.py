@@ -59,11 +59,22 @@ class TodoList(TreeList):
 
     def update_table(self, model: Optional[Workspace] = None):
         if not model:
-            self._assigned = True
+            self._assigned = False
         else:
             self._assigned = True
-            self.model = model
-            self.current = 0 if self._get_children(model) else -1
+
+            if not self.item:
+                self.model = model
+                self.current = 0 if self._get_children(model) else -1
+            else:
+                desc = self.item.desc
+                self.model = model
+                index = self.model._get_child_index("todo", desc = desc)
+                if index == -1:
+                    self.current = 0 if self._get_children(model) else -1
+                else:
+                    self.current = index
+
             self._refresh_rows()
         self.refresh()
 

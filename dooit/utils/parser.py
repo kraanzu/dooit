@@ -17,7 +17,7 @@ class Parser:
     def save(cls, data):
         obj = cls()
         with open(obj.todo_yaml, "w") as stream:
-            yaml.safe_dump(data, stream)
+            yaml.safe_dump(data, stream, sort_keys=False)
 
     @classmethod
     def load(cls) -> Dict:

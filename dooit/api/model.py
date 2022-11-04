@@ -1,14 +1,14 @@
-from typing import Any, Dict, List, Optional, Type, TypeVar
+from typing import Any, Dict, List, Optional, TypeVar
 from uuid import uuid4
 from dataclasses import dataclass
-from rich.text import Text
-from textual import message
 
 T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
 
+
 def colored(text: str, color: str):
     return f"[{color}]{text}[/{color}]"
+
 
 @dataclass
 class Response:
@@ -44,7 +44,6 @@ class Model:
         from ..api.workspace import Workspace
         from ..api.todo import Todo
 
-        self.todo_type: Type = None
         self.name = str(uuid4())
         self.parent = parent
 
@@ -54,13 +53,14 @@ class Model:
     def _get_children(self, kind: str) -> List:
         return self.workspaces if kind == "workspace" else self.todos
 
-    def _get_child_index(self, kind: str, name: str) -> int:
+    def _get_child_index(self, kind: str, **kwargs) -> int:
         """
         Get child index by attr
         """
 
+        key, value = list(kwargs.items())[0]
         for i, j in enumerate(self._get_children(kind)):
-            if j.name == name:
+            if getattr(j, key) == value:
                 return i
 
         return -1
@@ -73,7 +73,7 @@ class Model:
         if not self.parent:
             return -1
 
-        return self.parent._get_child_index(kind, self.name)
+        return self.parent._get_child_index(kind, name=self.name)
 
     def edit(self, key: str, value: str) -> Response:
         """
@@ -125,7 +125,7 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(kind, self.name)
+        idx = self.parent._get_child_index(kind, name=self.name)
 
         if idx:
             return self._get_children(kind)[idx - 1]
@@ -138,7 +138,7 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(kind, self.name)
+        idx = self.parent._get_child_index(kind, name=self.name)
         arr = self.parent._get_children(kind)
 
         if idx < len(arr) - 1:
@@ -150,7 +150,7 @@ class Model:
         """
 
         if self.parent:
-            idx = self.parent._get_child_index(kind, self.name)
+            idx = self.parent._get_child_index(kind, name=self.name)
             return self.parent.add_child(kind, idx + 1)
         else:
             return self.add_child(kind, 0)
@@ -182,7 +182,7 @@ class Model:
         Remove the child based on attr
         """
 
-        idx = self._get_child_index(kind, name)
+        idx = self._get_child_index(kind, name=name)
         return self._get_children(kind).pop(idx)
 
     def drop(self, kind: str) -> None:

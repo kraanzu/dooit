@@ -13,10 +13,19 @@ class Workspace(Model):
     def desc(self):
         return self._desc
 
-    def set_desc(self, value: str):
+    def set_desc(self, value: str) -> Response:
         if value:
-            self._desc = value
-            return Response(True)
+            if (
+                self.parent
+                and self.parent._get_child_index("workspace", desc=value) != -1
+            ):
+                return Response(
+                    False,
+                    "A workspace with same description is already present",
+                )
+            else:
+                self._desc = value
+                return Response(True)
 
         return Response(
             False,

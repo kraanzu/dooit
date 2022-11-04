@@ -71,8 +71,14 @@ class Todo(Model):
 
     def set_desc(self, value: str) -> Response:
         if value:
-            self._desc = value
-            return Response(True)
+            if self.parent and self.parent._get_child_index("todo", desc=value) != -1:
+                return Response(
+                    False,
+                    "A todo with same description is already present",
+                )
+            else:
+                self._desc = value
+                return Response(True)
 
         return Response(
             False,

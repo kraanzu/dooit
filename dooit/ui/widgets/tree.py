@@ -207,6 +207,9 @@ class TreeList(Widget):
         self.refresh()
 
     async def _start_edit(self, field: str) -> None:
+        if field == "none":
+            return
+
         if not self.component:
             return
 
@@ -224,9 +227,11 @@ class TreeList(Widget):
         await self._stop_edit(edit=False)
 
     async def _stop_edit(self, edit: bool = True) -> None:
-        if not self.component:
+        if self.editing == "none":
             return
 
+        if not self.component:
+            return
 
         simple_input = self.component.fields[self.editing]
 

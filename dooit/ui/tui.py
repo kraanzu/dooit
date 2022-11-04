@@ -25,10 +25,13 @@ class Dooit(App):
 
     async def poll(self):
         if self.watcher.has_modified():
+            a = self.navbar.editing
+            b = self.todos.editing
             manager.refresh_data()
             self.navbar._refresh_rows()
-            if item := self.navbar.item:
-                self.todos.update_table(item)
+            await self.todos.update_table(self.navbar.item)
+            await self.navbar._start_edit(a)
+            await self.todos._start_edit(b)
 
     async def setup_grid(self):
         self.grid = await self.view.dock_grid()
@@ -65,7 +68,7 @@ class Dooit(App):
             await self.todos.handle_key(event)
 
     async def handle_topic_select(self, event: TopicSelect):
-        self.todos.update_table(event.item)
+        await self.todos.update_table(event.item)
 
     async def handle_switch_tab(self, _: SwitchTab):
         self.toggle_highlight()

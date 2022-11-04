@@ -57,19 +57,21 @@ class TodoList(TreeList):
 
         await self.emit(SwitchTab(self))
 
-    def update_table(self, model: Optional[Workspace] = None):
+    async def update_table(self, model: Optional[Workspace] = None):
         if not model:
             self._assigned = False
         else:
             self._assigned = True
-
             if not self.item:
                 self.model = model
                 self.current = 0 if self._get_children(model) else -1
             else:
+                if self.editing != "none":
+                    await self._stop_edit()
+
                 desc = self.item.desc
+                index = self.model._get_child_index("todo", desc=desc)
                 self.model = model
-                index = self.model._get_child_index("todo", desc = desc)
                 if index == -1:
                     self.current = 0 if self._get_children(model) else -1
                 else:

@@ -29,7 +29,6 @@ class Dooit(App):
             self.navbar._refresh_rows()
             if item := self.navbar.item:
                 self.todos.update_table(item)
-            self.todos.xx()
             self.bar.set_message('updated!')
 
     async def setup_grid(self):

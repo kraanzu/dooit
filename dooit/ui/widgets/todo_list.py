@@ -42,7 +42,7 @@ class TodoList(TreeList):
 
     def make_table(self):
         if not self._assigned:
-            self.table = Table.grid(padding=(1,1))
+            self.table = Table.grid(padding=(1, 1))
         else:
             super().make_table()
 
@@ -57,14 +57,14 @@ class TodoList(TreeList):
 
         await self.emit(SwitchTab(self))
 
-    def xx(self):
-        self.update_table(self.model)
-
-    def update_table(self, model: Workspace):
-        self._assigned = True
-        self.model = model
-        self.current = 0 if self._get_children(model) else -1
-        self._refresh_rows()
+    def update_table(self, model: Optional[Workspace] = None):
+        if not model:
+            self._assigned = True
+        else:
+            self._assigned = True
+            self.model = model
+            self.current = 0 if self._get_children(model) else -1
+            self._refresh_rows()
         self.refresh()
 
     def _setup_table(self) -> None:

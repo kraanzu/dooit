@@ -36,7 +36,7 @@ class Manager(Model):
 
     def from_data(self, data: Any) -> None:
         for i, j in data.items():
-            child = self.add_child(WORKSPACE)
+            child = self.add_child(WORKSPACE, len(self.workspaces))
             child.edit("desc", i)
             child.from_data(j)
 

@@ -208,8 +208,8 @@ class Todo(Model):
                 self.to_data(),
             ]
 
-    def add_child(self: T) -> T:
-        return super().add_child(TODO)
+    def add_child(self: T, index: int = 0) -> T:
+        return super().add_child(TODO, index)
 
     def add_sibling(self: T) -> T:
         return super().add_sibling(TODO)
@@ -236,5 +236,5 @@ class Todo(Model):
         self.fill_from_data(data[0])
         if len(data) > 1:
             for i in data[1]:
-                child_todo: Todo = self.add_child()
+                child_todo: Todo = self.add_child(index=len(self.todos))
                 child_todo.from_data(i)

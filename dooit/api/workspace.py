@@ -27,11 +27,11 @@ class Workspace(Model):
         super().__init__(parent)
         self._desc = ""
 
-    def add_todo(self) -> Todo:
-        return super().add_child(TODO)
+    def add_todo(self, index: int = 0) -> Todo:
+        return super().add_child(TODO, index)
 
-    def add_workspace(self) -> "Workspace":
-        return super().add_child(WORKSPACE)
+    def add_workspace(self, index: int = 0) -> "Workspace":
+        return super().add_child(WORKSPACE, index)
 
     def add_sibling(self) -> "Workspace":
         return super().add_sibling(WORKSPACE)
@@ -68,8 +68,8 @@ class Workspace(Model):
         }
 
         return {
-            **child_workspaces,
             **todos,
+            **child_workspaces,
         }
 
     def from_data(self, data: Any) -> None:
@@ -77,14 +77,14 @@ class Workspace(Model):
             for i, j in data.items():
                 if i == "common":
                     for data in j:
-                        todo = self.add_todo()
+                        todo = self.add_todo(index=len(self.todos))
                         todo.from_data(data)
                     continue
 
-                workspace = self.add_workspace()
+                workspace = self.add_workspace(index=len(self.workspaces))
                 workspace.edit("desc", i)
                 workspace.from_data(j)
 
         elif isinstance(data, list):
-            todo = self.add_todo()
+            todo = self.add_todo(index=len(self.todos))
             todo.from_data(data)

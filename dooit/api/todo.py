@@ -189,7 +189,7 @@ class Todo(Model):
     def fill_from_data(self, data: str) -> None:
         status, urgency, due, *desc = data.split()
 
-        status = True if status == "x" else False
+        status = True if status == "X" else False
         desc = " ".join(desc)
 
         due = due[4:]

@@ -64,6 +64,7 @@ class TodoList(TreeList):
             self._assigned = True
             if not self.item:
                 self.model = model
+                self._refresh_rows()
                 self.current = 0 if self._get_children(model) else -1
             else:
                 if self.editing != "none":
@@ -72,12 +73,12 @@ class TodoList(TreeList):
                 desc = self.item.desc
                 index = self.model._get_child_index("todo", desc=desc)
                 self.model = model
+                self._refresh_rows()
                 if index == -1:
                     self.current = 0 if self._get_children(model) else -1
                 else:
                     self.current = index
 
-            self._refresh_rows()
         self.refresh()
 
     def _setup_table(self) -> None:

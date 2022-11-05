@@ -11,8 +11,8 @@ class Watcher:
         self.filename = filename
 
     def has_modified(self) -> bool:
-        stamp = int(os.stat(self.filename).st_mtime)
-        if stamp != self._cached_stamp:
+        stamp = os.stat(self.filename).st_mtime
+        if abs(stamp - self._cached_stamp) > 1:
             res = self._cached_stamp != -1
             self._cached_stamp = stamp
             return res

@@ -67,17 +67,21 @@ class TodoList(TreeList):
                 self._refresh_rows()
                 self.current = 0 if self._get_children(model) else -1
             else:
-                if self.editing != "none":
+                editing = self.editing
+                desc = self.item.desc
+
+                if editing != "none":
                     await self._stop_edit()
 
-                desc = self.item.desc
-                index = self.model._get_child_index("todo", desc=desc)
                 self.model = model
                 self._refresh_rows()
+
+                index = self.model._get_child_index("todo", desc=desc)
                 if index == -1:
-                    self.current = 0 if self._get_children(model) else -1
+                    self.current = 0 if self.row_vals else -1
                 else:
                     self.current = index
+                    await self._start_edit(editing)
 
         self.refresh()
 

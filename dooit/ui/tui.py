@@ -25,13 +25,11 @@ class Dooit(App):
 
     async def poll(self):
         if self.watcher.has_modified():
-            a = self.navbar.editing
-            b = self.todos.editing
+            nav_edit = self.navbar.editing
             manager.refresh_data()
             self.navbar._refresh_rows()
             await self.todos.update_table(self.navbar.item)
-            await self.navbar._start_edit(a)
-            await self.todos._start_edit(b)
+            await self.navbar._start_edit(nav_edit)
 
     async def setup_grid(self):
         self.grid = await self.view.dock_grid()

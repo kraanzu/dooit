@@ -364,7 +364,7 @@ class TreeList(Widget):
             self.current -= 1
 
     async def move_down(self) -> None:
-        self.current += 1
+        self.current = min(self.current + 1, len(self.row_vals) - 1)
 
     async def move_to_top(self) -> None:
         self.current = 0

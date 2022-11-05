@@ -122,6 +122,9 @@ class TreeList(Widget):
         self._set_screen()
         self._refresh_rows()
 
+    def commit(self) -> None:
+        manager.commit()
+
     # ------------ INTERNALS ----------------
 
     def toggle_highlight(self) -> None:
@@ -256,7 +259,7 @@ class TreeList(Widget):
         if not res.ok:
             await self.remove_item()
         else:
-            manager.commit()
+            self.commit()
 
     async def _start_filtering(self) -> None:
         self.filter.on_focus()
@@ -296,6 +299,7 @@ class TreeList(Widget):
         self._drop()
         self._refresh_rows()
         self.current = min(self.current, len(self.row_vals) - 1)
+        self.commit()
         self.refresh()
 
     async def add_child(self) -> None:
@@ -350,6 +354,7 @@ class TreeList(Widget):
         self._shift_up()
         self._refresh_rows()
         await self.move_up()
+        self.commit()
 
     async def shift_down(self) -> None:
         if not self.item:
@@ -358,6 +363,7 @@ class TreeList(Widget):
         self._shift_down()
         self._refresh_rows()
         await self.move_down()
+        self.commit()
 
     async def move_up(self) -> None:
         if self.current:
@@ -396,6 +402,7 @@ class TreeList(Widget):
             self.item.sort(attr)
             self._refresh_rows()
             self.current = self._rows[curr].index
+            self.commit()
 
     async def show_sort_menu(self) -> None:
         self.sort_menu.visible = True

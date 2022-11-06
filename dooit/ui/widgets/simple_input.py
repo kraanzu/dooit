@@ -1,7 +1,5 @@
 import pyperclip
 from typing import Any, Literal
-from rich.console import RenderableType
-from rich.panel import Panel
 from rich.style import StyleType
 from rich.text import Text, TextType
 from rich.box import Box

@@ -106,9 +106,9 @@ SEARCH_KB = {
 }
 
 SORT_KB = {
-    f"j, down": "Move down",
-    f"k, up": "Move up",
-    f"enter": "Select the sorting method",
+    "j, down": "Move down",
+    "k, up": "Move up",
+    "enter": "Select the sorting method",
 }
 # ---------------- X -------------------------
 

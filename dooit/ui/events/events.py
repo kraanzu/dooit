@@ -1,12 +1,12 @@
 from typing import Literal
-from rich.console import RenderableType
 from rich.text import TextType
 from textual.message import Message, MessageTarget
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG"]
 SortMethodType = Literal["desc", "status", "date", "urgency"]
 
-class Xxx(Message, bubble = True):
+
+class Xxx(Message, bubble=True):
     pass
 
 

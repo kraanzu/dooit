@@ -3,7 +3,7 @@ from textual.app import App
 from textual import events
 
 from dooit.utils.watcher import Watcher
-from ..ui.events import *
+from ..ui.events import *  # noqa
 from ..ui.widgets import NavBar, TodoList, StatusBar
 from ..api.manager import manager
 from ..api.workspace import Workspace

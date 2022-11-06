@@ -7,7 +7,7 @@ from ...api.todo import Todo
 from ...ui.events.events import SwitchTab
 from ...api import Workspace
 from ...ui.widgets.sort_options import SortOptions
-from ...utils.default_config import *
+from ...utils.default_config import *  # noqa
 
 
 class TodoList(TreeList):

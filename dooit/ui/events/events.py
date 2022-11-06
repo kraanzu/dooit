@@ -13,7 +13,6 @@ class Xxx(Message, bubble=True):
 class ChangeStatus(Message, bubble=True):
     """
     Emitted when there is a change in the `status`
-    See: StatusType
     """
 
     def __init__(self, sender: MessageTarget, status: StatusType) -> None:
@@ -53,7 +52,5 @@ class TopicSelect(Message, bubble=True):
 
 class SwitchTab(Message, bubble=True):
     """
-    Emitted when user presses `Esc` while in normal mode in todo
+    Emitted when user needs to focus other pane
     """
-
-    pass

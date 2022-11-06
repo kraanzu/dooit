@@ -6,6 +6,7 @@ from rich.style import StyleType
 from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
+from textual import events
 from textual.widget import Widget
 
 NL = "\n"
@@ -144,6 +145,9 @@ class HelpMenu(Widget):
     thanks = Text.from_markup(THANKS, justify="center")
     author = Text.from_markup(AUTHOR, justify="center")
     outro = Text.from_markup(OUTRO, justify="center")
+
+    async def handle_key(self, event: events.Key):
+        pass
 
     def render(self) -> RenderableType:
         tree = Tree("")

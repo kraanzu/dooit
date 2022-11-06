@@ -1,8 +1,8 @@
 from typing import Union
 from textual.app import App
 from textual import events
-
 from dooit.utils.watcher import Watcher
+from ..ui.widgets.help_menu import HelpMenu
 from ..ui.events import *  # noqa
 from ..ui.widgets import NavBar, TodoList, StatusBar
 from ..api.manager import manager
@@ -16,6 +16,7 @@ class Dooit(App):
         self.todos = TodoList()
         self.bar = StatusBar()
         self.watcher = Watcher()
+        self.help_menu = HelpMenu()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
 
@@ -50,6 +51,9 @@ class Dooit(App):
             bar=self.bar,
         )
 
+        await self.view.dock(self.help_menu, z=2)
+        self.help_menu.visible = False
+
     async def action_quit(self) -> None:
         manager.commit()
         return await super().action_quit()
@@ -59,6 +63,12 @@ class Dooit(App):
         self.todos.toggle_highlight()
 
     async def on_key(self, event: events.Key) -> None:
+
+        if (event.key == "?") and (
+            self.bar.status == "NORMAL" or self.help_menu.visible
+        ):
+            self.help_menu.visible = not self.help_menu.visible
+            return
 
         if self.navbar.has_focus:
             await self.navbar.handle_key(event)

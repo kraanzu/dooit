@@ -107,7 +107,7 @@ class TreeList(Widget):
         name: str | None = None,
         model: Manager = manager,
     ) -> None:
-        super().__init__(name)
+        super().__init__(name=name)
         self.model = model
         self.editing = "none"
         self.sort_menu = SortOptions()
@@ -442,7 +442,7 @@ class TreeList(Widget):
 
                 keybinds = {
                     "escape": self._stop_filtering,
-                    "ctrl+i": self.handle_tab,
+                    "tab": self.handle_tab,
                     "k": self.move_up,
                     "up": self.move_up,
                     "K": self.shift_up,
@@ -536,6 +536,6 @@ class TreeList(Widget):
             border_style="cyan" if self._has_focus else "dim white",
         )
 
-    async def on_resize(self, event: events.Resize) -> None:
-        self._set_view()
-        return await super().on_resize(event)
+    # async def on_resize(self, event: events.Resize) -> None:
+    #     self._set_view()
+    #     return await super().on_resize(event)

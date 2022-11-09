@@ -30,7 +30,7 @@ class SimpleInput(Widget):
         password: bool = False,
         list: tuple[Literal["blacklist", "whitelist"], list[str]] = ("blacklist", []),
     ) -> None:
-        super().__init__(name)
+        super().__init__(name=name)
         self.title = title
         self.value = str(value)
         self.title_align: AlignMethod = title_align  # Silence compiler warning
@@ -190,12 +190,15 @@ class SimpleInput(Widget):
     async def clear_input(self):
         await self.handle_keypress("end")
         while self.value:
-            await self.handle_keypress("ctrl+h")
+            await self.handle_keypress("backspace")
 
     async def handle_keypress(self, key: str) -> None:
         """
         Handles Keypresses
         """
+
+        if key == "space":
+            key = " "
 
         if key == "enter":
             self.on_blur()
@@ -207,7 +210,7 @@ class SimpleInput(Widget):
         elif key == "ctrl+left":
             await self._move_cursor_backward(word=True)
 
-        elif key == "ctrl+h":  # Backspace
+        elif key == "backspace":  # Backspace
             await self._move_cursor_backward(delete=True)
 
         elif key == "ctrl+w":
@@ -236,7 +239,7 @@ class SimpleInput(Widget):
         elif key == "end":
             self._cursor_position = len(self.value)
 
-        elif key == "ctrl+i":
+        elif key == "tab":
             await self._insert_text("\t")
 
         # COPY-PASTA

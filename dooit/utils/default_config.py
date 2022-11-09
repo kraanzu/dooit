@@ -145,7 +145,7 @@ bar = [
 #          KEYBINDING           #
 #################################
 special_keys = {
-    "switch pane": "ctrl+i",
+    "switch pane": "tab",
     "canel writing": "escape",
     "sort menu toggle": "s",
     "search": ["/", "ctrl+s", "S"],

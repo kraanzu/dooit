@@ -12,4 +12,4 @@ def main():
         ver = pkg_resources.get_distribution("dooit").version
         print(f"dooit - {ver}")
     else:
-        Dooit.run()
+        Dooit().run()

@@ -28,7 +28,7 @@ class SortOptions(Widget):
         rotate: bool = False,
         wrap: bool = True,
     ) -> None:
-        super().__init__(name)
+        super().__init__(name=name)
         self.options = options
         self.style_unfocused = style_unfocused
         self.style_focused = style_focused

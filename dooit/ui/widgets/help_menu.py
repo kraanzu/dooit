@@ -74,7 +74,7 @@ NORMAL_KB = {
     "A": "Add child todo/workspace",
     "s": "Launch sort menu",
     "/": "Start Search Mode ⃰ ⃰ ",
-    "ctrl+i": "Change focused pane",
+    "tab": "Change focused pane",
     "ctrl+q": "Quit the Application",
 }
 

@@ -6,10 +6,7 @@ from datetime import datetime
 #################################
 #            GENERAL            #
 #################################
-theme = {}
-
-colors = theme
-
+BACKGROUND = "#2e3440"
 
 #################################
 #             UTILS             #

@@ -156,7 +156,7 @@ class TodoList(TreeList):
 
     def _add_child(self) -> Todo:
         if self._assigned and self.item:
-            return self.item.add_child()
+            return self.item.add_todo()
         else:
             return self.model.add_todo()
 

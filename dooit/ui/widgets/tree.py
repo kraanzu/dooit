@@ -176,16 +176,17 @@ class TreeList(Widget):
         return model.workspaces
 
     def _refresh_rows(self) -> None:
-        _rows_copy = self._rows
+        _rows_copy = {j.item.path: j for j in self._rows.values()}
         self._rows = {}
 
         def add_rows(item: Workspace, nest_level=0):
 
             name = item.name
+            path = item.path
 
             def push_item(item: Workspace):
                 self._rows[name] = _rows_copy.get(
-                    name,
+                    path,
                     Component(
                         item, nest_level, len(self._rows)
                     ),  # defaults to a new Component
@@ -256,6 +257,7 @@ class TreeList(Widget):
 
         await self.emit(Notify(self, res.text()))
         await self.emit(ChangeStatus(self, "NORMAL"))
+
         if not res.ok:
             await self.remove_item()
         else:
@@ -274,7 +276,7 @@ class TreeList(Widget):
     def _add_child(self) -> Model:
         ...
 
-    def _drop(self) -> None:
+    def _drop(self, _item=None) -> None:
         ...
 
     def _add_sibling(self) -> Model:
@@ -296,9 +298,11 @@ class TreeList(Widget):
         if not self.item:
             return
 
-        self._drop()
+        item = self.item
+        self.current = min(self.current, len(self.row_vals) - 2)
+        self._drop(item)
         self._refresh_rows()
-        self.current = min(self.current, len(self.row_vals) - 1)
+
         self.commit()
         self.refresh()
 

@@ -2,6 +2,7 @@ from typing import Optional
 from rich.table import Table
 from rich.text import Text
 from textual import events
+
 from .tree import Component, TreeList
 from ...api.todo import Todo
 from ...ui.events.events import SwitchTab
@@ -68,7 +69,7 @@ class TodoList(TreeList):
                 self.current = 0 if self._get_children(model) else -1
             else:
                 editing = self.editing
-                desc = self.item.desc
+                path = self.item.path
 
                 if editing != "none":
                     await self._stop_edit()
@@ -76,11 +77,14 @@ class TodoList(TreeList):
                 self.model = model
                 self._refresh_rows()
 
-                index = self.model._get_child_index("todo", desc=desc)
-                if index == -1:
-                    self.current = 0 if self.row_vals else -1
-                else:
-                    self.current = index
+                index = 0 if self.row_vals else -1
+                for i, j in enumerate(self.row_vals):
+                    if j.item.path == path:
+                        index = i
+                        break
+
+                self.current = index
+                if editing != "none":
                     await self._start_edit(editing)
 
         self.refresh()
@@ -160,9 +164,11 @@ class TodoList(TreeList):
         else:
             return self.model.add_todo()
 
-    def _drop(self) -> None:
-        if self.item:
-            self.item.drop()
+    def _drop(self, item: Optional[Todo] = None) -> None:
+        item = item or self.item
+
+        if item:
+            item.drop()
 
     def _next_sibling(self) -> Optional[Todo]:
         if self.item:

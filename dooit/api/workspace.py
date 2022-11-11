@@ -10,6 +10,13 @@ class Workspace(Model):
     fields = ["desc"]
 
     @property
+    def path(self):
+        if self.parent:
+            return self.desc + "#" + self.parent.path
+
+        return "#"
+
+    @property
     def desc(self):
         return self._desc
 

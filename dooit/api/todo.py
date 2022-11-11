@@ -66,6 +66,13 @@ class Todo(Model):
         return f"{frequency} {name}"
 
     @property
+    def path(self):
+        if not self.parent:
+            return "/"
+
+        return self.desc + "/" + self.parent.path
+
+    @property
     def desc(self):
         return self._desc
 

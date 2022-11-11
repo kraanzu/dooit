@@ -50,6 +50,10 @@ class Model:
         self.workspaces: List[Workspace] = []
         self.todos: List[Todo] = []
 
+    @property
+    def path(self):
+        return "$"
+
     def _get_children(self, kind: str) -> List:
         return self.workspaces if kind == "workspace" else self.todos
 

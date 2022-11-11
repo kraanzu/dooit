@@ -61,7 +61,7 @@ class NavBar(TreeList):
 
     def add_row(self, row: Component, highlight: bool) -> None:
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
-        desc = self._stylize(navbar['desc'], highlight, kwargs)
+        desc = self._stylize(navbar["desc"], highlight, kwargs)
         return self.push_row([desc], row.depth)
 
     def _get_children(self, model: Manager) -> List[Workspace]:
@@ -79,9 +79,11 @@ class NavBar(TreeList):
         else:
             return self.model.add_child_workspace()
 
-    def _drop(self) -> None:
-        if self.item:
-            self.item.drop()
+    def _drop(self, item: Optional[Workspace] = None) -> None:
+
+        item = item or self.item
+        if item:
+            item.drop()
 
     def _next_sibling(self) -> Optional[Model]:
         if self.item:

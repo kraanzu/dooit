@@ -181,8 +181,7 @@ class TreeList(Widget):
 
         def add_rows(item: Workspace, nest_level=0):
 
-            name = item.name
-            path = item.path
+            name = item._name
 
             def push_item(item: Workspace):
                 self._rows[name] = _rows_copy.get(
@@ -321,7 +320,7 @@ class TreeList(Widget):
         if not self.item:
             child = self._add_child()
             self._refresh_rows()
-            self.current = self._rows[child.name].index
+            self.current = self._rows[child._name].index
             await self._start_edit("desc")
             return
 
@@ -347,7 +346,7 @@ class TreeList(Widget):
         if item is None:
             return
 
-        self.current = self._rows[item.name].index
+        self.current = self._rows[item._name].index
         if edit:
             await self._start_edit(edit)
 
@@ -395,14 +394,14 @@ class TreeList(Widget):
 
         parent = self.item.parent
         if parent and not isinstance(parent, Manager):
-            index = self._rows[parent.name].index
+            index = self._rows[parent._name].index
             self.current = index
 
         await self.toggle_expand()
 
     def sort(self, attr: str) -> None:
         if self.item:
-            curr = self.item.name
+            curr = self.item._name
             self.item.sort(attr)
             self._refresh_rows()
             self.current = self._rows[curr].index

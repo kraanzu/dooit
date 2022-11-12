@@ -11,10 +11,8 @@ class Workspace(Model):
 
     @property
     def path(self):
-        if self.parent:
-            return self.desc + "#" + self.parent.path
-
-        return "#"
+        parent_path = self.parent.path if self.parent else ""
+        return self.desc + "#" + parent_path
 
     @property
     def desc(self):

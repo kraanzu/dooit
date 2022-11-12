@@ -67,10 +67,8 @@ class Todo(Model):
 
     @property
     def path(self):
-        if not self.parent:
-            return "/"
-
-        return self.desc + "/" + self.parent.path
+        parent_path = self.parent.path if self.parent else ""
+        return self.desc + "/" + parent_path
 
     @property
     def desc(self):

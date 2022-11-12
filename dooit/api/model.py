@@ -44,15 +44,11 @@ class Model:
         from ..api.workspace import Workspace
         from ..api.todo import Todo
 
-        self._name = str(uuid4())
+        self.name = str(uuid4())
         self.parent = parent
 
         self.workspaces: List[Workspace] = []
         self.todos: List[Todo] = []
-
-    @property
-    def name(self):
-        return self.path
 
     @property
     def path(self):
@@ -81,7 +77,7 @@ class Model:
         if not self.parent:
             return -1
 
-        return self.parent._get_child_index(kind, name=self._name)
+        return self.parent._get_child_index(kind, name=self.name)
 
     def edit(self, key: str, value: str) -> Response:
         """
@@ -133,7 +129,7 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(kind, name=self._name)
+        idx = self.parent._get_child_index(kind, name=self.name)
 
         if idx:
             return self._get_children(kind)[idx - 1]
@@ -146,7 +142,7 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(kind, name=self._name)
+        idx = self.parent._get_child_index(kind, name=self.name)
         arr = self.parent._get_children(kind)
 
         if idx < len(arr) - 1:
@@ -158,7 +154,7 @@ class Model:
         """
 
         if self.parent:
-            idx = self.parent._get_child_index(kind, name=self._name)
+            idx = self.parent._get_child_index(kind, name=self.name)
             return self.parent.add_child(kind, idx + 1)
         else:
             return self.add_child(kind, 0)
@@ -199,7 +195,7 @@ class Model:
         """
 
         if self.parent:
-            self.parent.remove_child(kind, self._name)
+            self.parent.remove_child(kind, self.name)
 
     def sort(self, kind: str, attr: str) -> None:
         """

@@ -170,12 +170,11 @@ class SimpleInput(Widget):
         self.refresh()
 
     def _is_allowed(self, text: str) -> bool:
-        if self.list[0] == "whitelist":
-            for letter in text:
+        for letter in text:
+            if self.list[0] == "whitelist":
                 if letter not in self.list[1]:
                     return False
-        else:
-            for letter in text:
+            else:
                 if letter in self.list[1]:
                     return False
 

@@ -140,17 +140,13 @@ class Parser:
 
     # DEPRECATED: will be removed in v0.3.0
     def fetch_usable_info_todo(self, todo: TodoList) -> list:
-        x = []
-        for i in todo.root.children:
-            x.append([i.data.encode(), [j.data.encode() for j in i.children]])
+        x = [[i.data.encode(), [j.data.encode() for j in i.children]] for i in todo.root.children]
 
         return x
 
     # DEPRECATED: will be removed in v0.3.0
     def fetch_usable_info_topic(self, topic: Navbar) -> list:
-        x = []
-        for i in topic.root.children:
-            x.append([i.data.value, [j.data.value for j in i.children]])
+        x = [[i.data.value, [j.data.value for j in i.children]] for i in topic.root.children]
 
         return x
 

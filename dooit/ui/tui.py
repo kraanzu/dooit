@@ -152,20 +152,7 @@ class Doit(App):
 
             self.grid.place(**placements)
 
-        borders = []
-        for i in range(2):
-            borders.append(
-                [
-                    f"middle{2 * i}",
-                    f"top_connector{2 * i}",
-                    f"top{i}",
-                    f"top_connector{2 * i + 1}",
-                    f"middle{2 * i + 1}",
-                    f"bottom_connector{2 * i + 1}",
-                    f"bottom{i}",
-                    f"bottom_connector{2 * i}",
-                ]
-            )
+        borders = [[f"middle{2 * i}", f"top_connector{2 * i}", f"top{i}", f"top_connector{2 * i + 1}", f"middle{2 * i + 1}", f"bottom_connector{2 * i + 1}", f"bottom{i}", f"bottom_connector{2 * i}",] for i in range(2)]
 
         self.navbar_box = self._make_box(borders[0])
         self.todos_box = self._make_box(borders[1])

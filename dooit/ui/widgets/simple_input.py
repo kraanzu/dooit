@@ -110,11 +110,10 @@ class SimpleInput(Widget):
 
         if self.has_focus:
             text = self._render_text_with_cursor()
+        elif len(self.value) == 0:
+            return self.render_panel(self.placeholder)
         else:
-            if len(self.value) == 0:
-                return self.render_panel(self.placeholder)
-            else:
-                text = self.value
+            text = self.value
 
         formatted_text = Text.from_markup(self._format_text(text))
         return self.render_panel(formatted_text)

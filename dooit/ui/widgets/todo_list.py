@@ -169,17 +169,17 @@ class TodoList(NestedListEdit):
     async def unfocus_node(self) -> None:
 
         ok = await self.check_node()
-        if not ok:
-            if self.warn:
-                await self.remove_node()
-                await self.post_message(ChangeStatus(self, "NORMAL"))
-                await super().unfocus_node()
-            else:
-                self.warn = True
-                return
-        else:
+        if ok:
             await self.post_message(ChangeStatus(self, "NORMAL"))
             await super().unfocus_node()
+
+        elif self.warn:
+            await self.remove_node()
+            await self.post_message(ChangeStatus(self, "NORMAL"))
+            await super().unfocus_node()
+        else:
+            self.warn = True
+            return
 
     async def modify_due_status(self, status: str) -> None:
         node = self.highlighted_node
@@ -414,7 +414,12 @@ class TodoList(NestedListEdit):
             self.refresh(layout=True)
 
     async def add_sibling(self) -> None:
-        if parent := self.highlighted_node.parent:
+        parent = self.highlighted_node.parent
+
+        if not parent:
+            await self.add_child()
+            return
+        else:
             children = parent.children
             tree = parent.tree.children
 
@@ -428,9 +433,6 @@ class TodoList(NestedListEdit):
             while self.highlighted != id:
                 await self.cursor_down()
 
-        else:
-            await self.add_child()
-            return
         await self.focus_node()
         self.refresh()
 

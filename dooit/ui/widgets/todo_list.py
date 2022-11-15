@@ -414,12 +414,7 @@ class TodoList(NestedListEdit):
             self.refresh(layout=True)
 
     async def add_sibling(self) -> None:
-        parent = self.highlighted_node.parent
-
-        if not parent:
-            await self.add_child()
-            return
-        else:
+        if parent := self.highlighted_node.parent:
             children = parent.children
             tree = parent.tree.children
 
@@ -433,6 +428,9 @@ class TodoList(NestedListEdit):
             while self.highlighted != id:
                 await self.cursor_down()
 
+        else:
+            await self.add_child()
+            return
         await self.focus_node()
         self.refresh()
 

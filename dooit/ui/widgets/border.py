@@ -67,11 +67,9 @@ class Connector1(Border):
         super().__init__(item="┏")
 
     def render(self) -> RenderableType:
-        width = self.size.width - 1
-        height = self.size.height - 1
-        if width:
+        if width := self.size.width - 1:
             self.item += "━" * width
-        if height:
+        if height := self.size.height - 1:
             self.item += "\n┃" * height
 
         style = "bold blue" if self.highlight else "dim white"
@@ -87,11 +85,9 @@ class Connector2(Border):
         super().__init__(item="┓")
 
     def render(self) -> RenderableType:
-        width = self.size.width - 2
-        height = self.size.height - 1
-        if width:
+        if width := self.size.width - 2:
             self.item = "━" * width + self.item
-        if height:
+        if height := self.size.height - 1:
             self.item += "\n┃" * height
 
         style = "bold blue" if self.highlight else "dim white"
@@ -107,11 +103,9 @@ class Connector3(Border):
         super().__init__(item="┗")
 
     def render(self) -> RenderableType:
-        width = self.size.width - 1
-        height = self.size.height - 1
-        if width:
+        if width := self.size.width - 1:
             self.item += "━" * width
-        if height:
+        if height := self.size.height - 1:
             self.item += "\n┃" * height
 
         style = "bold blue" if self.highlight else "dim white"
@@ -127,11 +121,9 @@ class Connector4(Border):
         super().__init__(item="┛")
 
     def render(self) -> RenderableType:
-        width = self.size.width - 2
-        height = self.size.height - 1
-        if width:
+        if width := self.size.width - 2:
             self.item = "━" * width + self.item
-        if height:
+        if height := self.size.height - 1:
             self.item += "\n┃" * height
 
         style = "bold blue" if self.highlight else "dim white"

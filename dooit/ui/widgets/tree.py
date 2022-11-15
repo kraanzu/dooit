@@ -176,7 +176,7 @@ class TreeList(Widget):
         return model.workspaces
 
     def _refresh_rows(self) -> None:
-        _rows_copy = self._rows
+        _rows_copy = {i.item.path: i.expanded for i in self._rows.values()}
         self._rows = {}
 
         def add_rows(item: Workspace, nest_level=0):
@@ -185,12 +185,14 @@ class TreeList(Widget):
             path = item.path
 
             def push_item(item: Workspace):
-                self._rows[name] = _rows_copy.get(
-                    name,
-                    Component(
-                        item, nest_level, len(self._rows)
-                    ),  # defaults to a new Component
-                )
+                expanded = _rows_copy.get(path, False)
+
+                self._rows[name] = Component(
+                    item,
+                    nest_level,
+                    len(self._rows),
+                    expanded,
+                )  # defaults to a new Component
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:

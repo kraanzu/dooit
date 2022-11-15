@@ -52,7 +52,7 @@ class Parser:
             return x
 
         with open(self.todo_yaml, "r") as f:
-            todos = yaml.safe_load(f) or dict()
+            todos = yaml.safe_load(f) or {}
 
         navbar = Navbar()
         todo_tree = {}
@@ -179,7 +179,4 @@ class Parser:
         self.todo_yaml = dooit_data / "todo.yaml"
         if not Path.is_file(self.todo_yaml):
             with open(self.todo_yaml, "w") as f:
-                yaml.safe_dump(
-                    dict(),
-                    f,
-                )
+                yaml.safe_dump({}, f)

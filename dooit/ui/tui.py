@@ -181,7 +181,7 @@ class Doit(App):
             self.grid.add_areas(**areas)
 
         # WIDGET SPACES
-        middle_areas = dict()
+        middle_areas = {}
         if not self.show_header:
             middle_areas["0b"] = "0,a-start|b-end"
             middle_areas["1b"] = "1,a-start|b-end"

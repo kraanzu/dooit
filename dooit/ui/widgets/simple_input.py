@@ -171,13 +171,8 @@ class SimpleInput(Widget):
 
     def _is_allowed(self, text: str) -> bool:
         for letter in text:
-            if self.list[0] == "whitelist":
-                if letter not in self.list[1]:
-                    return False
-            else:
-                if letter in self.list[1]:
-                    return False
-
+            if self.list[0] == "whitelist" and letter not in self.list[1] or self.list[0] != "whitelist" and letter in self.list[1]:
+                return False
         return True
 
     async def _insert_text(self, text: str | None = None) -> None:

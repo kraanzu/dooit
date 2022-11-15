@@ -10,9 +10,7 @@ def generate_uuid() -> str:
     """
     Generates a unique id for entries
     """
-    uuid = ""
-    for _ in range(32):
-        uuid += choice(chars)
+    uuid = "".join(choice(chars) for _ in range(32))
     return uuid
 
 

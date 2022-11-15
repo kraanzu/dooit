@@ -239,7 +239,7 @@ class Navbar(NestedListEdit):
             icon = icons["single_topic"]
 
         # Padding adjustment
-        label.plain = f" {icon} " + label.plain + " "
+        label.plain = f" {icon} {label.plain} "
         label.pad_right(self.size.width)
 
         if node.id == self.highlighted:

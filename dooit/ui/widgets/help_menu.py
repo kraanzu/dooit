@@ -33,12 +33,8 @@ def generate_kb_table(
 
     table.add_row(Text.from_markup(f" [r green] {topic} [/r green]"), "", "", "")
     for cmd, help in kb.items():
-        table.add_row(
-            "",
-            (Text.from_markup(colored(cmd, "blue"))),
-            "",
-            (Text.from_markup(colored("  " + help, "magenta")) + NL),
-        )
+        table.add_row("", Text.from_markup(colored(cmd, "blue")), "", Text.from_markup(colored(f"  {help}", "magenta")) + NL)
+
 
     if notes:
         notes = [f"{colored('', 'd yellow')} {i}" for i in notes]

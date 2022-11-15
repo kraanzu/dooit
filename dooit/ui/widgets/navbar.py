@@ -105,14 +105,8 @@ class Navbar(NestedListEdit):
             > 1
         ):
 
-            await self.post_message(
-                Notify(
-                    self,
-                    f"{WARNING}: Duplicate sibling topic!"
-                    if not self.warn
-                    else "Topic Deleted!",
-                )
-            )
+            await self.post_message(Notify(self, "Topic Deleted!" if self.warn else f"{WARNING}: Duplicate sibling topic!"))
+
             return False
 
         return True

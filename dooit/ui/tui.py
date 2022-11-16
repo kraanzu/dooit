@@ -31,7 +31,7 @@ class Dooit(App):
         if self.watcher.has_modified():
             nav_edit = self.navbar.editing
             manager.refresh_data()
-            self.navbar._refresh_rows()
+            await self.navbar._refresh_data()
             await self.todos.update_table(self.navbar.item)
             await self.navbar._start_edit(nav_edit)
 

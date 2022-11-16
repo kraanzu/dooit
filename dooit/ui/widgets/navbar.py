@@ -25,6 +25,31 @@ class NavBar(TreeList):
         if self.component:
             return self.component.item
 
+    async def _refresh_data(self):
+
+        self.model.refresh_data()
+        if not self.item:
+            self._refresh_rows()
+            self.current = 0 if self._get_children(self.model) else -1
+        else:
+            editing = self.editing
+            path = self.item.path
+
+            if editing != "none":
+                await self._stop_edit()
+
+            self._refresh_rows()
+
+            index = 0 if self.row_vals else -1
+            for i, j in enumerate(self.row_vals):
+                if j.item.path == path:
+                    index = i
+                    break
+
+            self.current = index
+            if editing != "none":
+                await self._start_edit(editing)
+
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
         self.table.add_column("desc")

@@ -192,7 +192,7 @@ class TreeList(Widget):
                     nest_level,
                     len(self._rows),
                     expanded,
-                )  # defaults to a new Component
+                )
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:

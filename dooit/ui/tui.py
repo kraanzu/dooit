@@ -35,7 +35,7 @@ class Dooit(App):
     async def poll(self):
         if self.watcher.has_modified():
             manager.refresh_data()
-            self.navbar._refresh_rows()
+            await self.navbar._refresh_data()
             await self.todos.update_table(self.navbar.item)
             self.bar.set_message(str(self.navbar.current))
 

@@ -27,10 +27,10 @@ class Todo(Model):
         self._desc = ""
         self.urgency = 4
 
-        self._est = ""
+        self._eta = ""
         self._due = "none"
         self._done = False
-        self._tags = ""
+        self._tags = []
         self._recur = ""
         self.todos: List[Todo] = []
 
@@ -98,7 +98,7 @@ class Todo(Model):
 
     @property
     def eta(self):
-        return self._format_duration(self._est)
+        return self._format_duration(self._eta)
 
     def set_eta(self, val: str) -> Response:
         if not self._is_valid(val):
@@ -106,7 +106,7 @@ class Todo(Model):
                 False, "Invalid Format!", "See help using [b cyan]?[/b cyan]"
             )
 
-        self._est = val
+        self._eta = val
         return Response(True)
 
     @property
@@ -163,10 +163,10 @@ class Todo(Model):
 
     @property
     def tags(self):
-        return self._tags
+        return ", ".join(self._tags)
 
     def set_tags(self, val: str) -> Response:
-        self._tags = ", ".join([i.strip() for i in val.split(",")])
+        self._tags = [i.strip() for i in val.split(",")]
         return Response(True)
 
     def toggle_complete(self):
@@ -195,13 +195,34 @@ class Todo(Model):
         Return todo.txt format of the todo
         """
 
-        return f"{OPTS[self.status]} ({self.urgency}) due:{self._due or 'None'} {self._desc}"
+        tags = " ".join([f"@{i}" for i in self._tags])
+        due = "due:" + (self._due or "None")
+        recur = f"%{self._recur}" if self._recur else ""
+        eta = f"+{self._eta}" if self._eta else ""
+        status = OPTS[self.status]
+        urgency = f"({self.urgency})"
+        desc = self._desc
+
+        arr = [status, urgency, due, tags, recur, eta, desc]
+        arr = [i for i in arr if i]
+        return " ".join(arr)
 
     def fill_from_data(self, data: str) -> None:
-        status, urgency, due, *desc = data.split()
+        status, urgency, due, *arr = data.split()
+        brr = []
+
+        for i in arr:
+            if i.startswith("@"):  # tags
+                self._tags.append(i[1:])
+            elif i.startswith("+"):  # eta
+                self._eta = i[1:]
+            elif i.startswith("%"):  # recurrence
+                self._recur = i[1:]
+            else:
+                brr.append(i)
 
         status = True if status == "X" else False
-        desc = " ".join(desc)
+        desc = " ".join(brr)
 
         due = due[4:]
         if due == "None":

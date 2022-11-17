@@ -12,7 +12,7 @@ class Watcher:
 
     def has_modified(self) -> bool:
         stamp = os.stat(self.filename).st_mtime
-        if abs(stamp - self._cached_stamp) > 1:
+        if abs(stamp - self._cached_stamp) >= 10**-6:
             res = self._cached_stamp != -1
             self._cached_stamp = stamp
             return res

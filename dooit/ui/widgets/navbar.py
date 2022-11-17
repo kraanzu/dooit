@@ -1,6 +1,7 @@
 from typing import List, Optional
 from rich.table import Table
 from rich.text import Text
+
 from .tree import Component, TreeList
 from ...ui.widgets.sort_options import SortOptions
 from ...api import Manager, Model, Workspace
@@ -27,10 +28,8 @@ class NavBar(TreeList):
 
     async def _refresh_data(self):
 
-        self.model.refresh_data()
         if not self.item:
             self._refresh_rows()
-            self.current = 0 if self._get_children(self.model) else -1
         else:
             editing = self.editing
             path = self.item.path
@@ -39,7 +38,6 @@ class NavBar(TreeList):
                 await self._stop_edit()
 
             self._refresh_rows()
-
             index = 0 if self.row_vals else -1
             for i, j in enumerate(self.row_vals):
                 if j.item.path == path:

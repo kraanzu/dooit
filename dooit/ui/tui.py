@@ -1,6 +1,7 @@
 from typing import Union
 from textual.app import App
 from textual import events
+from dooit.utils.plugin_manager import Plug
 from dooit.utils.watcher import Watcher
 from ..ui.widgets.help_menu import HelpMenu
 from ..ui.events import *  # noqa
@@ -26,14 +27,17 @@ class Dooit(App):
 
     async def on_mount(self):
         self.set_interval(1, self.poll)
+        self.set_timer(3, self.start_plugins)
+
+    def start_plugins(self):
+        Plug.entry()
 
     async def poll(self):
         if self.watcher.has_modified():
-            nav_edit = self.navbar.editing
             manager.refresh_data()
-            await self.navbar._refresh_data()
+            self.navbar._refresh_rows()
             await self.todos.update_table(self.navbar.item)
-            await self.navbar._start_edit(nav_edit)
+            self.bar.set_message(str(self.navbar.current))
 
     def compose(self):
         yield self.navbar
@@ -49,7 +53,6 @@ class Dooit(App):
         self.todos.toggle_highlight()
 
     async def on_key(self, event: events.Key) -> None:
-
         # if (event.key == "?") and (
         #     self.bar.status == "NORMAL" or self.help_menu.visible
         # ):

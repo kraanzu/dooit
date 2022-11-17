@@ -372,7 +372,7 @@ class TreeList(Widget):
         self.commit()
 
     async def move_up(self) -> None:
-        if self.current:
+        if self.current > 0:
             self.current -= 1
 
     async def move_down(self) -> None:

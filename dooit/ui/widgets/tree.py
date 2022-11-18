@@ -278,6 +278,9 @@ class TreeList(Widget):
     def _add_child(self) -> Model:
         ...
 
+    def _insert(self) -> Model:
+        ...
+
     def _drop(self, _item=None) -> None:
         ...
 
@@ -307,6 +310,16 @@ class TreeList(Widget):
 
         self.commit()
         self.refresh()
+
+    async def insert(self) -> None:
+
+        if self.component and self.item:
+            self.component.expand()
+
+        self._insert()
+        self._refresh_rows()
+        await self.move_down()
+        self.commit()
 
     async def add_child(self) -> None:
 
@@ -463,6 +476,7 @@ class TreeList(Widget):
                     "A": self.add_child,
                     "a": self.add_sibling,
                     "x": self.remove_item,
+                    "p": self.insert,
                     "g": self.move_to_top,
                     "home": self.move_to_top,
                     "G": self.move_to_bottom,

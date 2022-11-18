@@ -164,9 +164,12 @@ class TodoList(TreeList):
         else:
             return self.model.add_todo()
 
+    def _insert(self) -> None:
+        if self.item:
+            self.item.insert_item(self.current)
+
     def _drop(self, item: Optional[Todo] = None) -> None:
         item = item or self.item
-
         if item:
             item.drop()
 

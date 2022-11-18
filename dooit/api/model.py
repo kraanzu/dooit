@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, TypeVar
 from uuid import uuid4
 from dataclasses import dataclass
+from .storage import Storage
 
 T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
@@ -8,7 +9,6 @@ MaybeModel = Optional["Model"]
 
 def colored(text: str, color: str):
     return f"[{color}]{text}[/{color}]"
-
 
 @dataclass
 class Response:
@@ -181,13 +181,31 @@ class Model:
 
         return child
 
+    def insert_item(self, idx: int) -> Any:
+        """
+        Insert item at current location
+        """
+        from ..api.workspace import Workspace
+        kind = "workspace" if isinstance(Storage.clipboard, Workspace) else "todo"
+        if Storage.clipboard != None:
+            if self.parent:
+                idx = self.parent._get_child_index(kind, name=self.name)
+                children = self.parent._get_children(kind)
+                children.insert(idx + 1, Storage.clipboard)
+            else:
+                children = self._get_children(kind)
+                children.insert(idx + 1, Storage.clipboard)
+            Storage.clipboard = None
+
     def remove_child(self, kind: str, name: str) -> Any:
         """
         Remove the child based on attr
         """
 
         idx = self._get_child_index(kind, name=name)
-        return self._get_children(kind).pop(idx)
+        if self.parent:
+            Storage.clipboard = self._get_children(kind).pop(idx)
+            return Storage.clipboard
 
     def drop(self, kind: str) -> None:
         """

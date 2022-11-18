@@ -15,6 +15,8 @@ from ...api import Manager, manager, Model, Workspace, Todo
 from ...ui.widgets.sort_options import SortOptions
 from ...ui.events.events import ChangeStatus, Notify
 
+PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+
 
 class Component:
     """
@@ -421,7 +423,7 @@ class TreeList(Widget):
 
     async def handle_key(self, event: events.Key) -> None:
 
-        key = event.key
+        key = event.char if (event.char and (event.char in PRINTABLE)) else event.key
 
         if self.editing != "none":
             field = self.row_vals[self.current].fields[self.editing]
@@ -431,7 +433,7 @@ class TreeList(Widget):
             elif key == "enter":
                 await self._stop_edit()
             else:
-                await field.handle_keypress(event.key)
+                await field.handle_keypress(key)
 
         else:
 
@@ -439,7 +441,7 @@ class TreeList(Widget):
                 await self.sort_menu.handle_key(event)
 
             elif self.filter.has_focus:
-                await self.filter.handle_keypress(event.key)
+                await self.filter.handle_keypress(key)
                 await self.emit(Notify(self, self.filter.render()))
                 self._refresh_rows()
                 self.current = 0

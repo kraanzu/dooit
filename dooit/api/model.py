@@ -1,33 +1,23 @@
 from typing import Any, Dict, List, Optional, TypeVar
 from uuid import uuid4
 from dataclasses import dataclass
+from rich.text import Text
 
 T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
-
-
-def colored(text: str, color: str):
-    return f"[{color}]{text}[/{color}]"
 
 
 @dataclass
 class Response:
     ok: bool
     message: Optional[str] = None
-    hint: Optional[str] = None
 
     def text(self):
-        text = ""
 
         if self.message:
-            text += " "
-            text += colored(self.message, "green" if self.ok else "red")
+            return Text(" " + self.message, "green" if self.ok else "red")
 
-        if self.hint:
-            text += " "
-            text += colored(self.hint, "yellow")
-
-        return text
+        return Text()
 
 
 class Model:

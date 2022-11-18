@@ -102,9 +102,7 @@ class Todo(Model):
 
     def set_eta(self, val: str) -> Response:
         if not self._is_valid(val):
-            return Response(
-                False, "Invalid Format!", "See help using [b cyan]?[/b cyan]"
-            )
+            return Response(False, "Invalid Format!")
 
         self._eta = val
         return Response(True)
@@ -127,7 +125,7 @@ class Todo(Model):
             self._recur = val
             return Response(True)
 
-        return Response(False, "Invalid Format!", "See help using [b cyan]?[/b cyan]")
+        return Response(False, "Invalid Format!")
 
     @property
     def due(self):
@@ -149,7 +147,6 @@ class Todo(Model):
                 return Response(
                     False,
                     "Invalid Format!",
-                    "See help using [b cyan]?[/b cyan]",
                 )
 
         return Response(False, "Cannot parse the string!")

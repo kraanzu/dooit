@@ -46,15 +46,16 @@ class StatusBar(Widget):
 
     def render(self) -> RenderableType:
 
-        table = Table.grid(padding=(0, 0), expand=True)
+        table = Table.grid(expand=True)
         d = {"status": self.status, "message": self.message}
         renderables, kwargs = zip(*[widget.render() for widget in bar])
 
         row = []
         for i in renderables:
             if isinstance(i, Text):
-                i.plain = i.plain.format(**d)
-                row.append(i)
+                style = i.style
+                text = Text(i.plain.format(**d), style)
+                row.append(text)
             else:
                 i = str(i).format(**d)
                 row.append(Text.from_markup(i))
@@ -63,13 +64,3 @@ class StatusBar(Widget):
         table.add_row(*row)
 
         return table
-
-
-if __name__ == "__main__":
-    from textual.app import App
-
-    class MyApp(App):
-        async def on_mount(self):
-            await self.view.dock(StatusBar())
-
-    MyApp.run()

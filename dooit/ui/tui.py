@@ -16,7 +16,6 @@ class Dooit(App):
 
     CSS = screen_CSS
     SCREENS = {"help": HelpScreen(name="help")}
-    BINDINGS = [("question_mark", "push_screen('help')", "HELP")]
 
     async def on_load(self):
         self.navbar = NavBar()
@@ -54,9 +53,6 @@ class Dooit(App):
 
     async def on_key(self, event: events.Key) -> None:
 
-        if self.screen.name == "help":
-            return
-
         if self.navbar.has_focus:
             await self.navbar.handle_key(event)
         else:
@@ -77,3 +73,6 @@ class Dooit(App):
 
     async def on_notify(self, event: Notify):
         self.bar.set_message(event.message)
+
+    async def on_spawn_help(self, event: SpawnHelp):
+        self.push_screen("help")

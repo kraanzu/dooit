@@ -162,8 +162,10 @@ class HelpMenu:
 
 
 class HelpScreen(Screen):
-    BINDINGS = [("escape", "app.pop_screen", "Pop screen")]
-    BINDINGS = [("question_mark", "app.pop_screen", "Pop screen")]
+    BINDINGS = [
+        ("escape", "app.pop_screen", "Pop screen"),
+        ("question_mark", "app.pop_screen", "Pop screen"),
+    ]
     view = Vertical(*[Static(i) for i in HelpMenu().items()])
 
     def compose(self):

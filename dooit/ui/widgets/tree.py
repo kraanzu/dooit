@@ -13,7 +13,7 @@ from rich.table import Table, box
 from .simple_input import SimpleInput
 from ...api import Manager, manager, Model, Workspace, Todo
 from ...ui.widgets.sort_options import SortOptions
-from ...ui.events.events import ChangeStatus, Notify
+from ...ui.events.events import ChangeStatus, Notify, SpawnHelp
 
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 
@@ -470,6 +470,7 @@ class TreeList(Widget):
                     "G": self.move_to_bottom,
                     "s": self.show_sort_menu,
                     "/": self._start_filtering,
+                    "?": self.spawn_help,
                 }
 
                 if key in keybinds:
@@ -477,6 +478,9 @@ class TreeList(Widget):
 
         await self.check_extra_keys(event)
         self.refresh(layout=True)
+
+    async def spawn_help(self):
+        await self.emit(SpawnHelp(self))
 
     def add_row(self, _item: Component, _highlight: bool) -> None:  # noqa
         ...

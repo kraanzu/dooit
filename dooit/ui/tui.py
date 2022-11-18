@@ -16,6 +16,7 @@ class Dooit(App):
 
     CSS = screen_CSS
     SCREENS = {"help": HelpScreen(name="help")}
+    BINDINGS = [("ctrl+q", "quit", "Quit App")]
 
     async def on_load(self):
         self.navbar = NavBar()

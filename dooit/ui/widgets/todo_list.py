@@ -6,7 +6,7 @@ from textual import events
 from .tree import Component, TreeList
 from ...api.todo import Todo
 from ...ui.events.events import SwitchTab
-from ...api import Workspace
+from ...api import Workspace, Storage
 from ...ui.widgets.sort_options import SortOptions
 from ...utils.default_config import *  # noqa
 
@@ -164,9 +164,9 @@ class TodoList(TreeList):
         else:
             return self.model.add_todo()
 
-    def _insert(self) -> None:
+    def _insert(self, insert_as_child=False) -> None:
         if self.item:
-            self.item.insert_item(self.current)
+            self.item.insert_item(Storage.clipboard, insert_as_child)
 
     def _drop(self, item: Optional[Todo] = None) -> None:
         item = item or self.item

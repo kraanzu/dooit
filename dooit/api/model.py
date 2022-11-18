@@ -181,20 +181,23 @@ class Model:
 
         return child
 
-    def insert_item(self, idx: int) -> Any:
+    def insert_item(self: T, item: T | None, insert_as_child=False) -> None:
         """
-        Insert item at current location
+        Insert item at current location and clear clipboard each time we paste
         """
         from ..api.workspace import Workspace
-        kind = "workspace" if isinstance(Storage.clipboard, Workspace) else "todo"
-        if Storage.clipboard != None:
-            if self.parent:
-                idx = self.parent._get_child_index(kind, name=self.name)
-                children = self.parent._get_children(kind)
-                children.insert(idx + 1, Storage.clipboard)
-            else:
+        kind = "workspace" if isinstance(item, Workspace) else "todo"
+        if item != None and self.parent:
+            if insert_as_child: 
+                idx = self._get_child_index(kind, name=self.name)
                 children = self._get_children(kind)
-                children.insert(idx + 1, Storage.clipboard)
+                item.parent = self
+                children.insert(idx + 1, item)
+            else:
+                idx = self.parent._get_child_index(kind, name=self.name)
+                item.parent = self.parent
+                children = self.parent._get_children(kind)
+                children.insert(idx + 1, item)
             Storage.clipboard = None
 
     def remove_child(self, kind: str, name: str) -> Any:

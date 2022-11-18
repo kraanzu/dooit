@@ -1,4 +1,4 @@
-from dooit.utils.default_config import *  # noqa
+from dooit.utils.default_config import BACKGROUND
 
 
 screen_CSS = f"""
@@ -11,6 +11,12 @@ Screen {{
 }}
 
 StatusBar {{
-    column-span: 2
+    column-span: 2;
+}}
+
+Vertical {{
+    column-span: 2;
+    row-span: 2;
+    scrollbar-size: 1 1;
 }}
 """

@@ -3,7 +3,7 @@ from textual.app import App
 from textual import events
 from dooit.utils.plugin_manager import Plug
 from dooit.utils.watcher import Watcher
-from ..ui.widgets.help_menu import HelpMenu
+from ..ui.widgets.help_menu import HelpScreen
 from ..ui.events import *  # noqa
 from ..ui.widgets import NavBar, TodoList, StatusBar
 from ..api.manager import manager
@@ -15,13 +15,14 @@ from ..ui.css.screen import screen_CSS
 class Dooit(App):
 
     CSS = screen_CSS
+    SCREENS = {"help": HelpScreen(name="help")}
+    BINDINGS = [("question_mark", "push_screen('help')", "HELP")]
 
     async def on_load(self):
         self.navbar = NavBar()
         self.todos = TodoList()
         self.bar = StatusBar()
         self.watcher = Watcher()
-        self.help_menu = HelpMenu()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
 
@@ -53,11 +54,9 @@ class Dooit(App):
         self.todos.toggle_highlight()
 
     async def on_key(self, event: events.Key) -> None:
-        # if (event.key == "?") and (
-        #     self.bar.status == "NORMAL" or self.help_menu.visible
-        # ):
-        #     self.help_menu.visible = not self.help_menu.visible
-        #     return
+
+        if self.screen.name == "help":
+            return
 
         if self.navbar.has_focus:
             await self.navbar.handle_key(event)

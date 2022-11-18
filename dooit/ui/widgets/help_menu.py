@@ -1,29 +1,28 @@
+from typing import List
+from textual.containers import Vertical
+from textual.screen import Screen
+from textual.widgets import Static
 from rich.align import Align
-from rich.box import MINIMAL
 from rich.console import Group, RenderableType
-from rich.panel import Panel
 from rich.style import StyleType
 from rich.table import Table
 from rich.text import Text
-from rich.tree import Tree
 from textual import events
-from textual.widget import Widget
-
-NL = "\n"
 
 
 # UTILS
 # ---------------------------------------------------
+NL = Text("\n")
 
 
 def colored(text: str, color: StyleType) -> str:
-    return f"[{color}]{text}[/{color}]"
+    return f"[{color}]{text}[/]"
 
 
 def generate_kb_table(
     kb: dict[str, str], topic: str, notes: list[str] = []
 ) -> RenderableType:
-    table = Table.grid(expand=False, padding=(0, 0))
+    table = Table.grid(expand=True, padding=(0, 3))
     table.add_column("mode")
     table.add_column("cmd")
     table.add_column("colon")
@@ -34,7 +33,7 @@ def generate_kb_table(
         table.add_row(
             "",
             (Text.from_markup(colored(cmd, "blue"))),
-            "",
+            "->",
             (Text.from_markup(colored("  " + help, "magenta")) + NL),
         )
 
@@ -47,7 +46,7 @@ def generate_kb_table(
     )
 
 
-seperator = f"{colored('─' * 60, 'bold dim black')}"
+seperator = Text.from_markup(f"{colored('─' * 60, 'b d black')}")
 
 # ---------------- X -------------------------
 
@@ -118,24 +117,24 @@ SORT_KB = {
 # --------------------------------------------
 HEADER = f"""
 {colored("Welcome to the help menu!", 'yellow')}
-{seperator}
+{seperator.markup}
 """
 
 BODY = f""" {colored(f'Dooit is build to be used from the keyboard,{NL} but mouse can also be used to navigate', 'green')}
 
 Documentation below will walk you through the controls:
-{seperator}
+{seperator.markup}
 """
 
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
-AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL * 2}{seperator}{NL}"
+AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{seperator.markup}{NL}"
 
-OUTRO = f"Press {colored('escape', 'green')} to exit help menu"
+OUTRO = f"Press {colored('escape', 'green')} or {colored('?', 'green')} or to exit help menu"
 
 # ---------------- X -------------------------
 
 
-class HelpMenu(Widget):
+class HelpMenu:
     """
     A Help Menu Widget
     """
@@ -146,23 +145,37 @@ class HelpMenu(Widget):
     author = Text.from_markup(AUTHOR, justify="center")
     outro = Text.from_markup(OUTRO, justify="center")
 
-    async def handle_key(self, event: events.Key):
-        pass
+    def items(self) -> List[RenderableType]:
+        arr = []
+        arr.append(self.header)
+        arr.append(self.body)
+        arr.append(generate_kb_table(NORMAL_KB, "NORMAL", NORMAL_NB))
+        arr.append(generate_kb_table(INSERT_KB, "INSERT"))
+        arr.append(generate_kb_table(DATE_KB, "DATE", DATE_NB))
+        arr.append(generate_kb_table(SEARCH_KB, "SEARCH"))
+        arr.append(generate_kb_table(SORT_KB, "SORT"))
+        arr.append(self.thanks)
+        arr.append(self.author)
+        arr.append(self.outro)
 
-    def render(self) -> RenderableType:
-        tree = Tree("")
-        tree.hide_root = True
-        tree.expanded = True
+        return arr
 
-        tree.add(self.header)
-        tree.add(self.body)
-        tree.add(generate_kb_table(NORMAL_KB, "NORMAL", NORMAL_NB))
-        tree.add(generate_kb_table(INSERT_KB, "INSERT"))
-        tree.add(generate_kb_table(DATE_KB, "DATE", DATE_NB))
-        tree.add(generate_kb_table(SEARCH_KB, "SEARCH"))
-        tree.add(generate_kb_table(SORT_KB, "SORT"))
-        tree.add(self.thanks)
-        tree.add(self.author)
-        tree.add(self.outro)
 
-        return Panel(tree, box=MINIMAL)
+class HelpScreen(Screen):
+    BINDINGS = [("escape", "app.pop_screen", "Pop screen")]
+    BINDINGS = [("question_mark", "app.pop_screen", "Pop screen")]
+    view = Vertical(*[Static(i) for i in HelpMenu().items()])
+
+    def compose(self):
+        yield self.view
+
+    async def on_key(self, event: events.Key):
+        key = event.char
+        if key in ["j", "down"]:
+            self.view.scroll_down()
+        elif key in ["k", "up"]:
+            self.view.scroll_up()
+        elif key in ["home", "g"]:
+            self.view.scroll_home()
+        elif key in ["end", "G"]:
+            self.view.scroll_end()

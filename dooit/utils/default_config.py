@@ -1,3 +1,4 @@
+from rich.text import Text
 from dooit.utils.status_widget import Widget
 from datetime import datetime
 
@@ -11,16 +12,18 @@ BACKGROUND = "#2e3440"
 #################################
 #             UTILS             #
 #################################
+
+
 def colored(text: str, color: str, pre: str = ""):
-    return f"{pre} [{color}]{text}[/{color}]"
+    return f"{pre} [{color}]{text}[/]"
 
 
-def get_clock() -> str:
-    return f"{datetime.now().time().strftime(' {0}  %X ')}".format("C")
+def get_clock() -> Text:
+    return Text(f"{datetime.now().time().strftime(' %X ')}", "r yellow")
 
 
-def get_date() -> str:
-    return f"X {datetime.today().strftime('%d/%m/%Y')}"
+def get_date() -> Text:
+    return Text(f"{datetime.today().strftime(' %d/%m/%Y ')}", "r green")
 
 
 ART = """\
@@ -123,7 +126,7 @@ EMPTY_TODO = [
 #################################
 bar = [
     Widget(
-        func=lambda: " {status} ",
+        func=lambda: Text("{status}", "r blue"),
     ),
     Widget(
         func=lambda: " {message} ",
@@ -132,6 +135,9 @@ bar = [
     ),
     Widget(
         func=get_clock,
+    ),
+    Widget(
+        func=lambda: " ",  # padding
     ),
     Widget(
         func=get_date,

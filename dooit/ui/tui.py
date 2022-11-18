@@ -38,7 +38,6 @@ class Dooit(App):
             manager.refresh_data()
             await self.navbar._refresh_data()
             await self.todos.update_table(self.navbar.item)
-            self.bar.set_message(str(self.navbar.current))
 
     def compose(self):
         yield self.navbar

@@ -1,6 +1,7 @@
 from collections.abc import Callable
 from typing import Any, Dict, Optional
 from rich.console import JustifyMethod
+from rich.text import Text
 
 
 class Widget:
@@ -18,6 +19,8 @@ class Widget:
 
     def render(self):
         renderable = self.func()
+        if isinstance(renderable, str):
+            renderable = Text.from_markup(renderable)
 
         params: Dict[str, Any] = {"justify": self.justify}
         if self.expand:

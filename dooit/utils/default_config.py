@@ -1,4 +1,6 @@
 from rich.text import Text
+from dooit.api.todo import Todo
+from dooit.api.workspace import Workspace
 from dooit.utils.status_widget import Widget
 from datetime import datetime
 
@@ -48,6 +50,19 @@ dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
 # desc: description of the workspace
 # icon: icon to show for workspace
 
+
+def stylize_nav(workspace: Workspace, highlight: bool, edit: bool):
+
+    if not highlight:
+        return colored("{desc}", "d grey50", " ")
+    else:
+        if edit:
+            colored("{desc}", "b cyan", "➜")
+        else:
+            return colored("{desc}", "b white", "➜")
+
+
+nav_item_style = stylize_nav
 navbar = {
     "desc": {
         "dim": colored("{desc}", "d grey50", " "),
@@ -65,56 +80,59 @@ EMPTY_NAVBAR = [
 #            TODOS              #
 #################################
 
-# A column dict (key, value) => (name, ratio) of the columns
-# see todos var for rendering
-todo_columns = {
-    "desc": 80,
-    "due": 15,
-    "urgency": 5,
-}
 
-# Vars:
+# Vars: ( these are the vars which are edited in real time like an input box )
 # desc: description of the Todo
-# status: icon to show for status
 # tags: show tags, if any( modify tag format in extra_fmt )
 # recur: show recurrence, if any ( modify tag format in extra_fmt )
-# time: show time ( HH:MM )
 # eta: estimated time to complete
 # urgency: urgency ( 1 - 4 )
 
-todos = {
-    "status": {
-        "completed": colored("✓", "b green"),
-        "pending": colored("", "b yellow"),
-        "overdue": colored("!", "b red"),
-    },
-    "urgency_icons": {
-        1: "🅓",
-        2: "🅒",
-        3: "🅑",
-        4: "🅐",
-    },
-    "extra_fmt": {
-        "tags": colored("🖈 {tags} ", "b red", ""),
-        "recur": colored("🗘 {recur}", "b blue"),
-        "eta": colored("ETA: {eta}", "b r green"),
-    },
-    "desc": {
-        "dim": colored("{status} {eta} {desc} {tags} {recur}", "d grey50", " "),
-        "highlight": colored("{status} {eta} {desc} {tags} {recur}", "b white", "➜"),
-        "edit": colored("{status} {eta} {desc} {tags} {recur}", "b cyan", "➜"),
-    },
-    "due": {
-        "dim": colored("{due}", "d grey50"),
-        "highlight": colored("{due}", "b white"),
-        "edit": colored("{due}", "b cyan"),
-    },
-    "urgency": {
-        "dim": colored("{urgency}", "d grey50"),
-        "highlight": colored("{urgency}", "b white"),
-        "edit": colored("{urgency}", "b cyan"),
-    },
+
+def col1(todo: Todo, highlight: bool, edit: bool):
+    status = colored("✓", "b green")
+    if todo.status == "OVERDUE":
+        status = colored("!", "b red")
+    elif todo.status == "PENDING":
+        status = colored("", "b yellow")
+
+    if not highlight:
+        return colored(status + " {eta} {desc} {tags} {recur}", "d grey50", " ")
+    else:
+        if edit:
+            return colored(status + " {eta} {desc} {tags} {recur}", "b cyan", "➜")
+        else:
+            return colored(status + " {eta} {desc} {tags} {recur}", "b white", "➜")
+
+
+def col2(todo: Todo, highlight: bool, edit: bool):
+    if not highlight:
+        return colored("{due}", "d grey50")
+    else:
+        if edit:
+            return colored("{due}", "b white")
+        else:
+            return colored("{due}", "b cyan")
+
+
+def col3(todo: Todo, highlight: bool, edit: bool):
+    if not highlight:
+        return colored("{urgency}", "d grey50")
+    else:
+        if edit:
+            return colored("{urgency}", "b white")
+        else:
+            return colored("{urgency}", "b cyan")
+
+
+# A column dict (key, value) => (name -> (ratio, function)) of the columns
+# see todos var for rendering
+todo_columns = {
+    "desc": (80, col1),
+    "due": (15, col2),
+    "urgency": (5, col3),
 }
+
 
 EMPTY_TODO = [
     "Wow so Empty!?",

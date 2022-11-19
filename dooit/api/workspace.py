@@ -20,10 +20,13 @@ class Workspace(Model):
 
     def set_desc(self, value: str) -> Response:
         if value:
-            if (
-                self.parent
-                and self.parent._get_child_index("workspace", desc=value) != -1
-            ):
+            new_index = -1
+            if self.parent:
+                new_index = self.parent._get_child_index("workspace", desc=value)
+
+            old_index = self._get_index("workspace")
+
+            if new_index != -1 and new_index != old_index:
                 return Response(
                     False,
                     "A workspace with same description is already present",

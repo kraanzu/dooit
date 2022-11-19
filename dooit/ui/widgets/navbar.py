@@ -85,6 +85,9 @@ class NavBar(TreeList):
     def add_row(self, row: Component, highlight: bool) -> None:
 
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
+        desc = self._stylize(navbar["desc"], highlight, kwargs)
+        return self.push_row([desc], row.depth)
+
         res = nav_item_style(row.item, highlight, self.editing != "none")
 
         if isinstance(res, str):

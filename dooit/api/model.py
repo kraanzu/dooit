@@ -13,9 +13,11 @@ class Response:
     message: Optional[str] = None
 
     def text(self):
+        def colored(a, b):
+            return f"[{b}]{a}[/]"
 
         if self.message:
-            return Text(" " + self.message, "green" if self.ok else "red")
+            return colored(" " + self.message, "green" if self.ok else "red")
 
         return Text()
 

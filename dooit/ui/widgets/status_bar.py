@@ -53,12 +53,12 @@ class StatusBar(Widget):
         row = []
         for i in renderables:
             if isinstance(i, Text):
-                style = i.style
-                text = Text(i.plain.format(**d), style)
-                row.append(text)
-            else:
-                i = str(i).format(**d)
-                row.append(Text.from_markup(i))
+                i = i.markup
+
+            i = str(i)
+            i = i.format(**d)
+            i = Text.from_markup(i)
+            row.append(i)
 
         [table.add_column(**i) for i in kwargs]
         table.add_row(*row)

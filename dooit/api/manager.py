@@ -42,16 +42,17 @@ class Manager(Model):
             child.edit("desc", i)
             child.from_data(j)
 
-    def refresh_data(self) -> None:
+    def refresh_data(self) -> bool:
         data_new = Parser.load()
         data_cache = self._get_commit_data()
 
         if data_new == data_cache:
-            return
+            return False
 
         self.workspaces.clear()
         self.todos.clear()
         self.setup()
+        return True
 
 
 manager = Manager()

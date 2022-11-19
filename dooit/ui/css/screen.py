@@ -1,3 +1,7 @@
+"""
+Main CSS File for App
+"""
+
 from dooit.utils.default_config import BACKGROUND
 
 

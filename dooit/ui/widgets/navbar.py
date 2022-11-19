@@ -10,6 +10,10 @@ from ...utils.default_config import *  # noqa
 
 
 class NavBar(TreeList):
+    """
+    NavBar class to manage UI's navbar
+    """
+
     def __init__(self):
         super().__init__()
         self.sort_menu = SortOptions(
@@ -87,18 +91,6 @@ class NavBar(TreeList):
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
         desc = self._stylize(navbar["desc"], highlight, kwargs)
         return self.push_row([desc], row.depth)
-
-        res = nav_item_style(row.item, highlight, self.editing != "none")
-
-        if isinstance(res, str):
-            res = res.format(**kwargs)
-            res = Text.from_markup(res)
-        elif isinstance(res, Text):
-            res.plain = res.plain.format(**kwargs)
-        else:
-            res = Text(str(res))
-
-        return self.push_row([res], row.depth)
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

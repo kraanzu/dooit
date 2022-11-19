@@ -3,7 +3,7 @@ from rich.text import Text, TextType
 from rich.table import Table
 from textual.widget import Widget
 
-from dooit.utils import default_config
+from ...utils import default_config
 from ..events import StatusType
 
 bar = default_config.bar

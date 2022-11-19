@@ -12,6 +12,10 @@ from ...utils.default_config import *  # noqa
 
 
 class TodoList(TreeList):
+    """
+    Tree structured Class to manage todos
+    """
+
     def __init__(self):
         super().__init__()
         self._assigned = False

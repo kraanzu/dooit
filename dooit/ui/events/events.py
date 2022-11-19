@@ -6,8 +6,16 @@ StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG"]
 SortMethodType = Literal["desc", "status", "date", "urgency"]
 
 
+class SwitchTab(Message, bubble=True):
+    """
+    Emitted when user needs to focus other pane
+    """
+
+
 class SpawnHelp(Message, bubble=True):
-    pass
+    """
+    Emitted when user presses `?` in NORMAL mode
+    """
 
 
 class ChangeStatus(Message, bubble=True):
@@ -48,9 +56,3 @@ class TopicSelect(Message, bubble=True):
     def __init__(self, sender: MessageTarget, item) -> None:
         super().__init__(sender)
         self.item = item
-
-
-class SwitchTab(Message, bubble=True):
-    """
-    Emitted when user needs to focus other pane
-    """

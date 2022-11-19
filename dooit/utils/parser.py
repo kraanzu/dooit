@@ -11,17 +11,29 @@ PLUGINS = XDG_CONFIG / "plugins"
 
 
 class Parser:
+    """
+    Parser class to manage and parse dooit's config and data
+    """
+
     def __init__(self) -> None:
         self.check_files()
 
     @classmethod
     def save(cls, data):
+        """
+        Save the todos to data file
+        """
+
         obj = cls()
         with open(obj.todo_yaml, "w") as stream:
             yaml.safe_dump(data, stream, sort_keys=False)
 
     @classmethod
     def load(cls) -> Dict:
+        """
+        Retrieves the todos from data file
+        """
+
         obj = cls()
         with open(obj.todo_yaml, "r") as stream:
             data = yaml.safe_load(stream)
@@ -29,6 +41,11 @@ class Parser:
         return data
 
     def check_files(self) -> None:
+        """
+        Checks if all the files and folders are present
+        to avoid any errors
+        """
+
         def check_folder(f: Path):
             if not Path.is_dir(f):
                 mkdir(f)

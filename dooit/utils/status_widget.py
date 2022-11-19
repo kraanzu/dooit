@@ -1,10 +1,14 @@
 from collections.abc import Callable
-from typing import Any, Dict, Optional
-from rich.console import JustifyMethod
+from typing import Any, Dict, Optional, Tuple
+from rich.console import JustifyMethod, RenderableType
 from rich.text import Text
 
 
 class Widget:
+    """
+    Renderable Widget class for status bar
+    """
+
     def __init__(
         self,
         func: Callable,
@@ -17,12 +21,14 @@ class Widget:
         self.expand = expand
         self.justify = justify
 
-    def render(self):
+    def render(self) -> Tuple[RenderableType, Dict[str, Any]]:
         renderable = self.func()
         if isinstance(renderable, str):
             renderable = Text.from_markup(renderable)
 
-        params: Dict[str, Any] = {"justify": self.justify}
+        params: Dict[str, Any] = {
+            "justify": self.justify,
+        }
         if self.expand:
             params["ratio"] = 1
         else:

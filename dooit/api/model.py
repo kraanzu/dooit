@@ -9,6 +9,10 @@ MaybeModel = Optional["Model"]
 
 @dataclass
 class Response:
+    """
+    Response class to return result of an operation
+    """
+
     ok: bool
     message: Optional[str] = None
 
@@ -44,9 +48,17 @@ class Model:
 
     @property
     def path(self):
+        """
+        Uniquie path for model
+        """
+
         return "$"
 
     def _get_children(self, kind: str) -> List:
+        """
+        Get children list (workspace/todo)
+        """
+
         return self.workspaces if kind == "workspace" else self.todos
 
     def _get_child_index(self, kind: str, **kwargs) -> int:

@@ -42,7 +42,7 @@ class SortOptions(Widget):
         self.highlighted = id
         self.refresh(layout=True)
 
-    def hide(self):
+    def hide(self) -> None:
         self.visible = False
 
     def move_cursor_down(self) -> None:
@@ -115,24 +115,13 @@ class SortOptions(Widget):
 
     def render(self) -> RenderableType:
 
-        # 1 borders + 1 space padding on each side
         tree = Tree("")
         tree.hide_root = True
         tree.expanded = True
 
         for index, option in enumerate(self.options):
             label = Text(option)
-
-            if option == "desc":
-                label = Text("    ") + label
-            elif option == "due":
-                label = Text("    ") + label
-            elif option == "status":
-                label = Text("    ") + label
-            elif option == "urgency":
-                label = Text("    ") + label
-            else:
-                label = Text(" X   ") + label
+            label = Text("  ") + label
 
             label.pad_right(self.size.width)
             label.plain = label.plain.ljust(20)

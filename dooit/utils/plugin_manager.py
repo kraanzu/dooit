@@ -6,6 +6,11 @@ import importlib
 
 
 def run_file(d, file_name):
+    """
+    Runs the given file
+    Note: Add the path to $PATH and resets back everything on exit
+    """
+
     full_path = os.path.join(d, file_name)
     sys.path.append(d)
     sys.path.append(full_path)
@@ -13,8 +18,16 @@ def run_file(d, file_name):
 
 
 class Plug:
+    """
+    Plug class to run the plugins
+    """
+
     @classmethod
     def entry(cls):
+        """
+        Runs all the plugins on start (Threads with daemon set to true)
+        """
+
         for directory, _, filelist in os.walk(PLUGINS):
             for f in filelist:
                 if f.endswith("entry.py"):
@@ -29,6 +42,10 @@ class Plug:
 
     @classmethod
     def exit(cls):
+        """
+        Runs all the plugins to cleanup (Threads with daemon set to true)
+        """
+
         for directory, _, filelist in os.walk(PLUGINS):
             for f in filelist:
                 if f.endswith("exit.py"):

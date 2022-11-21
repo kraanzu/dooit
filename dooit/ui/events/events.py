@@ -1,13 +1,21 @@
 from typing import Literal
-from rich.text import TextType
+from rich.text import Text
 from textual.message import Message, MessageTarget
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG"]
 SortMethodType = Literal["desc", "status", "date", "urgency"]
 
 
-class Xxx(Message, bubble=True):
-    pass
+class SwitchTab(Message, bubble=True):
+    """
+    Emitted when user needs to focus other pane
+    """
+
+
+class SpawnHelp(Message, bubble=True):
+    """
+    Emitted when user presses `?` in NORMAL mode
+    """
 
 
 class ChangeStatus(Message, bubble=True):
@@ -25,7 +33,7 @@ class Notify(Message, bubble=True):
     Emitted when A notification message on status bar is to be shown
     """
 
-    def __init__(self, sender: MessageTarget, message: TextType) -> None:
+    def __init__(self, sender: MessageTarget, message: Text) -> None:
         super().__init__(sender)
         self.message = message
 
@@ -48,9 +56,3 @@ class TopicSelect(Message, bubble=True):
     def __init__(self, sender: MessageTarget, item) -> None:
         super().__init__(sender)
         self.item = item
-
-
-class SwitchTab(Message, bubble=True):
-    """
-    Emitted when user needs to focus other pane
-    """

@@ -22,6 +22,10 @@ def colored(text: str, color: StyleType) -> str:
 def generate_kb_table(
     kb: dict[str, str], topic: str, notes: list[str] = []
 ) -> RenderableType:
+    """
+    Generate Table for modes
+    """
+
     table = Table.grid(expand=True, padding=(0, 3))
     table.add_column("mode")
     table.add_column("cmd")
@@ -162,8 +166,14 @@ class HelpMenu:
 
 
 class HelpScreen(Screen):
-    BINDINGS = [("escape", "app.pop_screen", "Pop screen")]
-    BINDINGS = [("question_mark", "app.pop_screen", "Pop screen")]
+    """
+    Help Screen to view Help Menu
+    """
+
+    BINDINGS = [
+        ("escape", "app.pop_screen", "Pop screen"),
+        ("question_mark", "app.pop_screen", "Pop screen"),
+    ]
     view = Vertical(*[Static(i) for i in HelpMenu().items()])
 
     def compose(self):

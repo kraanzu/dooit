@@ -3,7 +3,7 @@ from rich.text import Text, TextType
 from rich.table import Table
 from textual.widget import Widget
 
-from dooit.utils import default_config
+from ...utils import default_config
 from ..events import StatusType
 
 bar = default_config.bar
@@ -46,30 +46,21 @@ class StatusBar(Widget):
 
     def render(self) -> RenderableType:
 
-        table = Table.grid(padding=(0, 0), expand=True)
+        table = Table.grid(expand=True)
         d = {"status": self.status, "message": self.message}
         renderables, kwargs = zip(*[widget.render() for widget in bar])
 
         row = []
         for i in renderables:
             if isinstance(i, Text):
-                i.plain = i.plain.format(**d)
-                row.append(i)
-            else:
-                i = str(i).format(**d)
-                row.append(Text.from_markup(i))
+                i = i.markup
+
+            i = str(i)
+            i = i.format(**d)
+            i = Text.from_markup(i)
+            row.append(i)
 
         [table.add_column(**i) for i in kwargs]
         table.add_row(*row)
 
         return table
-
-
-if __name__ == "__main__":
-    from textual.app import App
-
-    class MyApp(App):
-        async def on_mount(self):
-            await self.view.dock(StatusBar())
-
-    MyApp.run()

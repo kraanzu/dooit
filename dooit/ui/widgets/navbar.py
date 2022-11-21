@@ -10,6 +10,10 @@ from ...utils.default_config import *  # noqa
 
 
 class NavBar(TreeList):
+    """
+    NavBar class to manage UI's navbar
+    """
+
     def __init__(self):
         super().__init__()
         self.sort_menu = SortOptions(
@@ -83,6 +87,7 @@ class NavBar(TreeList):
         self.refresh()
 
     def add_row(self, row: Component, highlight: bool) -> None:
+
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
         desc = self._stylize(navbar["desc"], highlight, kwargs)
         return self.push_row([desc], row.depth)

@@ -12,6 +12,10 @@ from ...utils.default_config import *  # noqa
 
 
 class TodoList(TreeList):
+    """
+    Tree structured Class to manage todos
+    """
+
     def __init__(self):
         super().__init__()
         self._assigned = False
@@ -91,8 +95,8 @@ class TodoList(TreeList):
 
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
-        for name, ratio in todo_columns.items():
-            self.table.add_column(name, ratio=ratio)
+        for name, item in todo_columns.items():
+            self.table.add_column(name, ratio=item[0])
 
     # ##########################################
 
@@ -130,25 +134,21 @@ class TodoList(TreeList):
 
     def add_row(self, row: Component, highlight: bool) -> None:
 
-        item = {i: str(j.render()) for i, j in row.fields.items()}
-
-        if isinstance(row.item, Todo):
-            item["urgency"] = todos["urgency_icons"][row.item.urgency]
-            item["status"] = todos["status"][item["status"].lower()]
-
-            for i in ["tags", "recur", "eta"]:  # Extra formatting
-                if item[i]:
-                    item[i] = todos["extra_fmt"][i].format(**{i: item[i]})
-
         entry = []
-        for col in todo_columns:
-            entry.append(
-                self._stylize(
-                    todos[col],
-                    highlight,
-                    item,
-                )
+        kwargs = {i: str(j.render()) for i, j in row.fields.items()}
+
+        for _, func in todo_columns.values():
+            res = func(
+                row.item,
+                highlight,
+                self.editing != "none",
             )
+            if isinstance(res, str):
+                res = res.format(**kwargs)
+                res = Text.from_markup(res)
+            else:
+                res.plain = res.plain.format(**kwargs)
+            entry.append(res)
 
         return self.push_row(entry, row.depth)
 

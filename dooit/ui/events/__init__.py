@@ -6,11 +6,11 @@ from .events import (
     SortMethodType,
     TopicSelect,
     SwitchTab,
-    Xxx,
+    SpawnHelp,
 )
 
 __all__ = [
-    "Xxx",
+    "SpawnHelp",
     "ChangeStatus",
     "Notify",
     "ApplySortMethod",

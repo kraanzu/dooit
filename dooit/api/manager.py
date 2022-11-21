@@ -26,9 +26,11 @@ class Manager(Model):
     def sort_workspace(self, attr: str) -> None:
         return super().sort(WORKSPACE, attr)
 
+    def _get_commit_data(self):
+        return {getattr(child, "desc"): child.commit() for child in self.workspaces}
+
     def commit(self) -> None:
-        data = {getattr(child, "desc"): child.commit() for child in self.workspaces}
-        Parser.save(data)
+        Parser.save(self._get_commit_data())
 
     def setup(self) -> None:
         data = Parser.load()
@@ -40,10 +42,17 @@ class Manager(Model):
             child.edit("desc", i)
             child.from_data(j)
 
-    def refresh_data(self):
+    def refresh_data(self) -> bool:
+        data_new = Parser.load()
+        data_cache = self._get_commit_data()
+
+        if data_new == data_cache:
+            return False
+
         self.workspaces.clear()
         self.todos.clear()
         self.setup()
+        return True
 
 
 manager = Manager()

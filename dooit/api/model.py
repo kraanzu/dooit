@@ -2,32 +2,31 @@ from typing import Any, Dict, List, Optional, TypeVar
 from uuid import uuid4
 from dataclasses import dataclass
 from .storage import Storage
+from rich.text import Text
 
 T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
-
 
 def colored(text: str, color: str):
     return f"[{color}]{text}[/{color}]"
 
 @dataclass
 class Response:
+    """
+    Response class to return result of an operation
+    """
+
     ok: bool
     message: Optional[str] = None
-    hint: Optional[str] = None
 
     def text(self):
-        text = ""
+        def colored(a, b):
+            return f"[{b}]{a}[/]"
 
         if self.message:
-            text += " "
-            text += colored(self.message, "green" if self.ok else "red")
+            return colored(" " + self.message, "green" if self.ok else "red")
 
-        if self.hint:
-            text += " "
-            text += colored(self.hint, "yellow")
-
-        return text
+        return Text()
 
 
 class Model:
@@ -52,9 +51,17 @@ class Model:
 
     @property
     def path(self):
+        """
+        Uniquie path for model
+        """
+
         return "$"
 
     def _get_children(self, kind: str) -> List:
+        """
+        Get children list (workspace/todo)
+        """
+
         return self.workspaces if kind == "workspace" else self.todos
 
     def _get_child_index(self, kind: str, **kwargs) -> int:

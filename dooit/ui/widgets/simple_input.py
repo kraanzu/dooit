@@ -26,7 +26,7 @@ class SimpleInput(Widget):
         title_align: AlignMethod = "center",
         border_style: StyleType = "blue",
         box: Box | None = None,
-        placeholder: TextType = Text("", style="dim white"),
+        placeholder: Text = Text("", style="dim white"),
         password: bool = False,
         list: tuple[Literal["blacklist", "whitelist"], list[str]] = ("blacklist", []),
     ) -> None:
@@ -47,7 +47,7 @@ class SimpleInput(Widget):
     def has_focus(self) -> bool:
         return self._has_focus
 
-    def render(self) -> TextType:
+    def render(self) -> Text:
         """
         Renders a Panel for the Text Input Box
         """

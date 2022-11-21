@@ -181,7 +181,7 @@ class Model:
 
         return child
 
-    def insert_item(self: T, item: T | None, insert_as_child=False) -> None:
+    def insert_item(self, item, insert_as_child=False) -> None:
         """
         Insert item at current location and clear clipboard each time we paste
         """

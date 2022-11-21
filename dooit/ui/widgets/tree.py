@@ -281,6 +281,9 @@ class TreeList(Widget):
     def _insert(self, insert_as_child=False) -> Model:
         ...
 
+    def _yank(self) -> Model:
+        ...
+
     def _drop(self, _item=None) -> None:
         ...
 
@@ -317,6 +320,14 @@ class TreeList(Widget):
             self.component.expand()
 
         self._insert(insert_as_child)
+        self._refresh_rows()
+        self.commit()
+
+    async def yank(self, insert_as_child=False) -> None:
+        if self.component and self.item:
+            self.component.expand()
+
+        self._yank()
         self._refresh_rows()
         self.commit()
 
@@ -475,6 +486,7 @@ class TreeList(Widget):
                     "A": self.add_child,
                     "a": self.add_sibling,
                     "x": self.remove_item,
+                    "y": self.yank,
                     "p": self.insert,
                     "P": partial(self.insert, True),
                     "g": self.move_to_top,

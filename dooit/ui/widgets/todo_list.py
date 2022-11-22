@@ -169,7 +169,7 @@ class TodoList(TreeList):
             self.item.insert_item(Storage.clipboard, insert_as_child)
 
     def _yank(self) -> None:
-        if self.item: 
+        if self.item:
             Storage.clipboard = self.item
 
     def _drop(self, item: Optional[Todo] = None) -> None:

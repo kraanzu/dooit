@@ -7,8 +7,10 @@ from rich.text import Text
 T = TypeVar("T", bound="Model")
 MaybeModel = Optional["Model"]
 
+
 def colored(text: str, color: str):
     return f"[{color}]{text}[/{color}]"
+
 
 @dataclass
 class Response:
@@ -193,9 +195,10 @@ class Model:
         Insert item at current location and clear clipboard each time we paste
         """
         from ..api.workspace import Workspace
+
         kind = "workspace" if isinstance(item, Workspace) else "todo"
-        if item != None and self.parent:
-            if insert_as_child: 
+        if item is not None and self.parent:
+            if insert_as_child:
                 idx = self._get_child_index(kind, name=self.name)
                 children = self._get_children(kind)
                 item.parent = self

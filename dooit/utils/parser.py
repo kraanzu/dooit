@@ -55,7 +55,12 @@ class Parser:
         check_folder(XDG_DATA)
 
         self.todo_yaml = XDG_DATA / "todo.yaml"
+        self.config_file = XDG_CONFIG / "config.py"
 
         if not Path.is_file(self.todo_yaml):
             with open(self.todo_yaml, "w") as f:
                 yaml.safe_dump(dict(), f)
+
+        if not Path.is_file(self.config_file):
+            with open(self.config_file, "w") as f:
+                pass

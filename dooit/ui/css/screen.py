@@ -2,12 +2,12 @@
 Main CSS File for App
 """
 
-from dooit.utils.default_config import BACKGROUND
+from dooit.utils.conf_reader import Config
 
 
 screen_CSS = f"""
 Screen {{
-    background: {BACKGROUND};
+    background: {Config().get("BACKGROUND")};
     layout: grid;
     grid-size: 2 2;
     grid-columns: 2fr 8fr;

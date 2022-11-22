@@ -3,10 +3,10 @@ from rich.text import Text, TextType
 from rich.table import Table
 from textual.widget import Widget
 
-from ...utils import default_config
+from ...utils.conf_reader import Config
 from ..events import StatusType
 
-bar = default_config.bar
+bar = Config().get("bar")
 
 
 class StatusBar(Widget):

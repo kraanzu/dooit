@@ -3,12 +3,18 @@ from rich.table import Table
 from rich.text import Text
 from textual import events
 
+from dooit.utils.conf_reader import Config
+
 from .tree import Component, TreeList
 from ...api.todo import Todo
 from ...ui.events.events import SwitchTab
 from ...api import Workspace
 from ...ui.widgets.sort_options import SortOptions
-from ...utils.default_config import *  # noqa
+
+conf = Config()
+EMPTY_TODO = conf.get("EMPTY_TODO")
+dashboard = conf.get("dashboard")
+todo_columns = conf.get("todo_columns")
 
 
 class TodoList(TreeList):

@@ -1,6 +1,6 @@
 import re
 from functools import partial
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Union
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -143,7 +143,7 @@ class TreeList(Widget):
             return self.row_vals[self.current]
 
     @property
-    def item(self) -> Optional[Workspace | Todo]:
+    def item(self) -> Any:
         if self.component:
             return self.component.item
 

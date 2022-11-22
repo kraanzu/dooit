@@ -6,7 +6,11 @@ from .tree import Component, TreeList
 from ...ui.widgets.sort_options import SortOptions
 from ...api import Manager, Model, Workspace
 from ..events import TopicSelect, SwitchTab
-from ...utils.default_config import *  # noqa
+from ...utils.conf_reader import Config
+
+conf = Config()
+EMPTY_NAVBAR = conf.get("EMPTY_NAVBAR")
+navbar = conf.get("navbar")
 
 
 class NavBar(TreeList):

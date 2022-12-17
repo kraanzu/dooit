@@ -7,8 +7,11 @@ import importlib.util
 user_config = path.join(appdirs.user_config_dir("dooit"), "config.py")
 default_config = path.join(path.dirname(__file__), "default_config.py")
 
-user_spec = importlib.util.spec_from_file_location("user_config", user_config)
 default_spec = importlib.util.spec_from_file_location("default_config", default_config)
+if path.isfile(user_config):
+    user_spec = importlib.util.spec_from_file_location("user_config", user_config)
+else:
+    user_spec = default_spec
 
 
 def get_vars(spec: Optional[ModuleSpec]) -> Dict[str, Any]:

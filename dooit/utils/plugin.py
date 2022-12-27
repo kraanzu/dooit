@@ -17,6 +17,7 @@ class Plugin:
         # All the pre processing stuff happens here
         # After it's done, mark `ready` param to True
         pass
+        self.ready = True
 
     def run(self) -> bool:
         # Do your magic here!

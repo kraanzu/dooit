@@ -1,8 +1,8 @@
 from importlib.machinery import ModuleSpec
+import importlib.util
 from os import path
 from typing import Any, Dict, Optional
 import appdirs
-import importlib.util
 
 user_config = path.join(appdirs.user_config_dir("dooit"), "config.py")
 default_config = path.join(path.dirname(__file__), "default_config.py")

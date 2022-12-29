@@ -11,8 +11,22 @@ class Manager(Model):
     Manager top class that manages basically
     """
 
+    _lock = 0
+    _force_refresh = 0
     fields = []
     nomenclature: str = "Workspace"
+
+    def lock(self) -> None:
+        self._lock += 1
+
+    def unlock(self) -> None:
+        self._lock -= 1
+
+    def enable_force_refresh(self):
+        self._force_refresh += 1
+
+    def is_locked(self) -> bool:
+        return self._lock != 0
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)
@@ -30,9 +44,17 @@ class Manager(Model):
         return {getattr(child, "desc"): child.commit() for child in self.workspaces}
 
     def commit(self) -> None:
+        if self.is_locked():
+            return
+
+        self.lock()
         Parser.save(self._get_commit_data())
+        self.unlock()
 
     def setup(self) -> None:
+        if self.is_locked():
+            return
+
         data = Parser.load()
         self.from_data(data)
 
@@ -47,7 +69,10 @@ class Manager(Model):
         data_cache = self._get_commit_data()
 
         if data_new == data_cache:
-            return False
+            if self._force_refresh:
+                self._force_refresh -= 1
+            else:
+                return False
 
         self.workspaces.clear()
         self.todos.clear()

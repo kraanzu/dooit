@@ -7,7 +7,7 @@ from os import mkdir
 HOME = Path.home()
 XDG_CONFIG = Path(appdirs.user_config_dir("dooit"))
 XDG_DATA = Path(appdirs.user_data_dir("dooit"))
-PLUGINS = XDG_CONFIG / "plugins"
+PLUGINS_PATH = XDG_CONFIG / "plugins"
 
 
 class Parser:
@@ -51,7 +51,7 @@ class Parser:
                 mkdir(f)
 
         check_folder(XDG_CONFIG)
-        check_folder(PLUGINS)
+        check_folder(PLUGINS_PATH)
         check_folder(XDG_DATA)
 
         self.todo_yaml = XDG_DATA / "todo.yaml"

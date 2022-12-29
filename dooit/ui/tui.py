@@ -1,15 +1,17 @@
+from datetime import datetime
 from typing import Union
 from textual.app import App
 from textual import events
-from dooit.utils.plugin_manager import Plug
+from dooit.utils.plugin_manager import PluginManager
 from dooit.utils.watcher import Watcher
-from ..ui.widgets.help_menu import HelpScreen
-from ..ui.events import *  # noqa
-from ..ui.widgets import NavBar, TodoList, StatusBar
-from ..api.manager import manager
-from ..api.workspace import Workspace
-from ..api.todo import Todo
-from ..ui.css.screen import screen_CSS
+from dooit.ui.widgets.help_menu import HelpScreen
+from dooit.ui.events import *  # noqa
+from dooit.ui.widgets import NavBar, TodoList, StatusBar
+from dooit.api.manager import manager
+from dooit.api.workspace import Workspace
+from dooit.api.todo import Todo
+from dooit.ui.css.screen import screen_CSS
+from threading import Thread
 
 
 class Dooit(App):
@@ -25,17 +27,20 @@ class Dooit(App):
         self.watcher = Watcher()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
+        self.p = PluginManager(manager)
+        self.start_plugins()
 
     async def on_mount(self):
         self.set_interval(1, self.poll)
-        self.set_timer(3, self.start_plugins)
 
     def start_plugins(self):
-        Plug.entry()
+        Thread(target=self.p.start, daemon=True).start()
 
     async def poll(self):
-        if self.watcher.has_modified():
+        if not manager.is_locked() and self.watcher.has_modified():
+            self.bar.set_message("Checking for modifications /// ")
             if manager.refresh_data():
+                self.bar.set_message(str(datetime.now()).split()[1])
                 await self.navbar._refresh_data()
                 await self.todos.update_table(self.navbar.item)
 
@@ -45,6 +50,7 @@ class Dooit(App):
         yield self.bar
 
     async def action_quit(self) -> None:
+        self.p.cleanup()
         manager.commit()
         return await super().action_quit()
 

@@ -3,15 +3,16 @@ from ..api.manager import Manager
 
 class Plugin:
     ready: bool = False
+    running: bool = False
 
     def __init__(self, manager: Manager) -> None:
         self.manager = manager
 
+    def commit(self):
+        self.manager.commit()
+
     def is_ready(self) -> bool:
         return self.ready
-
-    def refresh(self) -> None:
-        self.manager.refresh_data()
 
     def pre_process(self) -> None:
         # All the pre processing stuff happens here
@@ -22,7 +23,7 @@ class Plugin:
     def run(self) -> bool:
         # Do your magic here!
         # Return True to call again else return False
-        raise NotImplemented
+        return False
 
     def run_on_exit(self) -> None:
         pass

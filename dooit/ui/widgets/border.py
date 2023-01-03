@@ -74,7 +74,7 @@ class Connector1(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold blue" if self.highlight else "dim white"
+        style = self.style_highlight if self.highlight else self.style_dim
         return Text(self.item, style=style)
 
 
@@ -94,7 +94,7 @@ class Connector2(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold blue" if self.highlight else "dim white"
+        style = self.style_highlight if self.highlight else self.style_dim
         return Text(self.item, style=style)
 
 
@@ -114,7 +114,7 @@ class Connector3(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold blue" if self.highlight else "dim white"
+        style = self.style_highlight if self.highlight else self.style_dim
         return Text(self.item, style=style)
 
 
@@ -134,5 +134,5 @@ class Connector4(Border):
         if height:
             self.item += "\n┃" * height
 
-        style = "bold blue" if self.highlight else "dim white"
+        style = self.style_highlight if self.highlight else self.style_dim
         return Text(self.item, style=style)

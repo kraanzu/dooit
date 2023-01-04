@@ -180,7 +180,7 @@ class HelpScreen(Screen):
         yield self.view
 
     async def on_key(self, event: events.Key):
-        key = event.char
+        key = event.character
         if key in ["j", "down"]:
             self.view.scroll_down()
         elif key in ["k", "up"]:

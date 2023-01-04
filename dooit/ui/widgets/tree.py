@@ -424,7 +424,7 @@ class TreeList(Widget):
 
     async def handle_key(self, event: events.Key) -> None:
 
-        key = event.char if (event.char and (event.char in PRINTABLE)) else event.key
+        key = event.character if (event.character and (event.character in PRINTABLE)) else event.key
 
         if self.editing != "none":
             field = self.row_vals[self.current].fields[self.editing]

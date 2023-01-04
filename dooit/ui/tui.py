@@ -33,12 +33,12 @@ class Dooit(App):
     async def on_mount(self):
         self.set_interval(1, self.poll)
 
-    def start_plugins(self):
+    def start_plugins(self) -> None:
         Thread(target=self.p.start, daemon=True).start()
 
     async def poll(self):
         if not manager.is_locked() and self.watcher.has_modified():
-            self.bar.set_message("Checking for modifications /// ")
+            self.bar.set_message("Checking for modifications ... ")
             if manager.refresh_data():
                 self.bar.set_message(str(datetime.now()).split()[1])
                 await self.navbar._refresh_data()

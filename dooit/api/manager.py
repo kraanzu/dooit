@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 from .model import Model
 from ..utils import Parser
 from ..api.workspace import Workspace
@@ -51,12 +51,13 @@ class Manager(Model):
         Parser.save(self._get_commit_data())
         self.unlock()
 
-    def setup(self) -> None:
+    def setup(self, data: Optional[Dict] = None) -> None:
         if self.is_locked():
             return
 
-        data = Parser.load()
-        self.from_data(data)
+        data = data or Parser.load()
+        if data:
+            self.from_data(data)
 
     def from_data(self, data: Any) -> None:
         for i, j in data.items():
@@ -66,6 +67,10 @@ class Manager(Model):
 
     def refresh_data(self) -> bool:
         data_new = Parser.load()
+
+        if data_new is None:
+            return False
+
         data_cache = self._get_commit_data()
 
         if data_new == data_cache:
@@ -76,7 +81,7 @@ class Manager(Model):
 
         self.workspaces.clear()
         self.todos.clear()
-        self.setup()
+        self.setup(data_new)
         return True
 
 

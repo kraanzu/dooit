@@ -73,16 +73,18 @@ class TodoList(TreeList):
             self._assigned = False
         else:
             self._assigned = True
-            if not self.item:
+            if not self.item or not self.component:
                 self.model = model
                 self._refresh_rows()
                 self.current = 0 if self._get_children(model) else -1
             else:
                 editing = self.editing
                 path = self.item.path
+                _old_val = ""
 
                 if editing != "none":
-                    await self._stop_edit()
+                    _old_val = self.component.fields[editing].value
+                    await self._cancel_edit()
 
                 self.model = model
                 self._refresh_rows()
@@ -95,6 +97,10 @@ class TodoList(TreeList):
 
                 self.current = index
                 if editing != "none":
+                    self.component.fields[editing].value = _old_val
+                    await self.component.fields[editing].handle_keypress(
+                        "end"
+                    )  # new val added
                     await self._start_edit(editing)
 
         self.refresh()

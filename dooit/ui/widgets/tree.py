@@ -331,6 +331,7 @@ class TreeList(Widget):
 
         self._add_sibling()
         self._refresh_rows()
+        self.commit()
         await self.to_next_sibling("desc")
 
     async def to_next_sibling(self, edit: Optional[str] = None) -> None:

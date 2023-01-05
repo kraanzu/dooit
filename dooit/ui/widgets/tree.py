@@ -399,11 +399,11 @@ class TreeList(Widget):
             return
 
         parent = self.item.parent
-        if parent and not isinstance(parent, Manager):
+        if parent.name in self._rows:
             index = self._rows[parent.name].index
             self.current = index
 
-        await self.toggle_expand()
+            await self.toggle_expand()
 
     def sort(self, attr: str) -> None:
         if self.item:

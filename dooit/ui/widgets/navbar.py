@@ -10,7 +10,7 @@ from ...utils.conf_reader import Config
 
 conf = Config()
 EMPTY_NAVBAR = conf.get("EMPTY_NAVBAR")
-navbar = conf.get("navbar")
+func = conf.get("nav_item_style")
 
 
 class NavBar(TreeList):
@@ -92,9 +92,20 @@ class NavBar(TreeList):
 
     def add_row(self, row: Component, highlight: bool) -> None:
 
+        entry = []
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
-        desc = self._stylize(navbar["desc"], highlight, kwargs)
-        return self.push_row([desc], row.depth)
+        res = func(row.item, highlight, self.editing != "none")
+
+        if isinstance(res, str):
+            res = res.format(**kwargs)
+            res = Text.from_markup(res)
+        elif isinstance(res, Text):
+            res.plain = res.plain.format(**kwargs)
+        else:
+            res = Text(str(res))
+
+        entry.append(res)
+        return self.push_row(entry, row.depth)
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

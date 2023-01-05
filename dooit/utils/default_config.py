@@ -52,24 +52,18 @@ dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
 
 
 def stylize_nav(workspace: Workspace, highlight: bool, edit: bool):
-
+    format = "{desc}" + ("/" if len(workspace.workspaces) else "")
+    pointer = "▍"
     if not highlight:
-        return colored("{desc}", "d grey50", " ")
+        return colored(format, "d grey50", " ")
     else:
         if edit:
-            colored("{desc}", "b cyan", "➜")
+            return colored(format, "b cyan", pointer)
         else:
-            return colored("{desc}", "b white", "➜")
+            return colored(format, "b white", pointer)
 
 
 nav_item_style = stylize_nav
-navbar = {
-    "desc": {
-        "dim": colored("{desc}", "d grey50", " "),
-        "highlight": colored("{desc}", "b white", "➜"),
-        "edit": colored("{desc}", "b cyan", "➜"),
-    },
-}
 
 EMPTY_NAVBAR = [
     "No workspaces yet?",
@@ -96,33 +90,68 @@ def col1(todo: Todo, highlight: bool, edit: bool):
     elif todo.status == "PENDING":
         status = colored("", "b yellow")
 
+    format = status + "{eta} {desc} {tags} {recur}"
+    if todo.todos:
+        format += "[b green]+[/]"
+
+    pointer = "⮕"
     if not highlight:
-        return colored(status + " {eta} {desc} {tags} {recur}", "d grey50", " ")
+        return colored(format, "d grey50", " ")
     else:
         if edit:
-            return colored(status + " {eta} {desc} {tags} {recur}", "b cyan", "➜")
+            return colored(format, "b cyan", pointer)
         else:
-            return colored(status + " {eta} {desc} {tags} {recur}", "b white", "➜")
+            return colored(format, "b white", pointer)
 
 
 def col2(todo: Todo, highlight: bool, edit: bool):
+
+    pre = "🕱"
+    color = "green"
+    if todo.status == "PENDING":
+        color = "yellow"
+    if todo.status == "OVERDUE":
+        color = "red"
+
+    pre = colored(pre, f"b {color}")
+
+    format = pre + " {due}"
     if not highlight:
-        return colored("{due}", "d grey50")
+        return colored(format, "d grey50")
     else:
         if edit:
-            return colored("{due}", "b white")
+            return colored(format, "b white")
         else:
-            return colored("{due}", "b cyan")
+            return colored(format, "b cyan")
 
 
 def col3(todo: Todo, highlight: bool, edit: bool):
+
+    if todo.urgency == 1:
+        pre = "🅐"
+    elif todo.urgency == 2:
+        pre = "🅑"
+    elif todo.urgency == 3:
+        pre = "🅒"
+    else:
+        pre = "🅓"
+
+    color = "green"
+    if todo.status == "PENDING":
+        color = "yellow"
+    if todo.status == "OVERDUE":
+        color = "red"
+
+    pre = colored(pre, f"b {color}")
+
+    format = pre
     if not highlight:
-        return colored("{urgency}", "d grey50")
+        return colored(format, "d grey50")
     else:
         if edit:
-            return colored("{urgency}", "b white")
+            return colored(format, "b white")
         else:
-            return colored("{urgency}", "b cyan")
+            return colored(format, "b cyan")
 
 
 # A column dict (key, value) => (name -> (ratio, function)) of the columns
@@ -144,7 +173,10 @@ EMPTY_TODO = [
 #################################
 bar = [
     Widget(
-        func=lambda: Text("{status}", "r blue"),
+        func=lambda: Text(
+            " {status} ",
+            "r blue",
+        ),
     ),
     Widget(
         func=lambda: " {message} ",

@@ -15,6 +15,7 @@ conf = Config()
 EMPTY_TODO = conf.get("EMPTY_TODO")
 dashboard = conf.get("dashboard")
 todo_columns = conf.get("todo_columns")
+PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 
 
 class TodoList(TreeList):
@@ -118,7 +119,11 @@ class TodoList(TreeList):
 
     async def check_extra_keys(self, event: events.Key):
 
-        key = event.key
+        key = (
+            event.character
+            if (event.character and (event.character in PRINTABLE))
+            else event.key
+        )
 
         if self.editing != "none":
             return

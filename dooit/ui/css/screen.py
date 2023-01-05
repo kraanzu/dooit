@@ -19,6 +19,7 @@ StatusBar {{
 }}
 
 Vertical {{
+    height: 100%;
     column-span: 2;
     row-span: 2;
     scrollbar-size: 1 1;

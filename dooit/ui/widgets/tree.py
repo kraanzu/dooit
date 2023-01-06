@@ -72,7 +72,7 @@ class VerticalView:
 
     def fix_view(self, current: int) -> None:
         if self.a < 0:
-            self.shift(-self.a)
+            self.shift(abs(self.a))
 
         if current <= self.a:
             self.shift(current - self.a)
@@ -94,6 +94,9 @@ class VerticalView:
         return self.b - self.a
 
     def range(self) -> Iterable[int]:
+        if self.a < 0:
+            self.shift(abs(self.a))
+
         return range(self.a, self.b + 1)
 
 
@@ -151,7 +154,9 @@ class TreeList(Widget):
 
     # --------------------------------------
 
-    def _size_updated(self, size: Size, virtual_size: Size, container_size: Size) -> None:
+    def _size_updated(
+        self, size: Size, virtual_size: Size, container_size: Size
+    ) -> None:
         super()._size_updated(size, virtual_size, container_size)
         self._set_view()
         self.refresh()
@@ -431,7 +436,11 @@ class TreeList(Widget):
 
     async def handle_key(self, event: events.Key) -> None:
 
-        key = event.character if (event.character and (event.character in PRINTABLE)) else event.key
+        key = (
+            event.character
+            if (event.character and (event.character in PRINTABLE))
+            else event.key
+        )
 
         if self.editing != "none":
             field = self.row_vals[self.current].fields[self.editing]
@@ -513,8 +522,7 @@ class TreeList(Widget):
     def make_table(self) -> None:
         self._setup_table()
 
-        # for i in self.view.range():
-        for i in range(len(self.row_vals)):
+        for i in self.view.range():
             try:
                 self.add_row(self.row_vals[i], i == self.current)
             except:

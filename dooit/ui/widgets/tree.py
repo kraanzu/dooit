@@ -1,4 +1,6 @@
 import re
+
+from textual.geometry import Size
 from functools import partial
 from typing import Any, Dict, Iterable, List, Optional, Union
 from rich.align import Align
@@ -148,6 +150,11 @@ class TreeList(Widget):
             return self.component.item
 
     # --------------------------------------
+
+    def _size_updated(self, size: Size, virtual_size: Size, container_size: Size) -> None:
+        super()._size_updated(size, virtual_size, container_size)
+        self._set_view()
+        self.refresh()
 
     def _fix_view(self) -> None:
         return self.view.fix_view(self.current)

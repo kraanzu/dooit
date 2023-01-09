@@ -14,7 +14,7 @@ class Widget:
         func: Callable,
         width: Optional[int] = None,
         expand: bool = False,
-        justify: JustifyMethod = "center",
+        justify: JustifyMethod = "left",
     ) -> None:
         self.func = func
         self.width = width
@@ -23,8 +23,10 @@ class Widget:
 
     def render(self) -> Tuple[RenderableType, Dict[str, Any]]:
         renderable = self.func()
-        if isinstance(renderable, str):
-            renderable = Text.from_markup(renderable)
+        if isinstance(renderable, Text):
+            renderable = renderable.markup
+        elif not isinstance(renderable, str):
+            renderable = str(renderable)
 
         params: Dict[str, Any] = {
             "justify": self.justify,
@@ -32,6 +34,6 @@ class Widget:
         if self.expand:
             params["ratio"] = 1
         else:
-            params["width"] = self.width or len(renderable)
+            params["width"] = self.width
 
         return renderable, params

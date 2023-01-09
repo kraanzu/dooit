@@ -47,11 +47,14 @@ class StatusBar(Widget):
     def render(self) -> RenderableType:
 
         table = Table.grid(expand=True)
-        d = {"status": self.status, "message": self.message}
+        d = {
+            "status": self.status,
+            "message": self.message,
+        }
         renderables, kwargs = zip(*[widget.render() for widget in bar])
 
         row = []
-        for i in renderables:
+        for i, attrs in zip(renderables, kwargs):
             if isinstance(i, Text):
                 i = i.markup
 
@@ -59,6 +62,9 @@ class StatusBar(Widget):
             i = i.format(**d)
             i = Text.from_markup(i)
             row.append(i)
+
+            if "ratio" not in attrs:
+                attrs["width"] = attrs.get("width", None) or len(i) + 1
 
         [table.add_column(**i) for i in kwargs]
         table.add_row(*row)

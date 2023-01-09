@@ -1,4 +1,6 @@
+from typing import List
 from rich.console import RenderableType
+from rich.markup import render
 from rich.text import Text, TextType
 from rich.table import Table
 from textual.widget import Widget
@@ -46,14 +48,18 @@ class StatusBar(Widget):
 
     def render(self) -> RenderableType:
 
-        table = Table.grid(expand=True)
+        renderable = Text()
+
         d = {
             "status": self.status,
             "message": self.message,
         }
+        expandables = 0
+        width = self.size.width
+
         renderables, kwargs = zip(*[widget.render() for widget in bar])
 
-        row = []
+        row: List[Text] = []
         for i, attrs in zip(renderables, kwargs):
             if isinstance(i, Text):
                 i = i.markup
@@ -63,10 +69,27 @@ class StatusBar(Widget):
             i = Text.from_markup(i)
             row.append(i)
 
-            if "ratio" not in attrs:
-                attrs["width"] = attrs.get("width", None) or len(i) + 1
+            if "ratio" in attrs:
+                expandables += 1
+            else:
+                w = attrs["width"] = attrs.get("width", None) or len(i)
+                width -= w
 
-        [table.add_column(**i) for i in kwargs]
-        table.add_row(*row)
+        for attrs in kwargs:
+            if "ratio" in attrs:
+                attrs["width"] = width // expandables
 
-        return table
+        for i, j in zip(row, kwargs):
+            justify = j["justify"]
+            width = j["width"] - len(i)
+
+            if justify == "right":
+                i.pad_left(width)
+            elif justify == "left":
+                i.pad_right(width)
+            elif justify == "center":
+                i.pad(width // 2)
+
+            renderable += i
+
+        return renderable

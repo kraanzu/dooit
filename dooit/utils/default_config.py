@@ -3,6 +3,7 @@ from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.utils.status_widget import Widget
 from datetime import datetime
+import os
 
 # NOTE: See rich style documentation for details
 
@@ -26,6 +27,10 @@ def get_clock() -> Text:
 
 def get_date() -> Text:
     return Text(f"{datetime.today().strftime(' %d/%m/%Y ')}", "r green")
+
+
+def get_username():
+    return Text(f" {os.getlogin()} ", "r blue")
 
 
 ART = """\
@@ -180,17 +185,14 @@ bar = [
     ),
     Widget(
         func=lambda: " {message} ",
-        justify="left",
         expand=True,
     ),
     Widget(
         func=get_clock,
+        justify="center"
     ),
     Widget(
-        func=lambda: " ",  # padding
-    ),
-    Widget(
-        func=get_date,
+        func=get_username,
     ),
 ]
 

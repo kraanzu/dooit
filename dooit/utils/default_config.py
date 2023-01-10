@@ -22,11 +22,7 @@ def colored(text: str, color: str, pre: str = ""):
 
 
 def get_clock() -> Text:
-    return Text(f"{datetime.now().time().strftime(' %X ')}", "r yellow")
-
-
-def get_date() -> Text:
-    return Text(f"{datetime.today().strftime(' %d/%m/%Y ')}", "r green")
+    return Text(f"{datetime.now().time().strftime(' %X ')}", "r cyan")
 
 
 def get_username():
@@ -95,13 +91,17 @@ def col1(todo: Todo, highlight: bool, edit: bool):
     elif todo.status == "PENDING":
         status = colored("", "b yellow")
 
-    format = status + "{eta} {desc} {tags} {recur}"
+    if todo.status == "COMPLETED":
+        format = status + "{eta} [s]{desc}[/s] {tags} {recur}"
+    else:
+        format = status + "{eta} {desc} {tags} {recur}"
+
     if todo.todos:
         format += "[b green]+[/]"
 
-    pointer = "⮕"
+    pointer = ""
     if not highlight:
-        return colored(format, "d grey50", " ")
+        return colored(format, "d grey50", "")
     else:
         if edit:
             return colored(format, "b cyan", pointer)
@@ -189,7 +189,6 @@ bar = [
     ),
     Widget(
         func=get_clock,
-        justify="center"
     ),
     Widget(
         func=get_username,

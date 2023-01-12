@@ -1,8 +1,8 @@
 import re
 from typing import Any, List, Optional, Tuple, TypeVar
-from .model import Model, Response
 from dateparser import parse
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from .model import Model, Response
 
 
 TODO = "todo"
@@ -24,12 +24,17 @@ class Todo(Model):
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
+        from dooit.utils.conf_reader import Config
+
+        self.DATE_ORDER = Config().get("DATE_ORDER")
+
         self._desc = ""
         self.urgency = 4
 
         self._eta = ""
         self._due = "none"
         self._done = False
+        self._overdue = False
         self._tags = []
         self._recur = ""
         self.todos: List[Todo] = []
@@ -132,14 +137,20 @@ class Todo(Model):
         return self._due
 
     def set_due(self, val: str) -> Response:
+
         if val == "":
             self._due = ""
             return Response(True, "Due removed for the todo")
 
-        res = parse(val)
+        res = parse(val, settings={"DATE_ORDER": self.DATE_ORDER})
         if res:
             try:
-                self._due = res.strftime(r"%m-%d-%y")
+                format = "-".join(list(self.DATE_ORDER))
+                for old, new in [["D", "%d"], ["M", "%m"], ["Y", "%y"]]:
+                    format = format.replace(old, new)
+
+                self._overdue = datetime.now() > res
+                self._due = res.strftime(format)
                 return Response(
                     True, f"Due date changed to [b cyan]{self.due}[/b cyan]"
                 )
@@ -156,6 +167,9 @@ class Todo(Model):
         if self._done:
             return "COMPLETED"
         else:
+            if self._overdue:
+                return "OVERDUE"
+
             return "PENDING"
 
     @property

@@ -111,7 +111,7 @@ def col1(todo: Todo, highlight: bool, edit: bool):
 
 def col2(todo: Todo, highlight: bool, edit: bool):
 
-    pre = "🕱"
+    pre = "🕑"
     color = "green"
     if todo.status == "PENDING":
         color = "yellow"

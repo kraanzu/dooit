@@ -1,4 +1,5 @@
 import re
+import pyperclip
 
 from textual.geometry import Size
 from functools import partial
@@ -6,7 +7,7 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
-from rich.text import Text
+from rich.text import Text, TextType
 from textual import events
 from textual.reactive import Reactive
 from textual.widget import Widget
@@ -133,6 +134,12 @@ class TreeList(Widget):
         manager.commit()
 
     # ------------ INTERNALS ----------------
+
+    async def notify(self, message: TextType):
+        if isinstance(message, str):
+            message = Text.from_markup(message)
+
+        await self.emit(Notify(self, message))
 
     def toggle_highlight(self) -> None:
         self._has_focus = not self._has_focus
@@ -271,7 +278,7 @@ class TreeList(Widget):
         self.component.refresh_item(self.editing)
         self.editing = "none"
 
-        await self.emit(Notify(self, res.text()))
+        await self.notify(res.text())
         await self.emit(ChangeStatus(self, "NORMAL"))
 
         if not res.ok:
@@ -281,12 +288,12 @@ class TreeList(Widget):
 
     async def _start_filtering(self) -> None:
         self.filter.on_focus()
-        await self.emit(Notify(self, self.filter.render()))
+        await self.notify(self.filter.render())
 
     async def _stop_filtering(self) -> None:
         self.filter.clear()
         self._refresh_rows()
-        await self.emit(Notify(self, self.filter.render()))
+        await self.notify(self.filter.render())
         await self.emit(ChangeStatus(self, "NORMAL"))
 
     def _add_child(self) -> Model:
@@ -425,6 +432,10 @@ class TreeList(Widget):
             self.current = self._rows[curr].index
             self.commit()
 
+    async def copy_text(self) -> None:
+        pyperclip.copy(self.item.desc)
+        await self.notify("[green]Description copied to clipboard![/]")
+
     async def show_sort_menu(self) -> None:
         self.sort_menu.visible = True
 
@@ -459,7 +470,7 @@ class TreeList(Widget):
 
             elif self.filter.has_focus:
                 await self.filter.handle_keypress(key)
-                await self.emit(Notify(self, self.filter.render()))
+                await self.notify(self.filter.render())
                 self._refresh_rows()
                 self.current = 0
 
@@ -488,6 +499,7 @@ class TreeList(Widget):
                     "s": self.show_sort_menu,
                     "/": self._start_filtering,
                     "?": self.spawn_help,
+                    "y": self.copy_text
                 }
 
                 if key in keybinds:

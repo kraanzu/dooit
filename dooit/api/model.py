@@ -8,13 +8,27 @@ MaybeModel = Optional["Model"]
 
 
 @dataclass
-class Response:
+class Result:
     """
     Response class to return result of an operation
     """
 
     ok: bool
     message: Optional[str] = None
+
+    @classmethod
+    def Ok(cls, message: Optional[str] = None):
+        return cls(True, message)
+
+    @classmethod
+    def Err(cls, message: str):
+        return cls(False, message)
+
+    def is_ok(self) -> bool:
+        return self.ok
+
+    def is_err(self) -> bool:
+        return not self.ok
 
     def text(self):
         def colored(a, b):
@@ -24,6 +38,9 @@ class Response:
             return colored(" " + self.message, "green" if self.ok else "red")
 
         return Text()
+
+Ok = Result.Ok
+Err = Result.Err
 
 
 class Model:
@@ -83,7 +100,7 @@ class Model:
 
         return self.parent._get_child_index(kind, name=self.name)
 
-    def edit(self, key: str, value: str) -> Response:
+    def edit(self, key: str, value: str) -> Result:
         """
         Edit item's attrs
         """
@@ -92,7 +109,7 @@ class Model:
         if hasattr(self, func):
             return getattr(self, func)(value)
         else:
-            return Response(False, "Invalid Request!")
+            return Err("Invalid Request!")
 
     def shift_up(self, kind: str) -> None:
         """

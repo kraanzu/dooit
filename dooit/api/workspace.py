@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 from ..api.todo import Todo
-from .model import Model, Response
+from .model import Model, Ok, Err, Result
 
 WORKSPACE = "workspace"
 TODO = "todo"
@@ -18,7 +18,7 @@ class Workspace(Model):
     def desc(self):
         return self._desc
 
-    def set_desc(self, value: str) -> Response:
+    def set_desc(self, value: str) -> Result:
         if value:
             new_index = -1
             if self.parent:
@@ -27,16 +27,14 @@ class Workspace(Model):
             old_index = self._get_index("workspace")
 
             if new_index != -1 and new_index != old_index:
-                return Response(
-                    False,
+                return Err(
                     "A workspace with same description is already present",
                 )
             else:
                 self._desc = value
-                return Response(True)
+                return Ok()
 
-        return Response(
-            False,
+        return Err(
             "Can't leave description empty!",
         )
 

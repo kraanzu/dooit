@@ -1,8 +1,8 @@
 import re
 from typing import Any, List, Optional, Tuple, TypeVar
 from dateparser import parse
-from datetime import date, datetime, timedelta
-from .model import Model, Response
+from datetime import datetime, timedelta
+from .model import Model, Result, Ok, Err
 
 
 TODO = "todo"
@@ -79,7 +79,7 @@ class Todo(Model):
     def desc(self):
         return self._desc
 
-    def set_desc(self, value: str) -> Response:
+    def set_desc(self, value: str) -> Result:
         if value:
             new_index = -1
             if self.parent:
@@ -88,16 +88,14 @@ class Todo(Model):
             old_index = self._get_index("todo")
 
             if new_index != -1 and new_index != old_index:
-                return Response(
-                    False,
+                return Err(
                     "A todo with same description is already present",
                 )
             else:
                 self._desc = value
-                return Response(True)
+                return Ok()
 
-        return Response(
-            False,
+        return Err(
             "Can't leave description empty!",
         )
 
@@ -105,12 +103,12 @@ class Todo(Model):
     def eta(self):
         return self._format_duration(self._eta)
 
-    def set_eta(self, val: str) -> Response:
+    def set_eta(self, val: str) -> Result:
         if not self._is_valid(val):
-            return Response(False, "Invalid Format!")
+            return Err("Invalid Format!")
 
         self._eta = val
-        return Response(True)
+        return Ok()
 
     @property
     def recur(self):
@@ -124,23 +122,23 @@ class Todo(Model):
 
         if not val:
             self._recur = ""
-            return Response(True, "Recurrence removed for the todo")
+            return Ok("Recurrence removed for the todo")
 
         if self._is_valid(val):
             self._recur = val
-            return Response(True)
+            return Ok()
 
-        return Response(False, "Invalid Format!")
+        return Err("Invalid Format!")
 
     @property
     def due(self):
         return self._due
 
-    def set_due(self, val: str) -> Response:
+    def set_due(self, val: str) -> Result:
 
         if val == "":
             self._due = ""
-            return Response(True, "Due removed for the todo")
+            return Ok("Due removed for the todo")
 
         res = parse(val, settings={"DATE_ORDER": self.DATE_ORDER})
         if res:
@@ -151,16 +149,11 @@ class Todo(Model):
 
                 self._overdue = datetime.now() > res
                 self._due = res.strftime(format)
-                return Response(
-                    True, f"Due date changed to [b cyan]{self.due}[/b cyan]"
-                )
+                return Ok(f"Due date changed to [b cyan]{self.due}[/b cyan]")
             except:
-                return Response(
-                    False,
-                    "Invalid Format!",
-                )
+                return Err("Invalid Format!")
 
-        return Response(False, "Cannot parse the string!")
+        return Err("Cannot parse the string!")
 
     @property
     def status(self):
@@ -176,9 +169,9 @@ class Todo(Model):
     def tags(self):
         return ", ".join(self._tags)
 
-    def set_tags(self, val: str) -> Response:
+    def set_tags(self, val: str) -> Result:
         self._tags = [i.strip() for i in val.split(",")]
-        return Response(True)
+        return Ok()
 
     def toggle_complete(self):
         self._done = not self._done

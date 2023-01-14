@@ -234,10 +234,11 @@ class Todo(Model):
 
         urgency = int(urgency[1:-1])
 
-        self._desc = desc
         self.urgency = urgency
-        self._due = due
         self._done = status
+
+        self.set_desc(desc)
+        self.set_due(due)
 
     def commit(self) -> List[Any]:
         if self.todos:

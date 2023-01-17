@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Union
 from textual.app import App
 from textual import events
-from dooit.utils.plugin_manager import PluginManager
 from dooit.utils.watcher import Watcher
 from dooit.ui.widgets.help_menu import HelpScreen
 from dooit.ui.events import *  # noqa
@@ -27,14 +26,9 @@ class Dooit(App):
         self.watcher = Watcher()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
-        self.p = PluginManager(manager)
-        self.start_plugins()
 
     async def on_mount(self):
         self.set_interval(1, self.poll)
-
-    def start_plugins(self) -> None:
-        Thread(target=self.p.start, daemon=True).start()
 
     async def poll(self):
         if not manager.is_locked() and self.watcher.has_modified():
@@ -50,7 +44,6 @@ class Dooit(App):
         yield self.bar
 
     async def action_quit(self) -> None:
-        self.p.cleanup()
         manager.commit()
         return await super().action_quit()
 

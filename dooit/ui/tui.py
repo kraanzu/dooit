@@ -10,7 +10,6 @@ from dooit.api.manager import manager
 from dooit.api.workspace import Workspace
 from dooit.api.todo import Todo
 from dooit.ui.css.screen import screen_CSS
-from threading import Thread
 
 
 class Dooit(App):

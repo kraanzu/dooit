@@ -1,8 +1,6 @@
 from typing import List
 from rich.console import RenderableType
-from rich.markup import render
 from rich.text import Text, TextType
-from rich.table import Table
 from textual.widget import Widget
 
 from ...utils.conf_reader import Config

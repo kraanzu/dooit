@@ -11,7 +11,7 @@ import os
 #            GENERAL            #
 #################################
 BACKGROUND = "#2e3440"
-DATE_ORDER = "DMY" # can be any permutation of 'D', 'M' and 'Y'
+DATE_ORDER = "DMY"  # can be any permutation of 'D', 'M' and 'Y'
 
 #################################
 #             UTILS             #

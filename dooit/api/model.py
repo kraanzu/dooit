@@ -39,6 +39,7 @@ class Result:
 
         return Text()
 
+
 Ok = Result.Ok
 Err = Result.Err
 

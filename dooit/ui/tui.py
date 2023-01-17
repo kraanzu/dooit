@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Union
 from textual.app import App
 from textual import events
@@ -31,9 +30,7 @@ class Dooit(App):
 
     async def poll(self):
         if not manager.is_locked() and self.watcher.has_modified():
-            self.bar.set_message("Checking for modifications ... ")
             if manager.refresh_data():
-                self.bar.set_message(str(datetime.now()).split()[1])
                 await self.navbar._refresh_data()
                 await self.todos.update_table(self.navbar.item)
 

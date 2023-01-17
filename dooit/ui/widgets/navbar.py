@@ -36,13 +36,15 @@ class NavBar(TreeList):
 
     async def _refresh_data(self):
 
-        if not self.item:
+        if not self.item or not self.component:
             self._refresh_rows()
         else:
             editing = self.editing
             path = self.item.path
+            _old_val = ""
 
             if editing != "none":
+                _old_val = self.component.fields[editing].value
                 await self._stop_edit()
 
             self._refresh_rows()
@@ -54,6 +56,7 @@ class NavBar(TreeList):
 
             self.current = index
             if editing != "none":
+                self.component.fields[editing].value = _old_val
                 await self._start_edit(editing)
 
     def _setup_table(self) -> None:

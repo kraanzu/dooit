@@ -28,7 +28,7 @@ class Config:
         self.update()
 
     def update(self):
-        self._d = get_vars(user_spec) | get_vars(default_spec)
+        self._d = get_vars(default_spec) | get_vars(user_spec)
 
     def get(self, var: str) -> Any:
         return self._d[var]

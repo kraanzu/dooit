@@ -17,8 +17,12 @@ from .simple_input import SimpleInput
 from ...api import Manager, manager, Model, Workspace, Todo
 from ...ui.widgets.sort_options import SortOptions
 from ...ui.events.events import ChangeStatus, Notify, SpawnHelp
+from ...utils.conf_reader import Config
 
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+conf = Config()
+DIM = conf.get("BORDER_DIM")
+LIT = conf.get("BORDER_LIT")
 
 
 class Component:
@@ -499,7 +503,7 @@ class TreeList(Widget):
                     "s": self.show_sort_menu,
                     "/": self._start_filtering,
                     "?": self.spawn_help,
-                    "y": self.copy_text
+                    "y": self.copy_text,
                 }
 
                 if key in keybinds:
@@ -573,7 +577,7 @@ class TreeList(Widget):
             expand=True,
             height=height,
             box=box.HEAVY,
-            border_style="cyan" if self._has_focus else "dim white",
+            border_style=LIT if self._has_focus else DIM,
         )
 
     # async def on_resize(self, event: events.Resize) -> None:

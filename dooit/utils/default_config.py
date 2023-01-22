@@ -12,6 +12,8 @@ import os
 #################################
 BACKGROUND = "#2e3440"
 DATE_ORDER = "DMY"  # can be any permutation of 'D', 'M' and 'Y'
+BORDER_DIM = "dim white"
+BORDER_LIT = "bold cyan"
 
 #################################
 #             UTILS             #

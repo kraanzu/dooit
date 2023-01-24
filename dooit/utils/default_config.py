@@ -69,6 +69,14 @@ def stylize_nav(workspace: Workspace, highlight: bool, edit: bool):
 
 nav_item_style = stylize_nav
 
+NAVBAR = {
+    "dim": "d grey50",
+    "highlight": "b white",
+    "editing": "b cyan",
+    "pointer": "▍",
+    "parent_hint": "/",
+    "children_hint": "[{count}]",
+}
 EMPTY_NAVBAR = [
     "No workspaces yet?",
     f"Press {colored('a', 'cyan')} to add some!",
@@ -170,6 +178,23 @@ todo_columns = {
     "urgency": (5, col3),
 }
 
+TODO = {
+    "dim": "d grey50",
+    "highlight": "b white",
+    "editing": "b cyan",
+    "pointer": "",
+    "children_hint": "[{done}/{total}]",
+    "recurrence_icon": "",
+    "tags_icon": "",
+    "tags_seperator": "",  # icon, pipe, comma
+    "completed_icon": "",
+    "pending_icon": "",
+    "overdue_icon": "",
+    "urgency1_icon": "",
+    "urgency2_icon": "",
+    "urgency3_icon": "",
+    "urgency4_icon": "",
+}
 
 EMPTY_TODO = [
     "Wow so Empty!?",
@@ -204,8 +229,8 @@ bar = [
 special_keys = {
     "switch pane": "tab",
     "canel writing": "escape",
-    "sort menu toggle": "s",
-    "search": ["/", "ctrl+s", "S"],
+    "sort menu toggle": "ctrl+s",
+    "search": ["/", "S"],
     "quit": "ctrl+q",
     "edit tag": "t",
     "edit recurrence": "r",

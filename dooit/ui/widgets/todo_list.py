@@ -32,7 +32,7 @@ class TodoList(TreeList):
         else:
             arr = dashboard
 
-        return [Text.from_markup(i) if isinstance(i, str) else i for i in arr]
+        return arr
 
     async def watch_current(self, value: int):
         if not self.row_vals:

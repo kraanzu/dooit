@@ -111,9 +111,10 @@ class TreeList(Widget):
     """
 
     _has_focus = False
-    current = Reactive(-1)
     _rows = {}
+    current = Reactive(-1)
     options = []
+    EMPTY: List
 
     def __init__(
         self,
@@ -132,10 +133,6 @@ class TreeList(Widget):
             parent_widget=self,
         )
         self.sort_menu.visible = False
-
-    @property
-    def EMPTY(self) -> List[RenderableType]:
-        return [""]
 
     async def on_mount(self) -> None:
         self._set_screen()
@@ -568,9 +565,12 @@ class TreeList(Widget):
         if self.sort_menu.visible:
             to_render = self.sort_menu.render()
         elif not self.row_vals:
+            EMPTY = [
+                Text.from_markup(i) if isinstance(i, str) else i for i in self.EMPTY
+            ]
             to_render = Align.center(
                 Group(
-                    *[Align.center(i) for i in self.EMPTY],
+                    *[Align.center(i) for i in EMPTY],
                 ),
                 vertical="middle",
             )

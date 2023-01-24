@@ -18,10 +18,7 @@ class NavBar(TreeList):
     """
 
     options = Workspace.fields
-
-    @property
-    def EMPTY(self):
-        return [Text.from_markup(i) if isinstance(i, str) else i for i in EMPTY_NAVBAR]
+    EMPTY = EMPTY_NAVBAR
 
     @property
     def item(self) -> Optional[Workspace]:

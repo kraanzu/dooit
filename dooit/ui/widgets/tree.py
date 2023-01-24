@@ -113,6 +113,7 @@ class TreeList(Widget):
     _has_focus = False
     current = Reactive(-1)
     _rows = {}
+    options = []
 
     def __init__(
         self,
@@ -125,6 +126,12 @@ class TreeList(Widget):
         self.sort_menu = SortOptions()
         self.sort_menu.visible = False
         self.filter = SimpleInput()
+        self.sort_menu = SortOptions(
+            name=f"Sort_{self.name}",
+            options=self.options,
+            parent_widget=self,
+        )
+        self.sort_menu.visible = False
 
     @property
     def EMPTY(self) -> List[RenderableType]:

@@ -9,7 +9,6 @@ from .tree import Component, TreeList
 from ...api.todo import Todo
 from ...ui.events.events import SwitchTab
 from ...api import Workspace
-from ...ui.widgets.sort_options import SortOptions
 
 conf = Config()
 EMPTY_TODO = conf.get("EMPTY_TODO")
@@ -23,15 +22,8 @@ class TodoList(TreeList):
     Tree structured Class to manage todos
     """
 
-    def __init__(self):
-        super().__init__()
-        self._assigned = False
-        self.sort_menu = SortOptions(
-            name=f"Sort_{self.name}",
-            options=Todo.fields,
-            parent_widget=self,
-        )
-        self.sort_menu.visible = False
+    options = Todo.fields
+    _assigned = False
 
     @property
     def EMPTY(self):

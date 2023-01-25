@@ -24,21 +24,7 @@ class TodoList(TreeList):
 
     options = Todo.fields
     _assigned = False
-
-    @property
-    def EMPTY(self):
-        if self._assigned:
-            arr = EMPTY_TODO
-        else:
-            arr = dashboard
-
-        return arr
-
-    def make_table(self):
-        if not self._assigned:
-            self.table = Table.grid(padding=(1, 1))
-        else:
-            super().make_table()
+    EMPTY = dashboard
 
     def _get_children(self, model: Workspace):
         if self._assigned and model:
@@ -54,12 +40,15 @@ class TodoList(TreeList):
     async def update_table(self, model: Optional[Workspace] = None):
         if not model:
             self._assigned = False
+            self.EMPTY = dashboard
+            self._refresh_rows()
         else:
+            self.EMPTY = EMPTY_TODO
             self._assigned = True
             if not self.item or not self.component:
                 self.model = model
+                self.current = -1
                 self._refresh_rows()
-                self.current = 0 if self._get_children(model) else -1
             else:
                 editing = self.editing
                 path = self.item.path

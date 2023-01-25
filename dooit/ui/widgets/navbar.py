@@ -42,7 +42,7 @@ class NavBar(TreeList):
                 await self._stop_edit()
 
             self._refresh_rows()
-            index = 0 if self.row_vals else -1
+            index = -1
             for i, j in enumerate(self.row_vals):
                 if j.item.path == path:
                     index = i

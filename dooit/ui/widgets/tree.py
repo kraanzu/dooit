@@ -249,8 +249,9 @@ class TreeList(Widget):
                     for i in self._get_children(item):
                         add_rows(i, nest_level + 1)
 
-        for i in self._get_children(self.model):
-            add_rows(i)
+        if self.model:
+            for i in self._get_children(self.model):
+                add_rows(i)
 
         self.row_vals: List[Component] = list(self._rows.values())
         self.refresh()
@@ -305,6 +306,7 @@ class TreeList(Widget):
 
         if not res.ok:
             await self.remove_item()
+            await self._current_change_callback()
         else:
             self.commit()
 
@@ -347,7 +349,7 @@ class TreeList(Widget):
         self.current = min(self.current, len(self.row_vals) - 2)
         self._drop(item)
         self._refresh_rows()
-
+        await self._current_change_callback()
         self.commit()
         self.refresh()
 

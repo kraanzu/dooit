@@ -42,16 +42,14 @@ class NavBar(TreeList):
                 await self._stop_edit()
 
             self._refresh_rows()
-            index = -1
+            self.current = -1
             for i, j in enumerate(self.row_vals):
                 if j.item.path == path:
-                    index = i
+                    self.current = i
+                    if editing != "none":
+                        self.component.fields[editing].value = _old_val
+                        await self._start_edit(editing)
                     break
-
-            self.current = index
-            if editing != "none":
-                self.component.fields[editing].value = _old_val
-                await self._start_edit(editing)
 
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)

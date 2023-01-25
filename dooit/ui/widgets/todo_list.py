@@ -69,6 +69,7 @@ class TodoList(TreeList):
                             # move cursor to the end
                             await self.component.fields[editing].handle_keypress("end")
                             await self._start_edit(editing)
+                        break
 
         self.refresh()
 

@@ -34,16 +34,6 @@ class TodoList(TreeList):
 
         return arr
 
-    async def watch_current(self, value: int):
-        if not self.row_vals:
-            self.current = -1
-        else:
-            value = min(max(0, value), len(self.row_vals) - 1)
-            self.current = value
-            self._fix_view()
-
-        self.refresh()
-
     def make_table(self):
         if not self._assigned:
             self.table = Table.grid(padding=(1, 1))
@@ -82,19 +72,16 @@ class TodoList(TreeList):
                 self.model = model
                 self._refresh_rows()
 
-                index = 0 if self.row_vals else -1
+                self.current = -1
                 for i, j in enumerate(self.row_vals):
                     if j.item.path == path:
-                        index = i
-                        break
+                        self.current = i
+                        if editing != "none":
+                            self.component.fields[editing].value = _old_val
 
-                self.current = index
-                if editing != "none":
-                    self.component.fields[editing].value = _old_val
-                    await self.component.fields[editing].handle_keypress(
-                        "end"
-                    )  # new val added
-                    await self._start_edit(editing)
+                            # move cursor to the end
+                            await self.component.fields[editing].handle_keypress("end")
+                            await self._start_edit(editing)
 
         self.refresh()
 

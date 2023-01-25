@@ -141,7 +141,21 @@ class TreeList(Widget):
     def commit(self) -> None:
         manager.commit()
 
+    async def _current_change_callback(self) -> None:
+        pass
+
     # ------------ INTERNALS ----------------
+
+    async def watch_current(self, value: int) -> None:
+        if not self.row_vals:
+            self.current = -1
+        else:
+            value = min(max(0, value), len(self.row_vals) - 1)
+            self.current = value
+
+        await self._current_change_callback()
+        self._fix_view()
+        self.refresh()
 
     async def notify(self, message: TextType):
         if isinstance(message, str):

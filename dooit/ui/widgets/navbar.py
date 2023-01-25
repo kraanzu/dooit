@@ -25,6 +25,9 @@ class NavBar(TreeList):
         if self.component:
             return self.component.item
 
+    async def _current_change_callback(self) -> None:
+        await self.emit(TopicSelect(self, self.item))
+
     async def _refresh_data(self):
 
         if not self.item or not self.component:
@@ -72,17 +75,6 @@ class NavBar(TreeList):
             self.current = -1
 
         await self.emit(SwitchTab(self))
-
-    async def watch_current(self, value: int) -> None:
-
-        value = min(value, len(self.row_vals) - 1)
-        self.current = value
-
-        self._fix_view()
-        if self.current != -1 and self.item:
-            await self.emit(TopicSelect(self, self.item))
-
-        self.refresh()
 
     def add_row(self, row: Component, highlight: bool) -> None:
 

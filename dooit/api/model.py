@@ -209,7 +209,8 @@ class Model:
         """
 
         idx = self._get_child_index(kind, name=name)
-        return self._get_children(kind).pop(idx)
+        if idx != -1:
+            return self._get_children(kind).pop(idx)
 
     def drop(self, kind: str) -> None:
         """

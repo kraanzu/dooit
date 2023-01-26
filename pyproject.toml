@@ -14,7 +14,7 @@ python = "^3.10"
 textual = "^0.9.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
-dateparser = "^1.1.6"
+dateparser = "^1.1.2"
 tzlocal = "2.1"
 appdirs = "^1.4.4"
 

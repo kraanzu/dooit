@@ -486,7 +486,7 @@ class TreeList(Widget):
     async def check_extra_keys(self, _event: events.Key) -> None:
         pass
 
-    async def handle_tab(self) -> None:
+    async def switch_tabs(self) -> None:
         pass
 
     async def handle_key(self, event: events.Key) -> None:
@@ -522,7 +522,7 @@ class TreeList(Widget):
 
                 keybinds = {
                     "escape": self._stop_filtering,
-                    "tab": self.handle_tab,
+                    "tab": self.switch_tabs,
                     "k": self.move_up,
                     "up": self.move_up,
                     "K": self.shift_up,

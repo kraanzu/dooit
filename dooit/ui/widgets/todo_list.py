@@ -32,7 +32,7 @@ class TodoList(TreeList):
             return model.todos
         return []
 
-    async def handle_tab(self):
+    async def switch_tabs(self):
         if self.filter.value:
             await self._stop_filtering()
 
@@ -67,8 +67,6 @@ class TodoList(TreeList):
                         self.current = i
                         if editing != "none":
                             self.component.fields[editing].value = _old_val
-
-                            # move cursor to the end
                             await self.component.fields[editing].handle_keypress("end")
                             await self._start_edit(editing)
                         break

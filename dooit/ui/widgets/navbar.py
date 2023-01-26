@@ -52,19 +52,13 @@ class NavBar(TreeList):
         self.table = Table.grid(expand=True)
         self.table.add_column("desc")
 
-    async def handle_tab(self) -> None:
+    async def switch_tabs(self) -> None:
         if self.current == -1:
             return
 
         if self.filter.value:
-
             if self.item:
-                await self.emit(
-                    TopicSelect(
-                        self,
-                        self.item,
-                    )
-                )
+                await self._current_change_callback()
 
             await self._stop_filtering()
             self.current = -1

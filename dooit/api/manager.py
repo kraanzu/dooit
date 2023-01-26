@@ -12,7 +12,6 @@ class Manager(Model):
     """
 
     _lock = 0
-    _force_refresh = 0
     fields = []
     nomenclature: str = "Workspace"
 
@@ -21,9 +20,6 @@ class Manager(Model):
 
     def unlock(self) -> None:
         self._lock -= 1
-
-    def enable_force_refresh(self):
-        self._force_refresh += 1
 
     def is_locked(self) -> bool:
         return self._lock != 0
@@ -72,12 +68,8 @@ class Manager(Model):
             return False
 
         data_cache = self._get_commit_data()
-
         if data_new == data_cache:
-            if self._force_refresh:
-                self._force_refresh -= 1
-            else:
-                return False
+            return False
 
         self.workspaces.clear()
         self.todos.clear()

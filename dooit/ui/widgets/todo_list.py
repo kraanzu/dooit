@@ -133,15 +133,3 @@ class TodoList(TreeList):
             entry.append(res)
 
         return self.push_row(entry, row.depth)
-
-    # def _add_sibling(self) -> Todo:
-    #     if self.item:
-    #         return self.item.add_sibling()
-    #     else:
-    #         return self.model.add_todo()
-    #
-    # def _add_child(self) -> Todo:
-    #     if self.item:
-    #         return self.item.add_todo()
-    #     else:
-    #         return self.model.add_todo()

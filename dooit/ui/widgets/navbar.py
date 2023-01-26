@@ -90,15 +90,3 @@ class NavBar(TreeList):
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces
-
-    # def _add_sibling(self):
-    #     if self.item and self.current >= 0:
-    #         self.item.add_sibling()
-    #     else:
-    #         self.model.add_child_workspace()
-    #
-    # def _add_child(self) -> Workspace:
-    #     if self.item:
-    #         return self.item.add_workspace()
-    #     else:
-    #         return self.model.add_child_workspace()

@@ -140,6 +140,7 @@ class Todo(Model):
             self._due = ""
             return Ok("Due removed for the todo")
 
+        # res = parse('1 week', settings={"DATE_ORDER": self.DATE_ORDER})
         res = parse(val, settings={"DATE_ORDER": self.DATE_ORDER})
         if res:
             try:

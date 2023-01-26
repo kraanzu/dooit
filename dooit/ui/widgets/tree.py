@@ -3,7 +3,7 @@ import pyperclip
 
 from textual.geometry import Size
 from functools import partial
-from typing import Dict, Iterable, List, Literal, Optional, Type, Union
+from typing import Dict, Iterable, List, Literal, Optional, Type
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -14,7 +14,7 @@ from textual.widget import Widget
 from rich.table import Table, box
 
 from .simple_input import SimpleInput
-from ...api import Manager, manager, Model, Workspace, Todo
+from ...api import Manager, manager, Model, Workspace
 from ...ui.widgets.sort_options import SortOptions
 from ...ui.events.events import ChangeStatus, Notify, SpawnHelp
 from ...utils.conf_reader import Config
@@ -32,7 +32,7 @@ class Component:
 
     def __init__(
         self,
-        item: Union[Todo, Workspace],
+        item,
         depth: int = 0,
         index: int = 0,
         expanded: bool = False,

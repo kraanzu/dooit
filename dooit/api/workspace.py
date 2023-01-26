@@ -72,7 +72,7 @@ class Workspace(Model):
                         todo.from_data(data)
                     continue
 
-                workspace = self.add_workspace(index=len(self.workspaces))
+                workspace = self.add_child("workspace", index=len(self.workspaces))
                 workspace.edit("desc", i)
                 workspace.from_data(j)
 

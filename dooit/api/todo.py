@@ -24,10 +24,6 @@ class Todo(Model):
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
-        from dooit.utils.conf_reader import Config
-
-        self.DATE_ORDER = Config().get("DATE_ORDER")
-
         self._desc = ""
         self.urgency = 4
 
@@ -45,6 +41,16 @@ class Todo(Model):
             "d": "day",
             "w": "week",
         }
+        self.setup_date_formats()
+
+    def setup_date_formats(self):
+        from dooit.utils.conf_reader import Config
+
+        self.DATE_ORDER = Config().get("DATE_ORDER")
+        format = "-".join(list(self.DATE_ORDER))
+        for old, new in [["D", "%d"], ["M", "%m"], ["Y", "%y"]]:
+            format = format.replace(old, new)
+        self.date_format = format
 
     def _split_duration(self, duration: str) -> Tuple[str, str]:
         return duration[-1], duration[:-1]
@@ -140,16 +146,11 @@ class Todo(Model):
             self._due = ""
             return Ok("Due removed for the todo")
 
-        # res = parse('1 week', settings={"DATE_ORDER": self.DATE_ORDER})
         res = parse(val, settings={"DATE_ORDER": self.DATE_ORDER})
         if res:
             try:
-                format = "-".join(list(self.DATE_ORDER))
-                for old, new in [["D", "%d"], ["M", "%m"], ["Y", "%y"]]:
-                    format = format.replace(old, new)
-
                 self._overdue = datetime.now() > res
-                self._due = res.strftime(format)
+                self._due = res.strftime(self.date_format)
                 return Ok(f"Due date changed to [b cyan]{self.due}[/b cyan]")
             except:
                 return Err("Invalid Format!")
@@ -176,8 +177,8 @@ class Todo(Model):
 
     def toggle_complete(self):
         self._done = not self._done
-        if self._done and self._recur:
-            due = datetime.strptime(self._due, "%m-%d-%y")
+        if self._done and self._recur and self._due != "none":
+            due = datetime.strptime(self._due, self.date_format)
             sign, frequency = self._split_duration(self._recur)
             frequency = int(frequency)
 
@@ -187,7 +188,7 @@ class Todo(Model):
                 }
             )
 
-            self.set_due(datetime.strftime(due + time_to_add, "%m-%d-%y"))
+            self.set_due(datetime.strftime(due + time_to_add, self.date_format))
 
     def decrease_urgency(self) -> None:
         self.urgency = max(self.urgency - 1, 1)

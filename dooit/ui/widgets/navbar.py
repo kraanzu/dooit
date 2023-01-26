@@ -8,8 +8,8 @@ from ..events import TopicSelect, SwitchTab
 from ...utils.conf_reader import Config
 
 conf = Config()
-EMPTY_NAVBAR = conf.get("EMPTY_NAVBAR")
-func = conf.get("nav_item_style")
+EMPTY_WORKSPACE = conf.get("EMPTY_WORKSPACE")
+format = conf.get("WORKSPACE")
 
 
 class NavBar(TreeList):
@@ -18,7 +18,7 @@ class NavBar(TreeList):
     """
 
     options = Workspace.fields
-    EMPTY = EMPTY_NAVBAR
+    EMPTY = EMPTY_WORKSPACE
     model_kind = "workspace"
     model_type = Workspace
 
@@ -68,10 +68,28 @@ class NavBar(TreeList):
         await self.emit(SwitchTab(self))
 
     def add_row(self, row: Component, highlight: bool) -> None:
+        def stylize(item: Workspace, kwargs):
+
+            text = kwargs["desc"]
+
+            if children := item.workspaces:
+                text += format["children_hint"].format(count=len(children))
+
+            if not highlight:
+                color = format["dim"]
+                text = len(format["pointer"]) * " " + text
+            else:
+                text = format["pointer"] + text
+                if self.editing:
+                    color = format["editing"]
+                else:
+                    color = format["highlight"]
+
+            return f"[{color}]{text}[/{color}]"
 
         entry = []
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
-        res = func(row.item, highlight, self.editing != "none")
+        res = stylize(row.item, kwargs)
 
         if isinstance(res, str):
             res = res.format(**kwargs)

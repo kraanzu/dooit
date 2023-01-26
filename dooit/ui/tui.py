@@ -1,4 +1,3 @@
-from typing import Union
 from textual.app import App
 from textual import events
 from dooit.utils.watcher import Watcher
@@ -6,8 +5,6 @@ from dooit.ui.widgets.help_menu import HelpScreen
 from dooit.ui.events import *  # noqa
 from dooit.ui.widgets import NavBar, TodoList, StatusBar
 from dooit.api.manager import manager
-from dooit.api.workspace import Workspace
-from dooit.api.todo import Todo
 from dooit.ui.css.screen import screen_CSS
 
 
@@ -21,18 +18,17 @@ class Dooit(App):
         self.navbar = NavBar()
         self.todos = TodoList()
         self.bar = StatusBar()
+
+    async def on_mount(self):
         self.watcher = Watcher()
         self.current_focus = "navbar"
         self.navbar.toggle_highlight()
-
-    async def on_mount(self):
         self.set_interval(1, self.poll)
 
     async def poll(self):
         if not manager.is_locked() and self.watcher.has_modified():
             if manager.refresh_data():
                 await self.navbar._refresh_data()
-                await self.todos.update_table(self.navbar.item)
 
     def compose(self):
         yield self.navbar
@@ -61,8 +57,7 @@ class Dooit(App):
         self.toggle_highlight()
 
     async def on_apply_sort_method(self, event: ApplySortMethod):
-        model: Union[Workspace, Todo] = event.sender
-        model.sort(event.method)
+        event.sender.sort(attr=event.method)
 
     async def on_change_status(self, event: ChangeStatus):
         self.bar.set_status(event.status)

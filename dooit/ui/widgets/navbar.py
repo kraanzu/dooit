@@ -48,6 +48,8 @@ class NavBar(TreeList):
                         await self._start_edit(editing)
                     break
 
+        await self._current_change_callback()
+
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
         self.table.add_column("desc")

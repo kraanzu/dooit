@@ -3,7 +3,7 @@ import pyperclip
 
 from textual.geometry import Size
 from functools import partial
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Dict, Iterable, List, Literal, Optional, Type, Union
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -115,6 +115,8 @@ class TreeList(Widget):
     current = Reactive(-1)
     options = []
     EMPTY: List
+    model_type: Type[Model] = Model
+    model_kind: Literal["workspace", "todo"]
 
     def __init__(
         self,
@@ -177,7 +179,7 @@ class TreeList(Widget):
             return self.row_vals[self.current]
 
     @property
-    def item(self) -> Any:
+    def item(self) -> Optional[model_type]:
         if self.component:
             return self.component.item
 
@@ -215,14 +217,14 @@ class TreeList(Widget):
     def _setup_table(self) -> None:
         self.table = Table.grid(expand=True)
 
-    def _get_children(self, model: Model) -> List[Workspace]:
-        return model.workspaces
+    def _get_children(self, model: model_type) -> List[model_type]:
+        raise NotImplementedError
 
     def _refresh_rows(self) -> None:
         _rows_copy = {i.item.path: i.expanded for i in self._rows.values()}
         self._rows = {}
 
-        def add_rows(item: Workspace, nest_level=0):
+        def add_rows(item: self.model_type, nest_level=0):
 
             name = item.name
             path = item.path
@@ -320,26 +322,38 @@ class TreeList(Widget):
         await self.notify(self.filter.render())
         await self.emit(ChangeStatus(self, "NORMAL"))
 
-    def _add_child(self) -> Model:
-        ...
+    def _drop(self, item: model_type) -> None:
+        item = item or self.item
+        if item:
+            item.drop(self.model_kind)
 
-    def _drop(self, _item=None) -> None:
-        ...
+    def _add_child(self) -> model_type:
+        if self.item:
+            return self.item.add_child(self.model_kind)
+        else:
+            return self.model.add_child(self.model_kind)
 
-    def _add_sibling(self) -> Model:
-        ...
+    def _add_sibling(self) -> model_type:
+        if self.item and self.current >= 0:
+            return self.item.add_sibling(self.model_kind)
+        else:
+            return self.model.add_child(self.model_kind)
 
-    def _next_sibling(self) -> Optional[Model]:
-        ...
+    def _next_sibling(self) -> Optional[model_type]:
+        if self.item:
+            return self.item.next_sibling(self.model_kind)
 
-    def _prev_sibling(self) -> Optional[Model]:
-        ...
-
-    def _shift_up(self) -> None:
-        ...
+    def _prev_sibling(self) -> Optional[model_type]:
+        if self.item:
+            return self.item.prev_sibling(self.model_kind)
 
     def _shift_down(self) -> None:
-        ...
+        if self.item:
+            return self.item.shift_down(self.model_kind)
+
+    def _shift_up(self) -> None:
+        if self.item:
+            return self.item.shift_up(self.model_kind)
 
     async def remove_item(self) -> None:
         if not self.item:
@@ -442,6 +456,9 @@ class TreeList(Widget):
             return
 
         parent = self.item.parent
+        if not parent:
+            return
+
         if parent.name in self._rows:
             index = self._rows[parent.name].index
             self.current = index
@@ -451,14 +468,17 @@ class TreeList(Widget):
     def sort(self, attr: str) -> None:
         if self.item:
             curr = self.item.name
-            self.item.sort(attr)
+            self.item.sort(self.model_kind, attr)
             self._refresh_rows()
             self.current = self._rows[curr].index
             self.commit()
 
     async def copy_text(self) -> None:
-        pyperclip.copy(self.item.desc)
-        await self.notify("[green]Description copied to clipboard![/]")
+        if self.item:
+            pyperclip.copy(self.item.desc)
+            await self.notify("[green]Description copied to clipboard![/]")
+        else:
+            await self.notify("[red]No item selected![/]")
 
     async def show_sort_menu(self) -> None:
         self.sort_menu.visible = True
@@ -582,7 +602,8 @@ class TreeList(Widget):
             to_render = self.sort_menu.render()
         elif not self.row_vals:
             EMPTY = [
-                Text.from_markup(i) if isinstance(i, str) else i for i in self.EMPTY
+                Text.from_markup(text) if isinstance(text, str) else text
+                for text in self.EMPTY
             ]
             to_render = Align.center(
                 Group(

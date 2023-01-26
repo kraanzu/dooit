@@ -1,9 +1,9 @@
-from typing import List, Optional
+from typing import List
 from rich.table import Table
 from rich.text import Text
 
 from .tree import Component, TreeList
-from ...api import Manager, Model, Workspace
+from ...api import Manager, Workspace
 from ..events import TopicSelect, SwitchTab
 from ...utils.conf_reader import Config
 
@@ -19,11 +19,8 @@ class NavBar(TreeList):
 
     options = Workspace.fields
     EMPTY = EMPTY_NAVBAR
-
-    @property
-    def item(self) -> Optional[Workspace]:
-        if self.component:
-            return self.component.item
+    model_kind = "workspace"
+    model_type = Workspace
 
     async def _current_change_callback(self) -> None:
         await self.emit(TopicSelect(self, self.item))
@@ -94,36 +91,14 @@ class NavBar(TreeList):
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces
 
-    def _add_sibling(self):
-        if self.item and self.current >= 0:
-            self.item.add_sibling()
-        else:
-            self.model.add_child_workspace()
-
-    def _add_child(self) -> Model:
-        if self.item:
-            return self.item.add_workspace()
-        else:
-            return self.model.add_child_workspace()
-
-    def _drop(self, item: Optional[Workspace] = None) -> None:
-
-        item = item or self.item
-        if item:
-            item.drop()
-
-    def _next_sibling(self) -> Optional[Model]:
-        if self.item:
-            return self.item.next_sibling()
-
-    def _prev_sibling(self) -> Optional[Model]:
-        if self.item:
-            return self.item.prev_sibling()
-
-    def _shift_down(self) -> None:
-        if self.item:
-            return self.item.shift_down()
-
-    def _shift_up(self) -> None:
-        if self.item:
-            return self.item.shift_up()
+    # def _add_sibling(self):
+    #     if self.item and self.current >= 0:
+    #         self.item.add_sibling()
+    #     else:
+    #         self.model.add_child_workspace()
+    #
+    # def _add_child(self) -> Workspace:
+    #     if self.item:
+    #         return self.item.add_workspace()
+    #     else:
+    #         return self.model.add_child_workspace()

@@ -251,33 +251,9 @@ class Todo(Model):
                 self.to_data(),
             ]
 
-    def add_todo(self: T, index: int = 0) -> T:
-        return super().add_child(TODO, index)
-
-    def add_sibling(self: T) -> T:
-        return super().add_sibling(TODO)
-
-    def shift_up(self) -> None:
-        return super().shift_up(TODO)
-
-    def shift_down(self) -> None:
-        return super().shift_down(TODO)
-
-    def next_sibling(self: T) -> Optional[T]:
-        return super().next_sibling(TODO)
-
-    def prev_sibling(self: T) -> Optional[T]:
-        return super().prev_sibling(TODO)
-
-    def drop(self) -> None:
-        return super().drop(TODO)
-
-    def sort(self, attr: str) -> None:
-        return super().sort(TODO, attr)
-
     def from_data(self, data: List) -> None:
         self.fill_from_data(data[0])
         if len(data) > 1:
             for i in data[1]:
-                child_todo: Todo = self.add_todo(index=len(self.todos))
+                child_todo = self.add_child(kind="todo", index=len(self.todos))
                 child_todo.from_data(i)

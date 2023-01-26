@@ -24,6 +24,8 @@ class TodoList(TreeList):
 
     options = Todo.fields
     EMPTY = dashboard
+    model_kind = "todo"
+    model_type = Todo
 
     def _get_children(self, model: Workspace):
         if model:
@@ -80,10 +82,6 @@ class TodoList(TreeList):
 
     # ##########################################
 
-    @property
-    def item(self) -> Optional[Todo]:
-        return super().item
-
     async def check_extra_keys(self, event: events.Key):
 
         key = (
@@ -136,36 +134,14 @@ class TodoList(TreeList):
 
         return self.push_row(entry, row.depth)
 
-    def _add_sibling(self) -> Todo:
-        if self.item:
-            return self.item.add_sibling()
-        else:
-            return self.model.add_todo()
-
-    def _add_child(self) -> Todo:
-        if self.item:
-            return self.item.add_todo()
-        else:
-            return self.model.add_todo()
-
-    def _drop(self, item: Optional[Todo] = None) -> None:
-        item = item or self.item
-
-        if item:
-            item.drop()
-
-    def _next_sibling(self) -> Optional[Todo]:
-        if self.item:
-            return self.item.next_sibling()
-
-    def _prev_sibling(self) -> Optional[Todo]:
-        if self.item:
-            return self.item.prev_sibling()
-
-    def _shift_down(self) -> None:
-        if self.item:
-            return self.item.shift_down()
-
-    def _shift_up(self) -> None:
-        if self.item:
-            return self.item.shift_up()
+    # def _add_sibling(self) -> Todo:
+    #     if self.item:
+    #         return self.item.add_sibling()
+    #     else:
+    #         return self.model.add_todo()
+    #
+    # def _add_child(self) -> Todo:
+    #     if self.item:
+    #         return self.item.add_todo()
+    #     else:
+    #         return self.model.add_todo()

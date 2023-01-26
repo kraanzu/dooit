@@ -45,29 +45,30 @@ class Workspace(Model):
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)
 
-    def add_workspace(self, index: int = 0) -> "Workspace":
-        return super().add_child(WORKSPACE, index)
-
-    def add_sibling(self) -> "Workspace":
-        return super().add_sibling(WORKSPACE)
-
-    def shift_down(self) -> None:
-        return super().shift_down(WORKSPACE)
-
-    def shift_up(self) -> None:
-        return super().shift_up(WORKSPACE)
-
-    def next_sibling(self) -> Optional["Workspace"]:
-        return super().next_sibling(WORKSPACE)
-
-    def prev_sibling(self) -> Optional["Workspace"]:
-        return super().prev_sibling(WORKSPACE)
-
-    def drop(self) -> None:
-        return super().drop(WORKSPACE)
-
-    def sort(self, attr: str) -> None:
-        return super().sort(WORKSPACE, attr)
+    #
+    # def add_workspace(self, index: int = 0) -> "Workspace":
+    #     return super().add_child(WORKSPACE, index)
+    #
+    # def add_sibling_workspace(self) -> "Workspace":
+    #     return super().add_sibling(WORKSPACE)
+    #
+    # def shift_down(self) -> None:
+    #     return super().shift_down(WORKSPACE)
+    #
+    # def shift_up(self) -> None:
+    #     return super().shift_up(WORKSPACE)
+    #
+    # def next_sibling(self) -> Optional["Workspace"]:
+    #     return super().next_sibling(WORKSPACE)
+    #
+    # def prev_sibling(self) -> Optional["Workspace"]:
+    #     return super().prev_sibling(WORKSPACE)
+    #
+    # def drop(self) -> None:
+    #     return super().drop(WORKSPACE)
+    #
+    # def sort(self, attr: str) -> None:
+    #     return super().sort(WORKSPACE, attr)
 
     def commit(self) -> Dict[str, Any]:
         child_workspaces = {

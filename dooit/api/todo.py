@@ -182,6 +182,7 @@ class Todo(Model):
     def toggle_complete(self):
         self._done = not self._done
         if self._done and self._recur and self._due != "none":
+            self._done = False
             due = datetime.strptime(self._due, self.date_format)
             sign, frequency = self._split_duration(self._recur)
             frequency = int(frequency)

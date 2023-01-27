@@ -110,12 +110,15 @@ class TodoTree(TreeList):
             await self._start_edit("recur")
         elif key in "c":
             if self.item and self.component:
+                self.component.refresh()
                 self.item.toggle_complete()
         elif key in "+=":
             if self.component and self.item:
+                self.component.refresh()
                 self.item.increase_urgency()
         elif key in "_-":
             if self.component and self.item:
+                self.component.refresh()
                 self.item.decrease_urgency()
 
     def add_row(self, row: Component, highlight: bool) -> None:

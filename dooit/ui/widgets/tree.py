@@ -267,7 +267,7 @@ class TreeList(Widget):
             await self.emit(ChangeStatus(self, "INSERT"))
         elif field == "tags":
             await self.emit(ChangeStatus(self, "TAG"))
-        else:
+        elif field == "due":
             await self.emit(ChangeStatus(self, "DATE"))
 
         self.component.fields[field].on_focus()

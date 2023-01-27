@@ -608,16 +608,23 @@ class TreeList(Widget):
             for i in row:
                 i.highlight_regex(pattern, style="b red")
 
-        else:
-            hint = Text("  " * padding, style="#434c5e")
-            if row:
-                row[0] = hint + row[0]
-
-        if row:
+        elif row:
             if pointer:
                 row.insert(0, self.pointer)
             else:
                 row.insert(0, Text(len(self.pointer) * " "))
+
+            if not hasattr(self, "pad_index"):
+                self.pad_index = 0
+
+                for i, j in enumerate(self.table.columns):
+                    if j.header == "desc":
+                        self.pad_index = i
+                        break
+
+            if row:
+                hint = Text("  " * padding)
+                row[self.pad_index] = hint + row[self.pad_index]
 
             self.table.add_row(*row)
 

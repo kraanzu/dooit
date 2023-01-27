@@ -1,5 +1,4 @@
 from typing import List
-from rich.table import Table
 from rich.text import Text
 
 from .tree import Component, TreeList
@@ -51,8 +50,8 @@ class WorkspaceTree(TreeList):
         await self._current_change_callback()
 
     def _setup_table(self) -> None:
-        self.table = Table.grid(expand=True)
-        self.table.add_column("desc")
+        super()._setup_table(format["pointer"])
+        self.table.add_column("desc", ratio=1)
 
     async def switch_tabs(self) -> None:
         if self.current == -1:
@@ -77,9 +76,7 @@ class WorkspaceTree(TreeList):
 
             if not highlight:
                 color = format["dim"]
-                text = len(format["pointer"]) * " " + text
             else:
-                text = format["pointer"] + text
                 if self.editing:
                     color = format["editing"]
                 else:
@@ -100,7 +97,8 @@ class WorkspaceTree(TreeList):
             res = Text(str(res))
 
         entry.append(res)
-        return self.push_row(entry, row.depth)
+
+        return self.push_row(entry, row.depth, highlight)
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

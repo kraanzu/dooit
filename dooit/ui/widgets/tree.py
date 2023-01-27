@@ -212,9 +212,6 @@ class TreeList(Widget):
 
         self._fix_view()
 
-    def _setup_table(self) -> None:
-        self.table = Table.grid(expand=True)
-
     def _get_children(self, model: model_type) -> List[model_type]:
         raise NotImplementedError
 
@@ -574,6 +571,15 @@ class TreeList(Widget):
         text = text.format(**kwargs)
         return Text.from_markup(text)
 
+    def _setup_table(self, pointer: TextType = "") -> None:
+        if isinstance(pointer, str):
+            pointer = Text.from_markup(pointer)
+
+        self.pointer = pointer
+        self.table = Table.grid(expand=True)
+        if width := len(pointer.plain):
+            self.table.add_column("pointer", width=width)
+
     def make_table(self) -> None:
         self._setup_table()
 
@@ -583,16 +589,22 @@ class TreeList(Widget):
             except:
                 pass
 
-    def push_row(self, row: List[Text], padding: int) -> None:
+    def push_row(self, row: List[Text], padding: int, pointer: bool) -> None:
         if pattern := self.filter.value:
             for i in row:
                 i.highlight_regex(pattern, style="b red")
 
         else:
-            pad = " " * padding
-            row = [Text(pad) + i for i in row]
+            hint = Text("  " * padding, style="#434c5e")
+            if row:
+                row[0] = hint + row[0]
 
         if row:
+            if pointer:
+                row.insert(0, self.pointer)
+            else:
+                row.insert(0, Text(len(self.pointer) * " "))
+
             self.table.add_row(*row)
 
     def render(self) -> RenderableType:

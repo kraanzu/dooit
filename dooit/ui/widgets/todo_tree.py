@@ -1,5 +1,4 @@
 from typing import Optional
-from rich.table import Table
 from rich.text import Text
 from textual import events
 
@@ -75,7 +74,7 @@ class TodoTree(TreeList):
         self.refresh()
 
     def _setup_table(self) -> None:
-        self.table = Table.grid(expand=True)
+        super()._setup_table(format["pointer"])
         for col in COLUMN_ORDER:
             if col == "desc":
                 d = {"ratio": 1}
@@ -184,9 +183,7 @@ class TodoTree(TreeList):
             # COLORING
             if not highlight:
                 color = format["dim"]
-                text = len(format["pointer"]) * " " + text
             else:
-                text = format["pointer"] + text
                 if self.editing:
                     color = format["editing"]
                 else:
@@ -244,4 +241,4 @@ class TodoTree(TreeList):
                 res.plain = res.plain.format(**kwargs)
             entry.append(res)
 
-        return self.push_row(entry, row.depth)
+        return self.push_row(entry, row.depth, highlight)

@@ -240,7 +240,7 @@ class TreeList(Widget):
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
-                if re.findall(pattern, item._desc):
+                if re.findall(pattern, item.desc):
                     push_item(item)
                 for i in self._get_children(item):
                     add_rows(i, nest_level + 1)
@@ -315,6 +315,7 @@ class TreeList(Widget):
     async def _start_filtering(self) -> None:
         self.filter.on_focus()
         await self.notify(self.filter.render())
+        await self.emit(ChangeStatus(self, "SEARCH"))
 
     async def _stop_filtering(self) -> None:
         self.filter.clear()
@@ -604,11 +605,7 @@ class TreeList(Widget):
                 pass
 
     def push_row(self, row: List[Text], padding: int, pointer: bool) -> None:
-        if pattern := self.filter.value:
-            for i in row:
-                i.highlight_regex(pattern, style="b red")
-
-        elif row:
+        if row:
             if pointer:
                 row.insert(0, self.pointer)
             else:
@@ -625,6 +622,7 @@ class TreeList(Widget):
             if row:
                 hint = Text("  " * padding)
                 row[self.pad_index] = hint + row[self.pad_index]
+                row[self.pad_index].highlight_regex(self.filter.value, style="b red")
 
             self.table.add_row(*row)
 

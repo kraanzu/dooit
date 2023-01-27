@@ -3,7 +3,7 @@ from textual import events
 from dooit.utils.watcher import Watcher
 from dooit.ui.widgets.help_menu import HelpScreen
 from dooit.ui.events import *  # noqa
-from dooit.ui.widgets import NavBar, TodoList, StatusBar
+from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
 from dooit.api.manager import manager
 from dooit.ui.css.screen import screen_CSS
 
@@ -15,8 +15,8 @@ class Dooit(App):
     BINDINGS = [("ctrl+q", "quit", "Quit App")]
 
     async def on_load(self):
-        self.navbar = NavBar()
-        self.todos = TodoList()
+        self.navbar = WorkspaceTree()
+        self.todos = TodoTree()
         self.bar = StatusBar()
 
     async def on_mount(self):

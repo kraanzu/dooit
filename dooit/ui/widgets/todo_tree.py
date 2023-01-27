@@ -18,7 +18,7 @@ COLUMN_ORDER = conf.get("COLUMN_ORDER")
 format = conf.get("TODO")
 
 
-class TodoList(TreeList):
+class TodoTree(TreeList):
     """
     Tree structured Class to manage todos
     """

@@ -12,7 +12,7 @@ EMPTY_WORKSPACE = conf.get("EMPTY_WORKSPACE")
 format = conf.get("WORKSPACE")
 
 
-class NavBar(TreeList):
+class WorkspaceTree(TreeList):
     """
     NavBar class to manage UI's navbar
     """

@@ -52,8 +52,8 @@ WORKSPACE = {
     "dim": "d grey50",
     "highlight": "b white",
     "editing": "b cyan",
-    "pointer": "▍",
-    "children_hint": "[{count}]",
+    "pointer": "> ",
+    "children_hint": "",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
     "No workspaces yet?",
@@ -70,8 +70,9 @@ TODO = {
     "dim": "d grey50",
     "highlight": "b white",
     "editing": "b cyan",
-    "pointer": "► ",
-    "children_hint": " [{done}/{total}]",  # vars: remaining, done, total
+    "pointer": "> ",
+    "children_hint": " [b green]({done}/{total})[/b green]",  # vars: remaining, done, total
+    # "children_hint": "[b magenta]({remaining}!)[/b magenta]",  # vars: remaining, done, total
     "due_icon": "🕑",
     "eta_icon": " ⌚",
     "eta_color": "b yellow",

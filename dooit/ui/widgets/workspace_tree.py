@@ -1,7 +1,7 @@
 from typing import List
-from rich.text import Text
+from dooit.ui.widgets.formatters.workspace_tree_formatter import WorkspaceFormatter
 
-from .tree import Component, TreeList
+from .tree import TreeList
 from ...api import Manager, Workspace
 from ..events import TopicSelect, SwitchTab
 from ...utils.conf_reader import Config
@@ -20,6 +20,8 @@ class WorkspaceTree(TreeList):
     EMPTY = EMPTY_WORKSPACE
     model_kind = "workspace"
     model_type = Workspace
+    styler = WorkspaceFormatter(format)
+    COLS = ["desc"]
 
     async def _current_change_callback(self) -> None:
         await self.emit(TopicSelect(self, self.item))
@@ -65,40 +67,6 @@ class WorkspaceTree(TreeList):
             self.current = -1
 
         await self.emit(SwitchTab(self))
-
-    def add_row(self, row: Component, highlight: bool) -> None:
-        def stylize(item: Workspace, kwargs):
-
-            text = kwargs["desc"]
-
-            if children := item.workspaces:
-                text += format["children_hint"].format(count=len(children))
-
-            if not highlight:
-                color = format["dim"]
-            else:
-                if self.editing:
-                    color = format["editing"]
-                else:
-                    color = format["highlight"]
-
-            return f"[{color}]{text}[/{color}]"
-
-        entry = []
-        kwargs = {i: str(j.render()) for i, j in row.fields.items()}
-        res = stylize(row.item, kwargs)
-
-        if isinstance(res, str):
-            res = res.format(**kwargs)
-            res = Text.from_markup(res)
-        elif isinstance(res, Text):
-            res.plain = res.plain.format(**kwargs)
-        else:
-            res = Text(str(res))
-
-        entry.append(res)
-
-        return self.push_row(entry, row.depth, highlight)
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

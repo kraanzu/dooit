@@ -13,6 +13,8 @@ from textual.reactive import Reactive
 from textual.widget import Widget
 from rich.table import Table, box
 
+from dooit.ui.widgets.formatters.formatter import Formatter
+
 from .simple_input import SimpleInput
 from ...api import Manager, manager, Model, Workspace
 from ...ui.widgets.sort_options import SortOptions
@@ -118,6 +120,8 @@ class TreeList(Widget):
     EMPTY: List
     model_type: Type[Model] = Model
     model_kind: Literal["workspace", "todo"]
+    COLS: List
+    styler: Formatter
 
     def __init__(
         self,
@@ -551,8 +555,18 @@ class TreeList(Widget):
     async def spawn_help(self):
         await self.emit(SpawnHelp(self))
 
-    def add_row(self, _item: Component, _highlight: bool) -> None:  # noqa
-        ...
+    def add_row(self, row: Component, highlight: bool) -> None:  # noqa
+
+        entry = []
+        kwargs = {i: str(j.render()) for i, j in row.fields.items()}
+
+        for column in self.COLS:
+            res = self.styler.style(
+                column, row.item, highlight, self.editing != "none", kwargs
+            )
+            entry.append(res)
+
+        return self.push_row(entry, row.depth, highlight)
 
     def _stylize(
         self,
@@ -634,7 +648,3 @@ class TreeList(Widget):
             box=box.HEAVY,
             border_style=LIT if self._has_focus else DIM,
         )
-
-    # async def on_resize(self, event: events.Resize) -> None:
-    #     self._set_view()
-    #     return await super().on_resize(event)

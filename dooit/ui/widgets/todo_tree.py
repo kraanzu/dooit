@@ -111,16 +111,12 @@ class TodoTree(TreeList):
         elif key in "c":
             if self.item and self.component:
                 self.item.toggle_complete()
-                self.component.refresh_item("status")
-                self.component.refresh_item("due")
         elif key in "+=":
             if self.component and self.item:
                 self.item.increase_urgency()
-                self.component.refresh_item("urgency")
         elif key in "_-":
             if self.component and self.item:
                 self.item.decrease_urgency()
-                self.component.refresh_item("urgency")
 
     def add_row(self, row: Component, highlight: bool) -> None:
         def colored(text, color):

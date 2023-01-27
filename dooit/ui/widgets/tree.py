@@ -48,13 +48,14 @@ class Component:
             for field in item.fields
         }
 
-    def refresh_item(self, field: str) -> None:
-        self.fields[field] = SimpleInput(
-            value=getattr(
-                self.item,
-                field,
+    def refresh(self) -> None:
+        for field in self.fields.keys():
+            self.fields[field] = SimpleInput(
+                value=getattr(
+                    self.item,
+                    field,
+                )
             )
-        )
 
     def get_field_values(self) -> Iterable[SimpleInput]:
         return self.fields.values()
@@ -297,7 +298,7 @@ class TreeList(Widget):
         )
 
         simple_input.on_blur()
-        self.component.refresh_item(self.editing)
+        self.component.refresh()
         self.editing = "none"
 
         await self.notify(res.text())

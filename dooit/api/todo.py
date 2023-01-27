@@ -126,13 +126,19 @@ class Todo(Model):
 
     def set_recur(self, val: str):
 
+        if flag := self.due == "none":
+            self.set_due("now")
+
         if not val:
             self._recur = ""
             return Ok("Recurrence removed for the todo")
 
         if self._is_valid(val):
             self._recur = val
-            return Ok()
+            if flag:
+                return Ok(f"Recurrence set for {self.recur} starting today")
+            else:
+                return Ok(f"Recurrence set for {self.recur}")
 
         return Err("Invalid Format!")
 

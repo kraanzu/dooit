@@ -2,7 +2,7 @@ import re
 from typing import Any, List, Optional, Tuple, TypeVar
 from dateparser import parse
 from datetime import datetime, timedelta
-from .model import Model, Result, Ok, Err
+from .model import Model, Result, Ok, Err, Warn
 
 
 TODO = "todo"
@@ -141,21 +141,19 @@ class Todo(Model):
         return self._due
 
     def set_due(self, val: str) -> Result:
+        val = val.strip()
 
-        if val == "":
-            self._due = ""
+        if not val or val == "none":
+            self._due = "none"
             return Ok("Due removed for the todo")
 
         res = parse(val, settings={"DATE_ORDER": self.DATE_ORDER})
         if res:
-            try:
-                self._overdue = datetime.now() > res
-                self._due = res.strftime(self.date_format)
-                return Ok(f"Due date changed to [b cyan]{self.due}[/b cyan]")
-            except:
-                return Err("Invalid Format!")
+            self._overdue = datetime.now() > res
+            self._due = res.strftime(self.date_format)
+            return Ok(f"Due date changed to [b cyan]{self.due}[/b cyan]")
 
-        return Err("Cannot parse the string!")
+        return Warn("Cannot parse the string!")
 
     @property
     def status(self):

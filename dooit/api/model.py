@@ -14,15 +14,20 @@ class Result:
     """
 
     ok: bool
+    cancel_op: bool
     message: Optional[str] = None
 
     @classmethod
     def Ok(cls, message: Optional[str] = None):
-        return cls(True, message)
+        return cls(True, False, message)
+
+    @classmethod
+    def Warn(cls, message: Optional[str] = None):
+        return cls(False, False, message)
 
     @classmethod
     def Err(cls, message: str):
-        return cls(False, message)
+        return cls(False, True, message)
 
     def is_ok(self) -> bool:
         return self.ok
@@ -42,6 +47,7 @@ class Result:
 
 Ok = Result.Ok
 Err = Result.Err
+Warn = Result.Warn
 
 
 class Model:

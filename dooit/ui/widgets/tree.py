@@ -307,7 +307,8 @@ class TreeList(Widget):
         await self.emit(ChangeStatus(self, "NORMAL"))
 
         if not res.ok:
-            await self.remove_item()
+            if res.cancel_op:
+                await self.remove_item()
             await self._current_change_callback()
         else:
             self.commit()

@@ -1,5 +1,5 @@
 from typing import Literal
-from rich.text import Text
+from rich.text import TextType
 from textual.message import Message, MessageTarget
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG"]
@@ -33,7 +33,7 @@ class Notify(Message, bubble=True):
     Emitted when A notification message on status bar is to be shown
     """
 
-    def __init__(self, sender: MessageTarget, message: Text) -> None:
+    def __init__(self, sender: MessageTarget, message: TextType) -> None:
         super().__init__(sender)
         self.message = message
 

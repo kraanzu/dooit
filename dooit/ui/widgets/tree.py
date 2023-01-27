@@ -160,9 +160,6 @@ class TreeList(Widget):
         self.refresh()
 
     async def notify(self, message: TextType):
-        if isinstance(message, str):
-            message = Text.from_markup(message)
-
         await self.emit(Notify(self, message))
 
     def toggle_highlight(self) -> None:

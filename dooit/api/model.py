@@ -37,7 +37,7 @@ class Result:
 
     def text(self):
         def colored(a, b):
-            return f"[{b}]{a}[/]"
+            return f"[{b}]{a}[/{b}]"
 
         if self.message:
             return colored(" " + self.message, "green" if self.ok else "red")

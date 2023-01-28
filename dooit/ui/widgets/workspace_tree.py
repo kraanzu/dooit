@@ -37,7 +37,7 @@ class WorkspaceTree(TreeList):
 
             if editing != "none":
                 _old_val = self.component.fields[editing].value
-                await self._stop_edit()
+                await self.stop_edit()
 
             self._refresh_rows()
             self.current = -1
@@ -46,7 +46,7 @@ class WorkspaceTree(TreeList):
                     self.current = i
                     if editing != "none":
                         self.component.fields[editing].value = _old_val
-                        await self._start_edit(editing)
+                        await self.start_edit(editing)
                     break
 
         await self._current_change_callback()
@@ -63,7 +63,7 @@ class WorkspaceTree(TreeList):
             if self.item:
                 await self._current_change_callback()
 
-            await self._stop_filtering()
+            await self.stop_filtering()
             self.current = -1
 
         await self.emit(SwitchTab(self))

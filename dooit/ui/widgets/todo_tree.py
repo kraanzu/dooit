@@ -36,7 +36,7 @@ class TodoTree(TreeList):
 
     async def switch_tabs(self):
         if self.filter.value:
-            await self._stop_filtering()
+            await self.stop_filtering()
 
         await self.emit(SwitchTab(self))
 
@@ -70,7 +70,7 @@ class TodoTree(TreeList):
                         if editing != "none":
                             self.component.fields[editing].value = _old_val
                             await self.component.fields[editing].handle_keypress("end")
-                            await self._start_edit(editing)
+                            await self.start_edit(editing)
                         break
 
         self.refresh()
@@ -102,13 +102,13 @@ class TodoTree(TreeList):
         if self.editing != "none":
             return
         if key in "d":
-            await self._start_edit("due")
+            await self.start_edit("due")
         elif key in "e":
-            await self._start_edit("eta")
+            await self.start_edit("eta")
         elif key in "t":
-            await self._start_edit("tags")
+            await self.start_edit("tags")
         elif key in "r":
-            await self._start_edit("recur")
+            await self.start_edit("recur")
         elif key in "c":
             if self.item and self.component:
                 self.component.refresh()

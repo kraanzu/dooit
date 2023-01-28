@@ -257,7 +257,7 @@ class TreeList(Widget):
         self.row_vals: List[Component] = list(self._rows.values())
         self.refresh()
 
-    async def _start_edit(self, field: str) -> None:
+    async def start_edit(self, field: str) -> None:
         if field == "none":
             return
 
@@ -275,9 +275,9 @@ class TreeList(Widget):
         self.editing = field
 
     async def _cancel_edit(self):
-        await self._stop_edit(edit=False)
+        await self.stop_edit(edit=False)
 
-    async def _stop_edit(self, edit: bool = True) -> None:
+    async def stop_edit(self, edit: bool = True) -> None:
         if self.editing == "none":
             return
 
@@ -312,12 +312,12 @@ class TreeList(Widget):
         else:
             self.commit()
 
-    async def _start_filtering(self) -> None:
+    async def start_filtering(self) -> None:
         self.filter.on_focus()
         await self.notify(self.filter.render())
         await self.emit(ChangeStatus(self, "SEARCH"))
 
-    async def _stop_filtering(self) -> None:
+    async def stop_filtering(self) -> None:
         self.filter.clear()
         self._refresh_rows()
         await self.notify(self.filter.render())
@@ -376,7 +376,7 @@ class TreeList(Widget):
         self._add_child()
         self._refresh_rows()
         await self.move_down()
-        await self._start_edit("desc")
+        await self.start_edit("desc")
 
     async def add_sibling(self) -> None:
 
@@ -384,7 +384,7 @@ class TreeList(Widget):
             child = self._add_child()
             self._refresh_rows()
             self.current = self._rows[child.name].index
-            await self._start_edit("desc")
+            await self.start_edit("desc")
             return
 
         self._add_sibling()
@@ -412,7 +412,7 @@ class TreeList(Widget):
 
         self.current = self._rows[item.name].index
         if edit:
-            await self._start_edit(edit)
+            await self.start_edit(edit)
 
     async def shift_up(self) -> None:
         if not self.item:
@@ -504,7 +504,7 @@ class TreeList(Widget):
             if key == "escape":
                 await self._cancel_edit()
             elif key == "enter":
-                await self._stop_edit()
+                await self.stop_edit()
             else:
                 await field.handle_keypress(key)
 
@@ -522,7 +522,7 @@ class TreeList(Widget):
             else:
 
                 keybinds = {
-                    "escape": self._stop_filtering,
+                    "escape": self.stop_filtering,
                     "tab": self.switch_tabs,
                     "k": self.move_up,
                     "up": self.move_up,
@@ -532,7 +532,7 @@ class TreeList(Widget):
                     "down": self.move_down,
                     "J": self.shift_down,
                     "shift+down": self.shift_down,
-                    "i": partial(self._start_edit, "desc"),
+                    "i": partial(self.start_edit, "desc"),
                     "z": self.toggle_expand,
                     "Z": self.toggle_expand_parent,
                     "A": self.add_child,
@@ -542,7 +542,7 @@ class TreeList(Widget):
                     "home": self.move_to_top,
                     "G": self.move_to_bottom,
                     "s": self.show_sort_menu,
-                    "/": self._start_filtering,
+                    "/": self.start_filtering,
                     "?": self.spawn_help,
                     "y": self.copy_text,
                 }

@@ -11,7 +11,7 @@ repository = "https://github.com/kraanzu/dooit"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-textual = "^0.9.1"
+textual = "^0.10.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
 dateparser = "^1.1.2"

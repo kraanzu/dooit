@@ -27,10 +27,8 @@ DEFAULTS = {
     "move to bottom": ["<end>", "G"],
     "sort menu toggle": "s",
     "start search": "/",
-    # "spawn help": "?",
-    # "copy text": "y",
-    "spawn help": " ?",
-    "copy text": " y",
+    "spawn help": "?",
+    "copy text": "y",
 }
 
 TODO_BINDINGS = {

@@ -529,6 +529,9 @@ class TreeList(Widget):
                 bind = self.key_manager.get_method()
                 if bind:
                     await self.change_status("NORMAL")
+                    await self.notify(
+                        f"returned {bind.func}  = {hasattr(self, bind.func)}"
+                    )
                     func = getattr(self, bind.func)
                     await func(*bind.params)
 

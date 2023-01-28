@@ -1,5 +1,5 @@
 from typing import Literal
-from rich.text import TextType
+from rich.text import TextType, Text
 from textual.message import Message, MessageTarget
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG", "K PENDING"]
@@ -35,6 +35,8 @@ class Notify(Message, bubble=True):
 
     def __init__(self, sender: MessageTarget, message: TextType) -> None:
         super().__init__(sender)
+        if isinstance(message, Text):
+            message = message.markup
         self.message = message
 
 

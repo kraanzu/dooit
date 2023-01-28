@@ -1,5 +1,6 @@
+from collections import defaultdict
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Union
+from typing import DefaultDict, Dict, List, Optional, Union
 
 
 @dataclass
@@ -48,6 +49,7 @@ class KeyBinder:
     def __init__(self, attach_todo_bindings: bool = False) -> None:
         self.pressed = ""
         self.methods: Dict[str, Bind] = {}
+        self.raw: DefaultDict[str, List[str]] = defaultdict(list)
         self.add_keys(DEFAULTS)
         if attach_todo_bindings:
             self.add_keys(TODO_BINDINGS)
@@ -61,8 +63,12 @@ class KeyBinder:
 
     def add_keys(self, keys: KeyList) -> None:
         for cmd, key in keys.items():
+
             if isinstance(key, str):
+                self.raw[cmd].append(key)
                 key = [key]
+            else:
+                self.raw[cmd].extend(key)
 
             for k in key:
                 self.methods[k] = self.convert_to_bind(cmd)

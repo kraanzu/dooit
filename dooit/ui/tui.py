@@ -44,7 +44,6 @@ class Dooit(App):
         self.todos.toggle_highlight()
 
     async def on_key(self, event: events.Key) -> None:
-
         if self.navbar.has_focus:
             await self.navbar.handle_key(event)
         else:

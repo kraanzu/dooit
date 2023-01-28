@@ -1,8 +1,8 @@
 from typing import Optional
-from textual import events
 from dooit.ui.widgets.formatters.todo_tree_formatter import TodoFormatter
 
 from dooit.utils.conf_reader import Config
+from dooit.utils.keybinder import KeyBinder
 
 from .tree import TreeList
 from ...api.todo import Todo
@@ -28,6 +28,7 @@ class TodoTree(TreeList):
     model_type = Todo
     styler = TodoFormatter(format)
     COLS = COLUMN_ORDER
+    key_manager = KeyBinder(attach_todo_bindings=True)
 
     def _get_children(self, model: Workspace):
         if model:
@@ -36,7 +37,7 @@ class TodoTree(TreeList):
 
     async def switch_tabs(self):
         if self.filter.value:
-            await self.stop_filtering()
+            await self.stop_search()
 
         await self.emit(SwitchTab(self))
 
@@ -91,33 +92,42 @@ class TodoTree(TreeList):
 
     # ##########################################
 
-    async def check_extra_keys(self, event: events.Key):
+    async def increase_urgency(self):
+        if self.component and self.item:
+            self.component.refresh()
+            self.item.increase_urgency()
 
-        key = (
-            event.character
-            if (event.character and (event.character in PRINTABLE))
-            else event.key
-        )
+    async def decrease_urgency(self):
+        if self.component and self.item:
+            self.component.refresh()
+            self.item.decrease_urgency()
 
-        if self.editing != "none":
-            return
-        if key in "d":
-            await self.start_edit("due")
-        elif key in "e":
-            await self.start_edit("eta")
-        elif key in "t":
-            await self.start_edit("tags")
-        elif key in "r":
-            await self.start_edit("recur")
-        elif key in "c":
-            if self.item and self.component:
-                self.component.refresh()
-                self.item.toggle_complete()
-        elif key in "+=":
-            if self.component and self.item:
-                self.component.refresh()
-                self.item.increase_urgency()
-        elif key in "_-":
-            if self.component and self.item:
-                self.component.refresh()
-                self.item.decrease_urgency()
+    async def toggle_complete(self):
+        if self.item and self.component:
+            self.component.refresh()
+            self.item.toggle_complete()
+
+    # async def check_extra_keys(self, event: events.Key):
+    #
+    #     key = (
+    #         event.character
+    #         if (event.character and (event.character in PRINTABLE))
+    #         else event.key
+    #     )
+    #
+    #     if self.editing != "none":
+    #         return
+    #     if key in "d":
+    #         await self.start_edit("due")
+    #     elif key in "e":
+    #         await self.start_edit("eta")
+    #     elif key in "t":
+    #         await self.start_edit("tags")
+    #     elif key in "r":
+    #         await self.start_edit("recur")
+    #     elif key in "c":
+    #         await self.toggle_complete()
+    #     elif key in "+=":
+    #         await self.increase_urgency()
+    #     elif key in "_-":
+    #         await self.decrease_urgency()

@@ -1,5 +1,6 @@
 from typing import List
 from dooit.ui.widgets.formatters.workspace_tree_formatter import WorkspaceFormatter
+from dooit.utils.keybinder import KeyBinder
 
 from .tree import TreeList
 from ...api import Manager, Workspace
@@ -22,6 +23,7 @@ class WorkspaceTree(TreeList):
     model_type = Workspace
     styler = WorkspaceFormatter(format)
     COLS = ["desc"]
+    key_manager = KeyBinder()
 
     async def _current_change_callback(self) -> None:
         await self.emit(TopicSelect(self, self.item))
@@ -63,7 +65,7 @@ class WorkspaceTree(TreeList):
             if self.item:
                 await self._current_change_callback()
 
-            await self.stop_filtering()
+            await self.stop_search()
             self.current = -1
 
         await self.emit(SwitchTab(self))

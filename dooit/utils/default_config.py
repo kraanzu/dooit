@@ -123,11 +123,10 @@ bar = [
 #################################
 special_keys = {
     "switch pane": "tab",
-    "canel writing": "escape",
     "sort menu toggle": "ctrl+s",
     "search": ["/", "S"],
     "quit": "ctrl+q",
-    "edit tag": "t",
-    "edit recurrence": "r",
+    "edit tags": "t",
+    "edit recur": "r",
     "edit eta": "e",
 }

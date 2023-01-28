@@ -2,7 +2,6 @@ import re
 import pyperclip
 
 from textual.geometry import Size
-from functools import partial
 from typing import Dict, Iterable, List, Literal, Optional, Type
 from rich.align import Align
 from rich.console import Group, RenderableType
@@ -14,11 +13,12 @@ from textual.widget import Widget
 from rich.table import Table, box
 
 from dooit.ui.widgets.formatters.formatter import Formatter
+from dooit.utils.keybinder import KeyBinder
 
 from .simple_input import SimpleInput
 from ...api import Manager, manager, Model, Workspace
 from ...ui.widgets.sort_options import SortOptions
-from ...ui.events.events import ChangeStatus, Notify, SpawnHelp
+from ...ui.events.events import ChangeStatus, Notify, SpawnHelp, StatusType
 from ...utils.conf_reader import Config
 
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
@@ -122,6 +122,7 @@ class TreeList(Widget):
     model_kind: Literal["workspace", "todo"]
     COLS: List
     styler: Formatter
+    key_manager: KeyBinder
 
     def __init__(
         self,
@@ -257,6 +258,9 @@ class TreeList(Widget):
         self.row_vals: List[Component] = list(self._rows.values())
         self.refresh()
 
+    async def change_status(self, status: StatusType):
+        await self.emit(ChangeStatus(self, status))
+
     async def start_edit(self, field: str) -> None:
         if field == "none":
             return
@@ -265,11 +269,11 @@ class TreeList(Widget):
             return
 
         if field == "desc":
-            await self.emit(ChangeStatus(self, "INSERT"))
+            await self.change_status("INSERT")
         elif field == "tags":
-            await self.emit(ChangeStatus(self, "TAG"))
+            await self.change_status("TAG")
         elif field == "due":
-            await self.emit(ChangeStatus(self, "DATE"))
+            await self.change_status("DATE")
 
         self.component.fields[field].on_focus()
         self.editing = field
@@ -303,7 +307,7 @@ class TreeList(Widget):
         self.editing = "none"
 
         await self.notify(res.text())
-        await self.emit(ChangeStatus(self, "NORMAL"))
+        await self.change_status("NORMAL")
 
         if not res.ok:
             if res.cancel_op:
@@ -312,16 +316,16 @@ class TreeList(Widget):
         else:
             self.commit()
 
-    async def start_filtering(self) -> None:
+    async def start_search(self) -> None:
         self.filter.on_focus()
         await self.notify(self.filter.render())
-        await self.emit(ChangeStatus(self, "SEARCH"))
+        await self.change_status("SEARCH")
 
-    async def stop_filtering(self) -> None:
+    async def stop_search(self) -> None:
         self.filter.clear()
         self._refresh_rows()
         await self.notify(self.filter.render())
-        await self.emit(ChangeStatus(self, "NORMAL"))
+        await self.change_status("NORMAL")
 
     def _drop(self, item: model_type) -> None:
         item = item or self.item
@@ -481,7 +485,7 @@ class TreeList(Widget):
         else:
             await self.notify("[red]No item selected![/]")
 
-    async def show_sort_menu(self) -> None:
+    async def sort_menu_toggle(self) -> None:
         self.sort_menu.visible = True
 
     async def check_extra_keys(self, _event: events.Key) -> None:
@@ -521,36 +525,15 @@ class TreeList(Widget):
 
             else:
 
-                keybinds = {
-                    "escape": self.stop_filtering,
-                    "tab": self.switch_tabs,
-                    "k": self.move_up,
-                    "up": self.move_up,
-                    "K": self.shift_up,
-                    "shift+up": self.shift_up,
-                    "j": self.move_down,
-                    "down": self.move_down,
-                    "J": self.shift_down,
-                    "shift+down": self.shift_down,
-                    "i": partial(self.start_edit, "desc"),
-                    "z": self.toggle_expand,
-                    "Z": self.toggle_expand_parent,
-                    "A": self.add_child,
-                    "a": self.add_sibling,
-                    "x": self.remove_item,
-                    "g": self.move_to_top,
-                    "home": self.move_to_top,
-                    "G": self.move_to_bottom,
-                    "s": self.show_sort_menu,
-                    "/": self.start_filtering,
-                    "?": self.spawn_help,
-                    "y": self.copy_text,
-                }
+                self.key_manager.attach_key(key)
+                bind = self.key_manager.get_method()
+                if bind:
+                    await self.change_status("NORMAL")
+                    func = getattr(self, bind.func)
+                    await func(*bind.params)
 
-                if key in keybinds:
-                    await keybinds[key]()
-
-        await self.check_extra_keys(event)
+        # await self.check_extra_keys(event)
+        await self.notify(str(self.key_manager.pressed))
         self.refresh(layout=True)
 
     async def spawn_help(self):

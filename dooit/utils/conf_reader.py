@@ -23,12 +23,22 @@ def get_vars(spec: Optional[ModuleSpec]) -> Dict[str, Any]:
     return {}
 
 
+def combine_into(d: dict, to: dict) -> None:
+    for k, v in d.items():
+        if isinstance(v, dict):
+            combine_into(v, to.setdefault(k, {}))
+        else:
+            to[k] = v
+
+
 class Config:
     def __init__(self) -> None:
+        self._d = {}
         self.update()
 
     def update(self):
-        self._d = get_vars(default_spec) | get_vars(user_spec)
+        for i in [default_spec, user_spec]:
+            combine_into(get_vars(i), self._d)
 
     def get(self, var: str) -> Any:
         return self._d[var]

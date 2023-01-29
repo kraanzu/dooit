@@ -16,18 +16,19 @@ class Result:
     ok: bool
     cancel_op: bool
     message: Optional[str] = None
+    color: str = "white"
 
     @classmethod
     def Ok(cls, message: Optional[str] = None):
-        return cls(True, False, message)
+        return cls(True, False, message, "b green")
 
     @classmethod
     def Warn(cls, message: Optional[str] = None):
-        return cls(False, False, message)
+        return cls(False, False, message, "b yellow")
 
     @classmethod
     def Err(cls, message: str):
-        return cls(False, True, message)
+        return cls(False, True, message, "b red")
 
     def is_ok(self) -> bool:
         return self.ok
@@ -40,7 +41,7 @@ class Result:
             return f"[{b}]{a}[/{b}]"
 
         if self.message:
-            return colored(" " + self.message, "green" if self.ok else "red")
+            return colored(self.message, self.color)
 
         return Text()
 

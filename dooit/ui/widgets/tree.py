@@ -275,7 +275,11 @@ class TreeList(Widget):
         elif field == "due":
             await self.change_status("DATE")
 
-        self.component.fields[field].value = getattr(self.item, f"_{field}")
+        if field == "tags":
+            self.component.fields[field].value = getattr(self.item, f"{field}")
+        else:
+            self.component.fields[field].value = getattr(self.item, f"_{field}")
+
         self.component.fields[field].on_focus()
         self.editing = field
 

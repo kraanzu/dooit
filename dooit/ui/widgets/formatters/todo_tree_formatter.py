@@ -45,7 +45,7 @@ class TodoFormatter(Formatter):
             text += self.colored(f" {icon}{eta}", color)
 
         # TAGS
-        if tags := item.tags:
+        if tags := kwargs["tags"]:
             tags = [i.strip() for i in kwargs["tags"].split(",")]
             icon = self.format["tags_icon"]
             seperator = self.format["tags_seperator"]

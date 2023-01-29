@@ -111,7 +111,7 @@ class Todo(Model):
 
     def set_eta(self, val: str) -> Result:
         if not self._is_valid(val):
-            return Err("Invalid Format!")
+            return Warn("Invalid Format! Use: <number><m/h/d/w>")
 
         self._eta = val
         return Ok()
@@ -140,7 +140,7 @@ class Todo(Model):
             else:
                 return Ok(f"Recurrence set for {self.recur}")
 
-        return Err("Invalid Format!")
+        return Warn("Invalid Format! Use: <number><m/h/d/w>")
 
     @property
     def due(self):

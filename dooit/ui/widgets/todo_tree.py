@@ -1,13 +1,9 @@
 from typing import Optional
-from dooit.ui.widgets.formatters.todo_tree_formatter import TodoFormatter
-
-from dooit.utils.conf_reader import Config
-from dooit.utils.keybinder import KeyBinder
-
+from dooit.ui.formatters import TodoFormatter
+from dooit.utils import KeyBinder, Config
+from dooit.ui.events.events import SwitchTab
+from dooit.api import Workspace, Todo
 from .tree import TreeList
-from ...api.todo import Todo
-from ...ui.events.events import SwitchTab
-from ...api import Workspace
 
 conf = Config()
 EMPTY_TODO = conf.get("EMPTY_TODO")

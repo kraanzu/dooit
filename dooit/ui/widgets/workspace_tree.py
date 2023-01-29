@@ -1,11 +1,10 @@
 from typing import List
-from dooit.ui.widgets.formatters.workspace_tree_formatter import WorkspaceFormatter
+from dooit.ui.formatters import WorkspaceFormatter
 from dooit.utils.keybinder import KeyBinder
-
+from dooit.api import Manager, Workspace
+from dooit.ui.events import TopicSelect, SwitchTab
+from dooit.utils.conf_reader import Config
 from .tree import TreeList
-from ...api import Manager, Workspace
-from ..events import TopicSelect, SwitchTab
-from ...utils.conf_reader import Config
 
 conf = Config()
 EMPTY_WORKSPACE = conf.get("EMPTY_WORKSPACE")

@@ -1,5 +1,5 @@
 from typing import Dict
-from dooit.api.todo import Todo
+from dooit.api import Todo
 from .formatter import Formatter
 
 

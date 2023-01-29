@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from rich.text import Text
 
 T = TypeVar("T", bound="Model")
-MaybeModel = Optional["Model"]
 
 
 @dataclass

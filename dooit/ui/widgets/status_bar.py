@@ -2,8 +2,7 @@ from typing import List
 from rich.console import RenderableType
 from rich.text import Text, TextType
 from textual.widget import Widget
-
-from ...utils.conf_reader import Config
+from dooit.utils.conf_reader import Config
 from ..events import StatusType
 
 bar = Config().get("bar")

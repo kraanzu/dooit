@@ -4,7 +4,7 @@ from rich.console import JustifyMethod, RenderableType
 from rich.text import Text
 
 
-class Widget:
+class StatusItem:
     """
     Renderable Widget class for status bar
     """

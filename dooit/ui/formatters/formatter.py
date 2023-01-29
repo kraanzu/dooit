@@ -1,7 +1,6 @@
 from typing import Type, Dict
-
 from rich.text import Text
-from dooit.api.model import Model
+from dooit.api import Model
 
 
 class Formatter:

@@ -1,5 +1,5 @@
 from rich.text import Text
-from dooit.utils.status_widget import Widget
+from dooit.utils.status_widget import StatusItem
 from datetime import datetime
 import os
 
@@ -100,20 +100,20 @@ EMPTY_TODO = [
 #          STATUS BAR           #
 #################################
 bar = [
-    Widget(
+    StatusItem(
         func=lambda: Text(
             " {status} ",
             "r blue",
         ),
     ),
-    Widget(
+    StatusItem(
         func=lambda: " {message} ",
         expand=True,
     ),
-    Widget(
+    StatusItem(
         func=get_clock,
     ),
-    Widget(
+    StatusItem(
         func=get_username,
     ),
 ]

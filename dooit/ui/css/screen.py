@@ -2,7 +2,7 @@
 Main CSS File for App
 """
 
-from dooit.utils.conf_reader import Config
+from dooit.utils import Config
 
 
 screen_CSS = f"""

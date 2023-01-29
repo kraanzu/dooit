@@ -1,5 +1,5 @@
 from typing import Dict
-from dooit.api.workspace import Workspace
+from dooit.api import Workspace
 from .formatter import Formatter
 
 

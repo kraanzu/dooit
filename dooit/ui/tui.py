@@ -1,9 +1,8 @@
 from textual.app import App
 from textual import events
 from dooit.utils.watcher import Watcher
-from dooit.ui.widgets.help_menu import HelpScreen
 from dooit.ui.events import *  # noqa
-from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
+from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar, HelpScreen
 from dooit.api.manager import manager
 from dooit.ui.css.screen import screen_CSS
 

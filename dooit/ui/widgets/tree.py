@@ -1,25 +1,22 @@
 import re
 import pyperclip
-
 from textual.geometry import Size
 from typing import Any, Dict, Iterable, List, Literal, Optional, Type
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
 from rich.text import Text, TextType
+from rich.table import Table, box
 from textual import events
 from textual.reactive import Reactive
 from textual.widget import Widget
-from rich.table import Table, box
-
-from dooit.ui.widgets.formatters.formatter import Formatter
+from dooit.ui.formatters import Formatter
 from dooit.utils.keybinder import KeyBinder
-
+from dooit.api import Manager, manager, Model
+from dooit.ui.widgets.sort_options import SortOptions
+from dooit.ui.events.events import ChangeStatus, Notify, SpawnHelp, StatusType
+from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
-from ...api import Manager, manager, Model
-from ...ui.widgets.sort_options import SortOptions
-from ...ui.events.events import ChangeStatus, Notify, SpawnHelp, StatusType
-from ...utils.conf_reader import Config
 
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 conf = Config()

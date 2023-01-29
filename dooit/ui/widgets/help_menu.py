@@ -8,7 +8,7 @@ from rich.style import StyleType
 from rich.table import Table
 from rich.text import Text
 from textual import events
-from dooit.utils.keybinder import KeyBinder
+from dooit.utils import KeyBinder
 
 
 # UTILS

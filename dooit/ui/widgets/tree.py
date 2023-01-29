@@ -266,6 +266,12 @@ class TreeList(Widget):
         if not self.component:
             return
 
+        if field not in self.component.fields.keys():
+            await self.notify(
+                f"[yellow]Can't change [b orange1]`{field}`[/b orange1] here![/yellow]"
+            )
+            return
+
         if field == "desc":
             await self.change_status("INSERT")
         elif field == "tags":
@@ -490,7 +496,7 @@ class TreeList(Widget):
     async def sort_menu_toggle(self) -> None:
         self.sort_menu.visible = True
 
-    async def switch_tabs(self) -> None:
+    async def switch_pane(self) -> None:
         pass
 
     async def handle_key(self, event: events.Key) -> None:
@@ -528,8 +534,13 @@ class TreeList(Widget):
                 bind = self.key_manager.get_method()
                 if bind:
                     await self.change_status("NORMAL")
-                    func = getattr(self, bind.func)
-                    await func(*bind.params)
+                    if hasattr(self, bind.func):
+                        func = getattr(self, bind.func)
+                        await func(*bind.params)
+                    else:
+                        await self.notify(
+                            "[yellow]Cannot perform this operation here![/yellow]"
+                        )
 
         self.refresh()
 

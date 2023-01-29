@@ -1,6 +1,9 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import DefaultDict, Dict, List, Optional, Union
+from dooit.utils.conf_reader import Config
+
+configured_keys = Config().get("keybindings")
 
 
 @dataclass
@@ -13,7 +16,7 @@ KeyList = Dict[str, Union[str, List]]
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 DEFAULTS = {
     "stop search": "<escape>",
-    "switch tabs": "<tab>",
+    "switch pane": "<tab>",
     "move up": ["k", "<up>"],
     "shift up": ["K", "<shift+up>"],
     "move down": ["j", "<down>"],
@@ -30,9 +33,6 @@ DEFAULTS = {
     "start search": "/",
     "spawn help": "?",
     "copy text": "y",
-}
-
-TODO_BINDINGS = {
     "toggle complete": "c",
     "edit due": "d",
     "edit tags": "t",
@@ -46,13 +46,12 @@ TODO_BINDINGS = {
 class KeyBinder:
     # KEYBIND MANAGER FOR NORMAL MODE
 
-    def __init__(self, attach_todo_bindings: bool = False) -> None:
+    def __init__(self) -> None:
         self.pressed = ""
         self.methods: Dict[str, Bind] = {}
         self.raw: DefaultDict[str, List[str]] = defaultdict(list)
         self.add_keys(DEFAULTS)
-        if attach_todo_bindings:
-            self.add_keys(TODO_BINDINGS)
+        self.add_keys(configured_keys)
 
     def convert_to_bind(self, cmd: str):
         func_split = cmd.split()

@@ -14,7 +14,7 @@ from dooit.utils import KeyBinder
 # UTILS
 # ---------------------------------------------------
 NL = Text("\n")
-kb = KeyBinder(True)
+kb = KeyBinder()
 
 
 def colored(text: str, color: StyleType) -> str:
@@ -103,7 +103,7 @@ NORMAL_KB = {
     "add child": "Add child todo/workspace",
     "sort menu toggle": "Launch sort menu",
     "start search": "Start Search Mode",
-    "switch tabs": "Change focused pane",
+    "switch pane": "Change focused pane",
     "edit due": "Edit date**",
     "edit desc": "Edit description**",
     "edit eta": "Edit ETA for todo**",

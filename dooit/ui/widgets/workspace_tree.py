@@ -56,7 +56,7 @@ class WorkspaceTree(TreeList):
         super()._setup_table(format["pointer"])
         self.table.add_column("desc", ratio=1)
 
-    async def switch_tabs(self) -> None:
+    async def switch_pane(self) -> None:
         if self.current == -1:
             return
 

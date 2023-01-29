@@ -115,11 +115,10 @@ bar = {
 #################################
 #          KEYBINDING           #
 #################################
-special_keys = {
-    "switch pane": "tab",
-    "sort menu toggle": "ctrl+s",
-    "search": ["/", "S"],
-    "quit": "ctrl+q",
+keybindings = {
+    "switch pane": "<tab>",
+    "sort menu toggle": "<ctrl+s>",
+    "start search": ["/", "S"],
     "edit tags": "t",
     "edit recur": "r",
     "edit eta": "e",

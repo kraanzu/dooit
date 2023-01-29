@@ -24,14 +24,14 @@ class TodoTree(TreeList):
     model_type = Todo
     styler = TodoFormatter(format)
     COLS = COLUMN_ORDER
-    key_manager = KeyBinder(attach_todo_bindings=True)
+    key_manager = KeyBinder()
 
     def _get_children(self, model: Workspace):
         if model:
             return model.todos
         return []
 
-    async def switch_tabs(self):
+    async def switch_pane(self):
         if self.filter.value:
             await self.stop_search()
 

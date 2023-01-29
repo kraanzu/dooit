@@ -76,6 +76,10 @@ class TodoTree(TreeList):
 
         self.refresh()
 
+    @property
+    def item(self) -> Optional[Todo]:
+        return super().item
+
     def _setup_table(self) -> None:
         super()._setup_table(format["pointer"])
         for col in COLUMN_ORDER:

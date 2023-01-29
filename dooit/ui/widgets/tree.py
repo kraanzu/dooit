@@ -2,7 +2,7 @@ import re
 import pyperclip
 
 from textual.geometry import Size
-from typing import Dict, Iterable, List, Literal, Optional, Type
+from typing import Any, Dict, Iterable, List, Literal, Optional, Type
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -16,7 +16,7 @@ from dooit.ui.widgets.formatters.formatter import Formatter
 from dooit.utils.keybinder import KeyBinder
 
 from .simple_input import SimpleInput
-from ...api import Manager, manager, Model, Workspace
+from ...api import Manager, manager, Model
 from ...ui.widgets.sort_options import SortOptions
 from ...ui.events.events import ChangeStatus, Notify, SpawnHelp, StatusType
 from ...utils.conf_reader import Config
@@ -182,7 +182,7 @@ class TreeList(Widget):
             return self.row_vals[self.current]
 
     @property
-    def item(self) -> Optional[model_type]:
+    def item(self) -> Optional[Any]:
         if self.component:
             return self.component.item
 
@@ -224,12 +224,12 @@ class TreeList(Widget):
         _rows_copy = {i.item.path: i.expanded for i in self._rows.values()}
         self._rows = {}
 
-        def add_rows(item: self.model_type, nest_level=0):
+        def add_rows(item: Model, nest_level=0):
 
             name = item.name
             path = item.path
 
-            def push_item(item: Workspace):
+            def push_item(item: Model):
                 expanded = _rows_copy.get(path, False)
 
                 self._rows[name] = Component(
@@ -241,7 +241,8 @@ class TreeList(Widget):
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
-                if re.findall(pattern, item.desc):
+                desc = getattr(item, "desc")
+                if re.findall(pattern, desc):
                     push_item(item)
                 for i in self._get_children(item):
                     add_rows(i, nest_level + 1)

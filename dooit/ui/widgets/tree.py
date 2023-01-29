@@ -536,8 +536,7 @@ class TreeList(Widget):
                     await func(*bind.params)
 
         # await self.check_extra_keys(event)
-        await self.notify(str(self.key_manager.pressed))
-        self.refresh(layout=True)
+        self.refresh()
 
     async def spawn_help(self):
         await self.emit(SpawnHelp(self))

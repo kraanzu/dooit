@@ -1,5 +1,4 @@
 from rich.text import Text
-from dooit.utils.status_widget import StatusItem
 from datetime import datetime
 import os
 
@@ -12,6 +11,14 @@ import os
 
 def colored(text: str, color: str, pre: str = ""):
     return f"{pre} [{color}]{text}[/]"
+
+
+def get_status(status):
+    return colored(f" {status} ", "r blue")
+
+
+def get_message(message):
+    return " " + message
 
 
 def get_clock() -> Text:
@@ -99,24 +106,11 @@ EMPTY_TODO = [
 #################################
 #          STATUS BAR           #
 #################################
-bar = [
-    StatusItem(
-        func=lambda: Text(
-            " {status} ",
-            "r blue",
-        ),
-    ),
-    StatusItem(
-        func=lambda: " {message} ",
-        expand=True,
-    ),
-    StatusItem(
-        func=get_clock,
-    ),
-    StatusItem(
-        func=get_username,
-    ),
-]
+bar = {
+    "A": [get_status],
+    "B": [get_message],
+    "C": [get_clock, get_username],
+}
 
 #################################
 #          KEYBINDING           #

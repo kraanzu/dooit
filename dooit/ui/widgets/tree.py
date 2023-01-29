@@ -488,9 +488,6 @@ class TreeList(Widget):
     async def sort_menu_toggle(self) -> None:
         self.sort_menu.visible = True
 
-    async def check_extra_keys(self, _event: events.Key) -> None:
-        pass
-
     async def switch_tabs(self) -> None:
         pass
 
@@ -535,7 +532,6 @@ class TreeList(Widget):
                     func = getattr(self, bind.func)
                     await func(*bind.params)
 
-        # await self.check_extra_keys(event)
         self.refresh()
 
     async def spawn_help(self):

@@ -274,8 +274,6 @@ class TreeList(Widget):
 
         if field == "description":
             await self.change_status("INSERT")
-        elif field == "tags":
-            await self.change_status("TAG")
         elif field == "due":
             await self.change_status("DATE")
 

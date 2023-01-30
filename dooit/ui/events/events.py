@@ -2,7 +2,7 @@ from typing import Literal
 from rich.text import TextType, Text
 from textual.message import Message, MessageTarget
 
-StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG", "K PENDING"]
+StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
 SortMethodType = Literal["description", "status", "date", "urgency"]
 
 

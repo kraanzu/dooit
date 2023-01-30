@@ -33,7 +33,13 @@ def convert_to_row(bindings: Dict):
 
             arr.append(
                 [
-                    Text("/".join(methods[i]), style="b green"),
+                    Text.from_markup(
+                        colored(
+                            " or ",
+                            "i cyan",
+                        ).join(methods[i]),
+                        style="b green",
+                    ),
                     Text(i, style="magenta"),
                     Text.from_markup(j, style="b blue"),
                 ]
@@ -42,7 +48,7 @@ def convert_to_row(bindings: Dict):
             arr.append(
                 [
                     Text(i, style="b green"),
-                    Text("-", style="d black", justify="center"),
+                    Text("N/Ablack", style="d white", justify="center"),
                     Text.from_markup(j, style="b blue"),
                 ]
             )
@@ -60,7 +66,7 @@ def generate_kb_table(
     arr = convert_to_row(kb)
 
     table = Table.grid(expand=True, padding=(0, 3))
-    table.add_column("mode", width=10)
+    table.add_column("mode", width=20)
     table.add_column("keybind", width=15)
     table.add_column("cmd", width=20)
     table.add_column("colon", width=2)
@@ -143,8 +149,9 @@ SEARCH_KB = {
 }
 
 SORT_KB = {
-    "j/down": "Move down",
-    "k/up": "Move up",
+    "move down": "Move to next sort option",
+    "move up": "Move to previous sort option",
+    "sort menu toggle": "Cancel sort operation",
     "enter": "Select the sorting method",
 }
 # ---------------- X -------------------------

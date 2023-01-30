@@ -28,7 +28,7 @@ DEFAULTS = {
     "add sibling": "a",
     "remove item": "x",
     "move to top": ["g", "<home>"],
-    "move to bottom": ["<end>", "G"],
+    "move to bottom": ["G", "<end>"],
     "sort menu toggle": "s",
     "start search": "/",
     "spawn help": "?",
@@ -64,12 +64,12 @@ class KeyBinder:
         for cmd, key in keys.items():
 
             if isinstance(key, str):
-                self.raw[cmd].append(key)
                 key = [key]
-            else:
-                self.raw[cmd].extend(key)
 
             for k in key:
+                if k not in self.raw[cmd]:
+                    self.raw[cmd].append(k)
+
                 self.methods[k] = self.convert_to_bind(cmd)
 
     def attach_key(self, key: str) -> None:

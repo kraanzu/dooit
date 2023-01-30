@@ -520,7 +520,7 @@ class TreeList(Widget):
         else:
 
             if self.sort_menu.visible:
-                await self.sort_menu.handle_key(event)
+                await self.sort_menu.handle_key(key)
 
             elif self.filter.has_focus:
                 await self.filter.handle_keypress(key)

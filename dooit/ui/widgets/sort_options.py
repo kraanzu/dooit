@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 from rich.align import Align
 from rich.box import HEAVY
 from rich.console import RenderableType
@@ -7,15 +7,16 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.style import StyleType
 from textual.widget import Widget
-from textual import events
-
-from ...ui.events.events import ApplySortMethod, ChangeStatus
+from dooit.ui.events import ApplySortMethod, ChangeStatus, Notify
+from dooit.utils import KeyBinder
 
 
 class SortOptions(Widget):
     """
     A list class to show and select the items in a list
     """
+
+    key_manager = KeyBinder()
 
     def __init__(
         self,
@@ -25,7 +26,6 @@ class SortOptions(Widget):
         style_unfocused: StyleType = "white",
         style_focused: StyleType = "bold reverse green ",
         pad: bool = True,
-        rotate: bool = False,
         wrap: bool = True,
     ) -> None:
         super().__init__(name=name)
@@ -33,7 +33,6 @@ class SortOptions(Widget):
         self.style_unfocused = style_unfocused
         self.style_focused = style_focused
         self.pad = pad
-        self.rotate = rotate
         self.wrap = wrap
         self.parent_widget = parent_widget
         self.highlighted = 0
@@ -45,67 +44,67 @@ class SortOptions(Widget):
     def hide(self) -> None:
         self.visible = False
 
-    def move_cursor_down(self) -> None:
+    async def move_down(self) -> None:
         """
         Moves the highlight down
         """
 
-        if self.rotate:
-            self.highlight((self.highlighted + 1) % len(self.options))
-        else:
-            self.highlight(min(self.highlighted + 1, len(self.options) - 1))
+        self.highlight(min(self.highlighted + 1, len(self.options) - 1))
 
-    def move_cursor_up(self) -> None:
+    async def move_up(self) -> None:
         """
         Moves the highlight up
         """
 
-        if self.rotate:
-            self.highlight(
-                (self.highlighted - 1 + len(self.options)) % len(self.options)
-            )
-        else:
-            self.highlight(max(self.highlighted - 1, 0))
+        self.highlight(max(self.highlighted - 1, 0))
 
-    def move_cursor_to_top(self) -> None:
+    async def move_to_top(self) -> None:
         """
         Moves the cursor to the top
         """
         self.highlight(0)
 
-    def move_cursor_to_bottom(self) -> None:
+    async def move_to_bottom(self) -> None:
         """
         Moves the cursor to the bottom
         """
 
         self.highlight(len(self.options) - 1)
 
-    async def handle_key(self, event: events.Key) -> None:
-        event.stop()
-        key = event.key
+    async def sort_menu_toggle(self):
+        await self.send_message(ChangeStatus, "NORMAL")
+        self.visible = False
 
-        if key in ["escape"]:
-            await self.post_message(ChangeStatus(self, "NORMAL"))
-            self.visible = False
-        elif key in ["j", "down"]:
-            self.move_cursor_down()
-        elif key in ["k", "up"]:
-            self.move_cursor_up()
-        elif key in ["g", "home"]:
-            self.move_cursor_to_top()
-        elif key in ["G", "end"]:
-            self.move_cursor_to_bottom()
-        elif key in ["enter"]:
-            if self.parent_widget:
-                await self.parent_widget.emit(
-                    ApplySortMethod(
-                        self.parent_widget,
-                        self.options[self.highlighted],
-                    )
+    async def send_message(self, event: Type, *args):
+        if self.parent_widget:
+            await self.parent_widget.emit(
+                event(
+                    self.parent_widget,
+                    *args,
                 )
-            self.hide()
-        elif key in ["s"]:
-            self.hide()
+            )
+
+    async def handle_key(self, key: str) -> None:
+
+        if key == "escape":
+            await self.sort_menu_toggle()
+            return
+
+        if key == "enter":
+            await self.send_message(ApplySortMethod, self.options[self.highlighted])
+            await self.sort_menu_toggle()
+            return
+
+        self.key_manager.attach_key(key)
+        bind = self.key_manager.get_method()
+        if bind:
+            if hasattr(self, bind.func):
+                func = getattr(self, bind.func)
+                await func(*bind.params)
+            else:
+                await self.emit(
+                    Notify(self, "[yellow]No such operation for sort menu![/yellow]")
+                )
 
         self.refresh()
 

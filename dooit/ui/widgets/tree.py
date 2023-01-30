@@ -305,19 +305,19 @@ class TreeList(Widget):
                 self.editing,
             )
             simple_input.value = val
-        else:
-            res = self.component.item.edit(
-                self.editing,
-                simple_input.value,
-            )
 
-            await self.notify(res.text())
-            if not res.ok:
-                if res.cancel_op:
-                    await self.remove_item()
-                await self._current_change_callback()
-            else:
-                self.commit()
+        res = self.component.item.edit(
+            self.editing,
+            simple_input.value,
+        )
+
+        await self.notify(res.text())
+        if not res.ok:
+            if res.cancel_op:
+                await self.remove_item()
+            await self._current_change_callback()
+        else:
+            self.commit()
 
         simple_input.on_blur()
         self.component.refresh()

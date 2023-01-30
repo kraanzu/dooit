@@ -188,9 +188,12 @@ class SimpleInput(Widget):
             self._cursor_position = prev  # Because the cursor never actually moved :)
 
     async def clear_input(self):
-        await self.handle_keypress("end")
+        self.move_cursor_to_end()
         while self.value:
             await self.handle_keypress("backspace")
+
+    def move_cursor_to_end(self):
+        self._cursor_position = len(self.value)
 
     async def handle_keypress(self, key: str) -> None:
         """
@@ -237,7 +240,7 @@ class SimpleInput(Widget):
             self._cursor_position = 0
 
         elif key == "end":
-            self._cursor_position = len(self.value)
+            self.move_cursor_to_end()
 
         elif key == "tab":
             await self._insert_text("\t")

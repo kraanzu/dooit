@@ -238,8 +238,8 @@ class TreeList(Widget):
                 self._rows[name].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
-                desc = getattr(item, "desc")
-                if re.findall(pattern, desc):
+                description = getattr(item, "description")
+                if re.findall(pattern, description):
                     push_item(item)
                 for i in self._get_children(item):
                     add_rows(i, nest_level + 1)
@@ -272,7 +272,7 @@ class TreeList(Widget):
             )
             return
 
-        if field == "desc":
+        if field == "description":
             await self.change_status("INSERT")
         elif field == "tags":
             await self.change_status("TAG")
@@ -388,7 +388,7 @@ class TreeList(Widget):
         self._add_child()
         self._refresh_rows()
         await self.move_down()
-        await self.start_edit("desc")
+        await self.start_edit("description")
 
     async def add_sibling(self) -> None:
 
@@ -396,13 +396,13 @@ class TreeList(Widget):
             child = self._add_child()
             self._refresh_rows()
             self.current = self._rows[child.name].index
-            await self.start_edit("desc")
+            await self.start_edit("description")
             return
 
         self._add_sibling()
         self._refresh_rows()
         self.commit()
-        await self.to_next_sibling("desc")
+        await self.to_next_sibling("description")
 
     async def to_next_sibling(self, edit: Optional[str] = None) -> None:
         if not self.item:
@@ -488,7 +488,7 @@ class TreeList(Widget):
 
     async def copy_text(self) -> None:
         if self.item:
-            pyperclip.copy(self.item.desc)
+            pyperclip.copy(self.item.description)
             await self.notify("[green]Description copied to clipboard![/]")
         else:
             await self.notify("[red]No item selected![/]")
@@ -501,6 +501,7 @@ class TreeList(Widget):
 
     async def handle_key(self, event: events.Key) -> None:
 
+        event.stop()
         key = (
             event.character
             if (event.character and (event.character in PRINTABLE))
@@ -606,7 +607,7 @@ class TreeList(Widget):
                 self.pad_index = 0
 
                 for i, j in enumerate(self.table.columns):
-                    if j.header == "desc":
+                    if j.header == "description":
                         self.pad_index = i
                         break
 

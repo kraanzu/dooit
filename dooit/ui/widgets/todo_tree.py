@@ -79,7 +79,7 @@ class TodoTree(TreeList):
     def _setup_table(self) -> None:
         super()._setup_table(format["pointer"])
         for col in COLUMN_ORDER:
-            if col == "desc":
+            if col == "description":
                 d = {"ratio": 1}
             elif col == "due":
                 d = {"width": 20}

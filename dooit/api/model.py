@@ -243,7 +243,7 @@ class Model:
         return {
             getattr(
                 child,
-                "desc",
+                "descrption",
             ): child.commit()
             for child in self.workspaces
         }
@@ -255,5 +255,5 @@ class Model:
 
         for i, j in data.items():
             self.add_child("workspace")
-            self.workspaces[-1].edit("desc", i)
+            self.workspaces[-1].edit("descrption", i)
             self.workspaces[-1].from_data(j)

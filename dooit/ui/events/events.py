@@ -3,7 +3,7 @@ from rich.text import TextType, Text
 from textual.message import Message, MessageTarget
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "TAG", "K PENDING"]
-SortMethodType = Literal["desc", "status", "date", "urgency"]
+SortMethodType = Literal["description", "status", "date", "urgency"]
 
 
 class SwitchTab(Message, bubble=True):

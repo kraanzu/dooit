@@ -15,14 +15,14 @@ class TodoFormatter(Formatter):
         else:
             return "b red"
 
-    def style_desc(
+    def style_description(
         self,
         item: model_type,
         is_highlighted: bool,
         is_editing: bool,
         kwargs: Dict[str, str],
     ) -> str:
-        text = kwargs["desc"]
+        text = kwargs["description"]
 
         # STATUS ICON
         status_icon = item.status.lower() + "_icon"
@@ -62,10 +62,10 @@ class TodoFormatter(Formatter):
             text += self.colored(t, color)
 
         # RECURRENCE
-        if recur := kwargs["recur"]:
+        if recurrence := kwargs["recurrence"]:
             color = self.format["recurrence_color"]
             icon = self.format["recurrence_icon"]
-            text += f"[{color}] {icon}{recur}[/{color}]"
+            text += f"[{color}] {icon}{recurrence}[/{color}]"
 
         return self.cursor_highlight(text, is_highlighted, is_editing)
 

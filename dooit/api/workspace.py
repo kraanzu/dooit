@@ -7,22 +7,22 @@ TODO = "todo"
 
 
 class Workspace(Model):
-    fields = ["desc"]
+    fields = ["description"]
 
     @property
     def path(self):
         parent_path = self.parent.path if self.parent else ""
-        return self.desc + "#" + parent_path
+        return self.description + "#" + parent_path
 
     @property
-    def desc(self):
-        return self._desc
+    def description(self):
+        return self._description
 
-    def set_desc(self, value: str) -> Result:
+    def set_description(self, value: str) -> Result:
         if value:
             new_index = -1
             if self.parent:
-                new_index = self.parent._get_child_index("workspace", desc=value)
+                new_index = self.parent._get_child_index("workspace", description=value)
 
             old_index = self._get_index("workspace")
 
@@ -31,7 +31,7 @@ class Workspace(Model):
                     "A workspace with same description is already present",
                 )
             else:
-                self._desc = value
+                self._description = value
                 return Ok()
 
         return Err(
@@ -40,7 +40,7 @@ class Workspace(Model):
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)
-        self._desc = ""
+        self._description = ""
 
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)
@@ -49,7 +49,7 @@ class Workspace(Model):
         child_workspaces = {
             getattr(
                 workspace,
-                "desc",
+                "description",
             ): workspace.commit()
             for workspace in self.workspaces
         }
@@ -73,7 +73,7 @@ class Workspace(Model):
                     continue
 
                 workspace = self.add_child("workspace", index=len(self.workspaces))
-                workspace.edit("desc", i)
+                workspace.edit("description", i)
                 workspace.from_data(j)
 
         elif isinstance(data, list):

@@ -21,7 +21,7 @@ class WorkspaceTree(TreeList):
     model_kind = "workspace"
     model_type = Workspace
     styler = WorkspaceFormatter(format)
-    COLS = ["desc"]
+    COLS = ["description"]
     key_manager = KeyBinder()
 
     async def _current_change_callback(self) -> None:
@@ -54,7 +54,7 @@ class WorkspaceTree(TreeList):
 
     def _setup_table(self) -> None:
         super()._setup_table(format["pointer"])
-        self.table.add_column("desc", ratio=1)
+        self.table.add_column("description", ratio=1)
 
     async def switch_pane(self) -> None:
         if self.current == -1:

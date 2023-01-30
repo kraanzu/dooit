@@ -73,7 +73,7 @@ EMPTY_WORKSPACE = [
 #################################
 
 
-COLUMN_ORDER = ["desc", "due", "urgency"]  # order of columns
+COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
 TODO = {
     "dim": "d grey50",
     "highlight": "b white",
@@ -120,6 +120,6 @@ keybindings = {
     "sort menu toggle": "<ctrl+s>",
     "start search": ["/", "S"],
     "edit tags": "t",
-    "edit recur": "r",
+    "edit recurrence": "r",
     "edit eta": "e",
 }

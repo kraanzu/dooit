@@ -19,12 +19,12 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["desc", "due", "urgency", "tags", "status", "recur", "eta"]
+    fields = ["description", "due", "urgency", "tags", "status", "recurrence", "eta"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         super().__init__(parent)
 
-        self._desc = ""
+        self._description = ""
         self.urgency = 4
 
         self._eta = ""
@@ -32,7 +32,7 @@ class Todo(Model):
         self._done = False
         self._overdue = False
         self._tags = []
-        self._recur = ""
+        self._recurrence = ""
         self.todos: List[Todo] = []
 
         self.duration_legend = {
@@ -79,17 +79,17 @@ class Todo(Model):
     @property
     def path(self):
         parent_path = self.parent.path if self.parent else ""
-        return self.desc + "/" + parent_path
+        return self.description + "/" + parent_path
 
     @property
-    def desc(self):
-        return self._desc
+    def description(self):
+        return self._description
 
-    def set_desc(self, value: str) -> Result:
+    def set_description(self, value: str) -> Result:
         if value:
             new_index = -1
             if self.parent:
-                new_index = self.parent._get_child_index("todo", desc=value)
+                new_index = self.parent._get_child_index("todo", description=value)
 
             old_index = self._get_index("todo")
 
@@ -98,7 +98,7 @@ class Todo(Model):
                     "A todo with same description is already present",
                 )
             else:
-                self._desc = value
+                self._description = value
                 return Ok()
 
         return Err(
@@ -117,28 +117,28 @@ class Todo(Model):
         return Ok()
 
     @property
-    def recur(self):
+    def recurrence(self):
 
-        if not self._recur:
+        if not self._recurrence:
             return ""
 
-        return f"Every {self._format_duration(self._recur)}"
+        return f"Every {self._format_duration(self._recurrence)}"
 
-    def set_recur(self, val: str):
+    def set_recurrence(self, val: str):
 
         if flag := self.due == "none":
             self.set_due("now")
 
         if not val:
-            self._recur = ""
+            self._recurrence = ""
             return Ok("Recurrence removed for the todo")
 
         if self._is_valid(val):
-            self._recur = val
+            self._recurrence = val
             if flag:
-                return Ok(f"Recurrence set for {self.recur} starting today")
+                return Ok(f"Recurrence set for {self.recurrence} starting today")
             else:
-                return Ok(f"Recurrence set for {self.recur}")
+                return Ok(f"Recurrence set for {self.recurrence}")
 
         return Warn("Invalid Format! Use: <number><m/h/d/w>")
 
@@ -181,10 +181,10 @@ class Todo(Model):
 
     def toggle_complete(self):
         self._done = not self._done
-        if self._done and self._recur and self._due != "none":
+        if self._done and self._recurrence and self._due != "none":
             self._done = False
             due = datetime.strptime(self._due, self.date_format)
-            sign, frequency = self._split_duration(self._recur)
+            sign, frequency = self._split_duration(self._recurrence)
             frequency = int(frequency)
 
             time_to_add = timedelta(
@@ -208,13 +208,13 @@ class Todo(Model):
 
         tags = " ".join([f"@{i}" for i in self._tags])
         due = "due:" + (self._due or "None")
-        recur = f"%{self._recur}" if self._recur else ""
+        recur = f"%{self._recurrence}" if self._recurrence else ""
         eta = f"+{self._eta}" if self._eta else ""
         status = OPTS[self.status]
         urgency = f"({self.urgency})"
-        desc = self._desc
+        description = self._description
 
-        arr = [status, urgency, due, tags, recur, eta, desc]
+        arr = [status, urgency, due, tags, recur, eta, description]
         arr = [i for i in arr if i]
         return " ".join(arr)
 
@@ -228,12 +228,12 @@ class Todo(Model):
             elif i.startswith("+"):  # eta
                 self._eta = i[1:]
             elif i.startswith("%"):  # recurrence
-                self._recur = i[1:]
+                self._recurrence = i[1:]
             else:
                 brr.append(i)
 
         status = True if status == "X" else False
-        desc = " ".join(brr)
+        description = " ".join(brr)
 
         due = due[4:]
         if due == "None":
@@ -244,7 +244,7 @@ class Todo(Model):
         self.urgency = urgency
         self._done = status
 
-        self.set_desc(desc)
+        self.set_description(description)
         self.set_due(due)
 
     def commit(self) -> List[Any]:

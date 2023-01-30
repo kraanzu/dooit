@@ -37,7 +37,9 @@ class Manager(Model):
         return super().sort(WORKSPACE, attr)
 
     def _get_commit_data(self):
-        return {getattr(child, "desc"): child.commit() for child in self.workspaces}
+        return {
+            getattr(child, "description"): child.commit() for child in self.workspaces
+        }
 
     def commit(self) -> None:
         if self.is_locked():
@@ -58,7 +60,7 @@ class Manager(Model):
     def from_data(self, data: Any) -> None:
         for i, j in data.items():
             child = self.add_child(WORKSPACE, len(self.workspaces))
-            child.edit("desc", i)
+            child.edit("description", i)
             child.from_data(j)
 
     def refresh_data(self) -> bool:

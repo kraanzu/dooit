@@ -6,7 +6,7 @@ from .formatter import Formatter
 class WorkspaceFormatter(Formatter):
     model_type = Workspace
 
-    def style_desc(
+    def style_description(
         self,
         item: Workspace,
         is_highlighted: bool,
@@ -14,7 +14,7 @@ class WorkspaceFormatter(Formatter):
         kwargs: Dict[str, str],
     ) -> str:
         pass
-        text = kwargs["desc"]
+        text = kwargs["description"]
 
         if children := item.workspaces:
             text += self.format["children_hint"].format(count=len(children))

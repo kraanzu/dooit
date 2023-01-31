@@ -38,38 +38,9 @@ class TodoTree(TreeList):
         await self.emit(SwitchTab(self))
 
     async def update_table(self, model: Optional[Workspace] = None):
-        if not model:
-            self.EMPTY = dashboard
-            self.model = None
-            self._refresh_rows()
-        else:
-            self.EMPTY = EMPTY_TODO
-            if not self.item or not self.component:
-                self.model = model
-                self.current = -1
-                self._refresh_rows()
-            else:
-                editing = self.editing
-                path = self.item.path
-                _old_val = ""
-
-                if editing != "none":
-                    _old_val = self.component.fields[editing].value
-                    await self._cancel_edit()
-
-                self.model = model
-                self._refresh_rows()
-
-                self.current = -1
-                for i, j in enumerate(self.row_vals):
-                    if j.item.path == path:
-                        self.current = i
-                        if editing != "none":
-                            self.component.fields[editing].value = _old_val
-                            await self.component.fields[editing].handle_keypress("end")
-                            await self.start_edit(editing)
-                        break
-
+        self.EMPTY = EMPTY_TODO if model else dashboard
+        self.model = model
+        await self.rearrange()
         self.refresh()
 
     @property

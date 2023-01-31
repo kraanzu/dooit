@@ -28,28 +28,7 @@ class WorkspaceTree(TreeList):
         await self.emit(TopicSelect(self, self.item))
 
     async def _refresh_data(self):
-
-        if not self.item or not self.component:
-            self._refresh_rows()
-        else:
-            editing = self.editing
-            path = self.item.path
-            _old_val = ""
-
-            if editing != "none":
-                _old_val = self.component.fields[editing].value
-                await self.stop_edit()
-
-            self._refresh_rows()
-            self.current = -1
-            for i, j in enumerate(self.row_vals):
-                if j.item.path == path:
-                    self.current = i
-                    if editing != "none":
-                        self.component.fields[editing].value = _old_val
-                        await self.start_edit(editing)
-                    break
-
+        await self.rearrange()
         await self._current_change_callback()
 
     def _setup_table(self) -> None:

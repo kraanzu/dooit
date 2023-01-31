@@ -8,7 +8,7 @@ from rich.panel import Panel
 from rich.text import Text, TextType
 from rich.table import Table, box
 from textual import events
-from textual.reactive import Reactive
+from textual.reactive import reactive
 from textual.widget import Widget
 from dooit.ui.formatters import Formatter
 from dooit.utils.keybinder import KeyBinder
@@ -112,7 +112,7 @@ class TreeList(Widget):
 
     _has_focus = False
     _rows = {}
-    current = Reactive(-1)
+    current = reactive(-1)
     options = []
     EMPTY: List
     model_type: Type[Model] = Model
@@ -151,13 +151,14 @@ class TreeList(Widget):
 
     # ------------ INTERNALS ----------------
 
-    async def watch_current(self, value: int) -> None:
-        if not self.row_vals:
-            self.current = -1
+    def validate_current(self, current: int):
+        if not self.row_vals or current == -2:
+            return -1
         else:
-            value = min(max(0, value), len(self.row_vals) - 1)
-            self.current = value
+            value = min(max(0, current), len(self.row_vals) - 1)
+            return value
 
+    async def watch_current(self, _old: int, _new: int) -> None:
         await self._current_change_callback()
         self._fix_view()
         self.refresh()
@@ -254,6 +255,41 @@ class TreeList(Widget):
                 add_rows(i)
 
         self.row_vals: List[Component] = list(self._rows.values())
+        self.refresh()
+
+    async def rearrange(self):
+        if not self.component or not self.item:
+            self._refresh_rows()
+            self.current = -2
+            return
+
+        editing = self.editing
+        path = self.item.path
+        old_ibox = SimpleInput()
+
+        if editing != "none":
+            old_ibox = self.component.fields[editing]
+
+        self._refresh_rows()
+
+        def get_index(path):
+            for i, j in enumerate(self.row_vals):
+                if j.item.path == path:
+                    return i
+
+            return -2
+
+        idx = get_index(path)
+        if idx == -2:
+            if editing != "none":
+                await self._cancel_edit()
+
+            self.current = -2
+        else:
+            self.current = idx
+            if editing != "none":
+                self.component.fields[editing] = old_ibox
+
         self.refresh()
 
     async def change_status(self, status: StatusType):

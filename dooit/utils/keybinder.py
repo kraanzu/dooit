@@ -37,7 +37,6 @@ DEFAULTS = {
     "edit due": "d",
     "edit tags": "t",
     "edit recurrence": "r",
-    "edit eta": "e",
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],
 }

@@ -83,7 +83,6 @@ TODO = {
     # "children_hint": "[b magenta]({remaining}!)[/b magenta]",  # vars: remaining, done, total
     "due_icon": "🕑",
     "eta_icon": " ⌚",
-    "eta_color": "b yellow",
     "recurrence_icon": " ⟲ ",
     "recurrence_color": "b blue",
     "tags_icon": " 🏷 ",
@@ -121,5 +120,4 @@ keybindings = {
     "start search": ["/", "S"],
     "edit tags": "t",
     "edit recurrence": "r",
-    "edit eta": "e",
 }

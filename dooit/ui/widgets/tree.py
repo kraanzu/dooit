@@ -409,6 +409,10 @@ class TreeList(Widget):
         self.current = min(self.current, len(self.row_vals) - 2)
         self._drop(item)
         self._refresh_rows()
+
+        if not self.row_vals:
+            self.current = -2
+
         await self._current_change_callback()
         self.commit()
         self.refresh()

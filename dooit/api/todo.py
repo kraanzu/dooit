@@ -1,5 +1,5 @@
 from typing import Any, List, Optional, TypeVar
-from .model import Model, Result
+from .model import Model
 
 
 TODO = "todo"
@@ -43,36 +43,21 @@ class Todo(Model):
     def description(self):
         return self._description.get()
 
-    def set_description(self, value: str) -> Result:
-        return self._description.set(value)
-
     @property
     def recurrence(self):
         return self._recurrence.get()
-
-    def set_recurrence(self, val: str):
-        return self._recurrence.set(val)
 
     @property
     def due(self):
         return self._due.get()
 
-    def set_due(self, val: str) -> Result:
-        return self._due.set(val)
-
     @property
     def status(self):
         return self._status.get()
 
-    def set_status(self, status):
-        self._status.set(status)
-
     @property
     def tags(self):
         return self._tags.get()
-
-    def set_tags(self, val: str) -> Result:
-        return self._tags.set(val)
 
     def toggle_complete(self):
         return self._status.toggle_done()

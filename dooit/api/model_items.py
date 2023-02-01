@@ -91,7 +91,9 @@ class Status(Item):
                 frequency = int(frequency)
 
                 time_to_add = timedelta(**{f"{DURATION_LEGEND[sign]}s": frequency})
-                self.model.set_due(datetime.strftime(due + time_to_add, DATE_FORMAT))
+                self.model.edit(
+                    "due", datetime.strftime(due + time_to_add, DATE_FORMAT)
+                )
                 self.set("PENDING")
             else:
                 self.value = "COMPLETED"
@@ -170,7 +172,7 @@ class Due(Item):
             self.model._overdue = datetime.now() > res
             self.value = res.strftime(DATE_FORMAT)
             if self.model.status != "COMPLETED":
-                self.model.set_status("PENDING")
+                self.model.edit("status", "PENDING")
 
             return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
 
@@ -252,7 +254,7 @@ class Recurrence(Item):
 
         self.value = val
         if self.model.due == "none":
-            self.model.set_due("now")
+            self.model.edit("due", "now")
             return Ok(f"Recurrence set for {self.value} [i]starting today[/i]")
 
         return Ok(f"Recurrence set for {self.value}")

@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 from ..api.todo import Todo
-from .model import Model, Result
+from .model import Model
 
 WORKSPACE = "workspace"
 TODO = "todo"
@@ -23,9 +23,6 @@ class Workspace(Model):
     @property
     def description(self):
         return self._description.get()
-
-    def set_description(self, value: str) -> Result:
-        return self._description.set(value)
 
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)

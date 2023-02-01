@@ -112,9 +112,9 @@ class Model:
         Edit item's attrs
         """
 
-        func = f"set_{key}"
-        if hasattr(self, func):
-            return getattr(self, func)(value)
+        var = f"_{key}"
+        if hasattr(self, var):
+            return getattr(self, var).set(value)
         else:
             return Err("Invalid Request!")
 

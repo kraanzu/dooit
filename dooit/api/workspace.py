@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 from ..api.todo import Todo
-from .model import Model, Ok, Err, Result
+from .model import Model, Result
 
 WORKSPACE = "workspace"
 TODO = "todo"
@@ -9,6 +9,12 @@ TODO = "todo"
 class Workspace(Model):
     fields = ["description"]
 
+    def __init__(self, parent: Optional["Model"] = None) -> None:
+        from .model_items import Description
+
+        super().__init__(parent)
+        self._description = Description(self)
+
     @property
     def path(self):
         parent_path = self.parent.path if self.parent else ""
@@ -16,47 +22,20 @@ class Workspace(Model):
 
     @property
     def description(self):
-        return self._description
+        return self._description.get()
 
     def set_description(self, value: str) -> Result:
-        if value:
-            new_index = -1
-            if self.parent:
-                new_index = self.parent._get_child_index("workspace", description=value)
-
-            old_index = self._get_index("workspace")
-
-            if new_index != -1 and new_index != old_index:
-                return Err(
-                    "A workspace with same description is already present",
-                )
-            else:
-                self._description = value
-                return Ok()
-
-        return Err(
-            "Can't leave description empty!",
-        )
-
-    def __init__(self, parent: Optional["Model"] = None) -> None:
-        super().__init__(parent)
-        self._description = ""
+        return self._description.set(value)
 
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)
 
     def commit(self) -> Dict[str, Any]:
         child_workspaces = {
-            getattr(
-                workspace,
-                "description",
-            ): workspace.commit()
-            for workspace in self.workspaces
+            workspace.description: workspace.commit() for workspace in self.workspaces
         }
 
-        todos = {
-            "common": [todo.commit() for todo in self.todos],
-        }
+        todos = {"common": [todo.commit() for todo in self.todos]}
 
         return {
             **todos,

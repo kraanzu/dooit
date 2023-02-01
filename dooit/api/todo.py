@@ -41,23 +41,23 @@ class Todo(Model):
 
     @property
     def description(self):
-        return self._description.get()
+        return self._description.value
 
     @property
     def recurrence(self):
-        return self._recurrence.get()
+        return self._recurrence.value
 
     @property
     def due(self):
-        return self._due.get()
+        return self._due.value
 
     @property
     def status(self):
-        return self._status.get()
+        return self._status.value
 
     @property
     def tags(self):
-        return self._tags.get()
+        return self._tags.value
 
     def toggle_complete(self):
         return self._status.toggle_done()

@@ -22,7 +22,7 @@ class Workspace(Model):
 
     @property
     def description(self):
-        return self._description.get()
+        return self._description.value
 
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)

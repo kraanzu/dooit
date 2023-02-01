@@ -58,12 +58,6 @@ class Item:
     def set(self, val: Any) -> Result:
         raise NotImplementedError
 
-    def get_raw(self) -> str:
-        raise NotImplementedError
-
-    def get(self) -> Any:
-        return self.value
-
     def get_sortable(self) -> Any:
         raise NotImplementedError
 
@@ -205,9 +199,6 @@ class Urgency(Item):
         self.value = val
         return Ok()
 
-    def get(self):
-        return str(self.value)
-
     def to_txt(self) -> str:
         return f"({self.value})"
 
@@ -258,12 +249,6 @@ class Recurrence(Item):
             return Ok(f"Recurrence set for {self.value} [i]starting today[/i]")
 
         return Ok(f"Recurrence set for {self.value}")
-
-    def get(self) -> Any:
-        if self.value:
-            return format_duration(self.value)
-
-        return ""
 
     def to_txt(self) -> str:
         if self.value:

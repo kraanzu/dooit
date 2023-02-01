@@ -87,7 +87,7 @@ TODO = {
     "recurrence_icon": " ⟲ ",
     "recurrence_color": "b blue",
     "tags_icon": " 🏷 ",
-    "tags_seperator": "comma",  # icon, pipe, comma
+    "tags_seperator": "icon",  # icon, pipe, comma
     "tags_color": "b red",
     "completed_icon": "✓ ",
     "pending_icon": "● ",

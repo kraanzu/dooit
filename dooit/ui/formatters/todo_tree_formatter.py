@@ -38,12 +38,6 @@ class TodoFormatter(Formatter):
             }
             text += self.format["children_hint"].format(**d)
 
-        # ETA
-        if eta := kwargs["eta"]:
-            color = self.format["eta_color"]
-            icon = self.format["eta_icon"]
-            text += self.colored(f" {icon}{eta}", color)
-
         # TAGS
         if tags := kwargs["tags"]:
             tags = [i.strip() for i in kwargs["tags"].split(",")]

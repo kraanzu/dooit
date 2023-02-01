@@ -2,6 +2,13 @@ from typing import Dict
 from dooit.api import Todo
 from .formatter import Formatter
 
+DURATION_LEGEND = {
+    "m": "minute",
+    "h": "hour",
+    "d": "day",
+    "w": "week",
+}
+
 
 class TodoFormatter(Formatter):
     model_type = Todo
@@ -57,6 +64,13 @@ class TodoFormatter(Formatter):
 
         # RECURRENCE
         if recurrence := kwargs["recurrence"]:
+
+            if not is_editing:
+                frequency, value = recurrence[:-1], recurrence[-1]
+                recurrence = f"Every {frequency} {DURATION_LEGEND[value]}"
+                if frequency != "1":
+                    recurrence += "s"
+
             color = self.format["recurrence_color"]
             icon = self.format["recurrence_icon"]
             text += f"[{color}] {icon}{recurrence}[/{color}]"

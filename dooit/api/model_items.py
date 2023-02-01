@@ -106,7 +106,7 @@ class Status(Item):
         return Ok()
 
     def to_txt(self) -> str:
-        return OPTS[self.get()]
+        return OPTS[self.value]
 
     def from_txt(self, txt: str) -> None:
         status = txt.split()[0]

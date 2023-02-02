@@ -70,41 +70,82 @@ class Item:
 
 
 class Status(Item):
-    value = "PENDING"
+    pending = True
+
+    @property
+    def value(self):
+        self.handle_recurrence()
+
+        if not self.pending:
+            return "COMPLETED"
+
+        due = self.model.due
+        if due == "none":  # why? dateparser slowpok
+            return "PENDING"
+
+        due = parse(due)
+        now = parse("now")
+
+        if now and due and due <= now:
+            return "OVERDUE"
+
+        return "PENDING"
 
     def toggle_done(self):
-        if self.value != "COMPLETED":
-            self.set("COMPLETED")
-        else:
-            self.set("PENDING")
+        self.pending = not self.pending
+
+    def handle_recurrence(self):
+        if not self.model.recurrence:
+            return
+
+        if self.pending:
+            return
+
+        due = parse(self.model.due)
+
+        if not due:
+            return
+
+        sign, frequency = split_duration(self.model._recurrence.value)
+        frequency = int(frequency)
+        time_to_add = timedelta(**{f"{DURATION_LEGEND[sign]}s": frequency})
+        new_time = due + time_to_add
+
+        if new_time > datetime.now():
+            return
+
+        self.model.edit("due", new_time.strftime("%D@%X"))
+        self.pending = True
 
     def set(self, val: Any) -> Result:
-        if val == "COMPLETED":
-            if self.model.recurrence:
-                due = datetime.strptime(self.model.due, DATE_FORMAT)
-                sign, frequency = split_duration(self.model._recurrence.value)
-                frequency = int(frequency)
-
-                time_to_add = timedelta(**{f"{DURATION_LEGEND[sign]}s": frequency})
-                self.model.edit(
-                    "due", datetime.strftime(due + time_to_add, DATE_FORMAT)
-                )
-                self.set("PENDING")
-            else:
-                self.value = "COMPLETED"
-        else:
-            due = self.model.due
-            if due == "none":
-                self.value = "PENDING"
-            else:
-                res = parse(due)
-                now = parse("now")
-                if res and now and res <= now:
-                    self.value = "OVERDUE"
-                else:
-                    self.value = "PENDING"
-
+        self.pending = val != "COMPLETED"
+        self.update_others()
         return Ok()
+
+    def update_others(self):
+
+        # Update ancestors
+        current = self.model
+        while parent := current.parent:
+            is_done = all(i.status == "COMPLETED" for i in parent.todos)
+            parent.edit("status", "COMPLETED" if is_done else "PENDING")
+            current = parent
+
+        # Update children
+        def update_children(todo=self.model, status=self.value):
+
+            if status == "COMPLETED":
+                for i in todo.todos:
+                    i._status.pending = False
+                    update_children(i, status)
+            else:
+                if not todo.todos:
+                    return
+
+                if all(i.status == "COMPLETED" for i in todo.todos):
+                    todo._status.pending = False
+
+        update_children()
 
     def to_txt(self) -> str:
         return "X" if self.value == "COMPLETED" else "O"
@@ -153,28 +194,39 @@ class Description(Item):
 
 
 class Due(Item):
-    value = "none"
+    _value = None
+
+    @property
+    def value(self):
+        if not self._value:
+            return "none"
+
+        time = self._value.time()
+        if time.hour == time.minute == 0:
+            return self._value.strftime("%d %h")
+        else:
+            return self._value.strftime("%d %h @ %H:%M")
 
     def set(self, val: str) -> Result:
         val = val.strip()
 
         if not val or val == "none":
-            self.value = "none"
+            self._value = None
             return Ok("Due removed for the todo")
 
         res = parse(val)
         if res:
-            self.model._overdue = datetime.now() > res
-            self.value = res.strftime(DATE_FORMAT)
-            if self.model.status != "COMPLETED":
-                self.model.edit("status", "PENDING")
-
+            self._value = res
             return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
 
         return Warn("Cannot parse the string!")
 
     def to_txt(self) -> str:
-        return f"due:{self.value}"
+        if self._value:
+            save = self._value.strftime("%D@%X")
+        else:
+            save = "none"
+        return f"due:{save}"
 
     def from_txt(self, txt: str) -> None:
         self.set(txt.split()[2].lstrip("due:"))

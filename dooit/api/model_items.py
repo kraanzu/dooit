@@ -1,14 +1,14 @@
 import re
 from typing import Any, Tuple
-import dateparser
 from datetime import datetime, timedelta
-from dooit.utils.conf_reader import Config
+from dooit.utils import Config, parse
 from .model import Result, Ok, Warn, Err
 
 DATE_ORDER = Config().get("DATE_ORDER")
 DATE_FORMAT = (
     "-".join(list(DATE_ORDER)).replace("D", "%d").replace("M", "%m").replace("Y", "%y")
 )
+TIME_FORMAT = "@%H:%M"
 DURATION_LEGEND = {
     "m": "minute",
     "h": "hour",
@@ -20,10 +20,7 @@ OPTS = {
     "COMPLETED": "X",
     "OVERDUE": "O",
 }
-
-
-def parse(date: str):
-    return dateparser.parse(date, settings={"DATE_ORDER": DATE_ORDER})
+CASUAL_FORMAT = "%d %h @ %H:%M"
 
 
 def split_duration(duration: str) -> Tuple[str, str]:
@@ -101,8 +98,11 @@ class Status(Item):
         if self.pending:
             return
 
-        due = parse(self.model.due)
+        due = self.model.due
+        if due == "none":
+            return
 
+        due = parse(due)
         if not due:
             return
 
@@ -114,7 +114,7 @@ class Status(Item):
         if new_time > datetime.now():
             return
 
-        self.model.edit("due", new_time.strftime("%D@%X"))
+        self.model.edit("due", new_time.strftime(CASUAL_FORMAT))
         self.pending = True
 
     def set(self, val: Any) -> Result:
@@ -223,13 +223,22 @@ class Due(Item):
 
     def to_txt(self) -> str:
         if self._value:
-            save = self._value.strftime("%D@%X")
+            t = self._value.time()
+            if t.hour == t.minute == 0:
+                save = self._value.strftime(DATE_FORMAT + TIME_FORMAT)
+            else:
+                save = self._value.strftime(DATE_FORMAT)
         else:
             save = "none"
         return f"due:{save}"
 
     def from_txt(self, txt: str) -> None:
-        self.set(txt.split()[2].lstrip("due:"))
+        value = txt.split()[2].lstrip("due:")
+        if value != "none":
+            if "@" in value:
+                self._value = datetime.strptime(value, DATE_FORMAT + TIME_FORMAT)
+            else:
+                self._value = datetime.strptime(value, DATE_FORMAT)
 
 
 class Urgency(Item):
@@ -271,7 +280,7 @@ class Tags(Item):
         return self.set(self.value + "," + tag)
 
     def to_txt(self):
-        return " ".join(f"@{i}" for i in self.value.split(","))
+        return " ".join(f"@{i}" for i in self.value.split(",") if i)
 
     def from_txt(self, txt: str) -> None:
         flag = True

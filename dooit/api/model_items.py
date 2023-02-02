@@ -20,7 +20,6 @@ OPTS = {
     "COMPLETED": "X",
     "OVERDUE": "O",
 }
-OPTS2 = {j: i for i, j in OPTS.items()}
 
 
 def parse(date: str):
@@ -34,37 +33,39 @@ def split_duration(duration: str) -> Tuple[str, str]:
         return tuple()
 
 
-def format_duration(duration: str):
-
-    res = split_duration(duration)
-    if not res:
-        return ""
-
-    sign, frequency = res
-    name = DURATION_LEGEND[sign]
-    if int(frequency) > 1:
-        name += "s"
-
-    return f"{frequency} {name}"
-
-
 class Item:
+    """
+    A workspace/todo item/param
+    """
+
     value: Any
 
     def __init__(self, model: Any) -> None:
         self.model = model
         self.model_kind = model.__class__.__name__.lower()
 
-    def set(self, val: Any) -> Result:
+    def set(self, val: str) -> Result:
+        """
+        Set the value after validation
+        """
         raise NotImplementedError
 
     def get_sortable(self) -> Any:
+        """
+        Returns a value for item for sorting
+        """
         raise NotImplementedError
 
     def to_txt(self) -> str:
+        """
+        Convert to storable format
+        """
         raise NotImplementedError
 
     def from_txt(self, txt: str) -> None:
+        """
+        Parse from stored todo string
+        """
         raise NotImplementedError
 
 
@@ -106,7 +107,7 @@ class Status(Item):
         return Ok()
 
     def to_txt(self) -> str:
-        return OPTS[self.value]
+        return "X" if self.value == "COMPLETED" else "O"
 
     def from_txt(self, txt: str) -> None:
         status = txt.split()[0]

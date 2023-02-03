@@ -358,4 +358,44 @@ class Recurrence(Item):
 
 
 class Effort(Item):
-    pass
+    _value = 0
+
+    @property
+    def value(self):
+        if self._value:
+            return str(self._value)
+
+        return ""
+
+    def increase(self):
+        self.set(self._value + 1)
+
+    def decrease(self):
+        self.set(self._value - 1)
+
+    def set(self, val: Any) -> Result:
+        val = int(val)
+        if val >= 0:
+            self._value = val
+            return Ok()
+
+        return Warn("Cannot decrease effort below zero")
+
+    def get_sortable(self) -> Any:
+        if self._value:
+            return self._value
+        else:
+            # NOTE: If someone opens an issue for this...
+            # my ans: if its above 100 then probably the other tasks require low effort
+            return 10**2
+
+    def to_txt(self) -> str:
+        if self.value:
+            return f"+{self.value}"
+        else:
+            return ""
+
+    def from_txt(self, txt: str) -> None:
+        for i in txt.split()[3:]:
+            if i[0] == "+":
+                self.set(i[1:])

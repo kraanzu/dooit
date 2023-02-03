@@ -25,6 +25,9 @@ class Formatter:
 
         return self.colored(text, self.STYLE_DIM)
 
+    def color_combo(self, icon: str, text: str, color: str):
+        return self.colored(f"[b] {icon}[/b]{text}", color)
+
     def colored(self, text: str, color: str):
         return f"[{color}]{text}[/{color}]"
 

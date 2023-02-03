@@ -45,6 +45,12 @@ class TodoFormatter(Formatter):
             }
             text += self.format["children_hint"].format(**d)
 
+        # EFFORT
+        if effort := kwargs["effort"]:
+            icon = self.format["effort_icon"]
+            color = self.format["effort_color"]
+            text += self.color_combo(icon, effort, color)
+
         # TAGS
         if tags := kwargs["tags"]:
             tags = [i.strip() for i in kwargs["tags"].split(",")]
@@ -74,6 +80,7 @@ class TodoFormatter(Formatter):
 
             color = self.format["recurrence_color"]
             icon = self.format["recurrence_icon"]
+            text += self.color_combo(icon, recurrence, color)
             text += f"[{color}] {icon}{recurrence}[/{color}]"
 
         return self.cursor_highlight(text, is_highlighted, editing)

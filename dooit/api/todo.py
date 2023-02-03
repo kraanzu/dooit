@@ -16,16 +16,32 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["description", "due", "urgency", "tags", "status", "recurrence"]
-    sortable_fields = ["description", "due", "urgency", "status", "recurrence"]
+    fields = ["description", "due", "urgency", "effort", "tags", "status", "recurrence"]
+    sortable_fields = [
+        "description",
+        "due",
+        "urgency",
+        "effort",
+        "status",
+        "recurrence",
+    ]
 
     def __init__(self, parent: Optional[T] = None) -> None:
-        from .model_items import Status, Due, Urgency, Recurrence, Tags, Description
+        from .model_items import (
+            Status,
+            Due,
+            Urgency,
+            Recurrence,
+            Tags,
+            Description,
+            Effort,
+        )
 
         super().__init__(parent)
         self._status = Status(self)
         self._description = Description(self)
         self._urgency = Urgency(self)
+        self._effort = Effort(self)
         self._tags = Tags(self)
         self._recurrence = Recurrence(self)
         self._due = Due(self)
@@ -35,6 +51,10 @@ class Todo(Model):
     def path(self):
         parent_path = self.parent.path if self.parent else ""
         return self.description + "/" + parent_path
+
+    @property
+    def effort(self):
+        return self._effort.value
 
     @property
     def urgency(self):
@@ -74,14 +94,15 @@ class Todo(Model):
         Return todo.txt format of the todo
         """
 
-        tags = self._tags.to_txt()
-        due = self._due.to_txt()
-        recur = self._recurrence.to_txt()
         status = self._status.to_txt()
         urgency = self._urgency.to_txt()
+        due = self._due.to_txt()
+        effort = self._effort.to_txt()
+        tags = self._tags.to_txt()
+        recur = self._recurrence.to_txt()
         description = self._description.to_txt()
 
-        arr = [status, urgency, due, tags, recur, description]
+        arr = [status, urgency, due, effort, tags, recur, description]
         arr = [i for i in arr if i]
         return " ".join(arr)
 
@@ -91,6 +112,7 @@ class Todo(Model):
         self._due.from_txt(data)
         self._description.from_txt(data)
         self._recurrence.from_txt(data)
+        self._effort.from_txt(data)
 
     def commit(self) -> List[Any]:
         if self.todos:

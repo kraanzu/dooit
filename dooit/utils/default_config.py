@@ -82,12 +82,13 @@ TODO = {
     "children_hint": " [b green]({done}/{total})[/b green]",  # vars: remaining, done, total
     # "children_hint": "[b magenta]({remaining}!)[/b magenta]",  # vars: remaining, done, total
     "due_icon": "🕑",
-    "eta_icon": " ⌚",
+    "effort_icon": "🗲 ",
+    "effort_color": "yellow",
     "recurrence_icon": " ⟲ ",
-    "recurrence_color": "b blue",
-    "tags_icon": " 🏷 ",
+    "recurrence_color": "blue",
+    "tags_icon": "🖈 ",
     "tags_seperator": "icon",  # icon, pipe, comma
-    "tags_color": "b red",
+    "tags_color": "red",
     "completed_icon": "✓ ",
     "pending_icon": "● ",
     "overdue_icon": "! ",
@@ -119,5 +120,6 @@ keybindings = {
     "sort menu toggle": "<ctrl+s>",
     "start search": ["/", "S"],
     "edit tags": "t",
+    "edit effort": "e",
     "edit recurrence": "r",
 }

@@ -324,7 +324,8 @@ class Recurrence(Item):
     def set(self, val: str) -> Result:
         res = split_duration(val.strip())
         if not res:
-            return Warn("Invalid Format! Use: <number><m/h/d/w>")
+            self.value = ""
+            return Ok()
 
         if not val:
             self.value = ""

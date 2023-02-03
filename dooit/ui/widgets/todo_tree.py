@@ -53,7 +53,9 @@ class TodoTree(TreeList):
             if col == "description":
                 d = {"ratio": 1}
             elif col == "due":
-                d = {"width": 20}
+                # 12 -> size of formatted date
+                # 02 -> padding
+                d = {"width": 12 + 2 + len(format["due_icon"])}
             elif col == "urgency":
                 d = {"width": 1}
             else:

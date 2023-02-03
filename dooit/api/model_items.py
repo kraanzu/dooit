@@ -224,7 +224,7 @@ class Due(Item):
         if time.hour == time.minute == 0:
             return self._value.strftime("%d %h")
         else:
-            return self._value.strftime("%d %h @ %H:%M")
+            return self._value.strftime("%d %h %H:%M")
 
     def set(self, val: str) -> Result:
         val = val.strip()
@@ -244,9 +244,9 @@ class Due(Item):
         if self._value:
             t = self._value.time()
             if t.hour == t.minute == 0:
-                save = self._value.strftime(DATE_FORMAT + TIME_FORMAT)
-            else:
                 save = self._value.strftime(DATE_FORMAT)
+            else:
+                save = self._value.strftime(DATE_FORMAT + TIME_FORMAT)
         else:
             save = "none"
         return f"due:{save}"

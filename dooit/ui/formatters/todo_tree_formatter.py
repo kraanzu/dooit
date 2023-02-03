@@ -81,7 +81,6 @@ class TodoFormatter(Formatter):
             color = self.format["recurrence_color"]
             icon = self.format["recurrence_icon"]
             text += self.color_combo(icon, recurrence, color)
-            text += f"[{color}] {icon}{recurrence}[/{color}]"
 
         return self.cursor_highlight(text, is_highlighted, editing)
 

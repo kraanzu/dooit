@@ -41,6 +41,8 @@ DEFAULTS = {
     "decrease urgency": ["-", "_"],
 }
 
+configured_keys = DEFAULTS | configured_keys
+
 
 class KeyBinder:
     # KEYBIND MANAGER FOR NORMAL MODE
@@ -49,7 +51,6 @@ class KeyBinder:
         self.pressed = ""
         self.methods: Dict[str, Bind] = {}
         self.raw: DefaultDict[str, List[str]] = defaultdict(list)
-        self.add_keys(DEFAULTS)
         self.add_keys(configured_keys)
 
     def convert_to_bind(self, cmd: str):
@@ -95,7 +96,7 @@ class KeyBinder:
 
         possible_keys = self.find_keys()
         if self.pressed and possible_keys:
-            if len(possible_keys) == 1:
+            if len(possible_keys) == 1 and possible_keys[0] == self.pressed:
                 method = self.methods.get(possible_keys[0])
                 self.clear()
                 return method

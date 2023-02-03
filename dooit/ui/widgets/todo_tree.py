@@ -18,7 +18,7 @@ class TodoTree(TreeList):
     Tree structured Class to manage todos
     """
 
-    options = Todo.fields
+    options = Todo.sortable_fields
     EMPTY = dashboard
     model_kind = "todo"
     model_type = Todo

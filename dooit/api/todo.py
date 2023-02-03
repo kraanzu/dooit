@@ -17,6 +17,7 @@ def reversed_dict(d):
 
 class Todo(Model):
     fields = ["description", "due", "urgency", "tags", "status", "recurrence"]
+    sortable_fields = ["description", "due", "urgency", "status", "recurrence"]
 
     def __init__(self, parent: Optional[T] = None) -> None:
         from .model_items import Status, Due, Urgency, Recurrence, Tags, Description

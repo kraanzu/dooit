@@ -157,6 +157,14 @@ class Status(Item):
         else:
             self.set("PENDING")
 
+    def get_sortable(self) -> Any:
+        if self.value == "OVERDUE":
+            return 1
+        elif self.value == "PENDING":
+            return 2
+        else:
+            return 3
+
 
 class Description(Item):
     value = ""
@@ -191,6 +199,9 @@ class Description(Item):
                 value = value + i + " "
 
         self.value = value.strip()
+
+    def get_sortable(self) -> Any:
+        return self.value
 
 
 class Due(Item):
@@ -240,6 +251,9 @@ class Due(Item):
             else:
                 self._value = datetime.strptime(value, DATE_FORMAT)
 
+    def get_sortable(self) -> Any:
+        return self._value or datetime.max
+
 
 class Urgency(Item):
     value = 1
@@ -265,7 +279,10 @@ class Urgency(Item):
         return f"({self.value})"
 
     def from_txt(self, txt: str) -> None:
-        self.value = txt.split()[1][1]
+        self.set(txt.split()[1][1])
+
+    def get_sortable(self) -> Any:
+        return -self.value
 
 
 class Tags(Item):
@@ -323,6 +340,13 @@ class Recurrence(Item):
             if i[0] == "%":
                 self.value = i[1:]
                 break
+
+    def get_sortable(self) -> Any:
+        if not self.value:
+            return timedelta.max
+        else:
+            frequency, value = split_duration(self.value)
+            return timedelta(**{DURATION_LEGEND[frequency] + "s": int(value)})
 
 
 class Effort(Item):

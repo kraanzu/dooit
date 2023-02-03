@@ -8,6 +8,7 @@ TODO = "todo"
 
 class Workspace(Model):
     fields = ["description"]
+    sortable_fields = ["description"]
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
         from .model_items import Description

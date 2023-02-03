@@ -16,7 +16,7 @@ class WorkspaceTree(TreeList):
     NavBar class to manage UI's navbar
     """
 
-    options = Workspace.fields
+    options = Workspace.sortable_fields
     EMPTY = EMPTY_WORKSPACE
     model_kind = "workspace"
     model_type = Workspace

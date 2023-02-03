@@ -55,7 +55,8 @@ class Model:
     Model class to for the base tree structure
     """
 
-    fields = []
+    fields: List
+    sortable_fields: List
 
     def __init__(
         self,
@@ -233,7 +234,7 @@ class Model:
 
         if self.parent:
             children = self.parent._get_children(kind)
-            children.sort(key=lambda x: getattr(x, attr))
+            children.sort(key=lambda x: getattr(x, f"_{attr}").get_sortable())
 
     def commit(self) -> Dict[str, Any]:
         """

@@ -367,16 +367,13 @@ class Effort(Item):
 
         return ""
 
-    def increase(self):
-        self.set(self._value + 1)
+    def set(self, val: str) -> Result:
+        if not val.isnumeric():
+            return Warn("Only numeric values allowed")
 
-    def decrease(self):
-        self.set(self._value - 1)
-
-    def set(self, val: Any) -> Result:
-        val = int(val)
-        if val >= 0:
-            self._value = val
+        val_int = int(val)
+        if val_int >= 0:
+            self._value = val_int
             return Ok()
 
         return Warn("Cannot decrease effort below zero")

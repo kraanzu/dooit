@@ -15,11 +15,11 @@ class Formatter:
         self.STYLE_HIGHLIGHT = format["highlight"]
         self.STYLE_EDITING = format["editing"]
 
-    def cursor_highlight(self, text: str, is_highlighted: bool, is_editing):
+    def cursor_highlight(self, text: str, is_highlighted: bool, editing: str):
         if is_highlighted:
             return (
                 self.colored(text, self.STYLE_EDITING)
-                if is_editing
+                if editing != "none"
                 else self.colored(text, self.STYLE_HIGHLIGHT)
             )
 
@@ -33,10 +33,10 @@ class Formatter:
         column: str,  # column name
         item: model_type,  # workspace obj
         is_highlighted: bool,
-        is_editing: bool,
+        editing: str,
         kwargs: Dict[str, str],  # display items,
     ) -> Text:
         func_name = f"style_{column}"
         func = getattr(self, func_name)
-        res = func(item, is_highlighted, is_editing, kwargs)
+        res = func(item, is_highlighted, editing, kwargs)
         return Text.from_markup(res)

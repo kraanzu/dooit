@@ -591,9 +591,7 @@ class TreeList(Widget):
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
 
         for column in self.COLS:
-            res = self.styler.style(
-                column, row.item, highlight, self.editing != "none", kwargs
-            )
+            res = self.styler.style(column, row.item, highlight, self.editing, kwargs)
             entry.append(res)
 
         return self.push_row(entry, row.depth, highlight)

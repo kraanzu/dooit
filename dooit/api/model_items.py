@@ -111,7 +111,7 @@ class Status(Item):
         time_to_add = timedelta(**{f"{DURATION_LEGEND[sign]}s": frequency})
         new_time = due + time_to_add
 
-        if new_time > datetime.now():
+        if new_time >= datetime.now():
             return
 
         self.model.edit("due", new_time.strftime(CASUAL_FORMAT))

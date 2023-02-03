@@ -26,7 +26,7 @@ class TodoFormatter(Formatter):
         self,
         item: model_type,
         is_highlighted: bool,
-        is_editing: bool,
+        editing: str,
         kwargs: Dict[str, str],
     ) -> str:
         text = kwargs["description"]
@@ -65,35 +65,36 @@ class TodoFormatter(Formatter):
         # RECURRENCE
         if recurrence := kwargs["recurrence"]:
 
-            if not is_editing:
-                frequency, value = recurrence[:-1], recurrence[-1]
-                recurrence = f"Every {frequency} {DURATION_LEGEND[value]}"
-                if frequency != "1":
-                    recurrence += "s"
+            if recurrence:
+                if editing != "recurrence" or not is_highlighted:
+                    frequency, value = recurrence[:-1], recurrence[-1]
+                    recurrence = f"Every {frequency} {DURATION_LEGEND.get(value)}"
+                    if frequency != "1":
+                        recurrence += "s"
 
             color = self.format["recurrence_color"]
             icon = self.format["recurrence_icon"]
             text += f"[{color}] {icon}{recurrence}[/{color}]"
 
-        return self.cursor_highlight(text, is_highlighted, is_editing)
+        return self.cursor_highlight(text, is_highlighted, editing)
 
     def style_due(
         self,
         item: model_type,
         is_highlighted: bool,
-        is_editing: bool,
+        editing: str,
         kwargs: Dict[str, str],
     ) -> str:
         icon_color = self.status_color(item)
         text = self.colored(self.format["due_icon"], icon_color) + kwargs["due"]
 
-        return self.cursor_highlight(text, is_highlighted, is_editing)
+        return self.cursor_highlight(text, is_highlighted, editing)
 
     def style_urgency(
         self,
         item: model_type,
         is_highlighted: bool,
-        is_editing: bool,
+        editing: str,
         kwargs: Dict[str, str],
     ) -> str:
         val = item.urgency

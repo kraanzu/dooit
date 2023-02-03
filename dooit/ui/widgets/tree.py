@@ -375,9 +375,9 @@ class TreeList(Widget):
 
     def _add_child(self) -> model_type:
         if self.item:
-            return self.item.add_child(self.model_kind)
+            return self.item.add_child(self.model_kind, inherit=True)
         else:
-            return self.model.add_child(self.model_kind)
+            return self.model.add_child(self.model_kind, inherit=True)
 
     def _add_sibling(self) -> model_type:
         if self.item and self.current >= 0:

@@ -188,22 +188,20 @@ class Model:
         else:
             return self.add_child(kind, 0)
 
-    def add_child(self, kind: str, index: int = 0) -> Any:
+    def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:
         """
         Adds a child to specified index (Defaults to first position)
         """
         from ..api.workspace import Workspace
         from ..api.todo import Todo
 
-        child = (
-            Workspace(
-                parent=self,
-            )
-            if kind == "workspace"
-            else Todo(
-                parent=self,
-            )
-        )
+        if kind == "workspace":
+            child = Workspace(parent=self)
+        else:
+            child = Todo(parent=self)
+            if inherit and isinstance(self, Todo):
+                child.fill_from_data(self.to_data())
+                child._description.value = ""
 
         children = self._get_children(kind)
         children.insert(index, child)

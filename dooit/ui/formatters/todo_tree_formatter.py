@@ -68,7 +68,7 @@ class TodoFormatter(Formatter):
             if recurrence:
                 if editing != "recurrence" or not is_highlighted:
                     frequency, value = recurrence[:-1], recurrence[-1]
-                    recurrence = f"Every {frequency} {DURATION_LEGEND.get(value)}"
+                    recurrence = f"{frequency} {DURATION_LEGEND.get(value)}"
                     if frequency != "1":
                         recurrence += "s"
 

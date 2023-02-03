@@ -169,7 +169,15 @@ class Status(Item):
 class Description(Item):
     value = ""
 
+    def clean(self, s: str):
+        for i, j in enumerate(s):
+            if j not in "@+%":  # left striping as this messes up with other attrs
+                return s[i:]
+
+        return s
+
     def set(self, value: Any) -> Result:
+        value = self.clean(value)
         if value:
             new_index = -1
             if self.model:

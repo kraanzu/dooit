@@ -119,7 +119,7 @@ keybindings = {
     "switch pane": "<tab>",
     "sort menu toggle": "<ctrl+s>",
     "start search": ["/", "S"],
-    "remove item": "dd",
+    "remove item": "xx",
     "edit tags": "t",
     "edit effort": "e",
     "edit recurrence": "r",

@@ -1,7 +1,7 @@
 import re
 import pyperclip
 from textual.geometry import Size
-from typing import Any, Dict, Iterable, List, Literal, Optional, Type
+from typing import Any, Iterable, List, Literal, Optional, Type
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.panel import Panel
@@ -438,7 +438,6 @@ class TreeList(Widget):
 
         self._add_sibling()
         self._refresh_rows()
-        # self.commit()
         await self.to_next_sibling("description")
 
     async def to_next_sibling(self, edit: Optional[str] = None) -> None:
@@ -595,23 +594,6 @@ class TreeList(Widget):
             entry.append(res)
 
         return self.push_row(entry, row.depth, highlight)
-
-    def _stylize(
-        self,
-        fmt: Dict[str, str],
-        highlight: bool,
-        kwargs: Dict[str, str],
-    ) -> Text:
-        if highlight:
-            if self.editing == "none":
-                text: str = fmt["highlight"]
-            else:
-                text: str = fmt["edit"]
-        else:
-            text: str = fmt["dim"]
-
-        text = text.format(**kwargs)
-        return Text.from_markup(text)
 
     def _setup_table(self, pointer: TextType = "") -> None:
         if isinstance(pointer, str):

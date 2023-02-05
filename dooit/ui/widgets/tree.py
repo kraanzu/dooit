@@ -295,6 +295,17 @@ class TreeList(Widget):
     async def change_status(self, status: StatusType):
         await self.emit(ChangeStatus(self, status))
 
+    async def start_search(self) -> None:
+        self.filter.on_focus()
+        await self.notify(self.filter.render())
+        await self.change_status("SEARCH")
+
+    async def stop_search(self) -> None:
+        self.filter.clear()
+        self._refresh_rows()
+        await self.notify(self.filter.render())
+        await self.change_status("NORMAL")
+
     async def start_edit(self, field: str) -> None:
         if field == "none":
             return
@@ -323,135 +334,6 @@ class TreeList(Widget):
     async def _cancel_edit(self):
         await self.stop_edit(edit=False)
 
-    async def stop_edit(self, edit: bool = True) -> None:
-        if self.editing == "none":
-            return
-
-        if not self.component:
-            return
-
-        simple_input = self.component.fields[self.editing]
-
-        if not edit:
-            val = getattr(
-                self.component.item,
-                self.editing,
-            )
-            simple_input.value = val
-
-        res = self.component.item.edit(
-            self.editing,
-            simple_input.value,
-        )
-
-        await self.notify(res.text())
-        if not res.ok:
-            if res.cancel_op:
-                await self.remove_item()
-            await self._current_change_callback()
-        else:
-            self.commit()
-
-        simple_input.on_blur()
-        self.component.refresh()
-        self.editing = "none"
-        await self.change_status("NORMAL")
-
-    async def start_search(self) -> None:
-        self.filter.on_focus()
-        await self.notify(self.filter.render())
-        await self.change_status("SEARCH")
-
-    async def stop_search(self) -> None:
-        self.filter.clear()
-        self._refresh_rows()
-        await self.notify(self.filter.render())
-        await self.change_status("NORMAL")
-
-    def _drop(self, item: model_type) -> None:
-        item = item or self.item
-        if item:
-            item.drop(self.model_kind)
-
-    def _add_child(self) -> model_type:
-        if self.item:
-            return self.item.add_child(self.model_kind, inherit=True)
-        else:
-            return self.model.add_child(self.model_kind, inherit=True)
-
-    def _add_sibling(self) -> model_type:
-        if self.item and self.current >= 0:
-            return self.item.add_sibling(self.model_kind)
-        else:
-            return self.model.add_child(self.model_kind)
-
-    def _next_sibling(self) -> Optional[model_type]:
-        if self.item:
-            return self.item.next_sibling(self.model_kind)
-
-    def _prev_sibling(self) -> Optional[model_type]:
-        if self.item:
-            return self.item.prev_sibling(self.model_kind)
-
-    def _shift_down(self) -> None:
-        if self.item:
-            return self.item.shift_down(self.model_kind)
-
-    def _shift_up(self) -> None:
-        if self.item:
-            return self.item.shift_up(self.model_kind)
-
-    async def remove_item(self) -> None:
-        if not self.item:
-            return
-
-        item = self.item
-        self.current = min(self.current, len(self.row_vals) - 2)
-        self._drop(item)
-        self._refresh_rows()
-
-        if not self.row_vals:
-            self.current = -2
-
-        await self._current_change_callback()
-        self.commit()
-        self.refresh()
-
-    async def add_child(self) -> None:
-
-        if self.component and self.item:
-            self.component.expand()
-
-        self._add_child()
-        self._refresh_rows()
-        await self.move_down()
-        await self.start_edit("description")
-
-    async def add_sibling(self) -> None:
-
-        if not self.item:
-            child = self._add_child()
-            self._refresh_rows()
-            self.current = self._rows[child.name].index
-            await self.start_edit("description")
-            return
-
-        self._add_sibling()
-        self._refresh_rows()
-        await self.to_next_sibling("description")
-
-    async def to_next_sibling(self, edit: Optional[str] = None) -> None:
-        if not self.item:
-            return
-
-        await self._move_to_item(self._next_sibling(), edit)
-
-    async def to_prev_sibling(self, edit: Optional[str] = None) -> None:
-        if not self.item:
-            return
-
-        await self._move_to_item(self._prev_sibling(), edit)
-
     async def _move_to_item(
         self, item: Optional[Model], edit: Optional[str] = None
     ) -> None:
@@ -461,24 +343,6 @@ class TreeList(Widget):
         self.current = self._rows[item.name].index
         if edit:
             await self.start_edit(edit)
-
-    async def shift_up(self) -> None:
-        if not self.item:
-            return
-
-        self._shift_up()
-        self._refresh_rows()
-        await self.move_up()
-        self.commit()
-
-    async def shift_down(self) -> None:
-        if not self.item:
-            return
-
-        self._shift_down()
-        self._refresh_rows()
-        await self.move_down()
-        self.commit()
 
     async def move_up(self) -> None:
         if self.current > 0:
@@ -492,42 +356,6 @@ class TreeList(Widget):
 
     async def move_to_bottom(self) -> None:
         self.current = len(self.row_vals) - 1
-
-    async def toggle_expand(self) -> None:
-        if not self.component:
-            return
-
-        self.component.toggle_expand()
-        self._refresh_rows()
-
-    async def toggle_expand_parent(self) -> None:
-        if not self.item:
-            return
-
-        parent = self.item.parent
-        if not parent:
-            return
-
-        if parent.name in self._rows:
-            index = self._rows[parent.name].index
-            self.current = index
-
-            await self.toggle_expand()
-
-    def sort(self, attr: str) -> None:
-        if self.item:
-            curr = self.item.name
-            self.item.sort(self.model_kind, attr)
-            self._refresh_rows()
-            self.current = self._rows[curr].index
-            self.commit()
-
-    async def copy_text(self) -> None:
-        if self.item:
-            pyperclip.copy(self.item.description)
-            await self.notify("[green]Description copied to clipboard![/]")
-        else:
-            await self.notify("[red]No item selected![/]")
 
     async def sort_menu_toggle(self) -> None:
         self.sort_menu.visible = True
@@ -662,3 +490,154 @@ class TreeList(Widget):
             box=box.HEAVY,
             border_style=LIT if self._has_focus else DIM,
         )
+
+    async def copy_text(self) -> None:
+        if self.item:
+            pyperclip.copy(self.item.description)
+            await self.notify("[green]Description copied to clipboard![/]")
+        else:
+            await self.notify("[red]No item selected![/]")
+
+    # COMMANDS TO INTERACT WITH API
+    async def stop_edit(self, edit: bool = True) -> None:
+        if self.editing == "none":
+            return
+
+        if not self.component:
+            return
+
+        simple_input = self.component.fields[self.editing]
+
+        if not edit:
+            val = getattr(
+                self.component.item,
+                self.editing,
+            )
+            simple_input.value = val
+
+        res = self.component.item.edit(
+            self.editing,
+            simple_input.value,
+        )
+
+        await self.notify(res.text())
+        if not res.ok:
+            if res.cancel_op:
+                await self.remove_item()
+            await self._current_change_callback()
+        else:
+            self.commit()
+
+        simple_input.on_blur()
+        self.component.refresh()
+        self.editing = "none"
+        await self.change_status("NORMAL")
+
+    def _drop(self, item: model_type) -> None:
+        item = item or self.item
+        if item:
+            item.drop(self.model_kind)
+
+    def _add_child(self) -> model_type:
+        model = self.item or self.model
+        return model.add_child(self.model_kind, inherit=True)
+
+    def _add_sibling(self) -> model_type:
+        if self.item and self.current >= 0:
+            return self.item.add_sibling(self.model_kind)
+        else:
+            return self.model.add_child(self.model_kind)
+
+    def _shift_down(self) -> None:
+        if self.item:
+            return self.item.shift_down(self.model_kind)
+
+    def _shift_up(self) -> None:
+        if self.item:
+            return self.item.shift_up(self.model_kind)
+
+    async def remove_item(self) -> None:
+        if not self.item:
+            return
+
+        item = self.item
+        self.current = min(self.current, len(self.row_vals) - 2)
+        self._drop(item)
+        self._refresh_rows()
+
+        if not self.row_vals:
+            self.current = -2
+
+        await self._current_change_callback()
+        self.commit()
+        self.refresh()
+
+    async def add_child(self) -> None:
+
+        if self.component and self.item:
+            self.component.expand()
+
+        self._add_child()
+        self._refresh_rows()
+        await self.move_down()
+        await self.start_edit("description")
+
+    async def add_sibling(self) -> None:
+
+        if not self.item:
+            sibling = self._add_child()
+            self._refresh_rows()
+            self.current = self._rows[sibling.name].index
+            await self.start_edit("description")
+            return
+
+        sibling = self._add_sibling()
+        self._refresh_rows()
+        await self._move_to_item(sibling, "description")
+
+    async def shift_up(self) -> None:
+        if not self.item:
+            return
+
+        self._shift_up()
+        self._refresh_rows()
+        await self.move_up()
+        self.commit()
+
+    async def shift_down(self) -> None:
+        if not self.item:
+            return
+
+        self._shift_down()
+        self._refresh_rows()
+        await self.move_down()
+        self.commit()
+
+    async def toggle_expand(self) -> None:
+        if not self.component:
+            return
+
+        self.component.toggle_expand()
+        self._refresh_rows()
+
+    async def toggle_expand_parent(self) -> None:
+        if not self.item:
+            return
+
+        parent = self.item.parent
+        if not parent:
+            return
+
+        if parent.name in self._rows:
+            index = self._rows[parent.name].index
+            self.current = index
+
+            await self.toggle_expand()
+
+    def sort(self, attr: str) -> None:
+        if self.item:
+            curr = self.item.name
+            self.item.sort(self.model_kind, attr)
+            self._refresh_rows()
+            self.current = self._rows[curr].index
+            self.commit()

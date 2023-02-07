@@ -48,7 +48,7 @@ def convert_to_row(bindings: Dict):
             arr.append(
                 [
                     Text(i, style="b green"),
-                    Text("N/Ablack", style="d white", justify="center"),
+                    Text("N/A", style="d white", justify="center"),
                     Text.from_markup(j, style="b blue"),
                 ]
             )
@@ -112,7 +112,7 @@ NORMAL_KB = {
     "switch pane": "Change focused pane",
     "edit due": "Edit date**",
     "edit description": "Edit description**",
-    "edit eta": "Edit ETA for todo**",
+    "edit effort": "Edit effort for todo**",
     "edit recurrence": "Edit recurrence for todo**",
     "edit tags": "Edit tags for todo**",
     "increase urgency": "Increase urgency**",

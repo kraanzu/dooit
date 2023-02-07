@@ -67,15 +67,12 @@ class TodoTree(TreeList):
 
     async def increase_urgency(self):
         if self.current != -1:
-            self.component.refresh()
             self.item.increase_urgency()
 
     async def decrease_urgency(self):
         if self.current != -1:
-            self.component.refresh()
             self.item.decrease_urgency()
 
     async def toggle_complete(self):
         if self.current != -1:
-            self.component.refresh()
             self.item.toggle_complete()

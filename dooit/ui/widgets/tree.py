@@ -149,10 +149,7 @@ class TreeList(Widget):
                 expanded = _rows_copy.get(path, False)
 
                 self._rows[name] = Component(
-                    item,
-                    nest_level,
-                    len(self._rows),
-                    expanded,
+                    item, nest_level, len(self._rows), expanded
                 )
                 self._rows[name].index = len(self._rows) - 1
 
@@ -418,25 +415,16 @@ class TreeList(Widget):
 
     # COMMANDS TO INTERACT WITH API
     async def stop_edit(self, edit: bool = True) -> None:
-        if self.editing == "none":
-            return
-
-        if self.current == -1:
+        if self.editing == "none" or self.current == -1:
             return
 
         simple_input = self.component.fields[self.editing]
 
         if not edit:
-            val = getattr(
-                self.component.item,
-                self.editing,
-            )
+            val = getattr(self.component.item, self.editing)
             simple_input.value = val
 
-        res = self.component.item.edit(
-            self.editing,
-            simple_input.value,
-        )
+        res = self.component.item.edit(self.editing, simple_input.value)
 
         await self.notify(res.text())
         if not res.ok:
@@ -452,10 +440,8 @@ class TreeList(Widget):
         self.editing = "none"
         await self.change_status("NORMAL")
 
-    def _drop(self, item: model_type) -> None:
-        item = item or self.item
-        if item:
-            item.drop(self.model_kind)
+    def _drop(self) -> None:
+        self.item.drop(self.model_kind)
 
     def _add_child(self) -> model_type:
         model = self.item if self.current != -1 else self.model
@@ -479,7 +465,7 @@ class TreeList(Widget):
         if self.current == -1:
             return
 
-        self._drop(self.item)
+        self._drop()
         self.current = min(self.current, len(self.row_vals) - 2)
         self._refresh_rows()
 
@@ -494,6 +480,7 @@ class TreeList(Widget):
         if self.current != -1:
             self.component.expand()
 
+        # self.item.add_child(self.model_kind, inherit=True)
         self._add_child()
         self._refresh_rows()
         await self.move_down()

@@ -442,6 +442,7 @@ class TreeList(Widget):
         if not res.ok:
             if res.cancel_op:
                 await self.remove_item()
+                await self.move_up()
             await self._current_change_callback()
         else:
             self.commit()
@@ -478,8 +479,8 @@ class TreeList(Widget):
         if self.current == -1:
             return
 
-        self.current = min(self.current, len(self.row_vals) - 2)
         self._drop(self.item)
+        self.current = min(self.current, len(self.row_vals) - 2)
         self._refresh_rows()
 
         if not self.row_vals:

@@ -40,7 +40,7 @@ class WorkspaceTree(TreeList):
             return
 
         if self.filter.value:
-            if self.item:
+            if self.current != -1:
                 await self._current_change_callback()
 
             await self.stop_search()

@@ -44,7 +44,7 @@ class TodoTree(TreeList):
         self.refresh()
 
     @property
-    def item(self) -> Optional[Todo]:
+    def item(self) -> Todo:
         return super().item
 
     def _setup_table(self) -> None:
@@ -66,16 +66,16 @@ class TodoTree(TreeList):
     # ##########################################
 
     async def increase_urgency(self):
-        if self.component and self.item:
+        if self.current != -1:
             self.component.refresh()
             self.item.increase_urgency()
 
     async def decrease_urgency(self):
-        if self.component and self.item:
+        if self.current != -1:
             self.component.refresh()
             self.item.decrease_urgency()
 
     async def toggle_complete(self):
-        if self.item and self.component:
+        if self.current != -1:
             self.component.refresh()
             self.item.toggle_complete()

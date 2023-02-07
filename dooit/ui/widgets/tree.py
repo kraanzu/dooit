@@ -95,14 +95,12 @@ class TreeList(Widget):
         return self._has_focus
 
     @property
-    def component(self) -> Optional[Component]:
-        if self.current != -1:
-            return self.row_vals[self.current]
+    def component(self) -> Component:
+        return self.row_vals[self.current]
 
     @property
-    def item(self) -> Optional[Any]:
-        if self.component:
-            return self.component.item
+    def item(self) -> Any:
+        return self.component.item
 
     # --------------------------------------
 
@@ -178,7 +176,7 @@ class TreeList(Widget):
         self.refresh()
 
     async def rearrange(self):
-        if not self.component or not self.item:
+        if self.current == -1:
             self._refresh_rows()
             self.current = -2
             return
@@ -230,7 +228,7 @@ class TreeList(Widget):
         if field == "none":
             return
 
-        if not self.component:
+        if self.current == -1:
             return
 
         if field not in self.component.fields.keys():
@@ -412,7 +410,7 @@ class TreeList(Widget):
         )
 
     async def copy_text(self) -> None:
-        if self.item:
+        if self.current != -1:
             pyperclip.copy(self.item.description)
             await self.notify("[green]Description copied to clipboard![/]")
         else:
@@ -423,7 +421,7 @@ class TreeList(Widget):
         if self.editing == "none":
             return
 
-        if not self.component:
+        if self.current == -1:
             return
 
         simple_input = self.component.fields[self.editing]
@@ -459,30 +457,29 @@ class TreeList(Widget):
             item.drop(self.model_kind)
 
     def _add_child(self) -> model_type:
-        model = self.item or self.model
+        model = self.item if self.current != -1 else self.model
         return model.add_child(self.model_kind, inherit=True)
 
     def _add_sibling(self) -> model_type:
-        if self.item and self.current >= 0:
+        if self.current >= 0:
             return self.item.add_sibling(self.model_kind)
         else:
             return self.model.add_child(self.model_kind)
 
     def _shift_down(self) -> None:
-        if self.item:
+        if self.current != -1:
             return self.item.shift_down(self.model_kind)
 
     def _shift_up(self) -> None:
-        if self.item:
+        if self.current != -1:
             return self.item.shift_up(self.model_kind)
 
     async def remove_item(self) -> None:
-        if not self.item:
+        if self.current == -1:
             return
 
-        item = self.item
         self.current = min(self.current, len(self.row_vals) - 2)
-        self._drop(item)
+        self._drop(self.item)
         self._refresh_rows()
 
         if not self.row_vals:
@@ -493,8 +490,7 @@ class TreeList(Widget):
         self.refresh()
 
     async def add_child(self) -> None:
-
-        if self.component and self.item:
+        if self.current != -1:
             self.component.expand()
 
         self._add_child()
@@ -504,7 +500,7 @@ class TreeList(Widget):
 
     async def add_sibling(self) -> None:
 
-        if not self.item:
+        if self.current == -1:
             sibling = self._add_child()
             self._refresh_rows()
             self.current = self._rows[sibling.name].index
@@ -516,7 +512,7 @@ class TreeList(Widget):
         await self._move_to_item(sibling, "description")
 
     async def shift_up(self) -> None:
-        if not self.item:
+        if self.current == -1:
             return
 
         self._shift_up()
@@ -525,7 +521,7 @@ class TreeList(Widget):
         self.commit()
 
     async def shift_down(self) -> None:
-        if not self.item:
+        if self.current == -1:
             return
 
         self._shift_down()
@@ -534,14 +530,14 @@ class TreeList(Widget):
         self.commit()
 
     async def toggle_expand(self) -> None:
-        if not self.component:
+        if self.current == -1:
             return
 
         self.component.toggle_expand()
         self._refresh_rows()
 
     async def toggle_expand_parent(self) -> None:
-        if not self.item:
+        if self.current == -1:
             return
 
         parent = self.item.parent
@@ -555,7 +551,7 @@ class TreeList(Widget):
             await self.toggle_expand()
 
     def sort(self, attr: str) -> None:
-        if self.item:
+        if self.current != -1:
             curr = self.item.name
             self.item.sort(self.model_kind, attr)
             self._refresh_rows()

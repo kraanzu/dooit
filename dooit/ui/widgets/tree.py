@@ -175,7 +175,6 @@ class TreeList(Widget):
     async def rearrange(self):
         if self.current == -1:
             self._refresh_rows()
-            self.current = -2
             return
 
         editing = self.editing
@@ -221,11 +220,8 @@ class TreeList(Widget):
         await self.notify(self.filter.render())
         await self.change_status("NORMAL")
 
-    async def start_edit(self, field: str) -> None:
-        if field == "none":
-            return
-
-        if self.current == -1:
+    async def start_edit(self, field: Optional[str]) -> None:
+        if not field or field == "none":
             return
 
         if field not in self.component.fields.keys():
@@ -249,28 +245,21 @@ class TreeList(Widget):
     async def _cancel_edit(self):
         await self.stop_edit(edit=False)
 
-    async def _move_to_item(
-        self, item: Optional[Model], edit: Optional[str] = None
-    ) -> None:
-        if item is None:
-            return
-
+    async def _move_to_item(self, item: Model, edit: Optional[str] = None) -> None:
         self.current = self._rows[item.name].index
-        if edit:
-            await self.start_edit(edit)
+        await self.start_edit(edit)
 
     async def move_up(self) -> None:
-        if self.current > 0:
-            self.current -= 1
+        self.current -= 1
 
     async def move_down(self) -> None:
-        self.current = min(self.current + 1, len(self.row_vals) - 1)
+        self.current += 1
 
     async def move_to_top(self) -> None:
         self.current = 0
 
     async def move_to_bottom(self) -> None:
-        self.current = len(self.row_vals) - 1
+        self.current = len(self.row_vals)
 
     async def sort_menu_toggle(self) -> None:
         self.sort_menu.visible = True
@@ -314,8 +303,15 @@ class TreeList(Widget):
                 bind = self.key_manager.get_method()
                 if bind:
                     await self.change_status("NORMAL")
-                    if hasattr(self, bind.func):
-                        func = getattr(self, bind.func)
+                    if hasattr(self, bind.func_name):
+                        func = getattr(self, bind.func_name)
+                        if bind.check_for_cursor and self.current == -1:
+                            return
+
+                        if self.current >= len(self.row_vals):
+                            self.current = len(self.row_vals) - 1
+                            return
+
                         await func(*bind.params)
                     else:
                         await self.notify(
@@ -415,7 +411,7 @@ class TreeList(Widget):
 
     # COMMANDS TO INTERACT WITH API
     async def stop_edit(self, edit: bool = True) -> None:
-        if self.editing == "none" or self.current == -1:
+        if self.editing == "none":
             return
 
         simple_input = self.component.fields[self.editing]
@@ -436,7 +432,9 @@ class TreeList(Widget):
             self.commit()
 
         simple_input.on_blur()
-        self.component.refresh()
+        if self.current != -1:
+            self.component.refresh()
+
         self.editing = "none"
         await self.change_status("NORMAL")
 
@@ -454,25 +452,15 @@ class TreeList(Widget):
             return self.model.add_child(self.model_kind)
 
     def _shift_down(self) -> None:
-        if self.current != -1:
-            return self.item.shift_down(self.model_kind)
+        return self.item.shift_down(self.model_kind)
 
     def _shift_up(self) -> None:
-        if self.current != -1:
-            return self.item.shift_up(self.model_kind)
+        return self.item.shift_up(self.model_kind)
 
     async def remove_item(self) -> None:
-        if self.current == -1:
-            return
-
         self._drop()
         self.current = min(self.current, len(self.row_vals) - 2)
         self._refresh_rows()
-
-        if not self.row_vals:
-            self.current = -2
-
-        await self._current_change_callback()
         self.commit()
         self.refresh()
 
@@ -480,7 +468,6 @@ class TreeList(Widget):
         if self.current != -1:
             self.component.expand()
 
-        # self.item.add_child(self.model_kind, inherit=True)
         self._add_child()
         self._refresh_rows()
         await self.move_down()
@@ -500,34 +487,22 @@ class TreeList(Widget):
         await self._move_to_item(sibling, "description")
 
     async def shift_up(self) -> None:
-        if self.current == -1:
-            return
-
         self._shift_up()
-        self._refresh_rows()
         await self.move_up()
+        self._refresh_rows()
         self.commit()
 
     async def shift_down(self) -> None:
-        if self.current == -1:
-            return
-
         self._shift_down()
-        self._refresh_rows()
         await self.move_down()
+        self._refresh_rows()
         self.commit()
 
     async def toggle_expand(self) -> None:
-        if self.current == -1:
-            return
-
         self.component.toggle_expand()
         self._refresh_rows()
 
     async def toggle_expand_parent(self) -> None:
-        if self.current == -1:
-            return
-
         parent = self.item.parent
         if not parent:
             return
@@ -539,9 +514,8 @@ class TreeList(Widget):
             await self.toggle_expand()
 
     def sort(self, attr: str) -> None:
-        if self.current != -1:
-            curr = self.item.name
-            self.item.sort(self.model_kind, attr)
-            self._refresh_rows()
-            self.current = self._rows[curr].index
-            self.commit()
+        curr = self.item.name
+        self.item.sort(self.model_kind, attr)
+        self._refresh_rows()
+        self.current = self._rows[curr].index
+        self.commit()

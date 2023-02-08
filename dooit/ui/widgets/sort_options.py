@@ -98,8 +98,8 @@ class SortOptions(Widget):
         self.key_manager.attach_key(key)
         bind = self.key_manager.get_method()
         if bind:
-            if hasattr(self, bind.func):
-                func = getattr(self, bind.func)
+            if hasattr(self, bind.func_name):
+                func = getattr(self, bind.func_name)
                 await func(*bind.params)
             else:
                 await self.emit(

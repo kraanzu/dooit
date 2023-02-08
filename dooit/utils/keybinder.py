@@ -1,15 +1,23 @@
 from collections import defaultdict
-from dataclasses import dataclass
 from typing import DefaultDict, Dict, List, Optional, Union
 from dooit.utils.conf_reader import Config
 
 configured_keys = Config().get("keybindings")
 
 
-@dataclass
 class Bind:
-    func: str
-    params: List[str]
+    exclude_cursor_check = [
+        "add_sibling",
+        "change_status",
+        "move_down",
+        "move_up",
+        "switch_pane",
+    ]
+
+    def __init__(self, func_name: str, params: List[str]) -> None:
+        self.func_name = func_name
+        self.params = params
+        self.check_for_cursor = func_name not in self.exclude_cursor_check
 
 
 KeyList = Dict[str, Union[str, List]]

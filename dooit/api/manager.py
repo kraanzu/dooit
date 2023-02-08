@@ -14,6 +14,7 @@ class Manager(Model):
     _lock = 0
     fields = []
     nomenclature: str = "Workspace"
+    parser_cache = None
 
     def lock(self) -> None:
         self._lock += 1
@@ -66,11 +67,12 @@ class Manager(Model):
     def refresh_data(self) -> bool:
         data_new = Parser.load()
 
-        if data_new is None:
+        if not data_new or data_new == self.parser_cache:
             return False
 
-        data_cache = self._get_commit_data()
-        if data_new == data_cache:
+        self.parser_cache = data_new
+        current_data = self._get_commit_data()
+        if data_new == current_data:
             return False
 
         self.workspaces.clear()

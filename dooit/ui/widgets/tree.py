@@ -446,10 +446,10 @@ class TreeList(Widget):
         return model.add_child(self.model_kind, inherit=True)
 
     def _add_sibling(self) -> model_type:
-        if self.current >= 0:
+        if self.current > -1:
             return self.item.add_sibling(self.model_kind)
         else:
-            return self.model.add_child(self.model_kind)
+            return self._add_child()
 
     def _shift_down(self) -> None:
         return self.item.shift_down(self.model_kind)
@@ -477,12 +477,9 @@ class TreeList(Widget):
 
         if self.current == -1:
             sibling = self._add_child()
-            self._refresh_rows()
-            self.current = self._rows[sibling.name].index
-            await self.start_edit("description")
-            return
+        else:
+            sibling = self._add_sibling()
 
-        sibling = self._add_sibling()
         self._refresh_rows()
         await self._move_to_item(sibling, "description")
 

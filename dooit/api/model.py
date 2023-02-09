@@ -186,7 +186,7 @@ class Model:
             idx = self.parent._get_child_index(kind, name=self.name)
             return self.parent.add_child(kind, idx + 1)
         else:
-            return self.add_child(kind, 0)
+            raise TypeError("Cannot add sibling")
 
     def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:
         """

@@ -137,21 +137,20 @@ class TreeList(Widget):
         raise NotImplementedError
 
     def _refresh_rows(self) -> None:
-        _rows_copy = {i.item.path: i.expanded for i in self._rows.values()}
+        _rows_copy = {path: item.expanded for path, item in self._rows.items()}
         self._rows = {}
 
         def add_rows(item: Model, nest_level=0):
 
-            name = item.name
             path = item.path
 
             def push_item(item: Model):
                 expanded = _rows_copy.get(path, False)
 
-                self._rows[name] = Component(
+                self._rows[path] = Component(
                     item, nest_level, len(self._rows), expanded
                 )
-                self._rows[name].index = len(self._rows) - 1
+                self._rows[path].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
                 description = getattr(item, "description")
@@ -161,7 +160,7 @@ class TreeList(Widget):
                     add_rows(i, nest_level + 1)
             else:
                 push_item(item)
-                if self._rows[name].expanded:
+                if self._rows[path].expanded:
                     for i in self._get_children(item):
                         add_rows(i, nest_level + 1)
 
@@ -246,7 +245,7 @@ class TreeList(Widget):
         await self.stop_edit(edit=False)
 
     async def _move_to_item(self, item: Model, edit: Optional[str] = None) -> None:
-        self.current = self._rows[item.name].index
+        self.current = self._rows[item.path].index
         await self.start_edit(edit)
 
     async def move_up(self) -> None:
@@ -504,14 +503,14 @@ class TreeList(Widget):
         if not parent:
             return
 
-        if parent.name in self._rows:
-            index = self._rows[parent.name].index
+        if parent.path in self._rows:
+            index = self._rows[parent.path].index
             self.current = index
 
             await self.toggle_expand()
 
     def sort(self, attr: str) -> None:
-        curr = self.item.name
+        curr = self.item.path
         self.item.sort(self.model_kind, attr)
         self._refresh_rows()
         self.current = self._rows[curr].index

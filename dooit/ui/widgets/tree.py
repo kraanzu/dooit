@@ -72,11 +72,13 @@ class TreeList(Widget):
     # ------------ INTERNALS ----------------
 
     def validate_current(self, current: int):
-        if not self.row_vals or current == -2:
-            return -1
+        if current < 0:
+            if self.row_vals:
+                return 0
+            else:
+                return -1
         else:
-            value = min(max(0, current), len(self.row_vals) - 1)
-            return value
+            return min(max(0, current), len(self.row_vals) - 1)
 
     async def watch_current(self, _old: int, _new: int) -> None:
         await self._current_change_callback()
@@ -312,6 +314,7 @@ class TreeList(Widget):
                             return
 
                         await func(*bind.params)
+                        self.current = self.current
                     else:
                         await self.notify(
                             "[yellow]Cannot perform this operation here![/yellow]"
@@ -458,8 +461,8 @@ class TreeList(Widget):
 
     async def remove_item(self) -> None:
         self._drop()
-        self.current = min(self.current, len(self.row_vals) - 2)
         self._refresh_rows()
+        self.current = min(self.current, len(self.row_vals) - 1)
         self.commit()
         self.refresh()
 
@@ -467,10 +470,9 @@ class TreeList(Widget):
         if self.current != -1:
             self.component.expand()
 
-        self._add_child()
+        child = self._add_child()
         self._refresh_rows()
-        await self.move_down()
-        await self.start_edit("description")
+        await self._move_to_item(child, "description")
 
     async def add_sibling(self) -> None:
 

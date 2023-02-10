@@ -30,10 +30,12 @@ class Workspace(Model):
 
     def commit(self) -> Dict[str, Any]:
         child_workspaces = {
-            workspace.description: workspace.commit() for workspace in self.workspaces
+            workspace.description: workspace.commit()
+            for workspace in self.workspaces
+            if workspace.description
         }
 
-        todos = {"common": [todo.commit() for todo in self.todos]}
+        todos = {"common": [todo.commit() for todo in self.todos if todo.description]}
 
         return {
             **todos,

@@ -413,7 +413,7 @@ class TreeList(Widget):
 
     # COMMANDS TO INTERACT WITH API
     async def stop_edit(self, edit: bool = True) -> None:
-        if self.editing == "none":
+        if self.editing == "none" or self.current == -1:
             return
 
         simple_input = self.component.fields[self.editing]

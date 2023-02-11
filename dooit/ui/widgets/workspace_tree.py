@@ -25,7 +25,10 @@ class WorkspaceTree(TreeList):
     key_manager = KeyBinder()
 
     async def _current_change_callback(self) -> None:
-        await self.emit(TopicSelect(self, self.item))
+        if self.current == -1:
+            await self.emit(TopicSelect(self, None))
+        else:
+            await self.emit(TopicSelect(self, self.item))
 
     async def _refresh_data(self):
         await self.rearrange()

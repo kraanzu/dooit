@@ -90,6 +90,7 @@ class Status(Item):
 
     def toggle_done(self):
         self.pending = not self.pending
+        self.update_others()
 
     def handle_recurrence(self):
         if not self.model.recurrence:
@@ -127,9 +128,12 @@ class Status(Item):
         # Update ancestors
         current = self.model
         while parent := current.parent:
-            is_done = all(i.status == "COMPLETED" for i in parent.todos)
-            parent.edit("status", "COMPLETED" if is_done else "PENDING")
-            current = parent
+            if hasattr(parent, "status"):
+                is_done = all(i.status == "COMPLETED" for i in parent.todos)
+                parent.edit("status", "COMPLETED" if is_done else "PENDING")
+                current = parent
+            else:
+                break
 
         # Update children
         def update_children(todo=self.model, status=self.value):

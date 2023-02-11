@@ -1,5 +1,5 @@
 from typing import Any, List, Optional, TypeVar
-from .model import Model
+from .model import Model, Result
 
 
 TODO = "todo"
@@ -79,6 +79,11 @@ class Todo(Model):
     @property
     def tags(self):
         return self._tags.value
+
+    def edit(self, key: str, value: str) -> Result:
+        res = super().edit(key, value)
+        self._status.update_others()
+        return res
 
     def toggle_complete(self):
         return self._status.toggle_done()

@@ -459,11 +459,12 @@ class TreeList(Widget):
         return self.item.shift_up(self.model_kind)
 
     async def remove_item(self) -> None:
+        commit = self.item.description != ""
         self._drop()
         self._refresh_rows()
         self.current -= self.current != len(self.row_vals)
-        self.commit()
-        self.refresh()
+        if commit:
+            self.commit()
 
     async def add_child(self) -> None:
         if self.current != -1:

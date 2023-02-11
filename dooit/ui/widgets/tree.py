@@ -139,7 +139,7 @@ class TreeList(Widget):
         raise NotImplementedError
 
     def _refresh_rows(self) -> None:
-        _rows_copy = {path: item.expanded for path, item in self._rows.items()}
+        _rows_copy = {item.item.path: item.expanded for item in self._rows.values()}
         self._rows = {}
 
         def add_rows(item: Model, nest_level=0):

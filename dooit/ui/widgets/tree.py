@@ -98,7 +98,10 @@ class TreeList(Widget):
 
     @property
     def component(self) -> Component:
-        return self.row_vals[self.current]
+        try:
+            return self.row_vals[self.current]
+        except:
+            raise TypeError(self.row_vals, len(self.row_vals), self.current)
 
     @property
     def item(self) -> Any:

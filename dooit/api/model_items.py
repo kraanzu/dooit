@@ -76,11 +76,10 @@ class Status(Item):
         if not self.pending:
             return "COMPLETED"
 
-        due = self.model.due
-        if due == "none":  # why? dateparser slowpok
+        due = self.model._due._value
+        if not due or due == "none":  # why? dateparser slowpok
             return "PENDING"
 
-        due = parse(due)
         now = parse("now")
 
         if now and due and due <= now:
@@ -99,12 +98,8 @@ class Status(Item):
         if self.pending:
             return
 
-        due = self.model.due
-        if due == "none":
-            return
-
-        due = parse(due)
-        if not due:
+        due = self.model._due._value
+        if not due or due == "none":
             return
 
         sign, frequency = split_duration(self.model._recurrence.value)
@@ -115,7 +110,7 @@ class Status(Item):
         if new_time >= datetime.now():
             return
 
-        self.model.edit("due", new_time.strftime(CASUAL_FORMAT))
+        self.model.edit("due", new_time.strftime(DATE_FORMAT))
         self.pending = True
 
     def set(self, val: Any) -> Result:

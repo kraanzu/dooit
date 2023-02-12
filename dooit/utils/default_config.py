@@ -9,8 +9,8 @@ import os
 #################################
 
 
-def colored(text: str, color: str, pre: str = ""):
-    return f"{pre} [{color}]{text}[/]"
+def colored(text: str, color: str):
+    return f"[{color}]{text}[/]"
 
 
 def get_status(status):
@@ -51,7 +51,6 @@ orange = "#d08770"
 BACKGROUND = black
 BORDER_DIM = white
 BORDER_LIT = cyan
-DATE_ORDER = "DMY"  # can be any permutation of 'D', 'M' and 'Y'
 
 #################################
 #          DASHBOARD            #
@@ -66,7 +65,11 @@ ART = """
 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝\
 """
 
-dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
+ART = colored(ART, frost_green)
+NL = " \n"
+SEP = colored("─" * 60, "d " + grey)
+help_message = f"Press {colored('?', magenta)} to spawn help menu"
+dashboard = [ART, NL, SEP, NL, NL, NL, help_message]
 
 
 #################################
@@ -96,7 +99,9 @@ TODO = {
     "highlight": white,
     "editing": cyan,
     "pointer": "> ",
-    "children_hint": colored("{done}/{total}", green),  # vars: remaining, done, total
+    "children_hint": colored(
+        " ({done}/{total})", green
+    ),  # vars: remaining, done, total
     # "children_hint": "[b magenta]({remaining}!)[/b magenta]",  # vars: remaining, done, total
     "due_icon": "🕑",
     "effort_icon": "🗲 ",

@@ -62,8 +62,8 @@ class Model:
         self,
         parent: Optional["Model"] = None,
     ) -> None:
-        from ..api.workspace import Workspace
-        from ..api.todo import Todo
+        from dooit.api.workspace import Workspace
+        from dooit.api.todo import Todo
 
         self.name = str(uuid4())
         self.parent = parent

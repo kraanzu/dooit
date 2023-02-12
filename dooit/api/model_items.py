@@ -1,10 +1,10 @@
 import re
 from typing import Any, Tuple
 from datetime import datetime, timedelta
-from dooit.utils import Config, parse
+from dooit.utils.dateparser import parse
 from .model import Result, Ok, Warn, Err
 
-DATE_ORDER = Config().get("DATE_ORDER")
+DATE_ORDER = "DMY"
 DATE_FORMAT = (
     "-".join(list(DATE_ORDER)).replace("D", "%d").replace("M", "%m").replace("Y", "%y")
 )
@@ -80,10 +80,15 @@ class Status(Item):
         if not due or due == "none":  # why? dateparser slowpok
             return "PENDING"
 
-        now = parse("now")
-
-        if now and due and due <= now:
-            return "OVERDUE"
+        if due.hour or due.minute:
+            now = parse("now")
+            if due < now:
+                return "OVERDUE"
+        else:
+            today = parse("today").date()
+            due = due.date()
+            if today > due:
+                return "OVERDUE"
 
         return "PENDING"
 

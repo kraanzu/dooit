@@ -321,14 +321,13 @@ class Recurrence(Item):
     value = ""
 
     def set(self, val: str) -> Result:
-        res = split_duration(val.strip())
-        if not res:
-            self.value = ""
-            return Ok()
-
         if not val:
             self.value = ""
             return Ok("Recurrence removed")
+
+        res = split_duration(val.strip())
+        if not res:
+            return Warn("Cannot parse! Please use format: [b]<number><m/h/d/w>[/b]")
 
         self.value = val
         if self.model.due == "none":

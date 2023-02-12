@@ -430,7 +430,7 @@ class TreeList(Widget):
         await self.notify(res.text())
         if not res.ok:
             if res.cancel_op:
-                await self.remove_item()
+                await self.remove_item(move_cursor_up=True)
             await self._current_change_callback()
         else:
             self.commit()
@@ -461,11 +461,11 @@ class TreeList(Widget):
     def _shift_up(self) -> None:
         return self.item.shift_up(self.model_kind)
 
-    async def remove_item(self) -> None:
+    async def remove_item(self, move_cursor_up: bool = False) -> None:
         commit = self.item.description != ""
         self._drop()
         self._refresh_rows()
-        self.current -= self.current != len(self.row_vals)
+        self.current -= move_cursor_up
         if commit:
             self.commit()
 

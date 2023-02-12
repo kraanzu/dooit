@@ -12,6 +12,7 @@ class Bind:
         "move_down",
         "move_up",
         "switch_pane",
+        "spawn_help",
     ]
 
     def __init__(self, func_name: str, params: List[str]) -> None:

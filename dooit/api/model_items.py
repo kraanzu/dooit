@@ -368,6 +368,10 @@ class Effort(Item):
         return ""
 
     def set(self, val: str) -> Result:
+        if not val:
+            self._value = ""
+            return Ok("Effort removed for the todo")
+
         if not val.isnumeric():
             return Warn("Only numeric values allowed")
 

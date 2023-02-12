@@ -1,6 +1,7 @@
-from typing import Dict
 import appdirs
 import yaml
+import os
+from typing import Dict
 from pathlib import Path
 from os import mkdir
 
@@ -13,27 +14,27 @@ class Parser:
     Parser class to manage and parse dooit's config and data
     """
 
+    @property
+    def last_modified(self) -> float:
+        return os.stat(self.todo_yaml).st_mtime
+
     def __init__(self) -> None:
         self.check_files()
 
-    @classmethod
-    def save(cls, data):
+    def save(self, data):
         """
         Save the todos to data file
         """
 
-        obj = cls()
-        with open(obj.todo_yaml, "w") as stream:
+        with open(self.todo_yaml, "w") as stream:
             yaml.safe_dump(data, stream, sort_keys=False)
 
-    @classmethod
-    def load(cls) -> Dict:
+    def load(self) -> Dict:
         """
         Retrieves the todos from data file
         """
 
-        obj = cls()
-        with open(obj.todo_yaml, "r") as stream:
+        with open(self.todo_yaml, "r") as stream:
             data = yaml.safe_load(stream)
 
         return data

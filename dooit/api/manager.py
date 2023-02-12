@@ -1,9 +1,11 @@
+from time import time
 from typing import Any, Dict, Optional
 from .model import Model
 from ..utils import Parser
 from ..api.workspace import Workspace
 
 WORKSPACE = "workspace"
+parser = Parser()
 
 
 class Manager(Model):
@@ -14,7 +16,7 @@ class Manager(Model):
     _lock = 0
     fields = []
     nomenclature: str = "Workspace"
-    parser_cache = None
+    last_modified = 0
 
     def lock(self) -> None:
         self._lock += 1
@@ -47,14 +49,18 @@ class Manager(Model):
             return
 
         self.lock()
-        Parser.save(self._get_commit_data())
+        self.last_modified = time()
+        parser.save(self._get_commit_data())
         self.unlock()
 
     def setup(self, data: Optional[Dict] = None) -> None:
         if self.is_locked():
             return
 
-        data = data or Parser.load()
+        self.workspaces.clear()
+        self.todos.clear()
+        data = data or parser.load()
+        self.last_modified = parser.last_modified
         if data:
             self.from_data(data)
 
@@ -65,19 +71,15 @@ class Manager(Model):
             child.from_data(j)
 
     def refresh_data(self) -> bool:
-        data_new = Parser.load()
 
-        if not data_new or data_new == self.parser_cache:
+        if abs(self.last_modified - parser.last_modified) < 2:
             return False
 
-        self.parser_cache = data_new
-        current_data = self._get_commit_data()
-        if data_new == current_data:
+        if self.last_modified > parser.last_modified:
+            self.commit()
             return False
 
-        self.workspaces.clear()
-        self.todos.clear()
-        self.setup(data_new)
+        self.setup()
         return True
 
 

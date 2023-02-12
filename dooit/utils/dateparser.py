@@ -1,8 +1,9 @@
 from dateparser import parse as dateparse
 from threading import Thread
-from dooit.utils.conf_reader import Config
 
-DATE_ORDER = Config().get("DATE_ORDER")
+# from dooit.utils.conf_reader import Config
+
+DATE_ORDER = "DMY"
 
 
 def parse(value: str):

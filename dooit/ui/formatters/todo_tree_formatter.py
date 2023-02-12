@@ -1,7 +1,12 @@
 from typing import Dict
 from dooit.api import Todo
+from dooit.utils.conf_reader import Config
 from .formatter import Formatter
 
+c = Config()
+RED = c.get("red")
+GREEN = c.get("green")
+YELLOW = c.get("yellow")
 DURATION_LEGEND = {
     "m": "minute",
     "h": "hour",
@@ -23,11 +28,11 @@ class TodoFormatter(Formatter):
     def status_color(self, todo: Todo):
         status = todo.status
         if status == "COMPLETED":
-            return "green"
+            return GREEN
         elif status == "PENDING":
-            return "yellow"
+            return YELLOW
         else:
-            return "red"
+            return RED
 
     def style_description(
         self,

@@ -14,7 +14,7 @@ def colored(text: str, color: str, pre: str = ""):
 
 
 def get_status(status):
-    return colored(f" {status} ", "r blue")
+    return colored(f" {status} ", "r " + blue)
 
 
 def get_message(message):
@@ -22,20 +22,36 @@ def get_message(message):
 
 
 def get_clock() -> Text:
-    return Text(f"{datetime.now().time().strftime(' %X ')}", "r cyan")
+    return Text(f"{datetime.now().time().strftime(' %X ')}", "r " + cyan)
 
 
 def get_username():
-    return Text(f" {os.getlogin()} ", "r blue")
+    return Text(f" {os.getlogin()} ", "r " + blue)
+
+
+#################################
+#            COLORS             #
+#################################
+black = "#2e3440"
+white = "#e5e9f0"
+grey = "#d8dee9"
+red = "#bf616a"
+frost_green = "#8fbcbb"
+cyan = "#88c0d0"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+orange = "#d08770"
 
 
 #################################
 #            GENERAL            #
 #################################
-BACKGROUND = "#2e3440"
+BACKGROUND = black
+BORDER_DIM = white
+BORDER_LIT = cyan
 DATE_ORDER = "DMY"  # can be any permutation of 'D', 'M' and 'Y'
-BORDER_DIM = "dim white"
-BORDER_LIT = "bold cyan"
 
 #################################
 #          DASHBOARD            #
@@ -57,15 +73,15 @@ dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
 #           WORKSPACE           #
 #################################
 WORKSPACE = {
-    "dim": "grey50",
-    "highlight": "white",
-    "editing": "cyan",
+    "dim": grey,
+    "highlight": white,
+    "editing": cyan,
     "pointer": "> ",
     "children_hint": "",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
     "No workspaces yet?",
-    f"Press {colored('a', 'cyan')} to add some!",
+    f"Press {colored('a', cyan)} to add some!",
 ]
 
 #################################
@@ -76,20 +92,20 @@ EMPTY_WORKSPACE = [
 COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
 TODO = {
     "color_todos": False,
-    "dim": "d grey50",
-    "highlight": "b white",
-    "editing": "b cyan",
+    "dim": grey,
+    "highlight": white,
+    "editing": cyan,
     "pointer": "> ",
-    "children_hint": " [b green]({done}/{total})[/b green]",  # vars: remaining, done, total
+    "children_hint": colored("{done}/{total}", green),  # vars: remaining, done, total
     # "children_hint": "[b magenta]({remaining}!)[/b magenta]",  # vars: remaining, done, total
     "due_icon": "🕑",
     "effort_icon": "🗲 ",
-    "effort_color": "yellow",
+    "effort_color": yellow,
     "recurrence_icon": " ⟲ ",
-    "recurrence_color": "blue",
+    "recurrence_color": blue,
     "tags_icon": "🖈 ",
     "tags_seperator": "icon",  # icon, pipe, comma
-    "tags_color": "red",
+    "tags_color": red,
     "completed_icon": "✓ ",
     "pending_icon": "● ",
     "overdue_icon": "! ",
@@ -101,7 +117,7 @@ TODO = {
 
 EMPTY_TODO = [
     "Wow so Empty!?",
-    f"Press {colored('a', 'cyan')} to add some!",
+    f"Press {colored('a', cyan)} to add some!",
 ]
 
 #################################

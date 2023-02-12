@@ -404,7 +404,7 @@ class TreeList(Widget):
             expand=True,
             height=height,
             box=box.HEAVY,
-            border_style=LIT if self._has_focus else DIM,
+            border_style="b " + LIT if self._has_focus else "d " + DIM,
         )
 
     async def copy_text(self) -> None:

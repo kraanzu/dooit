@@ -419,11 +419,12 @@ class TreeList(Widget):
         if self.editing == "none" or self.current == -1:
             return
 
-        simple_input = self.component.fields[self.editing]
+        editing = self.editing
+        simple_input = self.component.fields[editing]
+        old_val = getattr(self.component.item, self.editing)
 
         if not edit:
-            val = getattr(self.component.item, self.editing)
-            simple_input.value = val
+            simple_input.value = old_val
 
         res = self.component.item.edit(self.editing, simple_input.value)
 
@@ -441,6 +442,9 @@ class TreeList(Widget):
 
         self.editing = "none"
         await self.change_status("NORMAL")
+
+        if edit and not old_val and editing == "description":
+            await self.add_sibling()
 
     def _drop(self) -> None:
         self.item.drop(self.model_kind)

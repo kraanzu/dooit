@@ -7,6 +7,7 @@ c = Config()
 RED = c.get("red")
 GREEN = c.get("green")
 YELLOW = c.get("yellow")
+ORANGE = c.get("orange")
 DURATION_LEGEND = {
     "m": "minute",
     "h": "hour",
@@ -130,13 +131,13 @@ class TodoFormatter(Formatter):
     ) -> str:
         val = item.urgency
         if val == 3:
-            color = "orange1"
+            color = ORANGE
         elif val == 2:
-            color = "yellow"
+            color = YELLOW
         elif val == 1:
-            color = "green"
+            color = GREEN
         else:
-            color = "red"
+            color = RED
 
         if item.status == "COMPLETED":
             color = "strike " + color

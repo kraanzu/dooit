@@ -30,6 +30,8 @@ class TodoFormatter(Formatter):
         kwargs: Dict[str, str],
     ) -> str:
         text = kwargs["description"]
+        if item.status == "COMPLETED":
+            text = self.colored(text, "strike")
 
         # STATUS ICON
         status_icon = item.status.lower() + "_icon"
@@ -92,7 +94,11 @@ class TodoFormatter(Formatter):
         kwargs: Dict[str, str],
     ) -> str:
         icon_color = self.status_color(item)
-        text = self.colored(self.format["due_icon"], icon_color) + kwargs["due"]
+        text = self.colored(self.format["due_icon"], icon_color)
+        if item.status == "COMPLETED":
+            text += self.colored(kwargs["due"], "strike")
+        else:
+            text += kwargs["due"]
 
         return self.cursor_highlight(text, is_highlighted, editing)
 
@@ -112,6 +118,9 @@ class TodoFormatter(Formatter):
             color = "green"
         else:
             color = "red"
+
+        if item.status == "COMPLETED":
+            color = "strike " + color
 
         icon = f"urgency{val}_icon"
         icon = self.format[icon]

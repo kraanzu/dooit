@@ -74,7 +74,7 @@ class Manager(Model):
 
     def refresh_data(self) -> bool:
 
-        if abs(self.last_modified - parser.last_modified) < 0.5:
+        if abs(self.last_modified - parser.last_modified) <= 2:
             return False
 
         if self.last_modified > parser.last_modified:

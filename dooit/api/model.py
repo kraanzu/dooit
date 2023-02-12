@@ -19,15 +19,15 @@ class Result:
 
     @classmethod
     def Ok(cls, message: Optional[str] = None):
-        return cls(True, False, message, "b green")
+        return cls(True, False, message, "green")
 
     @classmethod
     def Warn(cls, message: Optional[str] = None):
-        return cls(False, False, message, "b yellow")
+        return cls(False, False, message, "yellow")
 
     @classmethod
     def Err(cls, message: str):
-        return cls(False, True, message, "b red")
+        return cls(False, True, message, "red")
 
     def is_ok(self) -> bool:
         return self.ok

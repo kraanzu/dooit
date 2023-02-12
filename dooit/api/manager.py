@@ -57,12 +57,14 @@ class Manager(Model):
         if self.is_locked():
             return
 
+        data = data or parser.load()
+        if not data:
+            return
+
         self.workspaces.clear()
         self.todos.clear()
-        data = data or parser.load()
         self.last_modified = parser.last_modified
-        if data:
-            self.from_data(data)
+        self.from_data(data)
 
     def from_data(self, data: Any) -> None:
         for i, j in data.items():
@@ -72,7 +74,7 @@ class Manager(Model):
 
     def refresh_data(self) -> bool:
 
-        if abs(self.last_modified - parser.last_modified) < 2:
+        if abs(self.last_modified - parser.last_modified) < 0.5:
             return False
 
         if self.last_modified > parser.last_modified:

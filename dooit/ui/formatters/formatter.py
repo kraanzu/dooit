@@ -18,12 +18,12 @@ class Formatter:
     def cursor_highlight(self, text: str, is_highlighted: bool, editing: str):
         if is_highlighted:
             return (
-                self.colored(text, self.STYLE_EDITING)
+                self.colored(text, "b " + self.STYLE_EDITING)
                 if editing != "none"
-                else self.colored(text, self.STYLE_HIGHLIGHT)
+                else self.colored(text, "b " + self.STYLE_HIGHLIGHT)
             )
 
-        return self.colored(text, self.STYLE_DIM)
+        return self.colored(text, "d " + self.STYLE_DIM)
 
     def color_combo(self, icon: str, text: str, color: str):
         return self.colored(f"[b] {icon}[/b]{text}", color)

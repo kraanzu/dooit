@@ -13,14 +13,21 @@ DURATION_LEGEND = {
 class TodoFormatter(Formatter):
     model_type = Todo
 
+    def todo_highlight(self, text: str, is_highlighted: bool, todo: Todo):
+        color = self.status_color(todo)
+        if is_highlighted:
+            return self.colored(text, "b " + color)
+        else:
+            return self.colored(text, "d " + color)
+
     def status_color(self, todo: Todo):
         status = todo.status
         if status == "COMPLETED":
-            return "b green"
+            return "green"
         elif status == "PENDING":
-            return "b yellow"
+            return "yellow"
         else:
-            return "b red"
+            return "red"
 
     def style_description(
         self,
@@ -30,6 +37,7 @@ class TodoFormatter(Formatter):
         kwargs: Dict[str, str],
     ) -> str:
         text = kwargs["description"]
+
         if item.status == "COMPLETED":
             text = self.colored(text, "strike")
 
@@ -84,7 +92,10 @@ class TodoFormatter(Formatter):
             icon = self.format["recurrence_icon"]
             text += self.color_combo(icon, recurrence, color)
 
-        return self.cursor_highlight(text, is_highlighted, editing)
+        if self.format["color_todos"]:
+            return self.todo_highlight(text, is_highlighted, item)
+        else:
+            return self.cursor_highlight(text, is_highlighted, editing)
 
     def style_due(
         self,
@@ -100,7 +111,10 @@ class TodoFormatter(Formatter):
         else:
             text += kwargs["due"]
 
-        return self.cursor_highlight(text, is_highlighted, editing)
+        if self.format["color_todos"]:
+            return self.todo_highlight(text, is_highlighted, item)
+        else:
+            return self.cursor_highlight(text, is_highlighted, editing)
 
     def style_urgency(
         self,

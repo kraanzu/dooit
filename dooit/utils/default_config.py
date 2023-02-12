@@ -57,9 +57,9 @@ dashboard = [ART, " \n", " \n", " \n", "Dooit Version 1.0"]
 #           WORKSPACE           #
 #################################
 WORKSPACE = {
-    "dim": "d grey50",
-    "highlight": "b white",
-    "editing": "b cyan",
+    "dim": "grey50",
+    "highlight": "white",
+    "editing": "cyan",
     "pointer": "> ",
     "children_hint": "",  # "[{count}]", # vars: count
 }
@@ -75,6 +75,7 @@ EMPTY_WORKSPACE = [
 
 COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
 TODO = {
+    "color_todos": False,
     "dim": "d grey50",
     "highlight": "b white",
     "editing": "b cyan",

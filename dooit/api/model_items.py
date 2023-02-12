@@ -256,7 +256,7 @@ class Due(Item):
         return f"due:{save}"
 
     def from_txt(self, txt: str) -> None:
-        value = txt.split()[2].lstrip("due:")
+        value = txt.split()[2].lstrip("due:").lower()
         if value != "none":
             if "@" in value:
                 self._value = datetime.strptime(value, DATE_FORMAT + TIME_FORMAT)

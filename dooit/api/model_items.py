@@ -129,8 +129,9 @@ class Status(Item):
         current = self.model
         while parent := current.parent:
             if hasattr(parent, "status"):
-                is_done = all(i.status == "COMPLETED" for i in parent.todos)
-                parent.edit("status", "COMPLETED" if is_done else "PENDING")
+                if parent.todos:
+                    is_done = all(i.status == "COMPLETED" for i in parent.todos)
+                    parent.edit("status", "COMPLETED" if is_done else "PENDING")
                 current = parent
             else:
                 break

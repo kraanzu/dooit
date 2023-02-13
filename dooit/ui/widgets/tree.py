@@ -27,6 +27,10 @@ RED = conf.get("red")
 EMPTY_SEARCH = [":(", "No items found which matches the search phrase"]
 
 
+class SearchEnabledError(Exception):
+    pass
+
+
 class TreeList(Widget):
     """
     An editable tree widget
@@ -329,10 +333,7 @@ class TreeList(Widget):
                     self._refresh_rows()
 
             elif self.filter.value and key == "enter":
-                if self.current != -1:
-                    item = self.item
-                    await self.stop_search()
-                    await self._move_to_item(item)
+                await self.move_to_filter_item()
 
             else:
 
@@ -345,18 +346,26 @@ class TreeList(Widget):
                         if bind.check_for_cursor and self.current == -1:
                             return
 
-                        if self.current >= len(self.row_vals):
-                            self.current = len(self.row_vals) - 1
-                            return
+                        try:
+                            await func(*bind.params)
+                            self.current = self.current
+                        except SearchEnabledError:
+                            if self.current != -1:
+                                await self.move_to_filter_item()
+                                await func(*bind.params)
 
-                        await func(*bind.params)
-                        self.current = self.current
                     else:
                         await self.notify(
                             "[yellow]Cannot perform this operation here![/yellow]"
                         )
 
         self.refresh()
+
+    async def move_to_filter_item(self):
+        if self.current != -1:
+            item = self.item
+            await self.stop_search()
+            await self._move_to_item(item)
 
     async def spawn_help(self):
         await self.emit(SpawnHelp(self))
@@ -515,6 +524,9 @@ class TreeList(Widget):
             self.commit()
 
     async def add_child(self) -> None:
+        if self.filter.value:
+            raise SearchEnabledError
+
         if self.current != -1:
             self.component.expand()
 
@@ -523,6 +535,9 @@ class TreeList(Widget):
         await self._move_to_item(child, "description")
 
     async def add_sibling(self) -> None:
+
+        if self.filter.value:
+            raise SearchEnabledError
 
         if self.current == -1:
             sibling = self._add_child()

@@ -131,7 +131,7 @@ class Status(Item):
             if hasattr(parent, "status"):
                 if parent.todos:
                     is_done = all(i.status == "COMPLETED" for i in parent.todos)
-                    parent.edit("status", "COMPLETED" if is_done else "PENDING")
+                    parent._status.pending = not is_done
                 current = parent
             else:
                 break

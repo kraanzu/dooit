@@ -263,10 +263,12 @@ class TreeList(Widget):
 
         while len(ancestors) > 1:
             item = ancestors.pop()
-            if self._rows[item.path].expanded:
+            component = self._rows[item.path]
+            if component.expanded:
                 break
 
-            self._rows[item.path].expand()
+            component.expand()
+            self._refresh_rows()
 
         self.current = self._rows[ancestors[0].path].index
         await self.start_edit(edit)
@@ -325,6 +327,12 @@ class TreeList(Widget):
                     await self.filter.handle_keypress(key)
                     await self.notify(self.filter.render())
                     self._refresh_rows()
+
+            elif self.filter.value and key == "enter":
+                if self.current != -1:
+                    item = self.item
+                    await self.stop_search()
+                    await self._move_to_item(item)
 
             else:
 

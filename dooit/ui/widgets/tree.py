@@ -23,6 +23,7 @@ PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$
 conf = Config()
 DIM = conf.get("BORDER_DIM")
 LIT = conf.get("BORDER_LIT")
+EMPTY_SEARCH = [":(", "No items found which matches the search phrase"]
 
 
 class TreeList(Widget):
@@ -48,18 +49,17 @@ class TreeList(Widget):
     ) -> None:
         super().__init__(name=name)
         self.model = model
-        self.editing = "none"
+
+    async def on_mount(self) -> None:
         self.sort_menu = SortOptions()
-        self.sort_menu.visible = False
         self.filter = SimpleInput()
         self.sort_menu = SortOptions(
             name=f"Sort_{self.name}",
             options=self.options,
             parent_widget=self,
         )
+        self.editing = "none"
         self.sort_menu.visible = False
-
-    async def on_mount(self) -> None:
         self._set_screen()
         self._refresh_rows()
 

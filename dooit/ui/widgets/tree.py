@@ -382,25 +382,33 @@ class TreeList(Widget):
     def render(self) -> RenderableType:
 
         if self.sort_menu.visible:
-            to_render = self.sort_menu.render()
-        elif not self.row_vals:
-            EMPTY = [
-                Text.from_markup(text) if isinstance(text, str) else text
-                for text in self.EMPTY
-            ]
-            to_render = Align.center(
-                Group(
-                    *[Align.center(i) for i in EMPTY],
-                ),
-                vertical="middle",
-            )
-        else:
-            self.make_table()
-            to_render = self.table
+            return self.render_panel(self.sort_menu.render())
 
+        if self.row_vals:
+            self.make_table()
+            return self.render_panel(self.table)
+
+        if self.filter.value and not self.row_vals:
+            EMPTY = EMPTY_SEARCH
+        else:
+            EMPTY = self.EMPTY
+
+        EMPTY = [
+            Text.from_markup(text) if isinstance(text, str) else text for text in EMPTY
+        ]
+
+        to_render = Align.center(
+            Group(
+                *[Align.center(i) for i in EMPTY],
+            ),
+            vertical="middle",
+        )
+        return self.render_panel(to_render)
+
+    def render_panel(self, renderable: RenderableType):
         height = self._size.height
         return Panel(
-            to_render,
+            renderable,
             expand=True,
             height=height,
             box=box.HEAVY,

@@ -254,7 +254,21 @@ class TreeList(Widget):
         await self.stop_edit(edit=False)
 
     async def _move_to_item(self, item: Model, edit: Optional[str] = None) -> None:
-        self.current = self._rows[item.path].index
+        ancestors = [item]
+        while parent := ancestors[-1].parent:
+            if not isinstance(parent, self.model_type):
+                break
+
+            ancestors.append(parent)
+
+        while len(ancestors) > 1:
+            item = ancestors.pop()
+            if self._rows[item.path].expanded:
+                break
+
+            self._rows[item.path].expand()
+
+        self.current = self._rows[ancestors[0].path].index
         await self.start_edit(edit)
 
     async def move_up(self) -> None:

@@ -136,18 +136,11 @@ class Status(Item):
                 break
 
         # Update children
-        def update_children(todo=self.model, status=self.value):
+        def update_children(todo=self.model, status=self.pending):
 
-            if status == "COMPLETED":
-                for i in todo.todos:
-                    i._status.pending = False
-                    update_children(i, status)
-            else:
-                if not todo.todos:
-                    return
-
-                if all(i.status == "COMPLETED" for i in todo.todos):
-                    todo._status.pending = False
+            todo._status.pending = status
+            for i in todo.todos:
+                update_children(i, status)
 
         update_children()
 

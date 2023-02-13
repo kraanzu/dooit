@@ -83,6 +83,7 @@ WORKSPACE = {
     "children_hint": "",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
+    "🍻",
     "No workspaces yet?",
     f"Press {colored('a', cyan)} to add some!",
 ]
@@ -121,8 +122,9 @@ TODO = {
 }
 
 EMPTY_TODO = [
+    "🤘",
     "Wow so Empty!?",
-    f"Press {colored('a', cyan)} to add some!",
+    "Add some todos to get started!",
 ]
 
 #################################

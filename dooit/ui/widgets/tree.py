@@ -218,8 +218,10 @@ class TreeList(Widget):
         await self.notify(self.filter.render())
         await self.change_status("SEARCH")
 
-    async def stop_search(self) -> None:
-        self.filter.clear()
+    async def stop_search(self, clear: bool = True) -> None:
+        if clear:
+            self.filter.clear()
+
         self.filter.on_blur()
         self._refresh_rows()
         await self.notify(self.filter.render())
@@ -299,6 +301,8 @@ class TreeList(Widget):
             elif self.filter.has_focus:
                 if key == "escape":
                     await self.stop_search()
+                elif key == "enter":
+                    await self.stop_search(clear=False)
                 else:
                     await self.filter.handle_keypress(key)
                     await self.notify(self.filter.render())

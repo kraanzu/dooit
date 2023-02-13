@@ -23,6 +23,7 @@ PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$
 conf = Config()
 DIM = conf.get("BORDER_DIM")
 LIT = conf.get("BORDER_LIT")
+RED = conf.get("red")
 EMPTY_SEARCH = [":(", "No items found which matches the search phrase"]
 
 
@@ -303,6 +304,9 @@ class TreeList(Widget):
                     await self.stop_search()
                 elif key == "enter":
                     await self.stop_search(clear=False)
+                    if not self.row_vals:
+                        await self.stop_search()
+                        await self.notify(f"[{RED}]No item found![/]")
                 else:
                     await self.filter.handle_keypress(key)
                     await self.notify(self.filter.render())

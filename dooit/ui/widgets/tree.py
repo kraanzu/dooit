@@ -24,7 +24,7 @@ conf = Config()
 DIM = conf.get("BORDER_DIM")
 LIT = conf.get("BORDER_LIT")
 RED = conf.get("red")
-EMPTY_SEARCH = [":(", "No items found which matches the search phrase"]
+EMPTY_SEARCH = [f"[{RED}]No items found![/{RED}]"]
 
 
 class SearchEnabledError(Exception):

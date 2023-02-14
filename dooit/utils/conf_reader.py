@@ -3,7 +3,9 @@ import importlib.util
 from os import path
 from typing import Any, Dict, Optional
 import appdirs
+import sys
 
+sys.path.append(appdirs.user_config_dir("dooit"))
 user_config = path.join(appdirs.user_config_dir("dooit"), "config.py")
 default_config = path.join(path.dirname(__file__), "default_config.py")
 

@@ -143,6 +143,30 @@ class TreeList(Widget):
 
         self._fix_view()
 
+    def _style_empty(self, empty_values: List):
+        def aligned(original: List) -> List[Text]:
+            texts: List[Text] = []
+            for text in original:
+                if not isinstance(text, Text):
+                    text = Text.from_markup(str(text))
+
+                texts.append(text)
+
+            max_len = max(len(i) for i in texts)
+            for text in texts:
+                text.pad_right(max_len - len(text))
+
+            return texts
+
+        formatted = []
+        for text in empty_values:
+            if not isinstance(text, List):
+                text = [text]
+
+            formatted.extend(aligned(text))
+
+        return formatted
+
     def _get_children(self, model: model_type) -> List[model_type]:
         raise NotImplementedError
 
@@ -435,10 +459,7 @@ class TreeList(Widget):
         else:
             EMPTY = self.EMPTY
 
-        EMPTY = [
-            Text.from_markup(text) if isinstance(text, str) else text for text in EMPTY
-        ]
-
+        EMPTY = self._style_empty(EMPTY)
         to_render = Align.center(
             Group(
                 *[Align.center(i) for i in EMPTY],

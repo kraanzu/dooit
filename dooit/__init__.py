@@ -1,5 +1,5 @@
 import argparse
-import pkg_resources
+from importlib.metadata import version
 from .ui.tui import Dooit
 
 
@@ -9,7 +9,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        ver = pkg_resources.get_distribution("dooit").version
+        ver = version("dooit")
         print(f"dooit - {ver}")
     else:
         Dooit().run()

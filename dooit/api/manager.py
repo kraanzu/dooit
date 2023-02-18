@@ -30,14 +30,8 @@ class Manager(Model):
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)
 
-    def add_child_workspace(self) -> Workspace:
-        return super().add_child(WORKSPACE)
-
-    def remove_child_workspace(self, name: str) -> Workspace:
-        return super().remove_child(WORKSPACE, name)
-
-    def sort_workspace(self, attr: str) -> None:
-        return super().sort(WORKSPACE, attr)
+    def add_workspace(self) -> Workspace:
+        return self.add_child(WORKSPACE)
 
     def _get_commit_data(self):
         return {

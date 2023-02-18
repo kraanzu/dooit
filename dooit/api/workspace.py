@@ -25,6 +25,11 @@ class Workspace(Model):
     def description(self):
         return self._description.value
 
+    def add_sibling(self, kind: str = WORKSPACE) -> "Workspace":
+        if kind != WORKSPACE:
+            raise TypeError(f"Cannot add {kind} as a sibling")
+        return super().add_sibling(kind)
+
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)
 

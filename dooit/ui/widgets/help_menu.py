@@ -164,7 +164,7 @@ HEADER = f"""
 {seperator.markup}
 """
 
-BODY = f""" {colored(f'Dooit is build to be used from the keyboard,{NL} but mouse can also be used to navigate', 'green')}
+BODY = f""" {colored(f'Dooit is built to be used from the keyboard!', 'green')}
 
 Documentation below will walk you through the controls:
 {seperator.markup}

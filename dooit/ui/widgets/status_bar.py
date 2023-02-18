@@ -1,4 +1,5 @@
 from inspect import getfullargspec as get_args
+from typing import Callable
 from rich.console import RenderableType
 from rich.table import Table
 from rich.text import Text, TextType
@@ -54,8 +55,12 @@ class StatusBar(Widget):
         for col in "ABC":
             temp = Text()
             for func in bar[col]:
-                args = get_args(func).args
-                text = func(**{i: params[i] for i in args})
+                if isinstance(func, Callable):
+                    args = get_args(func).args
+                    text = func(**{i: params[i] for i in args})
+                else:
+                    text = func
+
                 if isinstance(text, Text):
                     temp += text
                 else:

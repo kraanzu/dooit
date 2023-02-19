@@ -80,6 +80,23 @@ class Todo(Model):
     def tags(self):
         return self._tags.value
 
+    def add_sibling(self: T, kind: str = "todo") -> T:
+        if kind != "todo":
+            raise TypeError(f"Cannot add sibling of kind {kind}")
+
+        return super().add_sibling(kind)
+
+    def add_child(
+        self, kind: str = "todo", index: int = 0, inherit: bool = False
+    ) -> Any:
+        if kind != "todo":
+            raise TypeError(f"Cannot add child of kind {kind}")
+
+        return super().add_child(kind, index, inherit)
+
+    def add_todo(self):
+        return self.add_child()
+
     def edit(self, key: str, value: str) -> Result:
         res = super().edit(key, value)
         self._status.update_others()

@@ -125,38 +125,38 @@ class Model:
         else:
             return Err("Invalid Request!")
 
-    def shift_up(self, kind: str) -> None:
+    def shift_up(self) -> None:
         """
         Shift the item one place up among its siblings
         """
 
-        idx = self._get_index(kind)
+        idx = self._get_index(self.kind)
 
         if idx in [0, -1]:
             return
 
         if not self.parent:
             return
-        arr = self.parent._get_children(kind)
+        arr = self.parent._get_children(self.kind)
         arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
 
-    def shift_down(self, kind: str) -> None:
+    def shift_down(self) -> None:
         """
         Shift the item one place down among its siblings
         """
 
-        idx = self._get_index(kind)
+        idx = self._get_index(self.kind)
 
         if idx == -1 or not self.parent:
             return
 
-        arr = self.parent._get_children(kind)
+        arr = self.parent._get_children(self.kind)
         if idx == len(arr) - 1:
             return
 
         arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
 
-    def prev_sibling(self: T, kind: str) -> Optional[T]:
+    def prev_sibling(self: T) -> Optional[T]:
         """
         Returns previous sibling item, if any, else None
         """
@@ -164,12 +164,12 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(kind, name=self.name)
+        idx = self.parent._get_child_index(self.kind, name=self.name)
 
         if idx:
-            return self._get_children(kind)[idx - 1]
+            return self._get_children(self.kind)[idx - 1]
 
-    def next_sibling(self: T, kind: str) -> Optional[T]:
+    def next_sibling(self: T) -> Optional[T]:
         """
         Returns next sibling item, if any, else None
         """
@@ -177,8 +177,8 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(kind, name=self.name)
-        arr = self.parent._get_children(kind)
+        idx = self.parent._get_child_index(self.kind, name=self.name)
+        arr = self.parent._get_children(self.kind)
 
         if idx < len(arr) - 1:
             return arr[idx + 1]

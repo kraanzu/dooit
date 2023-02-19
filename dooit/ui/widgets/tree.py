@@ -531,10 +531,10 @@ class TreeList(Widget):
             return self._add_child()
 
     def _shift_down(self) -> None:
-        return self.item.shift_down(self.model_kind)
+        return self.item.shift_down()
 
     def _shift_up(self) -> None:
-        return self.item.shift_up(self.model_kind)
+        return self.item.shift_up()
 
     async def remove_item(self, move_cursor_up: bool = False) -> None:
         commit = self.item.description != ""

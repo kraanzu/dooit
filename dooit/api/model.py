@@ -84,7 +84,7 @@ class Model:
         Get children list (workspace/todo)
         """
 
-        return self.workspaces if kind == "workspace" else self.todos
+        return self.workspaces if kind.lower() == "workspace" else self.todos
 
     def _get_child_index(self, kind: str, **kwargs) -> int:
         """

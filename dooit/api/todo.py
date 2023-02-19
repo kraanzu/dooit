@@ -102,7 +102,7 @@ class Todo(Model):
         self._status.update_others()
         return res
 
-    def toggle_complete(self):
+    def toggle_complete(self) -> bool:
         return self._status.toggle_done()
 
     def decrease_urgency(self) -> None:

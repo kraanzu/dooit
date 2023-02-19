@@ -93,9 +93,10 @@ class Status(Item):
 
         return "PENDING"
 
-    def toggle_done(self):
+    def toggle_done(self) -> bool:
         self.pending = not self.pending
         self.update_others()
+        return not self.pending
 
     def handle_recurrence(self):
         if not self.model.recurrence:

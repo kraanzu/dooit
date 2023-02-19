@@ -94,8 +94,8 @@ class Todo(Model):
 
         return super().add_child(kind, index, inherit)
 
-    def add_todo(self):
-        return self.add_child()
+    def add_todo(self, index: int = 0, inherit: bool = False):
+        return self.add_child(TODO, index, inherit)
 
     def edit(self, key: str, value: str) -> Result:
         res = super().edit(key, value)

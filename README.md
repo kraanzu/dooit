@@ -54,9 +54,13 @@ brew install dooit --HEAD
 - Sort options with menu (Name, Date, Urgency, Status)
 - Search & edit on the fly!
 
-```
-See CHANGELOG.md to get more details on changes and feature additions!
-```
+**Note: See [CHANGELOG.md]() to get more details on changes and feature additions!**
+
+# Usage and configuration
+After launching the app, You can press the `?` key to get started with the app :)\
+You can also tweak everything including the UI, keybindings and status bar to your liking\
+Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know more!
+
 
 # Screenshots
 

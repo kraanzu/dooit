@@ -72,6 +72,10 @@ class Model:
         self.todos: List[Todo] = []
 
     @property
+    def kind(self):
+        return self.__class__.__name__.lower()
+
+    @property
     def path(self):
         """
         Uniquie path for model
@@ -83,6 +87,8 @@ class Model:
         """
         Get children list (workspace/todo)
         """
+        if kind not in ["workspace", "todo"]:
+            raise TypeError(f"Cannot perform this operation for type {kind}")
 
         return self.workspaces if kind.lower() == "workspace" else self.todos
 
@@ -225,13 +231,13 @@ class Model:
         if self.parent:
             self.parent.remove_child(kind, self.name)
 
-    def sort(self, kind: str, attr: str) -> None:
+    def sort(self, attr: str) -> None:
         """
         Sort the children based on specific attr
         """
 
         if self.parent:
-            children = self.parent._get_children(kind)
+            children = self.parent._get_children(self.kind)
             children.sort(key=lambda x: getattr(x, f"_{attr}").get_sortable())
 
     def commit(self) -> Dict[str, Any]:

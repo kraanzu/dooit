@@ -597,7 +597,7 @@ class TreeList(Widget):
 
     def sort(self, attr: str) -> None:
         curr = self.item.path
-        self.item.sort(self.model_kind, attr)
+        self.item.sort(attr)
         self._refresh_rows()
         self.current = self._rows[curr].index
         self.commit()

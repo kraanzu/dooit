@@ -56,13 +56,13 @@ brew install dooit --HEAD
 
 **Note: See [CHANGELOG.md]() to get more details on changes and feature additions!**
 
-# Usage and configuration
+# Usage and configuration :gear:
 After launching the app, You can press the `?` key to get started with the app :)\
 You can also tweak everything including the UI, keybindings and status bar to your liking\
 Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know more!
 
 
-# Screenshots
+# Screenshots 🖼️
 
 TODO: Add ss
 

@@ -392,7 +392,8 @@ class TreeList(Widget):
             await self._move_to_item(item)
 
     async def spawn_help(self):
-        await self.emit(SpawnHelp(self))
+        if self.app.screen.name != "help":
+            await self.emit(SpawnHelp(self))
 
     def add_row(self, row: Component, highlight: bool) -> None:  # noqa
 

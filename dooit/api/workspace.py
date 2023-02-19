@@ -30,6 +30,9 @@ class Workspace(Model):
             raise TypeError(f"Cannot add {kind} as a sibling")
         return super().add_sibling(kind)
 
+    def add_workspace(self, index: int = 0):
+        return super().add_child(WORKSPACE, index)
+
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)
 

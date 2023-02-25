@@ -183,14 +183,14 @@ class Model:
         if idx < len(arr) - 1:
             return arr[idx + 1]
 
-    def add_sibling(self: T, kind: str) -> T:
+    def add_sibling(self: T, kind: str, inherit: bool = False) -> T:
         """
         Add item sibling
         """
 
         if self.parent:
             idx = self.parent._get_child_index(kind, name=self.name)
-            return self.parent.add_child(kind, idx + 1)
+            return self.parent.add_child(kind, idx + 1, inherit)
         else:
             raise TypeError("Cannot add sibling")
 
@@ -208,6 +208,8 @@ class Model:
             if inherit and isinstance(self, Todo):
                 child.fill_from_data(self.to_data())
                 child._description.value = ""
+                child._effort._value = 0
+                child.edit("status", "PENDING")
 
         children = self._get_children(kind)
         children.insert(index, child)

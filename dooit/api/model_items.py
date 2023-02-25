@@ -233,6 +233,9 @@ class Due(Item):
             self._value = None
             return Ok("Due removed for the todo")
 
+        if val.strip() == "today":
+            val = "today 0:0"  # remove un-necessary time
+
         res = parse(val)
         if res:
             self._value = res
@@ -332,7 +335,11 @@ class Recurrence(Item):
 
         self.value = val
         if self.model.due == "none":
-            self.model.edit("due", "now")
+            if val[-1] in "dw":
+                self.model.edit("due", "today")
+            else:
+                self.model.edit("due", "now")
+
             return Ok(f"Recurrence set for {self.value} [i]starting today[/i]")
 
         return Ok(f"Recurrence set for {self.value}")

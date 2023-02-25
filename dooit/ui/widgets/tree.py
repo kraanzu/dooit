@@ -314,6 +314,7 @@ class TreeList(Widget):
         self.current = len(self.row_vals)
 
     async def sort_menu_toggle(self) -> None:
+        await self.change_status("SORT")
         self.sort_menu.visible = True
 
     async def switch_pane(self) -> None:

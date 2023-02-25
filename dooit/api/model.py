@@ -209,6 +209,7 @@ class Model:
                 child.fill_from_data(self.to_data())
                 child._description.value = ""
                 child._effort._value = 0
+                child._tags.value = ""
                 child.edit("status", "PENDING")
 
         children = self._get_children(kind)

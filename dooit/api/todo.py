@@ -129,6 +129,7 @@ class Todo(Model):
         self._description.from_txt(data)
         self._recurrence.from_txt(data)
         self._effort.from_txt(data)
+        self._tags.from_txt(data)
 
     def commit(self) -> List[Any]:
         if self.todos:

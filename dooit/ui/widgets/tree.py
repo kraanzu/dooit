@@ -520,7 +520,7 @@ class TreeList(Widget):
             await self.add_sibling()
 
     def _drop(self) -> None:
-        self.item.drop(self.model_kind)
+        self.item.drop()
 
     def _add_child(self) -> model_type:
         model = self.item if self.current != -1 else self.model
@@ -528,7 +528,7 @@ class TreeList(Widget):
 
     def _add_sibling(self) -> model_type:
         if self.current > -1:
-            return self.item.add_sibling(self.model_kind, True)
+            return self.item.add_sibling(True)
         else:
             return self._add_child()
 

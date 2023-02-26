@@ -183,14 +183,14 @@ class Model:
         if idx < len(arr) - 1:
             return arr[idx + 1]
 
-    def add_sibling(self: T, kind: str, inherit: bool = False) -> T:
+    def add_sibling(self: T, inherit: bool = False) -> T:
         """
         Add item sibling
         """
 
         if self.parent:
-            idx = self.parent._get_child_index(kind, name=self.name)
-            return self.parent.add_child(kind, idx + 1, inherit)
+            idx = self.parent._get_child_index(self.kind, name=self.name)
+            return self.parent.add_child(self.kind, idx + 1, inherit)
         else:
             raise TypeError("Cannot add sibling")
 
@@ -226,13 +226,13 @@ class Model:
         if idx != -1:
             return self._get_children(kind).pop(idx)
 
-    def drop(self, kind: str) -> None:
+    def drop(self) -> None:
         """
         Delete the item
         """
 
         if self.parent:
-            self.parent.remove_child(kind, self.name)
+            self.parent.remove_child(self.kind, self.name)
 
     def sort(self, attr: str) -> None:
         """

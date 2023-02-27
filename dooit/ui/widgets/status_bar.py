@@ -5,6 +5,7 @@ from rich.table import Table
 from rich.text import Text, TextType
 from textual.widget import Widget
 from dooit.utils.conf_reader import Config
+from dooit.api import manager
 from ..events import StatusType
 
 bar = Config().get("bar")
@@ -40,6 +41,7 @@ class StatusBar(Widget):
         return {
             "status": self.status,
             "message": self.message,
+            "manager": manager,
         }
 
     def render(self) -> RenderableType:

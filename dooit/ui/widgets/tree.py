@@ -546,6 +546,8 @@ class TreeList(Widget):
         if commit:
             self.commit()
 
+        await self._current_change_callback()
+
     async def add_child(self) -> None:
         if self.filter.value:
             raise SearchEnabledError

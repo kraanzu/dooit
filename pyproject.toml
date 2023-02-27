@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dooit"
-version = "0.2.1"
+version = "1.0.0"
 description = "A TUI todo manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]
@@ -10,7 +10,7 @@ homepage = "https://github.com/kraanzu/dooit"
 repository = "https://github.com/kraanzu/dooit"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 textual = "^0.12.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"

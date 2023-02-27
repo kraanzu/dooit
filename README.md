@@ -64,7 +64,10 @@ Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know
 
 # Screenshots 🖼️
 
-TODO: Add ss
+
+![Screenshot](https://user-images.githubusercontent.com/97718086/221467485-fae198f7-51b1-4a71-91d9-88b51897aeeb.png)
+
+
 
 
 # Contribution 🤝

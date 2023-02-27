@@ -77,7 +77,7 @@ class SortOptions(Widget):
 
     async def send_message(self, event: Type, *args):
         if self.parent_widget:
-            await self.parent_widget.emit(
+            await self.parent_widget.post_message(
                 event(
                     self.parent_widget,
                     *args,
@@ -102,7 +102,7 @@ class SortOptions(Widget):
                 func = getattr(self, bind.func_name)
                 await func(*bind.params)
             else:
-                await self.emit(
+                await self.post_message(
                     Notify(self, "[yellow]No such operation for sort menu![/yellow]")
                 )
 

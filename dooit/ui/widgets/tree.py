@@ -91,7 +91,7 @@ class TreeList(Widget):
         self.refresh()
 
     async def notify(self, message: TextType):
-        await self.emit(Notify(self, message))
+        await self.post_message(Notify(self, message))
 
     def toggle_highlight(self) -> None:
         self._has_focus = not self._has_focus
@@ -240,7 +240,7 @@ class TreeList(Widget):
         self.refresh()
 
     async def change_status(self, status: StatusType):
-        await self.emit(ChangeStatus(self, status))
+        await self.post_message(ChangeStatus(self, status))
 
     async def start_search(self) -> None:
         self.filter.on_focus()
@@ -394,7 +394,7 @@ class TreeList(Widget):
 
     async def spawn_help(self):
         if self.app.screen.name != "help":
-            await self.emit(SpawnHelp(self))
+            await self.post_message(SpawnHelp(self))
 
     def add_row(self, row: Component, highlight: bool) -> None:  # noqa
 

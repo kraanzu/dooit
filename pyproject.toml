@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dooit"
-version = "0.2.1"
+version = "1.0.0"
 description = "A TUI todo manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]
@@ -10,12 +10,13 @@ homepage = "https://github.com/kraanzu/dooit"
 repository = "https://github.com/kraanzu/dooit"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-textual = "^0.1.17"
+python = "^3.8"
+textual = "^0.12.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
-poetry = "^1.1.13"
-psutil = "^5.9.1"
+dateparser = "^1.1.2"
+tzlocal = "2.1"
+appdirs = "^1.4.4"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"

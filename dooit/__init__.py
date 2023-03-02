@@ -1,18 +1,6 @@
-import pkg_resources
 import argparse
-import psutil
-from .ui.tui import Doit
-
-
-def is_running() -> bool:
-    counter = 0
-    try:
-        for process in psutil.process_iter():
-            counter += process.name() in ["dooit", "dooit.exe"]
-    except psutil.NoSuchProcess:
-        pass
-
-    return counter > 1
+from importlib.metadata import version
+from .ui.tui import Dooit
 
 
 def main():
@@ -21,10 +9,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        ver = pkg_resources.get_distribution("dooit").version
+        ver = version("dooit")
         print(f"dooit - {ver}")
     else:
-        if is_running():
-            exit(print("One instance of dooit is already running!\nQuiting..."))
-
-        Doit.run()
+        Dooit().run()

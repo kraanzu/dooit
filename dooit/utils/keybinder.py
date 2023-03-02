@@ -15,6 +15,7 @@ class Bind:
         "spawn_help",
         "start_search",
         "stop_search",
+        "exit",
     ]
 
     def __init__(self, func_name: str, params: List[str]) -> None:
@@ -50,6 +51,7 @@ DEFAULTS = {
     "edit recurrence": "r",
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],
+    "exit": "<ctrl+q>",
 }
 
 configured_keys = DEFAULTS | configured_keys

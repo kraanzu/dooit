@@ -14,7 +14,7 @@ from dooit.ui.formatters import Formatter
 from dooit.utils.keybinder import KeyBinder
 from dooit.api import Manager, manager, Model
 from dooit.ui.widgets.sort_options import SortOptions
-from dooit.ui.events.events import ChangeStatus, Notify, SpawnHelp, StatusType
+from dooit.ui.events.events import ChangeStatus, ExitApp, Notify, SpawnHelp, StatusType
 from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
 from .utils import Component, VerticalView
@@ -605,3 +605,7 @@ class TreeList(Widget):
         self._refresh_rows()
         self.current = self._rows[curr].index
         self.commit()
+
+    async def exit(self):
+        await self.post_message(ExitApp(self))
+        exit()

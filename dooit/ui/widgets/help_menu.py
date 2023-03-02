@@ -117,7 +117,7 @@ NORMAL_KB = {
     "edit tags": "Edit tags for todo**",
     "increase urgency": "Increase urgency**",
     "decrease urgency": "Decrease urgency**",
-    "ctrl+q": "Quit the Application",
+    "exit": "Quit the Application",
 }
 
 NORMAL_NB = [

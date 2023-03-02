@@ -6,6 +6,11 @@ StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
 SortMethodType = Literal["description", "status", "date", "urgency"]
 
 
+class ExitApp(Message, bubble=True):
+    """
+    Emitted when user presses the exit app keybind
+    """
+
 class SwitchTab(Message, bubble=True):
     """
     Emitted when user needs to focus other pane

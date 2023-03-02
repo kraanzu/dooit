@@ -1,5 +1,6 @@
 from textual.app import App
 from textual import events
+from dooit.ui.events.events import ExitApp
 from dooit.utils.watcher import Watcher
 from dooit.ui.events import *  # noqa
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar, HelpScreen
@@ -11,7 +12,6 @@ class Dooit(App):
 
     CSS = screen_CSS
     SCREENS = {"help": HelpScreen(name="help")}
-    BINDINGS = [("ctrl+q", "quit", "Quit App")]
 
     async def on_load(self):
         self.navbar = WorkspaceTree()
@@ -65,3 +65,6 @@ class Dooit(App):
 
     async def on_spawn_help(self, event: SpawnHelp):
         self.push_screen("help")
+
+    async def on_exit_app(self, event: ExitApp):
+        await self.action_quit()

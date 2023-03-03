@@ -373,7 +373,6 @@ class TreeList(Widget):
 
                         try:
                             await func(*bind.params)
-                            self.current = self.current
                         except SearchEnabledError:
                             if self.current != -1:
                                 await self.move_to_filter_item()

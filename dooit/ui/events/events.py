@@ -11,6 +11,7 @@ class ExitApp(Message, bubble=True):
     Emitted when user presses the exit app keybind
     """
 
+
 class SwitchTab(Message, bubble=True):
     """
     Emitted when user needs to focus other pane

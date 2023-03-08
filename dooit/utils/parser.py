@@ -3,7 +3,7 @@ import yaml
 import os
 from typing import Dict
 from pathlib import Path
-from os import mkdir
+from os import makedirs
 
 XDG_CONFIG = Path(appdirs.user_config_dir("dooit"))
 XDG_DATA = Path(appdirs.user_data_dir("dooit"))
@@ -45,12 +45,8 @@ class Parser:
         to avoid any errors
         """
 
-        def check_folder(f: Path):
-            if not Path.is_dir(f):
-                mkdir(f)
-
-        check_folder(XDG_CONFIG)
-        check_folder(XDG_DATA)
+        makedirs(XDG_CONFIG, exist_ok=True)
+        makedirs(XDG_DATA, exist_ok=True)
 
         self.todo_yaml = XDG_DATA / "todo.yaml"
         self.config_file = XDG_CONFIG / "config.py"

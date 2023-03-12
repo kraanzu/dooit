@@ -26,7 +26,13 @@ def get_clock() -> Text:
 
 
 def get_username():
-    return Text(f" {os.getlogin()} ", "r " + blue)
+    try:
+        username = os.getlogin()
+    except OSError:
+        uid = os.getuid()
+        import pwd
+        username = pwd.getpwuid(uid).pw_name
+    return Text(f" {username} ", "r " + blue)
 
 
 #################################

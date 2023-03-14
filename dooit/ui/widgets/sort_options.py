@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, List
 from rich.align import Align
 from rich.box import HEAVY
 from rich.console import RenderableType
@@ -20,8 +20,8 @@ class SortOptions(Widget):
 
     def __init__(
         self,
-        name: str | None = None,
-        options: list[str] = [],
+        name: Optional[str] = None,
+        options: List[str] = [],
         parent_widget: Optional[Widget] = None,
         style_unfocused: StyleType = "white",
         style_focused: StyleType = "bold reverse green ",

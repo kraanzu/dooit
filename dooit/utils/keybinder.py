@@ -1,8 +1,8 @@
 from collections import defaultdict
 from typing import DefaultDict, Dict, List, Optional, Union
 from dooit.utils.conf_reader import Config
-
-configured_keys = Config().get("keybindings")
+from copy import deepcopy
+customed_keys = Config().get("keybindings")
 
 
 class Bind:
@@ -53,8 +53,8 @@ DEFAULTS = {
     "decrease urgency": ["-", "_"],
     "exit": "<ctrl+q>",
 }
-
-configured_keys = DEFAULTS | configured_keys
+configured_keys = deepcopy(DEFAULTS)
+configured_keys.update(customed_keys)
 
 
 class KeyBinder:

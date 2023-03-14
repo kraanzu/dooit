@@ -1,5 +1,5 @@
 import pyperclip
-from typing import Any, Literal
+from typing import Any, Literal, Optional, List, Tuple
 from rich.style import StyleType
 from rich.text import Text, TextType
 from rich.box import Box
@@ -20,15 +20,15 @@ class SimpleInput(Widget):
 
     def __init__(
         self,
-        name: str | None = None,
+        name: Optional[str] = None,
         value: Any = "",
         title: TextType = "",
         title_align: AlignMethod = "center",
         border_style: StyleType = "blue",
-        box: Box | None = None,
+        box: Optional[Box] = None,
         placeholder: Text = Text("", style="dim white"),
         password: bool = False,
-        list: tuple[Literal["blacklist", "whitelist"], list[str]] = ("blacklist", []),
+        list: Tuple[Literal["blacklist", "whitelist"], List[str]] = ("blacklist", []),
     ) -> None:
         super().__init__(name=name)
         self.title = title
@@ -107,7 +107,7 @@ class SimpleInput(Widget):
 
         return True
 
-    async def _insert_text(self, text: str | None = None) -> None:
+    async def _insert_text(self, text: Optional[str] = None) -> None:
         """
         Inserts text where the cursor is
         """

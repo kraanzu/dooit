@@ -49,7 +49,7 @@ class TreeList(Widget):
 
     def __init__(
         self,
-        name: str | None = None,
+        name: Optional[str] = None,
         model: Manager = manager,
     ) -> None:
         super().__init__(name=name)

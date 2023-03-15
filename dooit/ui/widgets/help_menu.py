@@ -57,7 +57,7 @@ def convert_to_row(bindings: Dict):
 
 
 def generate_kb_table(
-    kb: dict[str, str], topic: str, notes: list[str] = []
+    kb: Dict[str, str], topic: str, notes: List[str] = []
 ) -> RenderableType:
     """
     Generate Table for modes

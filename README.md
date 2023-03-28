@@ -18,7 +18,7 @@ Dooit can be installed with various package managers!
 > **Note**
 Make sure your `python local bin` is in `$PATH`
 
-> You can install dooit easily using a python one-liner. 
+You can install dooit easily using a python one-liner. 
 
 ```bash
 pip install dooit

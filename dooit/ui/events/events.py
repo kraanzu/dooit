@@ -29,8 +29,8 @@ class ChangeStatus(Message, bubble=True):
     Emitted when there is a change in the `status`
     """
 
-    def __init__(self, sender: MessageTarget, status: StatusType) -> None:
-        super().__init__(sender)
+    def __init__(self, status: StatusType) -> None:
+        super().__init__()
         self.status: StatusType = status
 
 
@@ -39,8 +39,8 @@ class Notify(Message, bubble=True):
     Emitted when A notification message on status bar is to be shown
     """
 
-    def __init__(self, sender: MessageTarget, message: TextType) -> None:
-        super().__init__(sender)
+    def __init__(self, message: TextType) -> None:
+        super().__init__()
         if isinstance(message, Text):
             message = message.markup
         self.message = message
@@ -51,9 +51,10 @@ class ApplySortMethod(Message, bubble=True):
     Emitted when the user selects a sort method from sort-menu
     """
 
-    def __init__(self, sender: MessageTarget, method: str) -> None:
-        super().__init__(sender)
+    def __init__(self, widget_obj: str, method: str) -> None:
+        super().__init__()
         self.method = method
+        self.widget_obj = widget_obj
 
 
 class TopicSelect(Message, bubble=True):
@@ -61,6 +62,6 @@ class TopicSelect(Message, bubble=True):
     Emitted when the user selects a todo from search list
     """
 
-    def __init__(self, sender: MessageTarget, item) -> None:
-        super().__init__(sender)
+    def __init__(self, item) -> None:
+        super().__init__()
         self.item = item

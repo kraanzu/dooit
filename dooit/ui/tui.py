@@ -55,7 +55,8 @@ class Dooit(App):
         self.toggle_highlight()
 
     async def on_apply_sort_method(self, event: ApplySortMethod):
-        event.sender.sort(attr=event.method)
+        w = event.widget_obj
+        w.sort(attr=event.method)
 
     async def on_change_status(self, event: ChangeStatus):
         self.bar.set_status(event.status)

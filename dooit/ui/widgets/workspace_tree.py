@@ -26,9 +26,9 @@ class WorkspaceTree(TreeList):
 
     async def _current_change_callback(self) -> None:
         if self.current == -1:
-            await self.post_message(TopicSelect(self, None))
+            self.post_message(TopicSelect(None))
         else:
-            await self.post_message(TopicSelect(self, self.item))
+            self.post_message(TopicSelect(self.item))
 
     async def _refresh_data(self):
         await self.rearrange()
@@ -49,7 +49,7 @@ class WorkspaceTree(TreeList):
             await self.stop_search()
             self.current = -1
 
-        await self.post_message(SwitchTab(self))
+        self.post_message(SwitchTab())
 
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

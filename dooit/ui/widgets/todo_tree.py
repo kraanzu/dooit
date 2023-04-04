@@ -35,7 +35,7 @@ class TodoTree(TreeList):
         if self.filter.value:
             await self.stop_search()
 
-        await self.post_message(SwitchTab(self))
+        self.post_message(SwitchTab())
 
     async def update_table(self, model: Optional[Workspace] = None):
         self.EMPTY = EMPTY_TODO if model else dashboard

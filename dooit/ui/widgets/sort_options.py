@@ -77,9 +77,8 @@ class SortOptions(Widget):
 
     async def send_message(self, event: Type, *args):
         if self.parent_widget:
-            await self.parent_widget.post_message(
+            self.parent_widget.post_message(
                 event(
-                    self.parent_widget,
                     *args,
                 )
             )
@@ -91,7 +90,9 @@ class SortOptions(Widget):
             return
 
         if key == "enter":
-            await self.send_message(ApplySortMethod, self.options[self.highlighted])
+            await self.send_message(
+                ApplySortMethod, self.parent_widget, self.options[self.highlighted]
+            )
             await self.sort_menu_toggle()
             return
 
@@ -102,8 +103,8 @@ class SortOptions(Widget):
                 func = getattr(self, bind.func_name)
                 await func(*bind.params)
             else:
-                await self.post_message(
-                    Notify(self, "[yellow]No such operation for sort menu![/yellow]")
+                self.post_message(
+                    Notify("[yellow]No such operation for sort menu![/yellow]")
                 )
 
         self.refresh()

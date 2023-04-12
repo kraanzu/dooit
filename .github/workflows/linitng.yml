@@ -1,4 +1,4 @@
-name: Flake8
+name: Ruff
 
 on: [push, pull_request]
 

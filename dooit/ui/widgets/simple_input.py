@@ -169,7 +169,6 @@ class SimpleInput(Widget):
         if not word:
             self._cursor_position = min(self._cursor_position + 1, len(self.value))
         else:
-
             while self._cursor_position < len(self.value):
                 if (
                     self._cursor_position != prev
@@ -249,7 +248,7 @@ class SimpleInput(Widget):
         elif key == "ctrl+v":
             try:
                 await self._insert_text()
-            except:
+            except Exception:
                 return
 
         if len(key) == 1:

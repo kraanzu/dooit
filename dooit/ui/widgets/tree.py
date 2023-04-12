@@ -19,12 +19,16 @@ from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
 from .utils import Component, VerticalView
 
-PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 conf = Config()
 DIM = conf.get("BORDER_DIM")
 LIT = conf.get("BORDER_LIT")
 RED = conf.get("red")
 EMPTY_SEARCH = [f"[{RED}]No items found![/{RED}]"]
+PRINTABLE = (
+    "0123456789"
+    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+)
 
 
 class SearchEnabledError(Exception):
@@ -103,10 +107,7 @@ class TreeList(Widget):
 
     @property
     def component(self) -> Component:
-        try:
-            return self.row_vals[self.current]
-        except:
-            raise TypeError(self.row_vals, len(self.row_vals), self.current)
+        return self.row_vals[self.current]
 
     @property
     def item(self) -> Any:
@@ -175,7 +176,6 @@ class TreeList(Widget):
         self._rows = {}
 
         def add_rows(item: Model, nest_level=0):
-
             path = item.path
 
             def push_item(item: Model):
@@ -321,7 +321,6 @@ class TreeList(Widget):
         pass
 
     async def handle_key(self, event: events.Key) -> None:
-
         event.stop()
         key = (
             event.character
@@ -340,7 +339,6 @@ class TreeList(Widget):
                 await field.handle_keypress(key)
 
         else:
-
             if self.sort_menu.visible:
                 await self.sort_menu.handle_key(key)
 
@@ -361,7 +359,6 @@ class TreeList(Widget):
                 await self.move_to_filter_item()
 
             else:
-
                 self.key_manager.attach_key(key)
                 bind = self.key_manager.get_method()
                 if bind:
@@ -396,7 +393,6 @@ class TreeList(Widget):
             self.post_message(SpawnHelp())
 
     def add_row(self, row: Component, highlight: bool) -> None:  # noqa
-
         entry = []
         kwargs = {i: str(j.render()) for i, j in row.fields.items()}
 
@@ -421,7 +417,7 @@ class TreeList(Widget):
         for i in self.view.range():
             try:
                 self.add_row(self.row_vals[i], i == self.current)
-            except:
+            except Exception:
                 pass
 
     def push_row(self, row: List[Text], padding: int, pointer: bool) -> None:
@@ -447,7 +443,6 @@ class TreeList(Widget):
             self.table.add_row(*row)
 
     def render(self) -> RenderableType:
-
         if self.sort_menu.visible:
             return self.render_panel(self.sort_menu.render())
 
@@ -559,7 +554,6 @@ class TreeList(Widget):
         await self._move_to_item(child, "description")
 
     async def add_sibling(self) -> None:
-
         if self.filter.value:
             raise SearchEnabledError
 

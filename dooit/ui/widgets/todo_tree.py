@@ -8,9 +8,13 @@ from .tree import TreeList
 conf = Config()
 EMPTY_TODO = conf.get("EMPTY_TODO")
 dashboard = conf.get("dashboard")
-PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 COLUMN_ORDER = conf.get("COLUMN_ORDER")
 format = conf.get("TODO")
+PRINTABLE = (
+    "0123456789"
+    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+)
 
 
 class TodoTree(TreeList):

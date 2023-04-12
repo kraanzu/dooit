@@ -26,7 +26,11 @@ class Bind:
 
 
 KeyList = Dict[str, Union[str, List]]
-PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+PRINTABLE = (
+    "0123456789"
+    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+)
 DEFAULTS = {
     "stop search": "<escape>",
     "switch pane": "<tab>",
@@ -76,7 +80,6 @@ class KeyBinder:
 
     def add_keys(self, keys: KeyList) -> None:
         for cmd, key in keys.items():
-
             if isinstance(key, str):
                 key = [key]
 
@@ -99,7 +102,6 @@ class KeyBinder:
         self.pressed = ""
 
     def find_keys(self) -> List:
-
         possible_bindings = filter(
             lambda keybind: keybind.startswith(self.pressed),
             self.methods.keys(),
@@ -107,7 +109,6 @@ class KeyBinder:
         return list(possible_bindings)
 
     def get_method(self) -> Optional[Bind]:
-
         possible_keys = self.find_keys()
         if self.pressed and possible_keys:
             if len(possible_keys) == 1 and possible_keys[0] == self.pressed:

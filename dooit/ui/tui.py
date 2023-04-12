@@ -2,14 +2,20 @@ from textual.app import App
 from textual import events
 from dooit.ui.events.events import ExitApp
 from dooit.utils.watcher import Watcher
-from dooit.ui.events import *  # noqa
+from dooit.ui.events import (
+    TopicSelect,
+    SwitchTab,
+    ApplySortMethod,
+    ChangeStatus,
+    Notify,
+    SpawnHelp,
+)
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar, HelpScreen
 from dooit.api.manager import manager
 from dooit.ui.css.screen import screen_CSS
 
 
 class Dooit(App):
-
     CSS = screen_CSS
     SCREENS = {"help": HelpScreen(name="help")}
 

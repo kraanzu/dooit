@@ -137,7 +137,9 @@ DATE_KB = {
 }
 
 DATE_NB = [
-    f"{colored('Only digits and hyphen allowed format:', 'grey50')} {(colored('dd-mm-yyyy', 'yellow'))}"
+    colored("Only digits and hyphen allowed format:", "grey50")
+    + " "
+    + colored("dd-mm-yyyy", "yellow")
 ]
 
 SEARCH_KB = {
@@ -164,7 +166,7 @@ HEADER = f"""
 {seperator.markup}
 """
 
-BODY = f""" {colored(f'Dooit is built to be used from the keyboard!', 'green')}
+BODY = f"""{colored('Dooit is built to be used from the keyboard!', 'green')}
 
 Documentation below will walk you through the controls:
 {seperator.markup}

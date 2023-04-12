@@ -110,7 +110,7 @@ TODO = {
     "children_hint": colored(
         " ({done}/{total})", green
     ),  # vars: remaining, done, total
-    # "children_hint": "[b magenta]({remaining}!)[/b magenta]",  # vars: remaining, done, total
+    # "children_hint": "[b magenta]({remaining}!)[/b magenta]",
     "due_icon": "🕑",
     "effort_icon": "🗲 ",
     "effort_color": yellow,

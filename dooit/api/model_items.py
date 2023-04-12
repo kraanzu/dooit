@@ -202,9 +202,14 @@ class Description(Item):
 
     def from_txt(self, txt: str) -> None:
         value = ""
-        for i in txt.split()[3:]:
-            if i[0].isalpha():
-                value = value + i + " "
+
+        index = 0
+        for index, i in enumerate(txt.split()[3:]):
+            if i[0] not in "+@%":
+                break
+
+        for j in txt.split()[3 + index :]:
+            value = value + j + " "
 
         self.value = value.strip()
 

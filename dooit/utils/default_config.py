@@ -31,6 +31,7 @@ def get_username():
     except OSError:
         uid = os.getuid()
         import pwd
+
         username = pwd.getpwuid(uid).pw_name
     return Text(f" {username} ", "r " + blue)
 

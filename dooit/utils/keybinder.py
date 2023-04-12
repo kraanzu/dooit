@@ -2,6 +2,7 @@ from collections import defaultdict
 from typing import DefaultDict, Dict, List, Optional, Union
 from dooit.utils.conf_reader import Config
 from copy import deepcopy
+
 customed_keys = Config().get("keybindings")
 
 

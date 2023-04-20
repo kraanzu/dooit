@@ -1,13 +1,15 @@
 """
-Main CSS File for App
+CSS File for python classses
 """
 
-from dooit.utils import Config
+from . import conf
+
+BG = conf.get("BACKGROUND")
 
 
-screen_CSS = f"""
+OBJS = f"""
 Screen {{
-    background: {Config().get("BACKGROUND")};
+    background: {BG};
     layout: grid;
     grid-size: 2 2;
     grid-columns: 2fr 8fr;
@@ -24,5 +26,9 @@ Vertical {{
     column-span: 2;
     row-span: 2;
     scrollbar-size: 1 1;
+}}
+
+Invisible {{
+    visibility: hidden;
 }}
 """

@@ -77,6 +77,7 @@ NL = " \n"
 SEP = colored("─" * 60, "d " + grey)
 help_message = f"Press {colored('?', magenta)} to spawn help menu"
 dashboard = [ART, NL, SEP, NL, NL, NL, help_message]
+no_search_results = ["🔍", colored("No results found!", red)]
 
 
 #################################

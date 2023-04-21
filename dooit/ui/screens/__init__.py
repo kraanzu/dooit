@@ -1,3 +1,3 @@
-from .help_screen import HelpScreen
+from .help import HelpScreen
 
 __all__ = ["HelpScreen"]

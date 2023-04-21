@@ -16,6 +16,11 @@ Screen {{
     grid-rows: 1fr 1;
 }}
 
+HelpScreen {{
+    layout: vertical;
+    scrollbar-size: 1 1;
+}}
+
 StatusBar {{
     column-span: 2;
 }}
@@ -26,9 +31,5 @@ Vertical {{
     column-span: 2;
     row-span: 2;
     scrollbar-size: 1 1;
-}}
-
-Invisible {{
-    visibility: hidden;
 }}
 """

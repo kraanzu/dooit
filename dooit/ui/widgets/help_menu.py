@@ -139,7 +139,7 @@ DATE_KB = {
 DATE_NB = [
     colored("Only digits and hyphen allowed format:", "grey50")
     + " "
-    + colored("dd-mm-yyyy", "yellow")
+    + colored("dd-mm-yyyy", "yellow"))
 ]
 
 SEARCH_KB = {

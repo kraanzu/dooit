@@ -138,8 +138,7 @@ DATE_KB = {
 
 DATE_NB = [
     colored("Only digits and hyphen allowed format:", "grey50")
-    + " "
-    + colored("dd-mm-yyyy", "yellow"))
+    + (colored("dd-mm-yyyy", "yellow"))
 ]
 
 SEARCH_KB = {
@@ -208,28 +207,3 @@ class HelpMenu:
 
         return arr
 
-
-class HelpScreen(Screen):
-    """
-    Help Screen to view Help Menu
-    """
-
-    BINDINGS = [
-        ("escape", "app.pop_screen", "Pop screen"),
-        ("question_mark", "app.pop_screen", "Pop screen"),
-    ]
-    view = Vertical(*[Static(i) for i in HelpMenu().items()])
-
-    def compose(self):
-        yield self.view
-
-    async def on_key(self, event: events.Key):
-        key = event.character
-        if key in ["j", "down"]:
-            self.view.scroll_down()
-        elif key in ["k", "up"]:
-            self.view.scroll_up()
-        elif key in ["home", "g"]:
-            self.view.scroll_home()
-        elif key in ["end", "G"]:
-            self.view.scroll_end()

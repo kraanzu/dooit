@@ -1,6 +1,5 @@
 from textual.app import App
 from textual import events
-from dooit.ui.events.events import ExitApp
 from dooit.utils.watcher import Watcher
 from dooit.ui.events import (
     TopicSelect,
@@ -9,15 +8,19 @@ from dooit.ui.events import (
     ChangeStatus,
     Notify,
     SpawnHelp,
+    ExitApp,
 )
-from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar, HelpScreen
+from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
 from dooit.api.manager import manager
-from dooit.ui.css.screen import screen_CSS
+from dooit.ui.css.main import screen_CSS
+from dooit.ui.screens import HelpScreen
 
 
 class Dooit(App):
     CSS = screen_CSS
-    SCREENS = {"help": HelpScreen(name="help")}
+    SCREENS = {
+        "help": HelpScreen(name="help"),
+    }
 
     async def on_load(self):
         self.navbar = WorkspaceTree()
@@ -58,7 +61,8 @@ class Dooit(App):
         await self.todos.update_table(event.item)
 
     async def on_switch_tab(self, _: SwitchTab):
-        self.toggle_highlight()
+        self.navbar.toggle_highlight()
+        self.todos.toggle_highlight()
 
     async def on_apply_sort_method(self, event: ApplySortMethod):
         w = event.widget_obj

@@ -11,6 +11,7 @@ from textual import events
 from textual.reactive import reactive
 from textual.widget import Widget
 from dooit.ui.formatters import Formatter
+from dooit.ui.widgets.empty import EmptyWidget
 from dooit.utils.keybinder import KeyBinder
 from dooit.api import Manager, manager, Model
 from dooit.ui.widgets.sort_options import SortOptions
@@ -143,30 +144,6 @@ class TreeList(Widget):
             self.view.b = bottom
 
         self._fix_view()
-
-    def _style_empty(self, empty_values: List):
-        def aligned(original: List) -> List[Text]:
-            texts: List[Text] = []
-            for text in original:
-                if not isinstance(text, Text):
-                    text = Text.from_markup(str(text))
-
-                texts.append(text)
-
-            max_len = max(len(i) for i in texts)
-            for text in texts:
-                text.pad_right(max_len - len(text))
-
-            return texts
-
-        formatted = []
-        for text in empty_values:
-            if not isinstance(text, List):
-                text = [text]
-
-            formatted.extend(aligned(text))
-
-        return formatted
 
     def _get_children(self, model: model_type) -> List[model_type]:
         raise NotImplementedError
@@ -451,18 +428,9 @@ class TreeList(Widget):
             return self.render_panel(self.table)
 
         if self.filter.value and not self.row_vals:
-            EMPTY = EMPTY_SEARCH
+            return EmptyWidget("no_search_results").render()
         else:
-            EMPTY = self.EMPTY
-
-        EMPTY = self._style_empty(EMPTY)
-        to_render = Align.center(
-            Group(
-                *[Align.center(i) for i in EMPTY],
-            ),
-            vertical="middle",
-        )
-        return self.render_panel(to_render)
+            return EmptyWidget(self.model_kind).render()
 
     def render_panel(self, renderable: RenderableType):
         height = self._size.height

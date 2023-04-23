@@ -8,7 +8,6 @@ from .events import (
     SwitchTab,
     SpawnHelp,
     ExitApp,
-    ShowEmptyWidget,
 )
 
 __all__ = [
@@ -21,5 +20,4 @@ __all__ = [
     "TopicSelect",
     "SwitchTab",
     "ExitApp",
-    "ShowEmptyWidget",
 ]

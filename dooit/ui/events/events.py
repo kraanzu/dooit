@@ -5,7 +5,7 @@ from textual.message import Message
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
 SortMethodType = Literal["description", "status", "date", "urgency"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
-PostionType = Literal["workspace", "todo"]
+PositionType = Literal["workspace", "todo"]
 
 
 class ExitApp(Message, bubble=True):
@@ -67,14 +67,3 @@ class TopicSelect(Message, bubble=True):
     def __init__(self, item) -> None:
         super().__init__()
         self.item = item
-
-
-class ShowEmptyWidget(Message, bubble=True):
-    """
-    Emitted when there are no todo/workspace to show
-    """
-
-    def __init__(self, screen: EmptyWidgetType, position: PostionType) -> None:
-        super().__init__()
-        self.screen = screen
-        self.position = position

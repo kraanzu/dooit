@@ -21,6 +21,14 @@ HelpScreen {{
     scrollbar-size: 1 1;
 }}
 
+EmptyScreen {{
+    background: {BG} 1%;
+    layout: grid;
+    grid-size: 2 2;
+    grid-columns: 2fr 8fr;
+    grid-rows: 1fr 1;
+}}
+
 StatusBar {{
     column-span: 2;
 }}

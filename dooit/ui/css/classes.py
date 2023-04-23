@@ -12,7 +12,7 @@ classes = f"""
     border: {DIM} heavy;
 }}
 
-.dim {{
+.lit {{
     border: {LIT} heavy;
 }}
 """

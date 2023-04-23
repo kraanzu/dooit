@@ -1,5 +1,7 @@
 from typing import Optional
+from rich.console import RenderableType
 from dooit.ui.formatters import TodoFormatter
+from dooit.ui.widgets.empty import EmptyWidget
 from dooit.utils import KeyBinder, Config
 from dooit.ui.events.events import SwitchTab
 from dooit.api import Workspace, Todo
@@ -80,3 +82,9 @@ class TodoTree(TreeList):
     async def toggle_complete(self):
         self.item.toggle_complete()
         self.commit()
+
+    def render(self) -> RenderableType:
+        if self.model:
+            return super().render()
+
+        return EmptyWidget("dashboard").render()

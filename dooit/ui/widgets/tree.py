@@ -41,7 +41,6 @@ class TreeList(Widget):
     An editable tree widget
     """
 
-    _has_focus = False
     _rows = {}
     current = reactive(-1)
     options = []
@@ -99,12 +98,12 @@ class TreeList(Widget):
         self.post_message(Notify(message))
 
     def toggle_highlight(self) -> None:
-        self._has_focus = not self._has_focus
+        self.toggle_class("focus")
         self.refresh()
 
     @property
     def has_focus(self) -> bool:
-        return self._has_focus
+        return self.has_class("focus")
 
     @property
     def component(self) -> Component:
@@ -421,26 +420,16 @@ class TreeList(Widget):
 
     def render(self) -> RenderableType:
         if self.sort_menu.visible:
-            return self.render_panel(self.sort_menu.render())
+            return self.sort_menu.render()
 
         if self.row_vals:
             self.make_table()
-            return self.render_panel(self.table)
+            return self.table
 
         if self.filter.value and not self.row_vals:
             return EmptyWidget("no_search_results").render()
         else:
             return EmptyWidget(self.model_kind).render()
-
-    def render_panel(self, renderable: RenderableType):
-        height = self._size.height
-        return Panel(
-            renderable,
-            expand=True,
-            height=height,
-            box=box.HEAVY,
-            border_style="b " + LIT if self._has_focus else "d " + DIM,
-        )
 
     async def copy_text(self) -> None:
         if self.current != -1:

@@ -74,8 +74,8 @@ class Dooit(App):
     async def on_notify(self, event: Notify):
         self.bar.set_message(event.message)
 
-    async def on_spawn_help(self, event: SpawnHelp):
+    async def on_spawn_help(self, _: SpawnHelp):
         self.push_screen("help")
 
-    async def on_exit_app(self, event: ExitApp):
+    async def on_exit_app(self, _: ExitApp):
         await self.action_quit()

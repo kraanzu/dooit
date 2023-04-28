@@ -148,19 +148,19 @@ class TreeList(Widget):
         raise NotImplementedError
 
     def _refresh_rows(self) -> None:
-        _rows_copy = {item.item.path: item.expanded for item in self._rows.values()}
+        _rows_copy = {item.item.uuid: item.expanded for item in self._rows.values()}
         self._rows = {}
 
         def add_rows(item: Model, nest_level=0):
-            path = item.path
+            uuid = item.uuid
 
             def push_item(item: Model):
-                expanded = _rows_copy.get(path, False)
+                expanded = _rows_copy.get(uuid, False)
 
-                self._rows[path] = Component(
+                self._rows[uuid] = Component(
                     item, nest_level, len(self._rows), expanded
                 )
-                self._rows[path].index = len(self._rows) - 1
+                self._rows[uuid].index = len(self._rows) - 1
 
             if pattern := self.filter.value:
                 description = getattr(item, "description")
@@ -170,7 +170,7 @@ class TreeList(Widget):
                     add_rows(i, nest_level + 1)
             else:
                 push_item(item)
-                if self._rows[path].expanded:
+                if self._rows[uuid].expanded:
                     for i in self._get_children(item):
                         add_rows(i, nest_level + 1)
 
@@ -187,7 +187,7 @@ class TreeList(Widget):
             return
 
         editing = self.editing
-        path = self.item.path
+        uuid = self.item.uuid
         old_ibox = SimpleInput()
 
         if editing != "none":
@@ -195,14 +195,14 @@ class TreeList(Widget):
 
         self._refresh_rows()
 
-        def get_index(path):
+        def get_index(uuid):
             for i, j in enumerate(self.row_vals):
-                if j.item.path == path:
+                if j.item.uuid == uuid:
                     return i
 
             return -2
 
-        idx = get_index(path)
+        idx = get_index(uuid)
         if idx == -2:
             if editing != "none":
                 await self._cancel_edit()
@@ -267,14 +267,14 @@ class TreeList(Widget):
 
         while len(ancestors) > 1:
             item = ancestors.pop()
-            component = self._rows[item.path]
+            component = self._rows[item.uuid]
             if component.expanded:
                 break
 
             component.expand()
             self._refresh_rows()
 
-        self.current = self._rows[ancestors[0].path].index
+        self.current = self._rows[ancestors[0].uuid].index
         await self.start_edit(edit)
 
     async def move_up(self) -> None:
@@ -543,14 +543,14 @@ class TreeList(Widget):
         if not parent:
             return
 
-        if parent.path in self._rows:
-            index = self._rows[parent.path].index
+        if parent.uuid in self._rows:
+            index = self._rows[parent.uuid].index
             self.current = index
 
             await self.toggle_expand()
 
     def sort(self, attr: str) -> None:
-        curr = self.item.path
+        curr = self.item.uuid
         self.item.sort(attr)
         self._refresh_rows()
         self.current = self._rows[curr].index

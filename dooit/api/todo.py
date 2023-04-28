@@ -50,11 +50,6 @@ class Todo(Model):
         self.todos: List[Todo] = []
 
     @property
-    def path(self):
-        parent_path = self.parent.path if self.parent else ""
-        return self.description + "/" + parent_path
-
-    @property
     def effort(self):
         return self._effort.value
 

@@ -17,11 +17,6 @@ class Workspace(Model):
         self._description = Description(self)
 
     @property
-    def path(self):
-        parent_path = self.parent.path if self.parent else ""
-        return self.description + "#" + parent_path
-
-    @property
     def description(self):
         return self._description.value
 

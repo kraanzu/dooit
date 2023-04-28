@@ -79,14 +79,6 @@ class Model:
     def kind(self):
         return self.__class__.__name__.lower()
 
-    @property
-    def path(self):
-        """
-        Uniquie path for model
-        """
-
-        return "$"
-
     def _get_children(self, kind: str) -> List:
         """
         Get children list (workspace/todo)

@@ -8,8 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.0.2 [Unreleased]
 
+### Added
+- Dooit now allows duplicate descriptions to be added(closes https://github.com/kraanzu/dooit/issues/113)
+
+
 ### Fixed
 - text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)
+- todos disappearing when wrapping descriptions with tags/quotes/brackets (closes https://github.com/kraanzu/dooit/issues/107)
 
 
 ## 1.0.1

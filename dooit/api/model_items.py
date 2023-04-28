@@ -126,7 +126,6 @@ class Status(Item):
         return Ok()
 
     def update_others(self):
-
         # Update ancestors
         current = self.model
         while parent := current.parent:
@@ -140,7 +139,6 @@ class Status(Item):
 
         # Update children
         def update_children(todo=self.model, status=self.pending):
-
             todo._status.pending = status
             for i in todo.todos:
                 update_children(i, status)
@@ -179,21 +177,8 @@ class Description(Item):
     def set(self, value: Any) -> Result:
         value = self.clean(value)
         if value:
-            new_index = -1
-            if self.model:
-                new_index = self.model.parent._get_child_index(
-                    self.model_kind, description=value
-                )
-
-            old_index = self.model._get_index(self.model_kind)
-
-            if new_index != -1 and new_index != old_index:
-                return Err(
-                    f"A {self.model_kind} with same description is already present"
-                )
-            else:
-                self.value = value
-                return Ok()
+            self.value = value
+            return Ok()
 
         return Err("Can't leave description empty!")
 
@@ -281,7 +266,6 @@ class Urgency(Item):
         return self.set(self.value - 1)
 
     def set(self, val: Any) -> Result:
-
         val = int(val)
         if val < 1:
             return Warn("Urgency cannot be decreased further!")

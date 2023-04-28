@@ -65,11 +65,15 @@ class Model:
         from dooit.api.workspace import Workspace
         from dooit.api.todo import Todo
 
-        self.name = str(uuid4())
+        self._uuid = str(uuid4())
         self.parent = parent
 
         self.workspaces: List[Workspace] = []
         self.todos: List[Todo] = []
+
+    @property
+    def uuid(self) -> str:
+        return self._uuid
 
     @property
     def kind(self):
@@ -112,7 +116,7 @@ class Model:
         if not self.parent:
             return -1
 
-        return self.parent._get_child_index(kind, name=self.name)
+        return self.parent._get_child_index(kind, uuid=self._uuid)
 
     def edit(self, key: str, value: str) -> Result:
         """
@@ -164,7 +168,7 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(self.kind, name=self.name)
+        idx = self.parent._get_child_index(self.kind, uuid=self._uuid)
 
         if idx:
             return self._get_children(self.kind)[idx - 1]
@@ -177,7 +181,7 @@ class Model:
         if not self.parent:
             return
 
-        idx = self.parent._get_child_index(self.kind, name=self.name)
+        idx = self.parent._get_child_index(self.kind, uuid=self._uuid)
         arr = self.parent._get_children(self.kind)
 
         if idx < len(arr) - 1:
@@ -189,7 +193,7 @@ class Model:
         """
 
         if self.parent:
-            idx = self.parent._get_child_index(self.kind, name=self.name)
+            idx = self.parent._get_child_index(self.kind, uuid=self._uuid)
             return self.parent.add_child(self.kind, idx + 1, inherit)
         else:
             raise TypeError("Cannot add sibling")
@@ -217,12 +221,12 @@ class Model:
 
         return child
 
-    def remove_child(self, kind: str, name: str) -> Any:
+    def remove_child(self, kind: str, uuid: str) -> Any:
         """
         Remove the child based on attr
         """
 
-        idx = self._get_child_index(kind, name=name)
+        idx = self._get_child_index(kind, uuid=uuid)
         if idx != -1:
             return self._get_children(kind).pop(idx)
 
@@ -232,7 +236,7 @@ class Model:
         """
 
         if self.parent:
-            self.parent.remove_child(self.kind, self.name)
+            self.parent.remove_child(self.kind, self._uuid)
 
     def sort(self, attr: str) -> None:
         """

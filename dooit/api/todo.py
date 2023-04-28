@@ -1,4 +1,5 @@
-from typing import Any, List, Optional, TypeVar
+from typing import Any, List, Optional, TypeVar, Union, Dict
+from uuid import uuid4
 from .model import Model, Result
 
 
@@ -38,6 +39,7 @@ class Todo(Model):
         )
 
         super().__init__(parent)
+        self._uuid = str(uuid4())
         self._status = Status(self)
         self._description = Description(self)
         self._urgency = Urgency(self)
@@ -105,24 +107,30 @@ class Todo(Model):
     def increase_urgency(self) -> None:
         self._urgency.increase()
 
-    def to_data(self) -> str:
+    def to_data(self) -> Dict[str, str]:
         """
-        Return todo.txt format of the todo
+        Return storable form of todo
         """
 
-        status = self._status.to_txt()
-        urgency = self._urgency.to_txt()
-        due = self._due.to_txt()
-        effort = self._effort.to_txt()
-        tags = self._tags.to_txt()
-        recur = self._recurrence.to_txt()
-        description = self._description.to_txt()
+        return {
+            "uuid": self._uuid,
+            "status": self._status.value,
+            "urgency": self._urgency.value,
+            "description": self._description.value,
+            "due": self._due.value,
+            "effort": self._effort.value,
+            "tags": self._tags.value,
+            "recur": self._recurrence.value,
+        }
 
-        arr = [status, urgency, due, effort, tags, recur, description]
-        arr = [i for i in arr if i]
-        return " ".join(arr)
+    def fill_from_data(self, data: Union[Dict, str]) -> None:
+        if isinstance(data, str):
+            self.extract_data_old(data)
+        else:
+            self.extract_data_new(data)
 
-    def fill_from_data(self, data: str) -> None:
+    # WARNING: This will be deprecated in future versions
+    def extract_data_old(self, data: str):
         self._status.from_txt(data)
         self._urgency.from_txt(data)
         self._due.from_txt(data)
@@ -130,6 +138,19 @@ class Todo(Model):
         self._recurrence.from_txt(data)
         self._effort.from_txt(data)
         self._tags.from_txt(data)
+
+    def extract_data_new(self, data: Dict[str, str]):
+        def get(key: str) -> str:
+            return data.get(key, "")
+
+        self._uuid = get("uuid")
+        self._status.set(get("status"))
+        self._urgency.set(get("urgency"))
+        self._due.set(get("due"))
+        self._description.set(get("description"))
+        self._recurrence.set(get("recurrence"))
+        self._effort.set(get("effort"))
+        self._tags.set(get("tags"))
 
     def commit(self) -> List[Any]:
         if self.todos:

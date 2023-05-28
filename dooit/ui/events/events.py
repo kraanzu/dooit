@@ -2,6 +2,8 @@ from typing import Literal
 from rich.text import TextType, Text
 from textual.message import Message
 
+from dooit.api.workspace import Workspace
+
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
 SortMethodType = Literal["description", "status", "date", "urgency"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
@@ -48,22 +50,11 @@ class Notify(Message, bubble=True):
         self.message = message
 
 
-class ApplySortMethod(Message, bubble=True):
-    """
-    Emitted when the user selects a sort method from sort-menu
-    """
-
-    def __init__(self, widget_obj: str, method: str) -> None:
-        super().__init__()
-        self.method = method
-        self.widget_obj = widget_obj
-
-
 class TopicSelect(Message, bubble=True):
     """
     Emitted when the user selects a todo from search list
     """
 
-    def __init__(self, item) -> None:
+    def __init__(self, model: Workspace) -> None:
         super().__init__()
-        self.item = item
+        self.model = model

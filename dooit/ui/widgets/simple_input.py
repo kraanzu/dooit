@@ -1,12 +1,15 @@
 import pyperclip
-from typing import Any, Literal, Optional, List, Tuple
-from rich.style import StyleType
-from rich.text import Text, TextType
-from rich.box import Box
-from rich.align import AlignMethod
+from typing import Optional
+from rich.text import Text
 from textual.widget import Widget
-from textual import events
-from textual.reactive import Reactive
+from dooit.api.model import Result
+from dooit.api.todo import Todo
+from dooit.utils.conf_reader import Config
+
+config = Config()
+RED = config.get("red")
+YELLOW = config.get("yellow")
+GREEN = config.get("green")
 
 
 class SimpleInput(Widget):
@@ -14,78 +17,87 @@ class SimpleInput(Widget):
     A simple single line Text Input widget
     """
 
-    cursor: str = "|"
     _cursor_position: int = 0
-    _has_focus: Reactive[bool] = Reactive(False)
+    _cursor: str = "|"
+    _status_colors = {
+        "COMPLETED": GREEN,
+        "PENDING": YELLOW,
+        "OVERDUE": RED,
+    }
 
-    def __init__(
-        self,
-        name: Optional[str] = None,
-        value: Any = "",
-        title: TextType = "",
-        title_align: AlignMethod = "center",
-        border_style: StyleType = "blue",
-        box: Optional[Box] = None,
-        placeholder: Text = Text("", style="dim white"),
-        password: bool = False,
-        list: Tuple[Literal["blacklist", "whitelist"], List[str]] = ("blacklist", []),
-    ) -> None:
-        super().__init__(name=name)
-        self.title = title
-        self.value = str(value)
-        self.title_align: AlignMethod = title_align  # Silence compiler warning
-        self.border_style: StyleType = border_style
-        self.placeholder = placeholder
-        self.password = password
-        self.list = list
-        self.box = box
-
+    def __init__(self, model: Todo, classes: str = "") -> None:
+        self._property: str = self.__class__.__name__.lower()
+        id_ = f"{model.uuid}-{self._property}"
+        self.model = model
+        self.value = getattr(model, self._property)
         self._cursor_position = len(self.value)
-        self.width = self.size.width - 4
+
+        super().__init__(id=id_, classes="padding dim " + classes)
+        self.styles.height = "auto"
 
     @property
-    def has_focus(self) -> bool:
-        return self._has_focus
+    def is_editing(self) -> bool:
+        return self.has_class("editing")
+
+    def refresh_value(self):
+        self.value = getattr(self.model, self._property)
+        self.refresh(layout=True)
+
+    def draw(self) -> str:
+        if self.is_editing:
+            text = self._render_text_with_cursor()
+        else:
+            text = self.value
+
+        return text
 
     def render(self) -> Text:
         """
         Renders a Panel for the Text Input Box
         """
+        value = self.draw().strip()
 
-        if self.has_focus:
-            text = self._render_text_with_cursor()
+        if not value:
+            self.remove_class("padding")
         else:
-            if len(self.value) == 0:
-                return self.placeholder
-            else:
-                text = self.value
+            self.add_class("padding")
 
-        formatted_text = Text.from_markup(text)
-        return formatted_text
+        return Text.from_markup(self.draw())
+
+    def _colorize_by_status(self, text: str) -> str:
+        return self._render_text_with_color(
+            text,
+            self._status_colors[self.model.status],
+        )
+
+    def _render_text_with_color(self, text: str, color: str) -> str:
+        return f"[{color}]{text}[/{color}]"
 
     def _render_text_with_cursor(self) -> str:
         """
         Produces renderable Text object combining value and cursor
         """
 
-        text = ""
+        return (
+            self.value[: self._cursor_position]
+            + self._cursor
+            + self.value[self._cursor_position :]
+        )
 
-        if self.password:
-            text += "•" * self._cursor_position
-            text += self.cursor
-            text += "•" * (len(self.value) - self._cursor_position)
-        else:
-            text += self.value[: self._cursor_position]
-            text += self.cursor
-            text += self.value[self._cursor_position :]
+    def start_edit(self) -> None:
+        self.add_class("editing")
+        self.refresh(layout=True)
 
-        return text
+    def stop_edit(self, cancel: bool = False) -> Optional[Result]:
+        self.remove_class("editing")
+        if not cancel:
+            self.model.edit(self._property, self.value)
 
-    def on_focus(self, *_: events.Focus) -> None:
-        self._has_focus = True
+        self.refresh_value()
+        self.refresh(layout=True)
 
-    def on_blur(self, *_: events.Blur) -> None:
-        self._has_focus = False
+    def cancel_edit(self):
+        return self.stop_edit(cancel=True)
 
     def clear(self) -> None:
         """
@@ -93,19 +105,7 @@ class SimpleInput(Widget):
         """
         self.value = ""
         self._cursor_position = 0
-        self.refresh()
-
-    def _is_allowed(self, text: str) -> bool:
-        if self.list[0] == "whitelist":
-            for letter in text:
-                if letter not in self.list[1]:
-                    return False
-        else:
-            for letter in text:
-                if letter in self.list[1]:
-                    return False
-
-        return True
+        self.refresh(layout=True)
 
     async def _insert_text(self, text: Optional[str] = None) -> None:
         """
@@ -125,12 +125,6 @@ class SimpleInput(Widget):
         )
 
         self._cursor_position += len(text)
-
-    async def on_key(self, event: events.Key) -> None:
-        """Send the key to the Input"""
-
-        await self.handle_keypress(event.key)
-        self.refresh()
 
     async def _move_cursor_backward(self, word=False, delete=False) -> None:
         """
@@ -189,21 +183,23 @@ class SimpleInput(Widget):
     async def clear_input(self):
         self.move_cursor_to_end()
         while self.value:
-            await self.handle_keypress("backspace")
+            await self.keypress("backspace")
 
     def move_cursor_to_end(self):
         self._cursor_position = len(self.value)
 
-    async def handle_keypress(self, key: str) -> None:
+    async def keypress(self, key: str) -> None:
         """
         Handles Keypresses
         """
-
         if key == "space":
             key = " "
 
         if key == "enter":
-            self.on_blur()
+            self.stop_edit()
+
+        if key == "escape":
+            self.cancel_edit()
 
         # Moving backward
         elif key == "left":
@@ -254,4 +250,4 @@ class SimpleInput(Widget):
         if len(key) == 1:
             await self._insert_text(key)
 
-        self.refresh()
+        self.refresh(layout=True)

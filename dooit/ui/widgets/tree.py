@@ -100,16 +100,19 @@ class Tree(Widget):
         highlighted = self.current
         children = self.get_children(self.model)
         was_expanded = dict()
+        self.nodes
 
-        for i in self.query("*"):
-            was_expanded[i.id] = getattr(i, "expanded", False)
+        with self.app.batch_update():
+            for i in self.query("*"):
+                was_expanded[i.id] = getattr(i, "expanded", False)
+                i.remove()
 
-        for i in children:
-            widget = self.WidgetType(i)
-            await self.mount(widget)
+            for i in children:
+                widget = self.WidgetType(i)
+                await self.mount(widget)
 
-            if was_expanded.get(i.uuid, False):
-                widget.toggle_expand()
+                if was_expanded.get(i.uuid, False):
+                    widget.toggle_expand()
 
         self.current = None
         self.current = highlighted

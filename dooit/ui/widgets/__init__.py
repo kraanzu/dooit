@@ -5,6 +5,7 @@ from .help_menu import HelpMenu
 from .workspace_tree import WorkspaceTree
 from .todo_tree import TodoTree
 from .empty import EmptyWidget
+from .inputs import Description
 
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "TodoTree",
     "WorkspaceTree",
     "EmptyWidget",
+    "Description",
 ]

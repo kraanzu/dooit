@@ -1,30 +1,16 @@
-import re
-import pyperclip
-from textual.geometry import Size
-from typing import Any, List, Literal, Optional, Type
-from rich.align import Align
-from rich.console import Group, RenderableType
-from rich.panel import Panel
-from rich.text import Text, TextType
-from rich.table import Table, box
-from textual import events
-from textual.reactive import reactive
+from typing import Any, List, Literal, Optional
+from textual.app import ComposeResult
+from textual.reactive import Reactive
 from textual.widget import Widget
-from dooit.ui.formatters import Formatter
-from dooit.ui.widgets.empty import EmptyWidget
-from dooit.utils.keybinder import KeyBinder
-from dooit.api import Manager, manager, Model
-from dooit.ui.widgets.sort_options import SortOptions
-from dooit.ui.events.events import ChangeStatus, ExitApp, Notify, SpawnHelp, StatusType
-from dooit.utils.conf_reader import Config
-from .simple_input import SimpleInput
-from .utils import Component, VerticalView
 
-conf = Config()
-DIM = conf.get("BORDER_DIM")
-LIT = conf.get("BORDER_LIT")
-RED = conf.get("red")
-EMPTY_SEARCH = [f"[{RED}]No items found![/{RED}]"]
+from dooit.api import Workspace
+from dooit.api.model import Model
+from dooit.ui.events.events import Notify, SpawnHelp
+from dooit.ui.widgets.empty import EmptyWidget
+from dooit.ui.widgets.sort_options import SortOptions
+from dooit.ui.widgets.workspace import WorkspaceWidget
+from dooit.utils.keybinder import KeyBinder
+
 PRINTABLE = (
     "0123456789"
     + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -32,530 +18,264 @@ PRINTABLE = (
 )
 
 
-class SearchEnabledError(Exception):
-    pass
+class Tree(Widget):
+    current = Reactive(None)
+    key_manager = KeyBinder()
+    ModelType = Workspace
+    WidgetType = WorkspaceWidget
 
-
-class TreeList(Widget):
+    DEFAULT_CSS = """
+    Tree {
+        overflow: auto auto;
+        scrollbar-size: 1 1;
+    }
     """
-    An editable tree widget
-    """
 
-    _rows = {}
-    current = reactive(-1)
-    options = []
-    EMPTY: List
-    model_type: Type[Model] = Model
-    model_kind: Literal["workspace", "todo"]
-    COLS: List
-    styler: Formatter
-    key_manager: KeyBinder
-
-    def __init__(
-        self,
-        name: Optional[str] = None,
-        model: Manager = manager,
-    ) -> None:
-        super().__init__(name=name)
+    def __init__(self, model: Model, classes: str = ""):
+        super().__init__(id=f"Tree-{model.uuid}", classes=classes)
         self.model = model
 
-    async def on_mount(self) -> None:
-        self.sort_menu = SortOptions()
-        self.filter = SimpleInput()
-        self.sort_menu = SortOptions(
-            name=f"Sort_{self.name}",
-            options=self.options,
-            parent_widget=self,
-        )
-        self.editing = "none"
-        self.sort_menu.visible = False
-        self._set_screen()
-        self._refresh_rows()
-
-    def commit(self) -> None:
-        manager.commit()
-
-    async def _current_change_callback(self) -> None:
-        pass
-
-    # ------------ INTERNALS ----------------
-
-    def validate_current(self, current: int):
-        if current < 0:
-            if self.row_vals:
-                return 0
-            else:
-                return -1
+    @property
+    def current_widget(self) -> WidgetType:
+        if isinstance(self.current, Reactive):
+            val = self.current._default
         else:
-            return min(max(0, current), len(self.row_vals) - 1)
+            val = self.current
 
-    async def watch_current(self, _old: int, _new: int) -> None:
-        await self._current_change_callback()
-        self._fix_view()
-        self.refresh()
-
-    async def notify(self, message: TextType):
-        self.post_message(Notify(message))
-
-    def toggle_highlight(self) -> None:
-        self.toggle_class("focus")
-        self.refresh()
+        return self.get_widget_by_id(val)
 
     @property
-    def has_focus(self) -> bool:
-        return self.has_class("focus")
+    def node(self) -> ModelType:
+        return self.current_widget.model
 
     @property
-    def component(self) -> Component:
-        return self.row_vals[self.current]
+    def nodes(self) -> List[WidgetType]:
+        return [
+            widget
+            for widget in self.walk_children()
+            if isinstance(widget, self.WidgetType) and widget.display
+        ]
 
-    @property
-    def item(self) -> Any:
-        return self.component.item
+    def get_children(self, parent: Model) -> List[ModelType]:
+        return parent.workspaces
 
-    # --------------------------------------
-
-    def _size_updated(
-        self, size: Size, virtual_size: Size, container_size: Size
-    ) -> None:
-        super()._size_updated(size, virtual_size, container_size)
-        self._set_view()
-        self.refresh()
-
-    def _fix_view(self) -> None:
-        return self.view.fix_view(self.current)
-
-    def _set_screen(self) -> None:
-        y = self._size.height - 3  # Panel
-        self.view = VerticalView(0, y)
-
-    def _set_view(self) -> None:
-        prev_size = self.view.height()
-        curr_size = self._size.height - 3  # Panel
-        diff = prev_size - curr_size
-
-        if diff <= 0:
-            self.view.shift_upper(diff)
-        else:
-            self.view.shift_lower(-diff)
-            bottom = max(self.current + 1, self.view.b)
-            self.view.a = bottom - curr_size
-            self.view.b = bottom
-
-        self._fix_view()
-
-    def _get_children(self, model: model_type) -> List[model_type]:
-        raise NotImplementedError
-
-    def _refresh_rows(self) -> None:
-        _rows_copy = {item.item.uuid: item.expanded for item in self._rows.values()}
-        self._rows = {}
-
-        def add_rows(item: Model, nest_level=0):
-            uuid = item.uuid
-
-            def push_item(item: Model):
-                expanded = _rows_copy.get(uuid, False)
-
-                self._rows[uuid] = Component(
-                    item, nest_level, len(self._rows), expanded
-                )
-                self._rows[uuid].index = len(self._rows) - 1
-
-            if pattern := self.filter.value:
-                description = getattr(item, "description")
-                if re.findall(pattern, description):
-                    push_item(item)
-                for i in self._get_children(item):
-                    add_rows(i, nest_level + 1)
-            else:
-                push_item(item)
-                if self._rows[uuid].expanded:
-                    for i in self._get_children(item):
-                        add_rows(i, nest_level + 1)
-
-        if self.model:
-            for i in self._get_children(self.model):
-                add_rows(i)
-
-        self.row_vals: List[Component] = list(self._rows.values())
-        self.refresh()
-
-    async def rearrange(self):
-        if self.current == -1:
-            self._refresh_rows()
-            return
-
-        editing = self.editing
-        uuid = self.item.uuid
-        old_ibox = SimpleInput()
-
-        if editing != "none":
-            old_ibox = self.component.fields[editing]
-
-        self._refresh_rows()
-
-        def get_index(uuid):
-            for i, j in enumerate(self.row_vals):
-                if j.item.uuid == uuid:
-                    return i
-
-            return -2
-
-        idx = get_index(uuid)
-        if idx == -2:
-            if editing != "none":
-                await self._cancel_edit()
-
-            self.current = -2
-        else:
-            self.current = idx
-            if editing != "none":
-                self.component.fields[editing] = old_ibox
-
-        self.refresh()
-
-    async def change_status(self, status: StatusType):
-        self.post_message(ChangeStatus(status))
-
-    async def start_search(self) -> None:
-        self.filter.on_focus()
-        await self.notify(self.filter.render())
-        await self.change_status("SEARCH")
-
-    async def stop_search(self, clear: bool = True) -> None:
-        if clear:
-            self.filter.clear()
-
-        self.filter.on_blur()
-        self._refresh_rows()
-        await self.notify(self.filter.render())
-        await self.change_status("NORMAL")
-
-    async def start_edit(self, field: Optional[str]) -> None:
-        if not field or field == "none":
-            return
-
-        if field not in self.component.fields.keys():
-            await self.notify(
-                f"[yellow]Can't change [b orange1]`{field}`[/b orange1] here![/yellow]"
+    def get_widget_by_id(self, id_: Any) -> WidgetType:
+        try:
+            return self.query_one(
+                f"#{id_}",
+                expect_type=self.WidgetType,
             )
-            return
+        except:
+            raise TypeError(
+                self.query_one(
+                    f"#{id_}",
+                )
+            )
 
-        if field == "description":
-            await self.change_status("INSERT")
-        elif field == "due":
-            await self.change_status("DATE")
-
-        ibox = self.component.fields[field]
-        ibox.value = getattr(self.item, f"{field}")
-
-        ibox.move_cursor_to_end()  # starting a new edit
-        self.component.fields[field].on_focus()
-        self.editing = field
-
-    async def _cancel_edit(self):
-        await self.stop_edit(edit=False)
-
-    async def _move_to_item(self, item: Model, edit: Optional[str] = None) -> None:
-        ancestors = [item]
-        while parent := ancestors[-1].parent:
-            if not isinstance(parent, self.model_type):
-                break
-
-            ancestors.append(parent)
-
-        while len(ancestors) > 1:
-            item = ancestors.pop()
-            component = self._rows[item.uuid]
-            if component.expanded:
-                break
-
-            component.expand()
-            self._refresh_rows()
-
-        self.current = self._rows[ancestors[0].uuid].index
-        await self.start_edit(edit)
-
-    async def move_up(self) -> None:
-        self.current -= 1
-
-    async def move_down(self) -> None:
-        self.current += 1
-
-    async def move_to_top(self) -> None:
-        self.current = 0
-
-    async def move_to_bottom(self) -> None:
-        self.current = len(self.row_vals)
-
-    async def sort_menu_toggle(self) -> None:
-        await self.change_status("SORT")
-        self.sort_menu.visible = True
-
-    async def switch_pane(self) -> None:
-        pass
-
-    async def handle_key(self, event: events.Key) -> None:
-        event.stop()
-        key = (
-            event.character
-            if (event.character and (event.character in PRINTABLE))
-            else event.key
-        )
-
-        if self.editing != "none":
-            field = self.row_vals[self.current].fields[self.editing]
-
-            if key == "escape":
-                await self._cancel_edit()
-            elif key == "enter":
-                await self.stop_edit()
-            else:
-                await field.handle_keypress(key)
-
-        else:
-            if self.sort_menu.visible:
-                await self.sort_menu.handle_key(key)
-
-            elif self.filter.has_focus:
-                if key == "escape":
-                    await self.stop_search()
-                elif key == "enter":
-                    await self.stop_search(clear=False)
-                    if not self.row_vals:
-                        await self.stop_search()
-                        await self.notify(f"[{RED}]No item found![/]")
-                else:
-                    await self.filter.handle_keypress(key)
-                    await self.notify(self.filter.render())
-                    self._refresh_rows()
-
-            elif self.filter.value and key == "enter":
-                await self.move_to_filter_item()
-
-            else:
-                self.key_manager.attach_key(key)
-                bind = self.key_manager.get_method()
-                if bind:
-                    await self.change_status("NORMAL")
-                    if hasattr(self, bind.func_name):
-                        func = getattr(self, bind.func_name)
-                        if bind.check_for_cursor and self.current == -1:
-                            return
-
-                        try:
-                            await func(*bind.params)
-                        except SearchEnabledError:
-                            if self.current != -1:
-                                await self.move_to_filter_item()
-                                await func(*bind.params)
-
-                    else:
-                        await self.notify(
-                            "[yellow]Cannot perform this operation here![/yellow]"
-                        )
-
-        self.refresh()
-
-    async def move_to_filter_item(self):
-        if self.current != -1:
-            item = self.item
-            await self.stop_search()
-            await self._move_to_item(item)
-
-    async def spawn_help(self):
-        if self.app.screen.name != "help":
-            self.post_message(SpawnHelp())
-
-    def add_row(self, row: Component, highlight: bool) -> None:  # noqa
-        entry = []
-        kwargs = {i: str(j.render()) for i, j in row.fields.items()}
-
-        for column in self.COLS:
-            res = self.styler.style(column, row.item, highlight, self.editing, kwargs)
-            entry.append(res)
-
-        return self.push_row(entry, row.depth, highlight)
-
-    def _setup_table(self, pointer: TextType = "") -> None:
-        if isinstance(pointer, str):
-            pointer = Text.from_markup(pointer)
-
-        self.pointer = pointer
-        self.table = Table.grid(expand=True)
-        if width := len(pointer.plain):
-            self.table.add_column("pointer", width=width)
-
-    def make_table(self) -> None:
-        self._setup_table()
-
-        for i in self.view.range():
+    async def watch_current(self, old: Optional[str], new: Optional[str]):
+        if old:
             try:
-                self.add_row(self.row_vals[i], i == self.current)
-            except Exception:
+                self.get_widget_by_id(old).highlight(False)
+            except:
                 pass
 
-    def push_row(self, row: List[Text], padding: int, pointer: bool) -> None:
-        if row:
-            if pointer:
-                row.insert(0, self.pointer)
+        if new:
+            try:
+                widget = self.get_widget_by_id(new)
+                widget.highlight()
+                widget.scroll_visible()
+            except:
+                self.post_message(Notify("cant find old highlighted node"))
+
+    def compose(self) -> ComposeResult:
+        children = self.get_children(self.model)
+
+        if not children:
+            yield EmptyWidget(self.ModelType.class_kind)
+
+        for i in children:
+            yield self.WidgetType(i)
+
+    async def force_refresh(self):
+        highlighted = self.current
+        children = self.get_children(self.model)
+        was_expanded = dict()
+
+        for i in self.query("*"):
+            was_expanded[i.id] = getattr(i, "expanded", False)
+
+        for i in children:
+            widget = self.WidgetType(i)
+            await self.mount(widget)
+
+            if was_expanded.get(i.uuid, False):
+                widget.toggle_expand()
+
+        self.current = None
+        self.current = highlighted
+
+    def next_node(self) -> Optional[str]:
+        nodes = self.nodes
+
+        if not self.current:
+            return nodes[0].id if nodes else None
+
+        idx = nodes.index(self.current_widget)
+        if idx == len(nodes) - 1:
+            return
+
+        return nodes[idx + 1].id
+
+    def prev_node(self):
+        nodes = self.nodes
+
+        if not self.current:
+            return
+
+        idx = nodes.index(self.current_widget)
+        if not idx:
+            return
+
+        return nodes[idx - 1].id
+
+    async def shift_node(self, position: Literal["up", "down"]):
+        node = self.node
+
+        sibling = node.next_sibling() if position == "down" else node.prev_sibling()
+
+        if sibling:
+            sibling_id = sibling.uuid
+
+            if position == "down":
+                node.shift_down()
             else:
-                row.insert(0, Text(len(self.pointer) * " "))
+                node.shift_up()
 
-            if not hasattr(self, "pad_index"):
-                self.pad_index = 0
+            new_widget = self.WidgetType(node)
+            self.current_widget.remove()
 
-                for i, j in enumerate(self.table.columns):
-                    if j.header == "description":
-                        self.pad_index = i
-                        break
+            sibling_widget = self.get_widget_by_id(sibling_id)
+            if position == "down":
+                await self.mount(new_widget, after=sibling_widget)
+            else:
+                await self.mount(new_widget, before=sibling_widget)
 
-            if row:
-                hint = Text("  " * padding)
-                row[self.pad_index] = hint + row[self.pad_index]
-                row[self.pad_index].highlight_regex(self.filter.value, style="b red")
+            self.current = node.uuid
+            new_widget.highlight()
 
-            self.table.add_row(*row)
-
-    def render(self) -> RenderableType:
-        if self.sort_menu.visible:
-            return self.sort_menu.render()
-
-        if self.row_vals:
-            self.make_table()
-            return self.table
-
-        if self.filter.value and not self.row_vals:
-            return EmptyWidget("no_search_results").render()
-        else:
-            return EmptyWidget(self.model_kind).render()
-
-    async def copy_text(self) -> None:
-        if self.current != -1:
-            pyperclip.copy(self.item.description)
-            await self.notify("[green]Description copied to clipboard![/]")
-        else:
-            await self.notify("[red]No item selected![/]")
-
-    # COMMANDS TO INTERACT WITH API
-    async def stop_edit(self, edit: bool = True) -> None:
-        if self.editing == "none" or self.current == -1:
+    async def add_node(self, type_: Literal["child", "sibling"]):
+        if not self.current:
             return
 
-        editing = self.editing
-        simple_input = self.component.fields[editing]
-        old_val = getattr(self.component.item, self.editing)
+        if type_ == "child" and not self.current_widget.expanded:
+            self.current_widget.toggle_expand()
 
-        if not edit:
-            simple_input.value = old_val
+        new_node = (
+            self.node.add_child(self.ModelType.class_kind)
+            if type_ == "child"
+            else self.node.add_sibling()
+        )
 
-        res = self.component.item.edit(self.editing, simple_input.value)
-
-        await self.notify(res.text())
-        if not res.ok:
-            if res.cancel_op:
-                await self.remove_item(move_cursor_up=True)
-            await self._current_change_callback()
+        widget = self.WidgetType(new_node)
+        if type_ == "sibling":
+            await self.mount(widget, after=self.current_widget)
         else:
-            self.commit()
+            await self.current_widget.mount(widget)
 
-        simple_input.on_blur()
-        if self.current != -1:
-            self.component.refresh()
+        self.current = new_node.uuid
+        widget.start_edit("description")
 
-        self.editing = "none"
-        await self.change_status("NORMAL")
-
-        if edit and not old_val and editing == "description":
-            await self.add_sibling()
-
-    def _drop(self) -> None:
-        self.item.drop()
-
-    def _add_child(self) -> model_type:
-        model = self.item if self.current != -1 else self.model
-        return model.add_child(self.model_kind, inherit=True)
-
-    def _add_sibling(self) -> model_type:
-        if self.current > -1:
-            return self.item.add_sibling(True)
-        else:
-            return self._add_child()
-
-    def _shift_down(self) -> None:
-        return self.item.shift_down()
-
-    def _shift_up(self) -> None:
-        return self.item.shift_up()
-
-    async def remove_item(self, move_cursor_up: bool = False) -> None:
-        commit = self.item.description != ""
-        self._drop()
-        self._refresh_rows()
-        self.current -= move_cursor_up
-        if commit:
-            self.commit()
-
-        await self._current_change_callback()
-
-    async def add_child(self) -> None:
-        if self.filter.value:
-            raise SearchEnabledError
-
-        if self.current != -1:
-            self.component.expand()
-
-        child = self._add_child()
-        self._refresh_rows()
-        await self._move_to_item(child, "description")
-
-    async def add_sibling(self) -> None:
-        if self.filter.value:
-            raise SearchEnabledError
-
-        if self.current == -1:
-            sibling = self._add_child()
-        else:
-            sibling = self._add_sibling()
-
-        self._refresh_rows()
-        await self._move_to_item(sibling, "description")
-
-    async def shift_up(self) -> None:
-        self._shift_up()
-        await self.move_up()
-        self._refresh_rows()
-        self.commit()
-
-    async def shift_down(self) -> None:
-        self._shift_down()
-        await self.move_down()
-        self._refresh_rows()
-        self.commit()
-
-    async def toggle_expand(self) -> None:
-        self.component.toggle_expand()
-        self._refresh_rows()
-
-    async def toggle_expand_parent(self) -> None:
-        parent = self.item.parent
-        if not parent:
+    async def remove_item(self):
+        if not self.current:
             return
 
-        if parent.uuid in self._rows:
-            index = self._rows[parent.uuid].index
-            self.current = index
+        widget = self.current_widget
 
-            await self.toggle_expand()
+        if id_ := self.next_node():
+            self.current = id_
+        elif id_ := self.prev_node():
+            self.current = id_
+        else:
+            self.current = None
 
-    def sort(self, attr: str) -> None:
-        curr = self.item.uuid
-        self.item.sort(attr)
-        self._refresh_rows()
-        self.current = self._rows[curr].index
-        self.commit()
+        self.node.drop()
+        await widget.remove()
 
-    async def exit(self):
-        self.post_message(ExitApp())
-        exit()
+    async def move_down(self):
+        if id_ := self.next_node():
+            self.current = id_
+
+    async def move_up(self):
+        if id_ := self.prev_node():
+            self.current = id_
+
+    async def move_to_top(self):
+        if self.nodes:
+            self.current = self.nodes[0].id
+
+    async def move_to_bottom(self):
+        if self.nodes:
+            self.current = self.nodes[-1].id
+
+    async def shift_down(self):
+        return await self.shift_node("down")
+
+    async def shift_up(self):
+        return await self.shift_node("up")
+
+    async def add_child(self):
+        await self.add_node("child")
+
+    async def add_sibling(self):
+        await self.add_node("sibling")
+
+    async def toggle_expand(self):
+        self.current_widget.toggle_expand()
+
+    async def toggle_expand_parent(self):
+        self.current_widget.toggle_expand_parent()
+
+    async def switch_pane(self):
+        pass
+
+    async def start_edit(self, field: str) -> None:
+        self.current_widget.start_edit(field)
+
+    async def apply_sort(self, method):
+        self.current_widget.model.sort(method)
+        await self.current_widget.parent.force_refresh()
+
+    async def sort_menu_toggle(self):
+        if query := self.query(SortOptions):
+            query.first().remove()
+            for i in self.query("*"):
+                i.remove_class("sort-hide")
+        else:
+            for i in self.query("*"):
+                i.add_class("sort-hide")
+
+            self.mount(SortOptions(self.ModelType, self.current_widget.model))
+
+    async def spawn_help(self):
+        self.post_message(SpawnHelp())
+
+    async def keypress(self, key: str):
+        if query := self.query(SortOptions):
+            await query.first().keypress(key)
+            return
+
+        if self.current and self.current_widget._is_editing():
+            await self.current_widget.keypress(key)
+            return
+
+        self.key_manager.attach_key(key)
+        bind = self.key_manager.get_method()
+        if bind:
+            if hasattr(self, bind.func_name):
+                func = getattr(self, bind.func_name)
+                if bind.check_for_cursor and self.current == -1:
+                    return
+                await func(*bind.params)
+
+
+# ----------------------------------

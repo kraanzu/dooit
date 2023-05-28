@@ -1,55 +1,18 @@
-from typing import List
-from dooit.ui.formatters import WorkspaceFormatter
-from dooit.utils.keybinder import KeyBinder
-from dooit.api import Manager, Workspace
-from dooit.ui.events import TopicSelect, SwitchTab
-from dooit.utils.conf_reader import Config
-from .tree import TreeList
-
-conf = Config()
-EMPTY_WORKSPACE = conf.get("EMPTY_WORKSPACE")
-format = conf.get("WORKSPACE")
+from dooit.api.model import Model
+from dooit.ui.events.events import SwitchTab, TopicSelect
+from .tree import Tree
 
 
-class WorkspaceTree(TreeList):
-    """
-    NavBar class to manage UI's navbar
-    """
+class WorkspaceTree(Tree):
+    _empty = "workspace"
 
-    options = Workspace.sortable_fields
-    EMPTY = EMPTY_WORKSPACE
-    model_kind = "workspace"
-    model_type = Workspace
-    styler = WorkspaceFormatter(format)
-    COLS = ["description"]
-    key_manager = KeyBinder()
+    def __init__(self, model: Model):
+        super().__init__(model, "focus left-dock")
 
-    async def _current_change_callback(self) -> None:
-        if self.current == -1:
-            self.post_message(TopicSelect(None))
-        else:
-            self.post_message(TopicSelect(self.item))
+    async def watch_current(self, old: str | None, new: str | None):
+        await super().watch_current(old, new)
+        self.post_message(TopicSelect(self.node))
 
-    async def _refresh_data(self):
-        await self.rearrange()
-        await self._current_change_callback()
-
-    def _setup_table(self) -> None:
-        super()._setup_table(format["pointer"])
-        self.table.add_column("description", ratio=1)
-
-    async def switch_pane(self) -> None:
-        if self.current == -1:
-            return
-
-        if self.filter.value:
-            if self.current != -1:
-                await self._current_change_callback()
-
-            await self.stop_search()
-            self.current = -1
-
-        self.post_message(SwitchTab())
-
-    def _get_children(self, model: Manager) -> List[Workspace]:
-        return model.workspaces
+    async def switch_pane(self):
+        if self.current:
+            self.post_message(SwitchTab())

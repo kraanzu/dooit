@@ -1,83 +1,39 @@
-from typing import Iterable
-from .simple_input import SimpleInput
+from rich.console import RenderableType
+from rich.text import TextType
+from textual.widget import Widget
+from textual.widgets import Label
 
 
-class Component:
-    """
-    Component class to maintain each row's data
-    """
+class Pointer(Widget):
+    _show = False
 
-    def __init__(
-        self,
-        item,
-        depth: int = 0,
-        index: int = 0,
-        expanded: bool = False,
-    ) -> None:
-        self.item = item
-        self.expanded = expanded
-        self.depth = depth
-        self.index = index
-        self.fields = {
-            field: SimpleInput(
-                value=getattr(item, field),
-            )
-            for field in item.fields
-        }
+    def __init__(self, symbol: TextType):
+        super().__init__(classes="padding")
+        self.symbol = symbol
 
-    def refresh(self) -> None:
-        for field in self.fields.keys():
-            self.fields[field] = SimpleInput(
-                value=getattr(
-                    self.item,
-                    field,
-                )
-            )
+    def show(self):
+        self._show = True
+        self.refresh()
 
-    def get_field_values(self) -> Iterable[SimpleInput]:
-        return self.fields.values()
+    def hide(self):
+        self._show = False
+        self.refresh()
 
-    def toggle_expand(self) -> None:
-        self.expanded = not self.expanded
-
-    def expand(self, expand: bool = True) -> None:
-        self.expanded = expand
+    def render(self) -> RenderableType:
+        return self.symbol if self._show else " " * len(self.symbol)
 
 
-class VerticalView:
-    """
-    Vertical view to manage scrolling
+class Padding(Label):
+    DEFAULT_CSS = """
+    Padding {
+        height: 1;
+        width: auto;
+    }
     """
 
-    def __init__(self, a: int, b: int) -> None:
-        self.a = a
-        self.b = b
+    def __init__(self, width):
+        self.padding_width = width
+        super().__init__()
 
-    def fix_view(self, current: int) -> None:
-        if self.a < 0:
-            self.shift(abs(self.a))
-
-        if current <= self.a:
-            self.shift(current - self.a)
-
-        if self.b <= current:
-            self.shift(current - self.b)
-
-    def shift_upper(self, delta) -> None:
-        self.a += delta
-
-    def shift_lower(self, delta) -> None:
-        self.b += delta
-
-    def shift(self, delta: int) -> None:
-        self.shift_lower(delta)
-        self.shift_upper(delta)
-
-    def height(self) -> int:
-        return self.b - self.a
-
-    def range(self) -> Iterable[int]:
-        if self.a < 0:
-            self.shift(abs(self.a))
-
-        return range(self.a, self.b + 1)
+    def render(self) -> RenderableType:
+        return "  " * self.padding_width

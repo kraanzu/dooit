@@ -22,12 +22,32 @@ HelpScreen {{
     scrollbar-size: 1 1;
 }}
 
-WorkspaceTree, TodoTree {{
-    border: heavy {DIM};
+WorkspaceTree, TodoTree, EmptyWidget {{
+    border: blank;
+    padding: 1;
+    background: #242831;
+}}
+
+SortOptions {{
+    content-align: center middle;
+}}
+
+SimpleInput, Pointer{{
+    height: auto;
+    width: auto;
+}}
+
+Horizontal {{
+    height: auto;
+    width: 100%;
 }}
 
 StatusBar {{
     column-span: 2;
+}}
+
+WorkspaceWidget, TodoWidget {{
+    height: auto;
 }}
 
 Vertical {{
@@ -37,4 +57,5 @@ Vertical {{
     row-span: 2;
     scrollbar-size: 1 1;
 }}
+
 """

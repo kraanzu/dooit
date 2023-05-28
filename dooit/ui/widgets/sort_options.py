@@ -1,14 +1,12 @@
-from typing import Optional, Type, Union
+from typing import Type, Union
 from rich.console import RenderableType
 from rich.table import Table
 from rich.text import Text
-from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
-from dooit.ui.events import ApplySortMethod, ChangeStatus, Notify
+from dooit.ui.events import ChangeStatus, Notify
 from dooit.utils import KeyBinder
-from textual.widgets import Label
 
 
 class SortOptions(Widget):
@@ -65,7 +63,6 @@ class SortOptions(Widget):
         self.highlight(len(self.options) - 1)
 
     async def sort_menu_toggle(self):
-        await self.send_message(ChangeStatus, "NORMAL")
         self.visible = False
 
     def sort(self, method: str):

@@ -21,7 +21,8 @@ class EmptyWidget(Widget):
     item = DASHBOARD
 
     def __init__(self, item: EmptyWidgetType = "dashboard"):
-        super().__init__()
+        classes = "no-border" if item != "dashboard" else ""
+        super().__init__(classes=classes)
         self.set_screen(item)
 
     def set_screen(self, screen: EmptyWidgetType):

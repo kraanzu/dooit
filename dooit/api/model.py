@@ -56,7 +56,7 @@ class Model:
     """
 
     fields: List
-    sortable_fields: List
+    sortable_fields: List[str]
 
     def __init__(
         self,
@@ -65,7 +65,7 @@ class Model:
         from dooit.api.workspace import Workspace
         from dooit.api.todo import Todo
 
-        self._uuid = str(uuid4())
+        self._uuid = f"{self.kind}_{uuid4()}"
         self.parent = parent
 
         self.workspaces: List[Workspace] = []
@@ -75,9 +75,47 @@ class Model:
     def uuid(self) -> str:
         return self._uuid
 
+    @classmethod
+    @property
+    def class_kind(cls) -> str:
+        return cls.__name__.lower()
+
     @property
     def kind(self):
         return self.__class__.__name__.lower()
+
+    @property
+    def nest_level(self):
+        level = 0
+        kind = self.kind
+        parent = self.parent
+
+        while parent and parent.kind == kind:
+            level += 1
+            parent = parent.parent
+
+        return level
+
+    @property
+    def is_last_sibling(self) -> bool:
+        if parent := self.parent:
+            return parent._get_children(self.kind)[-1] == self
+
+        return False
+
+    @property
+    def is_first_sibling(self) -> bool:
+        if parent := self.parent:
+            return parent._get_children(self.kind)[0] == self
+
+        return False
+
+    @property
+    def has_same_parent_kind(self) -> bool:
+        if parent := self.parent:
+            return parent.kind == self.kind
+
+        return False
 
     def _get_children(self, kind: str) -> List:
         """
@@ -100,7 +138,7 @@ class Model:
 
         return -1
 
-    def _get_index(self, kind: str) -> int:
+    def _get_index(self) -> int:
         """
         Get items's index among it's siblings
         """
@@ -108,7 +146,7 @@ class Model:
         if not self.parent:
             return -1
 
-        return self.parent._get_child_index(kind, uuid=self._uuid)
+        return self.parent._get_child_index(self.kind, uuid=self._uuid)
 
     def edit(self, key: str, value: str) -> Result:
         """
@@ -126,7 +164,7 @@ class Model:
         Shift the item one place up among its siblings
         """
 
-        idx = self._get_index(self.kind)
+        idx = self._get_index()
 
         if idx in [0, -1]:
             return
@@ -136,21 +174,22 @@ class Model:
         arr = self.parent._get_children(self.kind)
         arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
 
-    def shift_down(self) -> None:
+    def shift_down(self) -> bool:
         """
         Shift the item one place down among its siblings
         """
 
-        idx = self._get_index(self.kind)
+        idx = self._get_index()
 
         if idx == -1 or not self.parent:
-            return
+            return False
 
         arr = self.parent._get_children(self.kind)
         if idx == len(arr) - 1:
-            return
+            return False
 
         arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
+        return True
 
     def prev_sibling(self: T) -> Optional[T]:
         """
@@ -163,7 +202,7 @@ class Model:
         idx = self.parent._get_child_index(self.kind, uuid=self._uuid)
 
         if idx:
-            return self._get_children(self.kind)[idx - 1]
+            return self.parent._get_children(self.kind)[idx - 1]
 
     def next_sibling(self: T) -> Optional[T]:
         """
@@ -185,8 +224,7 @@ class Model:
         """
 
         if self.parent:
-            idx = self.parent._get_child_index(self.kind, uuid=self._uuid)
-            return self.parent.add_child(self.kind, idx + 1, inherit)
+            return self.parent.add_child(self.kind, self._get_index() + 1, inherit)
         else:
             raise TypeError("Cannot add sibling")
 

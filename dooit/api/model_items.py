@@ -165,7 +165,8 @@ class Status(Item):
 
 
 class Description(Item):
-    value = ""
+    _default = "placeholder_____"
+    value = _default
 
     def clean(self, s: str):
         for i, j in enumerate(s):
@@ -176,7 +177,7 @@ class Description(Item):
 
     def set(self, value: Any) -> Result:
         value = self.clean(value)
-        if value:
+        if value and value != self._default:
             self.value = value
             return Ok()
 

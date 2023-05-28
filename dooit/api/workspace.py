@@ -20,7 +20,7 @@ class Workspace(Model):
     def description(self):
         return self._description.value
 
-    def add_workspace(self, index: int = 0):
+    def add_workspace(self, index: int = 0) -> "Workspace":
         return super().add_child(WORKSPACE, index)
 
     def add_todo(self, index: int = 0) -> Todo:

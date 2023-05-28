@@ -1,5 +1,4 @@
 from typing import Any, List, Optional, TypeVar, Union, Dict
-from uuid import uuid4
 from .model import Model, Result
 
 
@@ -39,7 +38,6 @@ class Todo(Model):
         )
 
         super().__init__(parent)
-        self._uuid = str(uuid4())
         self._status = Status(self)
         self._description = Description(self)
         self._urgency = Urgency(self)
@@ -55,7 +53,7 @@ class Todo(Model):
 
     @property
     def urgency(self):
-        return self._urgency.value
+        return str(self._urgency.value)
 
     @property
     def description(self):
@@ -115,7 +113,7 @@ class Todo(Model):
             "due": self._due.value,
             "effort": self._effort.value,
             "tags": self._tags.value,
-            "recur": self._recurrence.value,
+            "recurrence": self._recurrence.value,
         }
 
     def fill_from_data(self, data: Union[Dict, str]) -> None:

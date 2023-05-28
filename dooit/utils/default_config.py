@@ -87,7 +87,7 @@ WORKSPACE = {
     "dim": grey,
     "highlight": white,
     "editing": cyan,
-    "pointer": "> ",
+    "pointer": ">",
     "children_hint": "",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
@@ -107,7 +107,7 @@ TODO = {
     "dim": grey,
     "highlight": white,
     "editing": cyan,
-    "pointer": "> ",
+    "pointer": ">",
     "children_hint": colored(
         " ({done}/{total})", green
     ),  # vars: remaining, done, total
@@ -115,14 +115,14 @@ TODO = {
     "due_icon": "🕑",
     "effort_icon": "🗲 ",
     "effort_color": yellow,
-    "recurrence_icon": " ⟲ ",
+    "recurrence_icon": "⟲ ",
     "recurrence_color": blue,
     "tags_icon": "🖈 ",
     "tags_seperator": "icon",  # icon, pipe, comma
     "tags_color": red,
-    "completed_icon": "✓ ",
-    "pending_icon": "● ",
-    "overdue_icon": "! ",
+    "completed_icon": "✓",
+    "pending_icon": "●",
+    "overdue_icon": "!",
     "urgency1_icon": "🅐",
     "urgency2_icon": "🅑",
     "urgency3_icon": "🅒",

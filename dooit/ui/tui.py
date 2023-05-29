@@ -1,19 +1,27 @@
+from functools import partial
 from textual.app import App
-from textual import events
+from textual import events, on
+from dooit.ui.widgets.empty import EmptyWidget
 from dooit.utils.watcher import Watcher
 from dooit.ui.events import (
     TopicSelect,
     SwitchTab,
-    ApplySortMethod,
-    ChangeStatus,
     Notify,
+    ChangeStatus,
     SpawnHelp,
+    CommitData,
     ExitApp,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
 from dooit.api.manager import manager
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import HelpScreen
+
+PRINTABLE = (
+    "0123456789"
+    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+)
 
 
 class Dooit(App):
@@ -22,60 +30,89 @@ class Dooit(App):
         "help": HelpScreen(name="help"),
     }
 
-    async def on_load(self):
-        self.navbar = WorkspaceTree()
-        self.todos = TodoTree()
-        self.bar = StatusBar()
-
     async def on_mount(self):
         self.watcher = Watcher()
-        self.current_focus = "navbar"
-        self.navbar.toggle_highlight()
+        self.x = 1
         self.set_interval(1, self.poll)
 
     async def poll(self):
-        if not manager.is_locked() and self.watcher.has_modified():
-            if manager.refresh_data():
-                await self.navbar._refresh_data()
+        # TODO: implement auto refresh for modified data
+
+        if (
+            not manager.is_locked()
+            and self.watcher.has_modified()
+            and manager.refresh_data()
+        ):
+            await self.query_one(WorkspaceTree).force_refresh(manager)
+            for i in self.query(TodoTree):
+                index = manager._get_child_index("workspace", uuid=i.model.uuid)
+                if index == -1:
+                    i.remove()
+                else:
+                    await i.force_refresh(manager._get_children("workspace")[index])
 
     def compose(self):
-        yield self.navbar
-        yield self.todos
-        yield self.bar
+        yield WorkspaceTree(manager)
+        yield EmptyWidget("dashboard")
+        yield StatusBar()
 
     async def action_quit(self) -> None:
         manager.commit()
         return await super().action_quit()
 
-    def toggle_highlight(self):
-        self.navbar.toggle_highlight()
-        self.todos.toggle_highlight()
-
     async def on_key(self, event: events.Key) -> None:
-        if self.navbar.has_focus:
-            await self.navbar.handle_key(event)
-        else:
-            await self.todos.handle_key(event)
+        key = (
+            event.character
+            if (event.character and (event.character in PRINTABLE))
+            else event.key
+        )
+        if self.screen.name != "help":
+            await self.query_one(".focus").keypress(key)
 
     async def on_topic_select(self, event: TopicSelect):
-        await self.todos.update_table(event.item)
+        event.stop()
+        model = event.model
+        func = partial(self.mount_todos, model)
+        self.run_worker(func, exclusive=True)
 
-    async def on_switch_tab(self, _: SwitchTab):
-        self.navbar.toggle_highlight()
-        self.todos.toggle_highlight()
+    async def mount_todos(self, model):
+        if widgets := self.query(EmptyWidget):
+            for widget in widgets:
+                await widget.remove()
 
-    async def on_apply_sort_method(self, event: ApplySortMethod):
-        w = event.widget_obj
-        w.sort(attr=event.method)
+        if widgets := self.query(TodoTree):
+            for i in widgets:
+                i.display = False
 
-    async def on_change_status(self, event: ChangeStatus):
-        self.bar.set_status(event.status)
+        if widgets := self.query(f"#Tree-{model.uuid}"):
+            current_widget = widgets.first()
+            current_widget.display = True
+        else:
+            current_widget = TodoTree(model)
+            await self.mount(current_widget, after=self.query_one(WorkspaceTree))
 
-    async def on_notify(self, event: Notify):
-        self.bar.set_message(event.message)
+    @on(SwitchTab)
+    async def switch_tab(self, _: SwitchTab):
+        self.query_one(WorkspaceTree).toggle_class("focus")
+        visible_todo = [i for i in self.query(TodoTree) if i.display][0]
+        visible_todo.toggle_class("focus")
 
-    async def on_spawn_help(self, _: SpawnHelp):
+    @on(ChangeStatus)
+    async def hange_status(self, event: ChangeStatus):
+        self.query_one(StatusBar).set_status(event.status)
+
+    @on(Notify)
+    async def notify(self, event: Notify):
+        self.query_one(StatusBar).set_message(event.message)
+
+    @on(SpawnHelp)
+    async def spawn_help(self, _: SpawnHelp):
         self.push_screen("help")
 
-    async def on_exit_app(self, _: ExitApp):
+    @on(CommitData)
+    async def commit_data(self, _: CommitData):
+        manager.commit()
+
+    @on(ExitApp)
+    async def exit_app(self, _: ExitApp):
         await self.action_quit()

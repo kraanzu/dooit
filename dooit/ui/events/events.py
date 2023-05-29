@@ -58,3 +58,9 @@ class TopicSelect(Message, bubble=True):
     def __init__(self, model: Workspace) -> None:
         super().__init__()
         self.model = model
+
+class CommitData(Message):
+    """
+    Emitted when the local data needs to be updated
+    """
+

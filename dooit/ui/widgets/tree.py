@@ -3,9 +3,9 @@ from textual.app import ComposeResult
 from textual.reactive import Reactive
 from textual.widget import Widget
 
-from dooit.api import Workspace
+from dooit.api import Workspace, manager
 from dooit.api.model import Model
-from dooit.ui.events.events import Notify, SpawnHelp
+from dooit.ui.events.events import CommitData, Notify, SpawnHelp
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.sort_options import SortOptions
 from dooit.ui.widgets.workspace import WorkspaceWidget
@@ -96,11 +96,13 @@ class Tree(Widget):
         for i in children:
             yield self.WidgetType(i)
 
-    async def force_refresh(self):
+    async def force_refresh(self, model: Optional[Model] = None):
         highlighted = self.current
+        if model:
+            self.model = model
+
         children = self.get_children(self.model)
         was_expanded = dict()
-        self.nodes
 
         with self.app.batch_update():
             for i in self.query("*"):
@@ -115,7 +117,11 @@ class Tree(Widget):
                     widget.toggle_expand()
 
         self.current = None
-        self.current = highlighted
+
+        try:
+            self.current = self.get_widget_by_id(highlighted).id
+        except:
+            pass
 
     def next_node(self) -> Optional[str]:
         nodes = self.nodes
@@ -165,6 +171,7 @@ class Tree(Widget):
 
             self.current = node.uuid
             new_widget.highlight()
+            self.post_message(CommitData())
 
     async def add_node(self, type_: Literal["child", "sibling"]):
         if not self.current:
@@ -201,8 +208,9 @@ class Tree(Widget):
         else:
             self.current = None
 
-        self.node.drop()
+        widget.model.drop()
         await widget.remove()
+        self.post_message(CommitData())
 
     async def move_down(self):
         if id_ := self.next_node():

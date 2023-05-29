@@ -4,6 +4,7 @@ from rich.text import Text
 from textual.widget import Widget
 from dooit.api.model import Result
 from dooit.api.todo import Todo
+from dooit.ui.events.events import CommitData
 from dooit.utils.conf_reader import Config
 
 config = Config()
@@ -94,6 +95,7 @@ class SimpleInput(Widget):
             self.model.edit(self._property, self.value)
 
         self.refresh_value()
+        self.post_message(CommitData())
         self.refresh(layout=True)
 
     def cancel_edit(self):

@@ -75,7 +75,6 @@ class Node(Widget):
         children = self._get_model_children()
         for i in children:
             if query := self.query(f"#{i.uuid}"):
-                self.post_message(Notify(f'found {i}'))
                 await self.mount(query.first())
             else:
                 child = self.__class__(i, display=False)
@@ -101,6 +100,10 @@ class Node(Widget):
     def toggle_expand_parent(self) -> Optional[str]:
         if self.model.has_same_parent_kind:
             return self.model.parent.uuid
+
+    async def refresh_value(self):
+        for i in self.query(SimpleInput):
+            i.refresh_value()
 
     async def keypress(self, key: str):
         if w := self._is_editing():

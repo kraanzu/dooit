@@ -69,13 +69,7 @@ class Dooit(App):
         if self.screen.name != "help":
             await self.query_one(".focus").keypress(key)
 
-    async def on_topic_select(self, event: TopicSelect):
-        event.stop()
-        model = event.model
-        func = partial(self.mount_todos, model)
-        self.run_worker(func, exclusive=True)
-
-    async def mount_todos(self, model):
+    async def clear_right(self):
         if widgets := self.query(EmptyWidget):
             for widget in widgets:
                 await widget.remove()
@@ -84,12 +78,27 @@ class Dooit(App):
             for i in widgets:
                 i.display = False
 
+    async def mount_todos(self, model):
+        await self.clear_right()
         if widgets := self.query(f"#Tree-{model.uuid}"):
             current_widget = widgets.first()
             current_widget.display = True
         else:
             current_widget = TodoTree(model)
             await self.mount(current_widget, after=self.query_one(WorkspaceTree))
+
+    async def mount_dashboard(self):
+        await self.clear_right()
+        await self.mount(EmptyWidget(), after=self.query_one(WorkspaceTree))
+
+    @on(TopicSelect)
+    async def topic_select(self, event: TopicSelect):
+        event.stop()
+        if model := event.model:
+            func = partial(self.mount_todos, model)
+            self.run_worker(func, exclusive=True)
+        else:
+            await self.mount_dashboard()
 
     @on(SwitchTab)
     async def switch_tab(self, _: SwitchTab):

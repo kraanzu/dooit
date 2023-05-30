@@ -11,7 +11,7 @@ class WorkspaceTree(Tree):
 
     async def watch_current(self, old: str | None, new: str | None):
         await super().watch_current(old, new)
-        self.post_message(TopicSelect(self.node))
+        self.post_message(TopicSelect(None if not new else self.node))
 
     async def switch_pane(self):
         if self.current:

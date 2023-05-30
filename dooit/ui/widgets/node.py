@@ -3,7 +3,6 @@ from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
-from dooit.ui.events.events import Notify
 from dooit.ui.widgets.simple_input import SimpleInput
 from .utils import Pointer
 

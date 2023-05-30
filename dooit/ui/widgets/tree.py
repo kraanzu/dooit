@@ -173,9 +173,19 @@ class Tree(Widget):
             new_widget.highlight()
             self.post_message(CommitData())
 
+    async def add_first_child(self):
+        for i in self.query(EmptyWidget):
+            await i.remove()
+
+        child = self.model.add_child(self.ModelType.class_kind)
+        new_widget = self.WidgetType(child)
+        await self.mount(new_widget)
+        self.current = new_widget.id
+        await self.start_edit("description")
+
     async def add_node(self, type_: Literal["child", "sibling"]):
-        if not self.current:
-            return
+        if not self.get_children(self.model):
+            return await self.add_first_child()
 
         if type_ == "child" and not self.current_widget.expanded:
             self.current_widget.toggle_expand()

@@ -3,7 +3,7 @@ from textual.app import ComposeResult
 from textual.reactive import Reactive
 from textual.widget import Widget
 
-from dooit.api import Workspace, manager
+from dooit.api import Workspace
 from dooit.api.model import Model
 from dooit.ui.events.events import CommitData, Notify, SpawnHelp
 from dooit.ui.widgets.empty import EmptyWidget
@@ -56,6 +56,10 @@ class Tree(Widget):
             if isinstance(widget, self.WidgetType) and widget.display
         ]
 
+    @property
+    def model_class_kind(self) -> Literal["workspace", "todo"]:
+        raise NotImplementedError
+
     def get_children(self, parent: Model) -> List[ModelType]:
         return parent.workspaces
 
@@ -91,24 +95,29 @@ class Tree(Widget):
         children = self.get_children(self.model)
 
         if not children:
-            yield EmptyWidget(self.ModelType.class_kind)
+            yield EmptyWidget(self.model_class_kind)
 
         for i in children:
             yield self.WidgetType(i)
 
     async def force_refresh(self, model: Optional[Model] = None):
+        was_expanded = dict()
+        for i in self.query("*"):
+            was_expanded[i.id] = getattr(i, "expanded", False)
+            i.remove()
+
         highlighted = self.current
         if model:
             self.model = model
 
         children = self.get_children(self.model)
-        was_expanded = dict()
+
+        if not children:
+            self.current = None
+            await self.mount(EmptyWidget(self.model_class_kind))
+            return
 
         with self.app.batch_update():
-            for i in self.query("*"):
-                was_expanded[i.id] = getattr(i, "expanded", False)
-                i.remove()
-
             for i in children:
                 widget = self.WidgetType(i)
                 await self.mount(widget)
@@ -117,7 +126,6 @@ class Tree(Widget):
                     widget.toggle_expand()
 
         self.current = None
-
         try:
             self.current = self.get_widget_by_id(highlighted).id
         except:
@@ -175,6 +183,8 @@ class Tree(Widget):
 
     async def add_first_child(self):
         for i in self.query(EmptyWidget):
+            self.styles.overflow_y = "auto"
+            self.styles.overflow_x = "auto"
             await i.remove()
 
         child = self.model.add_child(self.ModelType.class_kind)
@@ -217,6 +227,13 @@ class Tree(Widget):
             self.current = id_
         else:
             self.current = None
+
+            # NOTE: This hack is done because the app first renders
+            # and then removes scrollbars which looks like a glitch
+
+            self.styles.overflow_y = "hidden"
+            self.styles.overflow_x = "hidden"
+            await self.mount(EmptyWidget(self.model_class_kind))
 
         widget.model.drop()
         await widget.remove()
@@ -275,7 +292,7 @@ class Tree(Widget):
             for i in self.query("*"):
                 i.add_class("sort-hide")
 
-            self.mount(SortOptions(self.ModelType, self.current_widget.model))
+            await self.mount(SortOptions(self.ModelType, self.current_widget.model))
 
     async def spawn_help(self):
         self.post_message(SpawnHelp())

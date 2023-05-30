@@ -26,6 +26,8 @@ WorkspaceTree, TodoTree, EmptyWidget {{
     border: blank;
     padding: 1;
     background: #242831;
+    width: 100%;
+    height: 100%;
 }}
 
 SortOptions {{

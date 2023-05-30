@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 from dooit.api.model import Model
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
@@ -21,3 +21,7 @@ class TodoTree(Tree):
 
     async def switch_pane(self):
         self.post_message(SwitchTab())
+
+    @property
+    def model_class_kind(self) -> Literal["todo"]:
+        return "todo"

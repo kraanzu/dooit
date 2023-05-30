@@ -72,6 +72,9 @@ class Dooit(App):
     async def clear_right(self):
         if widgets := self.query(EmptyWidget):
             for widget in widgets:
+                if isinstance(widget.parent, WorkspaceTree):
+                    continue
+
                 await widget.remove()
 
         if widgets := self.query(TodoTree):
@@ -125,3 +128,7 @@ class Dooit(App):
     @on(ExitApp)
     async def exit_app(self, _: ExitApp):
         await self.action_quit()
+
+
+if __name__ == "__main__":
+    Dooit().run()

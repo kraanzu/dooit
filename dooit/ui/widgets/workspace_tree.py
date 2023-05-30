@@ -1,3 +1,4 @@
+from typing import Literal
 from dooit.api.model import Model
 from dooit.ui.events.events import SwitchTab, TopicSelect
 from .tree import Tree
@@ -16,3 +17,7 @@ class WorkspaceTree(Tree):
     async def switch_pane(self):
         if self.current:
             self.post_message(SwitchTab())
+
+    @property
+    def model_class_kind(self) -> Literal["workspace"]:
+        return "workspace"

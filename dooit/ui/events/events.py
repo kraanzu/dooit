@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 from rich.text import TextType, Text
 from textual.message import Message
 
@@ -55,12 +55,12 @@ class TopicSelect(Message, bubble=True):
     Emitted when the user selects a todo from search list
     """
 
-    def __init__(self, model: Workspace) -> None:
+    def __init__(self, model: Optional[Workspace] = None) -> None:
         super().__init__()
         self.model = model
+
 
 class CommitData(Message):
     """
     Emitted when the local data needs to be updated
     """
-

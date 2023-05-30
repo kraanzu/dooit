@@ -11,7 +11,7 @@ repository = "https://github.com/kraanzu/dooit"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-textual = "^0.24.1"
+textual = "^0.26.0"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
 dateparser = "^1.1.2"
@@ -22,6 +22,7 @@ appdirs = "^1.4.4"
 ruff = "^0.0.261"
 black = "^23.3.0"
 pre-commit = "^3.2.2"
+textual = {extras = ["dev"], version = "^0.26.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

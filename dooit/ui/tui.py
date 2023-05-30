@@ -110,7 +110,7 @@ class Dooit(App):
         visible_todo.toggle_class("focus")
 
     @on(ChangeStatus)
-    async def hange_status(self, event: ChangeStatus):
+    async def change_status(self, event: ChangeStatus):
         self.query_one(StatusBar).set_status(event.status)
 
     @on(Notify)

@@ -1,3 +1,4 @@
+from os import stat
 from typing import Any, List, Literal, Optional
 from textual.app import ComposeResult
 from textual.reactive import Reactive
@@ -5,7 +6,13 @@ from textual.widget import Widget
 
 from dooit.api import Workspace
 from dooit.api.model import Model
-from dooit.ui.events.events import CommitData, Notify, SpawnHelp
+from dooit.ui.events.events import (
+    ChangeStatus,
+    CommitData,
+    Notify,
+    SpawnHelp,
+    StatusType,
+)
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.sort_options import SortOptions
 from dooit.ui.widgets.workspace import WorkspaceWidget
@@ -282,12 +289,15 @@ class Tree(Widget):
     async def apply_sort(self, method):
         self.current_widget.model.sort(method)
         await self.current_widget.parent.force_refresh()
+        self.post_message(ChangeStatus("NORMAL"))
 
     async def sort_menu_toggle(self):
         if query := self.query(SortOptions):
             query.first().remove()
             for i in self.query("*"):
                 i.remove_class("sort-hide")
+
+            self.post_message(ChangeStatus("NORMAL"))
         else:
             for i in self.query("*"):
                 i.add_class("sort-hide")
@@ -296,6 +306,9 @@ class Tree(Widget):
 
     async def spawn_help(self):
         self.post_message(SpawnHelp())
+
+    async def change_status(self, status: StatusType):
+        self.post_message(ChangeStatus(status))
 
     async def keypress(self, key: str):
         if query := self.query(SortOptions):
@@ -314,6 +327,3 @@ class Tree(Widget):
                 if bind.check_for_cursor and self.current == -1:
                     return
                 await func(*bind.params)
-
-
-# ----------------------------------

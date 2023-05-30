@@ -28,6 +28,9 @@ class SortOptions(Widget):
         self.model_widget = model
         self.highlighted = 0
 
+    async def on_mount(self):
+        self.post_message(ChangeStatus("SORT"))
+
     def highlight(self, id: int) -> None:
         self.highlighted = id
         self.refresh(layout=True)
@@ -76,7 +79,6 @@ class SortOptions(Widget):
         if key == "enter":
             option = self.options[self.highlighted]
             await self.parent.apply_sort(option)
-            # await self.parent.sort_menu_toggle()
             return
 
         self.key_manager.attach_key(key)

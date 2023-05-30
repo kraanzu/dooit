@@ -3,6 +3,7 @@ from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
+from dooit.ui.events.events import ChangeStatus
 from dooit.ui.widgets.simple_input import SimpleInput
 from .utils import Pointer
 
@@ -50,6 +51,11 @@ class Node(Widget):
                 i.remove_class("highlight")
 
     def start_edit(self, property: str):
+        if property == "due":
+            self.post_message(ChangeStatus("DATE"))
+        else:
+            self.post_message(ChangeStatus("INSERT"))
+
         self.query_one(f"#{self.id}-{property}", expect_type=SimpleInput).start_edit()
         self.refresh()
 

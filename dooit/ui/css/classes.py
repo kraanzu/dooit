@@ -38,4 +38,12 @@ classes = f"""
 .padding {{
     padding-right: 1;
 }}
+
+.dock-left {{
+    dock: left;
+}}
+
+.dock-right {{
+    dock: right;
+}}
 """

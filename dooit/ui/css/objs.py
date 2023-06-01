@@ -25,7 +25,7 @@ HelpScreen {{
 WorkspaceTree, TodoTree, EmptyWidget {{
     border: blank;
     padding: 1;
-    background: #242831;
+    background: {BG};
     width: 100%;
     height: 100%;
 }}
@@ -42,10 +42,6 @@ SimpleInput, Pointer{{
 Horizontal {{
     height: auto;
     width: 100%;
-}}
-
-StatusBar {{
-    column-span: 2;
 }}
 
 WorkspaceWidget, TodoWidget {{

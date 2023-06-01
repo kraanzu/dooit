@@ -60,12 +60,18 @@ class Dooit(App):
         manager.commit()
         return await super().action_quit()
 
+    def set_message(self, message: str):
+        return
+        self.query_one(StatusBar).set_message(message)
+
     async def on_key(self, event: events.Key) -> None:
         key = (
             event.character
             if (event.character and (event.character in PRINTABLE))
             else event.key
         )
+        self.set_message(f"pressed {key}")
+
         if self.screen.name != "help":
             await self.query_one(".focus").keypress(key)
 

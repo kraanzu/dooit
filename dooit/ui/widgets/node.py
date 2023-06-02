@@ -11,9 +11,9 @@ from .utils import Pointer
 class Node(Widget):
     pointer = ">"
     _expand = False
-    ModelType: Type[Workspace | Todo] = Workspace
+    ModelType: Type[Union[Workspace, Todo]]
 
-    def __init__(self, model: ModelType, display: bool = True):
+    def __init__(self, model, display: bool = True):
         self.model = model
         self.force_display = display
         super().__init__(id=self.model.uuid)
@@ -22,7 +22,7 @@ class Node(Widget):
     def expanded(self):
         return self._expand
 
-    def _get_model_children(self) -> List[ModelType]:
+    def _get_model_children(self) -> List[Union[Workspace, Todo]]:
         raise NotImplementedError
 
     def _get_all_children(self):
@@ -111,11 +111,6 @@ class Node(Widget):
         for i in self.query(input_type):
             i.refresh_value()
 
-    async def handle_extra_keypress(self, key):
-        pass
-
     async def keypress(self, key: str):
         if w := self._is_editing():
             await w.keypress(key)
-        else:
-            await self.handle_extra_keypress(key)

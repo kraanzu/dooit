@@ -140,11 +140,11 @@ class Tags(SimpleInput):
 
 
 class Status(SimpleInput):
-    DEFAULT_CSS = f"""
-    Status {{
+    DEFAULT_CSS = """
+    Status {
         height: 1;
         width: auto;
-    }}
+    }
     """
 
     def draw(self) -> str:

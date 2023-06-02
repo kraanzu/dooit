@@ -1,4 +1,3 @@
-from textual.containers import Vertical
 from textual.screen import Screen
 from textual.widgets import Static
 from textual import events
@@ -14,7 +13,6 @@ class HelpScreen(Screen):
         ("escape", "app.pop_screen", "Pop screen"),
         ("question_mark", "app.pop_screen", "Pop screen"),
     ]
-    # view = Vertical(*[Static(i) for i in HelpMenu().items()])
 
     def compose(self):
         for i in HelpMenu().items():

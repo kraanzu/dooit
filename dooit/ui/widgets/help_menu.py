@@ -1,13 +1,9 @@
 from typing import Dict, List
-from textual.containers import Vertical
-from textual.screen import Screen
-from textual.widgets import Static
 from rich.align import Align
 from rich.console import Group, RenderableType
 from rich.style import StyleType
 from rich.table import Table
 from rich.text import Text
-from textual import events
 from dooit.utils import KeyBinder
 
 
@@ -206,4 +202,3 @@ class HelpMenu:
         arr.append(self.outro)
 
         return arr
-

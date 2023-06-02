@@ -1,4 +1,3 @@
-from os import stat
 from typing import Any, List, Literal, Optional
 from textual.app import ComposeResult
 from textual.reactive import Reactive
@@ -71,23 +70,16 @@ class Tree(Widget):
         return parent.workspaces
 
     def get_widget_by_id(self, id_: Any) -> WidgetType:
-        try:
-            return self.query_one(
-                f"#{id_}",
-                expect_type=self.WidgetType,
-            )
-        except:
-            raise TypeError(
-                self.query_one(
-                    f"#{id_}",
-                )
-            )
+        return self.query_one(
+            f"#{id_}",
+            expect_type=self.WidgetType,
+        )
 
     async def watch_current(self, old: Optional[str], new: Optional[str]):
         if old:
             try:
                 self.get_widget_by_id(old).highlight(False)
-            except:
+            except Exception:
                 pass
 
         if new:
@@ -95,7 +87,7 @@ class Tree(Widget):
                 widget = self.get_widget_by_id(new)
                 widget.highlight()
                 widget.scroll_visible()
-            except:
+            except Exception:
                 self.post_message(Notify("cant find old highlighted node"))
 
     def compose(self) -> ComposeResult:
@@ -135,7 +127,7 @@ class Tree(Widget):
         self.current = None
         try:
             self.current = self.get_widget_by_id(highlighted).id
-        except:
+        except Exception:
             pass
 
     def next_node(self) -> Optional[str]:
@@ -288,7 +280,9 @@ class Tree(Widget):
 
     async def apply_sort(self, method):
         self.current_widget.model.sort(method)
-        await self.current_widget.parent.force_refresh()
+        if parent := self.current_widget.parent:
+            await parent.force_refresh()
+
         self.post_message(ChangeStatus("NORMAL"))
 
     async def sort_menu_toggle(self):

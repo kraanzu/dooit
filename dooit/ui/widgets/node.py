@@ -106,10 +106,16 @@ class Node(Widget):
         if self.model.has_same_parent_kind:
             return self.model.parent.uuid
 
-    async def refresh_value(self):
-        for i in self.query(SimpleInput):
+    async def refresh_value(self, input_type: Optional[Type] = None):
+        input_type = input_type or SimpleInput
+        for i in self.query(input_type):
             i.refresh_value()
+
+    async def handle_extra_keypress(self, key):
+        pass
 
     async def keypress(self, key: str):
         if w := self._is_editing():
             await w.keypress(key)
+        else:
+            await self.handle_extra_keypress(key)

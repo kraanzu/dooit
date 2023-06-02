@@ -22,6 +22,12 @@ class TodoTree(Tree):
     async def switch_pane(self):
         self.post_message(SwitchTab())
 
+    async def increase_urgency(self):
+        await self.current_widget.increase_urgency()
+
+    async def decrease_urgency(self):
+        await self.current_widget.decrease_urgency()
+
     @property
     def model_class_kind(self) -> Literal["todo"]:
         return "todo"

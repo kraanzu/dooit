@@ -32,6 +32,14 @@ class TodoWidget(Node):
     def _get_model_children(self) -> List[ModelType]:
         return self.model.todos
 
+    async def increase_urgency(self):
+        self.model.increase_urgency()
+        await self.refresh_value(Urgency)
+
+    async def decrease_urgency(self):
+        self.model.decrease_urgency()
+        await self.refresh_value(Urgency)
+
     def draw(self) -> Iterator[Widget]:
         with ExpandedHorizontal():
             yield Pointer(self.pointer)

@@ -28,6 +28,10 @@ class TodoTree(Tree):
     async def decrease_urgency(self):
         await self.current_widget.decrease_urgency()
 
+    async def toggle_complete(self):
+        await self.current_widget.toggle_complete()
+
+
     @property
     def model_class_kind(self) -> Literal["todo"]:
         return "todo"

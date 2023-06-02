@@ -34,11 +34,15 @@ class TodoWidget(Node):
 
     async def increase_urgency(self):
         self.model.increase_urgency()
-        await self.refresh_value(Urgency)
+        await self.refresh_value()
 
     async def decrease_urgency(self):
         self.model.decrease_urgency()
-        await self.refresh_value(Urgency)
+        await self.refresh_value()
+
+    async def toggle_complete(self):
+        self.model.toggle_complete()
+        await self.refresh_value()
 
     def draw(self) -> Iterator[Widget]:
         with ExpandedHorizontal():

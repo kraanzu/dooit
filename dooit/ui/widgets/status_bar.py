@@ -1,5 +1,3 @@
-from typing import Callable, Union
-from inspect import getfullargspec as get_args
 from rich.console import RenderableType
 from rich.text import Text, TextType
 from textual.app import ComposeResult
@@ -7,6 +5,7 @@ from textual.widget import Widget
 from dooit.utils.conf_reader import Config
 from dooit.api import manager
 from ..events import StatusType
+from .bar_widget import BarWidget
 
 bar = Config().get("bar")
 BG = Config().get("BACKGROUND")
@@ -39,28 +38,29 @@ class StatusWidget(Widget):
     """
     _value = Text()
 
-    def __init__(self, func: Union[Callable, TextType], classes: str = ""):
-        super().__init__(classes=classes)
-        self.func = func
+    def __init__(self, widget: BarWidget):
+        super().__init__()
+
+        if not isinstance(widget, BarWidget):
+            exit(
+                "The method of creating bar widgets was changed."
+                + "\n"
+                + "Please refer to this: https://www.google.com"
+            )
+
+        self.widget = widget
         self.refresh_value()
-        self.set_interval(0.1, self.redraw)
+
+        if widget.delay > 0:
+            self.set_interval(widget.delay, self.redraw)
 
     def redraw(self):
         self.run_worker(self.refresh_value, exclusive=True)
         self.refresh(layout=True)
 
     def refresh_value(self):
-        if isinstance(self.func, Callable):
-            args = get_args(self.func).args
-            params = self.app.query_one(StatusBar).get_params()
-            res = self.func(**{i: params[i] for i in args})
-        else:
-            res = self.func
-
-        if not isinstance(res, Text):
-            res = Text.from_markup(str(res))
-
-        self._value = res
+        params = self.app.query_one(StatusBar).get_params()
+        self._value = self.widget.get_value(**params)
 
     def render(self) -> RenderableType:
         res = self._value

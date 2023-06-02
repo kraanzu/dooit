@@ -1,6 +1,7 @@
 from rich.text import Text
 from datetime import datetime
 import os
+from dooit.ui.widgets.bar_widget import BarWidget
 
 # NOTE: See rich style documentation for details
 
@@ -139,9 +140,8 @@ EMPTY_TODO = [
 #          STATUS BAR           #
 #################################
 bar = {
-    "A": [get_status],
-    "B": [get_message],
-    "C": [get_clock, get_username],
+    "A": [BarWidget(get_status, 0.1)],
+    "C": [BarWidget(get_clock, 1), BarWidget(get_username)],
 }
 
 #################################

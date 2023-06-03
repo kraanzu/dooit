@@ -345,4 +345,6 @@ class Tree(Widget):
                 func = getattr(self, bind.func_name)
                 if bind.check_for_cursor and self.current == -1:
                     return
+
+                await self.change_status("NORMAL")
                 await func(*bind.params)

@@ -61,7 +61,6 @@ class Dooit(App):
         return await super().action_quit()
 
     def set_message(self, message: str):
-        return
         self.query_one(StatusBar).set_message(message)
 
     async def on_key(self, event: events.Key) -> None:
@@ -70,8 +69,6 @@ class Dooit(App):
             if (event.character and (event.character in PRINTABLE))
             else event.key
         )
-        self.set_message(f"pressed {key}")
-
         if self.screen.name != "help":
             await self.query_one(".focus").keypress(key)
 
@@ -99,6 +96,10 @@ class Dooit(App):
     async def mount_dashboard(self):
         await self.clear_right()
         await self.mount(EmptyWidget(), after=self.query_one(WorkspaceTree))
+
+    @property
+    def bar(self):
+        return self.query_one(StatusBar)
 
     @on(TopicSelect)
     async def topic_select(self, event: TopicSelect):

@@ -1,7 +1,6 @@
 from typing import Literal, Optional
 from rich.text import TextType, Text
 from textual.message import Message
-
 from dooit.api.workspace import Workspace
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]

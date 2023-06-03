@@ -4,6 +4,7 @@ from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.events.events import ChangeStatus
+from dooit.ui.widgets.inputs import Description
 from dooit.ui.widgets.simple_input import SimpleInput
 from .utils import Pointer
 
@@ -114,3 +115,9 @@ class Node(Widget):
     async def keypress(self, key: str):
         if w := self._is_editing():
             await w.keypress(key)
+
+    async def apply_filter(self, filter: str) -> None:
+        widget = self.query_one(
+            f"#{self.model.uuid}-description", expect_type=Description
+        )
+        widget.apply_filter(filter)

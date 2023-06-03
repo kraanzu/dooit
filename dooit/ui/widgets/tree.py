@@ -1,4 +1,4 @@
-from typing import Any, List, Literal, Optional
+from typing import Any, List, Literal, Optional, Type, Union
 from textual.app import ComposeResult
 from textual.reactive import Reactive
 from textual.widget import Widget
@@ -14,6 +14,8 @@ from dooit.ui.events.events import (
 )
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.sort_options import SortOptions
+from dooit.ui.widgets.status_bar_utils import Searcher
+from dooit.ui.widgets.todo import TodoWidget
 from dooit.ui.widgets.workspace import WorkspaceWidget
 from dooit.utils.keybinder import KeyBinder
 
@@ -64,6 +66,10 @@ class Tree(Widget):
 
     @property
     def model_class_kind(self) -> Literal["workspace", "todo"]:
+        raise NotImplementedError
+
+    @property
+    def widget_type(self) -> Union[Type[WorkspaceWidget], Type[TodoWidget]]:
         raise NotImplementedError
 
     def get_children(self, parent: Model) -> List[ModelType]:
@@ -278,6 +284,10 @@ class Tree(Widget):
     async def start_edit(self, field: str) -> None:
         self.current_widget.start_edit(field)
 
+    async def apply_filter(self, filter):
+        for i in self.query(self.widget_type):
+            await i.apply_filter(filter)
+
     async def apply_sort(self, method):
         self.current_widget.model.sort(method)
         if parent := self.current_widget.parent:
@@ -304,7 +314,22 @@ class Tree(Widget):
     async def change_status(self, status: StatusType):
         self.post_message(ChangeStatus(status))
 
+    async def start_search(self):
+        if widget := self.app.query(Searcher):
+            widget.first().start_edit()
+        else:
+            await self.app.query_one("StatusBar").start_search()
+
+    async def stop_search(self):
+        pass
+
     async def keypress(self, key: str):
+        if query := self.app.query(Searcher):
+            widget = query.first()
+            if widget.is_editing:
+                await widget.keypress(key)
+                return
+
         if query := self.query(SortOptions):
             await query.first().keypress(key)
             return

@@ -1,6 +1,7 @@
-from typing import Literal, Optional
+from typing import Literal, Optional, Type
 from dooit.api.model import Model
 from dooit.ui.events.events import SwitchTab, TopicSelect
+from dooit.ui.widgets.workspace import WorkspaceWidget
 from .tree import Tree
 
 
@@ -9,6 +10,10 @@ class WorkspaceTree(Tree):
 
     def __init__(self, model: Model):
         super().__init__(model, "focus left-dock")
+
+    @property
+    def widget_type(self) -> Type[WorkspaceWidget]:
+        return WorkspaceWidget
 
     async def watch_current(self, old: Optional[str], new: Optional[str]):
         await super().watch_current(old, new)

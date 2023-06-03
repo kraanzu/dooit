@@ -1,88 +1,17 @@
-from rich.console import RenderableType
-from rich.text import Text, TextType
+from rich.text import TextType
 from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.utils.conf_reader import Config
 from dooit.api import manager
-from ..events import StatusType
-from .bar_widget import BarWidget
-
-bar = Config().get("bar")
-BG = Config().get("BACKGROUND")
-
-
-class AutoHorizontal(Widget):
-    DEFAULT_CSS = """
-    AutoHorizontal {
-        layout: horizontal;
-        max-height: 1;
-        width: auto;
-    }
-    """
-
-
-class StatusMiddle(Widget):
-    DEFAULT_CSS = f"""
-    StatusMiddle {{
-        background: {BG} 10%;
-    }}
-    """
-
-
-class StatusWidget(Widget):
-    DEFAULT_CSS = """
-    StatusWidget {
-        width: auto;
-        max-height: 1;
-    }
-    """
-    _value = Text()
-
-    def __init__(self, widget: BarWidget):
-        super().__init__()
-
-        if not isinstance(widget, BarWidget):
-            exit(
-                "The method of creating bar widgets was changed."
-                + "\n"
-                + "Please refer to this: https://www.google.com"
-            )
-
-        self.widget = widget
-        self.refresh_value()
-
-        if widget.delay > 0:
-            self.set_interval(widget.delay, self.redraw)
-
-    def redraw(self):
-        self.run_worker(self.refresh_value, exclusive=True)
-        self.refresh(layout=True)
-
-    def refresh_value(self):
-        params = self.app.query_one(StatusBar).get_params()
-        self._value = self.widget.get_value(**params)
-
-    def render(self) -> RenderableType:
-        res = self._value
-        self.styles.min_width = len(res)
-        return res
-
-
-class StatusMessage(StatusMiddle):
-    msg = Text()
-
-    def set_message(self, msg: TextType):
-        if isinstance(msg, str):
-            msg = Text.from_markup(msg)
-
-        self.msg = msg
-        self.refresh()
-
-    def clear(self):
-        self.set_message("")
-
-    def render(self) -> RenderableType:
-        return self.msg
+from dooit.ui.events import StatusType
+from .status_bar_utils import (
+    Searcher,
+    StatusMiddle,
+    bar,
+    AutoHorizontal,
+    StatusWidget,
+    StatusMessage,
+)
 
 
 class StatusBar(Widget):
@@ -117,6 +46,22 @@ class StatusBar(Widget):
             "status": self.status,
             "manager": manager,
         }
+
+    async def replace_middle(self, new_widget):
+        with self.app.batch_update():
+            widget = self.query_one(StatusMiddle)
+            self.mount(new_widget, before=widget)
+            widget.remove()
+
+    async def start_search(self):
+        searcher = Searcher()
+        await self.replace_middle(searcher)
+        searcher.start_edit()
+
+    async def stop_search(self):
+        focused = self.app.query(".focus").first()
+        await focused.apply_filter("")
+        await self.replace_middle(StatusMessage())
 
     def compose(self) -> ComposeResult:
         yield AutoHorizontal(*[StatusWidget(i) for i in bar["A"]], classes="dock-left")

@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import List, Literal, Type
 from dooit.api.model import Model
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
@@ -16,6 +16,10 @@ class TodoTree(Tree):
     def __init__(self, model: Workspace):
         super().__init__(model, classes="right-dock")
 
+    @property
+    def widget_type(self) -> Type[TodoWidget]:
+        return TodoWidget
+
     def get_children(self, parent: Model) -> List[ModelType]:
         return parent.todos
 
@@ -30,7 +34,6 @@ class TodoTree(Tree):
 
     async def toggle_complete(self):
         await self.current_widget.toggle_complete()
-
 
     @property
     def model_class_kind(self) -> Literal["todo"]:

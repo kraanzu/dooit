@@ -13,36 +13,19 @@ YELLOW = config.get("yellow")
 GREEN = config.get("green")
 
 
-class SimpleInput(Widget):
+class Input(Widget):
     """
     A simple single line Text Input widget
     """
 
     _cursor_position: int = 0
     _cursor: str = "|"
-    _status_colors = {
-        "COMPLETED": GREEN,
-        "PENDING": YELLOW,
-        "OVERDUE": RED,
-    }
-
-    def __init__(self, model: Todo, classes: str = "") -> None:
-        self._property: str = self.__class__.__name__.lower()
-        id_ = f"{model.uuid}-{self._property}"
-        self.model = model
-        self.value = getattr(model, self._property)
-        self._cursor_position = len(self.value)
-
-        super().__init__(id=id_, classes="padding dim " + classes)
-        self.styles.height = "auto"
+    highlight_pattern = ""
+    value = ""
 
     @property
     def is_editing(self) -> bool:
         return self.has_class("editing")
-
-    def refresh_value(self):
-        self.value = getattr(self.model, self._property)
-        self.refresh(layout=True)
 
     def draw(self) -> str:
         if self.is_editing:
@@ -52,24 +35,22 @@ class SimpleInput(Widget):
 
         return text
 
+    def apply_filter(self, pattern: str):
+        self.highlight_pattern = pattern
+        self.refresh()
+
     def render(self) -> Text:
         """
         Renders a Panel for the Text Input Box
         """
-        value = self.draw().strip()
-
-        if not value:
-            self.remove_class("padding")
-        else:
-            self.add_class("padding")
-
-        return Text.from_markup(self.draw())
-
-    def _colorize_by_status(self, text: str) -> str:
-        return self._render_text_with_color(
-            text,
-            self._status_colors[self.model.status],
-        )
+        value = Text.from_markup(self.draw().strip())
+        if self.highlight_pattern:
+            value.highlight_words(
+                self.highlight_pattern.split(),
+                "r #88c0d0",
+                case_sensitive=False,
+            )
+        return value
 
     def _render_text_with_color(self, text: str, color: str) -> str:
         return f"[{color}]{text}[/{color}]"
@@ -89,18 +70,8 @@ class SimpleInput(Widget):
         self.add_class("editing")
         self.refresh(layout=True)
 
-    def stop_edit(self, cancel: bool = False) -> Optional[Result]:
+    def stop_edit(self) -> Optional[Result]:
         self.remove_class("editing")
-        if not cancel:
-            self.model.edit(self._property, self.value)
-
-        self.post_message(ChangeStatus("NORMAL"))
-        self.refresh_value()
-        self.post_message(CommitData())
-        self.refresh(layout=True)
-
-    def cancel_edit(self):
-        return self.stop_edit(cancel=True)
 
     def clear(self) -> None:
         """
@@ -201,9 +172,6 @@ class SimpleInput(Widget):
         if key == "enter":
             self.stop_edit()
 
-        if key == "escape":
-            self.cancel_edit()
-
         # Moving backward
         elif key == "left":
             await self._move_cursor_backward()
@@ -254,3 +222,57 @@ class SimpleInput(Widget):
             await self._insert_text(key)
 
         self.refresh(layout=True)
+
+
+class SimpleInput(Input):
+    """
+    A simple single line Text Input widget
+    """
+
+    _cursor_position: int = 0
+    _cursor: str = "|"
+    _status_colors = {
+        "COMPLETED": GREEN,
+        "PENDING": YELLOW,
+        "OVERDUE": RED,
+    }
+
+    def __init__(self, model: Todo, classes: str = "") -> None:
+        self._property: str = self.__class__.__name__.lower()
+        id_ = f"{model.uuid}-{self._property}"
+        self.model = model
+        self.value = getattr(model, self._property)
+        self._cursor_position = len(self.value)
+
+        super().__init__(id=id_, classes="padding dim " + classes)
+        self.styles.height = "auto"
+        self.highlight_pattern = ""
+
+    def refresh_value(self):
+        self.value = getattr(self.model, self._property)
+        self.refresh(layout=True)
+
+    def stop_edit(self, cancel: bool = False) -> Optional[Result]:
+        super().stop_edit()
+        if not cancel:
+            self.model.edit(self._property, self.value)
+
+        self.post_message(ChangeStatus("NORMAL"))
+        self.refresh_value()
+        self.post_message(CommitData())
+        self.refresh(layout=True)
+
+    def cancel_edit(self):
+        return self.stop_edit(cancel=True)
+
+    async def keypress(self, key: str) -> None:
+        await super().keypress(key)
+
+        if key == "escape":
+            self.cancel_edit()
+
+    def _colorize_by_status(self, text: str) -> str:
+        return self._render_text_with_color(
+            text,
+            self._status_colors[self.model.status],
+        )

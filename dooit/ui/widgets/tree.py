@@ -36,12 +36,18 @@ class Tree(Widget):
     Tree {
         overflow: auto auto;
         scrollbar-size: 1 1;
+        border: #3b4252;
+        border-title-background: #3b4252;
+        border-title-color: #4c566a;
     }
     """
 
     def __init__(self, model: Model, classes: str = ""):
         super().__init__(id=f"Tree-{model.uuid}", classes=classes)
         self.model = model
+        self.border_title = self.__class__.__name__.replace(
+            "Tree", "s"
+        )  # Making it plural
 
     @property
     def current_widget(self) -> WidgetType:

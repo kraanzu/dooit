@@ -21,6 +21,8 @@ classes = f"""
 
 .focus {{
     border: #88c;
+    border-title-background: #88c;
+    border-title-color: #eceff4;
 }}
 
 .no-border {{

@@ -199,7 +199,7 @@ class Tree(Widget):
         await self.start_edit("description")
 
     async def add_node(self, type_: Literal["child", "sibling"]):
-        if not self.get_children(self.model):
+        if not self.get_children(self.model) or not self.current:
             return await self.add_first_child()
 
         if type_ == "child" and not self.current_widget.expanded:

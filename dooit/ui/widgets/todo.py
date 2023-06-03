@@ -42,6 +42,15 @@ class TodoWidget(Node):
 
     async def toggle_complete(self):
         self.model.toggle_complete()
+
+        parent = self.parent
+        while parent:
+            if not isinstance(parent, TodoWidget):
+                break
+
+            await parent.refresh_value()
+            parent = parent.parent
+
         await self.refresh_value()
 
     def draw(self) -> Iterator[Widget]:

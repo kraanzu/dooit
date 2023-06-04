@@ -170,7 +170,7 @@ class Description(Item):
 
     def clean(self, s: str):
         for i, j in enumerate(s):
-            if j not in "@+%":  # left striping as this messes up with other attrs
+            if j not in "+%":  # left striping as this messes up with other attrs
                 return s[i:]
 
         return s
@@ -284,31 +284,6 @@ class Urgency(Item):
 
     def get_sortable(self) -> Any:
         return -self.value
-
-
-class Tags(Item):
-    value = ""
-
-    def set(self, val: str) -> Result:
-        tags = [i.strip() for i in val.split(",") if i]
-        self.value = ",".join(set(tags))
-        return Ok()
-
-    def add_tag(self, tag: str):
-        return self.set(self.value + "," + tag)
-
-    def to_txt(self):
-        return " ".join(f"@{i}" for i in self.value.split(",") if i)
-
-    def from_txt(self, txt: str) -> None:
-        flag = True
-        for i in txt.split()[3:]:
-            if i[0] == "@":
-                self.add_tag(i[1:])
-                flag = False
-            else:
-                if not flag:
-                    break
 
 
 class Recurrence(Item):

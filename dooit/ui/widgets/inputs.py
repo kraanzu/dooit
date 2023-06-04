@@ -121,24 +121,6 @@ class Effort(SimpleInput):
         return icon + value
 
 
-class Tags(SimpleInput):
-    DEFAULT_CSS = f"""
-    Tags {{
-        color: {TODOS.get("tags_color")}
-    }}
-    """
-
-    def draw(self) -> RenderableType:
-        icon = " " + TODOS["tags_icon"]
-        value = super().draw()
-        if not value:
-            return ""
-
-        tags = [i.strip() for i in value.split(",")]
-        tags = icon.join(tags)
-        return icon + tags
-
-
 class Status(SimpleInput):
     DEFAULT_CSS = """
     Status {

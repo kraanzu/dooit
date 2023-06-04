@@ -52,7 +52,6 @@ DEFAULTS = {
     "copy text": "y",
     "toggle complete": "c",
     "edit due": "d",
-    "edit tags": "t",
     "edit recurrence": "r",
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],

@@ -118,9 +118,6 @@ TODO = {
     "effort_color": yellow,
     "recurrence_icon": "⟲ ",
     "recurrence_color": blue,
-    "tags_icon": "🖈 ",
-    "tags_seperator": "icon",  # icon, pipe, comma
-    "tags_color": red,
     "completed_icon": "✓",
     "pending_icon": "●",
     "overdue_icon": "!",
@@ -152,7 +149,6 @@ keybindings = {
     "sort menu toggle": "<ctrl+s>",
     "start search": ["/", "S"],
     "remove item": "xx",
-    "edit tags": "t",
     "edit effort": "e",
     "edit recurrence": "r",
 }

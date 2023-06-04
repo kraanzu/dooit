@@ -110,7 +110,6 @@ NORMAL_KB = {
     "edit description": "Edit description**",
     "edit effort": "Edit effort for todo**",
     "edit recurrence": "Edit recurrence for todo**",
-    "edit tags": "Edit tags for todo**",
     "increase urgency": "Increase urgency**",
     "decrease urgency": "Decrease urgency**",
     "exit": "Quit the Application",

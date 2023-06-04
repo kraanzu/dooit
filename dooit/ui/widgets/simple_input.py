@@ -44,6 +44,8 @@ class Input(Widget):
         Renders a Panel for the Text Input Box
         """
         value = Text.from_markup(self.draw().strip())
+        value.highlight_regex(r"\@\w+", "red")
+
         if self.highlight_pattern:
             value.highlight_words(
                 self.highlight_pattern.split(),

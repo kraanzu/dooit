@@ -7,7 +7,6 @@ from dooit.ui.widgets.inputs import (
     Effort,
     Recurrence,
     Status,
-    Tags,
     Urgency,
 )
 from dooit.ui.widgets.utils import Padding, Pointer
@@ -63,7 +62,6 @@ class TodoWidget(Node):
                 yield Description(model=self.model)
                 yield Effort(model=self.model)
                 yield Recurrence(model=self.model)
-                yield Tags(model=self.model)
 
             yield Due(model=self.model)
             yield Urgency(model=self.model)

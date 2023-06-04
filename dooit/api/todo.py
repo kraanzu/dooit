@@ -16,7 +16,7 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["description", "due", "urgency", "effort", "tags", "status", "recurrence"]
+    fields = ["description", "due", "urgency", "effort", "status", "recurrence"]
     sortable_fields = [
         "description",
         "due",
@@ -32,7 +32,6 @@ class Todo(Model):
             Due,
             Urgency,
             Recurrence,
-            Tags,
             Description,
             Effort,
         )
@@ -42,7 +41,6 @@ class Todo(Model):
         self._description = Description(self)
         self._urgency = Urgency(self)
         self._effort = Effort(self)
-        self._tags = Tags(self)
         self._recurrence = Recurrence(self)
         self._due = Due(self)
         self.todos: List[Todo] = []
@@ -70,10 +68,6 @@ class Todo(Model):
     @property
     def status(self):
         return self._status.value
-
-    @property
-    def tags(self):
-        return self._tags.value
 
     def add_child(
         self, kind: str = "todo", index: int = 0, inherit: bool = False
@@ -112,7 +106,6 @@ class Todo(Model):
             "description": self._description.value,
             "due": self._due.value,
             "effort": self._effort.value,
-            "tags": self._tags.value,
             "recurrence": self._recurrence.value,
         }
 
@@ -130,7 +123,6 @@ class Todo(Model):
         self._description.from_txt(data)
         self._recurrence.from_txt(data)
         self._effort.from_txt(data)
-        self._tags.from_txt(data)
 
     def extract_data_new(self, data: Dict[str, str]):
         def get(key: str) -> str:
@@ -143,7 +135,6 @@ class Todo(Model):
         self._description.set(get("description"))
         self._recurrence.set(get("recurrence"))
         self._effort.set(get("effort"))
-        self._tags.set(get("tags"))
 
     def commit(self) -> List[Any]:
         if self.todos:

@@ -6,7 +6,7 @@ from . import conf
 
 BG = conf.get("BACKGROUND")
 DIM = conf.get("BORDER_DIM")
-
+BORDER_TITLE_DIM = conf.get("BORDER_TITLE_DIM")
 
 OBJS = f"""
 Screen {{
@@ -23,11 +23,11 @@ HelpScreen {{
 }}
 
 WorkspaceTree, TodoTree, EmptyWidget {{
-    border: #3b4252;
-    border-title-background: #3b4252;
-    border-title-color: #4c566a;
-    padding: 1;
     background: {BG};
+    border: {DIM};
+    border-title-background: {DIM};
+    border-title-color: {BORDER_TITLE_DIM};
+    padding: 1;
     width: 100%;
     height: 100%;
 }}

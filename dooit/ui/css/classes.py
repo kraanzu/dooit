@@ -5,6 +5,7 @@ CSS file for property `class`
 from . import conf
 
 LIT = conf.get("BORDER_LIT")
+BORDER_TITLE_LIT = conf.get("BORDER_TITLE_LIT")
 
 classes = f"""
 .dim {{
@@ -20,9 +21,9 @@ classes = f"""
 }}
 
 .focus {{
-    border: #88c;
-    border-title-background: #88c;
-    border-title-color: #eceff4;
+    border: {LIT};
+    border-title-background: {LIT};
+    border-title-color: {BORDER_TITLE_LIT};
 }}
 
 .no-border {{

@@ -11,6 +11,7 @@ config = Config()
 RED = config.get("red")
 YELLOW = config.get("yellow")
 GREEN = config.get("green")
+SEARCH_COLOR = config.get("SEARCH_COLOR")
 
 
 class Input(Widget):
@@ -49,7 +50,7 @@ class Input(Widget):
         if self.highlight_pattern:
             value.highlight_words(
                 self.highlight_pattern.split(),
-                "r #88c0d0",
+                f"r {SEARCH_COLOR}",
                 case_sensitive=False,
             )
         return value

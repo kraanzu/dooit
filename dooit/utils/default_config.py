@@ -60,6 +60,9 @@ BACKGROUND = black
 BAR_BACKRGOUND = grey
 BORDER_DIM = grey
 BORDER_LIT = cyan
+BORDER_TITLE_DIM = black
+BORDER_TITLE_LIT = white
+SEARCH_COLOR = red
 
 #################################
 #          DASHBOARD            #

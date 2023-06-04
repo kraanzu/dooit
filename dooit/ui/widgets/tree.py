@@ -36,9 +36,6 @@ class Tree(Widget):
     Tree {
         overflow: auto auto;
         scrollbar-size: 1 1;
-        border: #3b4252;
-        border-title-background: #3b4252;
-        border-title-color: #4c566a;
     }
     """
 

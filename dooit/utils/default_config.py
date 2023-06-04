@@ -57,6 +57,7 @@ orange = "#d08770"
 #            GENERAL            #
 #################################
 BACKGROUND = black
+BAR_BACKRGOUND = grey
 BORDER_DIM = grey
 BORDER_LIT = cyan
 
@@ -77,7 +78,7 @@ ART = colored(ART, frost_green)
 NL = " \n"
 SEP = colored("─" * 60, "d " + grey)
 help_message = f"Press {colored('?', magenta)} to spawn help menu"
-dashboard = [ART, NL, SEP, NL, NL, NL, help_message]
+DASHBOARD = [ART, NL, SEP, NL, NL, NL, help_message]
 no_search_results = ["🔍", colored("No results found!", red)]
 
 

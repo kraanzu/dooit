@@ -13,7 +13,7 @@ DASHBOARD, EMPTY_TODO, EMPTY_WORKSPACE, NO_SEARCH_RESULTS = [
     align_texts(
         config.get(i),
     )
-    for i in ["dashboard", "EMPTY_TODO", "EMPTY_WORKSPACE", "no_search_results"]
+    for i in ["DASHBOARD", "EMPTY_TODO", "EMPTY_WORKSPACE", "no_search_results"]
 ]
 
 

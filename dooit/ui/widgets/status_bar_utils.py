@@ -95,8 +95,11 @@ class StatusWidget(Widget):
         self.refresh(layout=True)
 
     def refresh_value(self):
-        params = self.app.query_one("StatusBar").get_params()
-        self._value = self.widget.get_value(**params)
+        try:
+            params = self.app.query_one("StatusBar").get_params()
+            self._value = self.widget.get_value(**params)
+        except:
+            pass
 
     def render(self) -> RenderableType:
         res = self._value

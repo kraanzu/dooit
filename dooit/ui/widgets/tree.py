@@ -289,6 +289,9 @@ class Tree(Widget):
         self.current = id_
         await self.toggle_expand()
 
+    async def copy_text(self):
+        await self.current_widget.copy_text()
+
     async def switch_pane(self):
         pass
 

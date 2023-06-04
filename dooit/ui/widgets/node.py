@@ -1,4 +1,5 @@
 from typing import Iterator, List, Literal, Optional, Type, Union
+import pyperclip
 from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.api.todo import Todo
@@ -121,3 +122,9 @@ class Node(Widget):
             f"#{self.model.uuid}-description", expect_type=Description
         )
         widget.apply_filter(filter)
+
+    async def copy_text(self):
+        widget = self.query_one(
+            f"#{self.model.uuid}-description", expect_type=Description
+        )
+        pyperclip.copy(widget.value)

@@ -285,7 +285,9 @@ class Tree(Widget):
         self.current_widget.toggle_expand()
 
     async def toggle_expand_parent(self):
-        self.current_widget.toggle_expand_parent()
+        id_ = self.current_widget.toggle_expand_parent()
+        self.current = id_
+        await self.toggle_expand()
 
     async def switch_pane(self):
         pass

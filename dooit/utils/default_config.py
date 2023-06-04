@@ -89,7 +89,7 @@ WORKSPACE = {
     "highlight": white,
     "editing": cyan,
     "pointer": ">",
-    "children_hint": "",  # "[{count}]", # vars: count
+    "children_hint": "+",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
     "🍻",

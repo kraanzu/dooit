@@ -1,6 +1,7 @@
 from typing import Type
 from rich.console import RenderableType
 from dooit.api.todo import Todo
+from dooit.api.workspace import Workspace
 from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
 
@@ -56,6 +57,33 @@ class Description(SimpleInput):
         color: {todo_editing};
     }}
     """
+
+    def draw(self) -> str:
+        model = self.model
+        hint = ""
+
+        if isinstance(model, Todo):
+            if todos := model.todos:
+                hint: str = TODOS["children_hint"]
+                total = len(todos)
+                done = sum(i.status == "COMPLETED" for i in todos)
+                remaining = total - done
+                hint = hint.format(
+                    total=total,
+                    done=done,
+                    remaining=remaining,
+                )
+        elif isinstance(model, Workspace):
+            if workspaces := model.workspaces:
+                hint: str = WORKSPACES["children_hint"]
+                params = {"count": len(workspaces)}
+                hint = hint.format(**params)
+
+        value = super().draw()
+        if not value:
+            return ""
+
+        return value + hint
 
 
 class Due(SimpleInput):

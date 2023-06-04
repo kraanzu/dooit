@@ -142,6 +142,9 @@ class Tree(Widget):
         except Exception:
             pass
 
+    async def notify(self, message: str):
+        self.post_message(Notify(message))
+
     def next_node(self) -> Optional[str]:
         nodes = self.nodes
 

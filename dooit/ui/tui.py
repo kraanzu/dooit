@@ -2,6 +2,7 @@ from functools import partial
 from textual.app import App
 from textual import events, on
 from dooit.ui.widgets.empty import EmptyWidget
+from dooit.ui.widgets.tree import Tree
 from dooit.utils.watcher import Watcher
 from dooit.ui.events import (
     TopicSelect,
@@ -73,25 +74,22 @@ class Dooit(App):
             await self.query_one(".focus").keypress(key)
 
     async def clear_right(self):
-        if widgets := self.query(EmptyWidget):
-            for widget in widgets:
-                if isinstance(widget.parent, WorkspaceTree):
-                    continue
+        for i in self.query(TodoTree):
+            i.display = False
 
-                await widget.remove()
-
-        if widgets := self.query(TodoTree):
-            for i in widgets:
-                i.display = False
+        for i in self.query(EmptyWidget):
+            if not isinstance(i.parent, Tree):
+                i.remove()
 
     async def mount_todos(self, model):
-        await self.clear_right()
-        if widgets := self.query(f"#Tree-{model.uuid}"):
-            current_widget = widgets.first()
-            current_widget.display = True
-        else:
-            current_widget = TodoTree(model)
-            await self.mount(current_widget, after=self.query_one(WorkspaceTree))
+        with self.batch_update():
+            await self.clear_right()
+            if widgets := self.query(f"#Tree-{model.uuid}"):
+                current_widget = widgets.first()
+                current_widget.display = True
+            else:
+                current_widget = TodoTree(model)
+                await self.mount(current_widget, after=self.query_one(WorkspaceTree))
 
     async def mount_dashboard(self):
         await self.clear_right()

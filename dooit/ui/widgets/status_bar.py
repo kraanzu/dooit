@@ -21,8 +21,9 @@ class StatusBar(Widget):
 
     DEFAULT_CSS = """
         StatusBar {
-            column-span: 2;
             max-height: 1;
+            min-width: 100%;
+            column-span: 2;
             layout: horizontal;
         }
     """

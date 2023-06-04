@@ -23,7 +23,9 @@ HelpScreen {{
 }}
 
 WorkspaceTree, TodoTree, EmptyWidget {{
-    border: blank;
+    border: #3b4252;
+    border-title-background: #3b4252;
+    border-title-color: #4c566a;
     padding: 1;
     background: {BG};
     width: 100%;

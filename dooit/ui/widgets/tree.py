@@ -84,20 +84,23 @@ class Tree(Widget):
             expect_type=self.WidgetType,
         )
 
-    async def watch_current(self, old: Optional[str], new: Optional[str]):
-        if old:
-            try:
-                self.get_widget_by_id(old).highlight(False)
-            except Exception:
-                pass
+    def change_highlights(self, old, new):
+        with self.app.batch_update():
+            if old:
+                try:
+                    self.get_widget_by_id(old).highlight(False)
+                except Exception:
+                    pass
 
-        if new:
-            try:
-                widget = self.get_widget_by_id(new)
-                widget.highlight()
-                widget.scroll_visible()
-            except Exception:
-                self.post_message(Notify("cant find old highlighted node"))
+            if new:
+                try:
+                    widget = self.get_widget_by_id(new)
+                    widget.highlight()
+                except Exception:
+                    self.post_message(Notify("cant find old highlighted node"))
+
+    async def watch_current(self, old: Optional[str], new: Optional[str]):
+        self.change_highlights(old, new)
 
     def compose(self) -> ComposeResult:
         children = self.get_children(self.model)

@@ -1,6 +1,6 @@
 from functools import partial
 from textual.app import App
-from textual import events, on
+from textual import events, on, work
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.tree import Tree
 from dooit.utils.watcher import Watcher
@@ -81,6 +81,7 @@ class Dooit(App):
             if not isinstance(i.parent, Tree):
                 i.remove()
 
+    @work(exclusive=True)
     async def mount_todos(self, model):
         with self.batch_update():
             await self.clear_right()
@@ -103,8 +104,7 @@ class Dooit(App):
     async def topic_select(self, event: TopicSelect):
         event.stop()
         if model := event.model:
-            func = partial(self.mount_todos, model)
-            self.run_worker(func, exclusive=True)
+            self.mount_todos(model)
         else:
             await self.mount_dashboard()
 

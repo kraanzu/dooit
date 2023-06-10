@@ -1,4 +1,5 @@
 from textual.widget import Widget
+from textual import work
 from rich.console import RenderableType
 from rich.text import Text, TextType
 from .simple_input import Input
@@ -91,9 +92,10 @@ class StatusWidget(Widget):
             self.set_interval(widget.delay, self.redraw)
 
     def redraw(self):
-        self.run_worker(self.refresh_value, exclusive=True)
+        self.refresh_value()
         self.refresh(layout=True)
 
+    @work(exclusive=True)
     def refresh_value(self):
         try:
             params = self.app.query_one("StatusBar").get_params()

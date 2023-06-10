@@ -52,6 +52,8 @@ class Node(Widget):
                 i.add_class("dim")
                 i.remove_class("highlight")
 
+        self.scroll_visible()
+
     def start_edit(self, property: str):
         if property == "due":
             self.post_message(ChangeStatus("DATE"))

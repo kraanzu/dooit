@@ -60,8 +60,6 @@ class StatusBar(Widget):
         searcher.start_edit()
 
     async def stop_search(self):
-        focused = self.app.query(".focus").first()
-        await focused.apply_filter("")
         await self.replace_middle(StatusMessage())
 
     def compose(self) -> ComposeResult:

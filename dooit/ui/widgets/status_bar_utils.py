@@ -2,6 +2,11 @@ from textual.widget import Widget
 from textual import work
 from rich.console import RenderableType
 from rich.text import Text, TextType
+from dooit.ui.events.events import ChangeStatus, StopSearch
+
+from dooit.ui.widgets.search_menu import SearchMenu
+
+
 from .simple_input import Input
 from .bar_widget import BarWidget
 from dooit.utils.conf_reader import Config
@@ -53,17 +58,26 @@ class Searcher(StatusMiddle, Input):
     }}
     """
 
-    def clear(self) -> None:
-        super().clear()
+    async def on_mount(self):
+        from dooit.ui.widgets.status_bar import StatusBar
+
+        self.app.query_one(StatusBar).set_status("SEARCH")
+
+    async def on_unmount(self):
+        from dooit.ui.widgets.status_bar import StatusBar
+
+        self.app.query_one(StatusBar).set_status("NORMAL")
 
     async def keypress(self, key: str) -> None:
         if key == "escape":
-            return await self.app.query_one("StatusBar").stop_search()
+            self.post_message(StopSearch())
+            return
+
+        if key == "enter":
+            self.post_message(ChangeStatus("NORMAL"))
 
         await super().keypress(key)
-
-        focused = self.app.query(".focus").first()
-        await focused.apply_filter(self.value)
+        self.app.query_one(SearchMenu).apply_filter(self.value)
 
 
 class StatusWidget(Widget):

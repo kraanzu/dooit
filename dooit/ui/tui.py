@@ -1,7 +1,8 @@
-from functools import partial
 from textual.app import App
 from textual import events, on, work
 from dooit.ui.widgets.empty import EmptyWidget
+from dooit.ui.widgets.search_menu import SearchMenu
+from dooit.ui.widgets.status_bar_utils import Searcher
 from dooit.ui.widgets.tree import Tree
 from dooit.utils.watcher import Watcher
 from dooit.ui.events import (
@@ -11,6 +12,7 @@ from dooit.ui.events import (
     ChangeStatus,
     SpawnHelp,
     CommitData,
+    StopSearch,
     ExitApp,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
@@ -70,12 +72,19 @@ class Dooit(App):
             if (event.character and (event.character in PRINTABLE))
             else event.key
         )
+
+        if self.bar.status == "SEARCH":
+            await self.query_one(Searcher).keypress(key)
+            return
+
         if self.screen.name != "help":
-            await self.query_one(".focus").keypress(key)
+            visible_focused = [i for i in self.query(".focus") if i.display][0]
+            await visible_focused.keypress(key)
 
     async def clear_right(self):
         for i in self.query(TodoTree):
             i.display = False
+            i.remove_class("current")
 
         for i in self.query(EmptyWidget):
             if not isinstance(i.parent, Tree):
@@ -88,8 +97,10 @@ class Dooit(App):
             if widgets := self.query(f"#Tree-{model.uuid}"):
                 current_widget = widgets.first()
                 current_widget.display = True
+                current_widget.add_class("current")
             else:
                 current_widget = TodoTree(model)
+                current_widget.add_class("current")
                 await self.mount(current_widget, after=self.query_one(WorkspaceTree))
 
     async def mount_dashboard(self):
@@ -121,6 +132,11 @@ class Dooit(App):
     @on(Notify)
     async def notify(self, event: Notify):
         self.query_one(StatusBar).set_message(event.message)
+
+    @on(StopSearch)
+    async def stop_search(self, event: StopSearch):
+        await self.app.query_one(StatusBar).stop_search()
+        self.app.query_one(SearchMenu).stop_search(event.id_)
 
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp):

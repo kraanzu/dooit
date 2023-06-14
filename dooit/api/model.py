@@ -298,3 +298,23 @@ class Model:
             self.add_child("workspace")
             self.workspaces[-1].edit("descrption", i)
             self.workspaces[-1].from_data(j)
+
+    # ------ HELPERS -----------
+
+    def get_workspaces(self):
+        from dooit.api.workspace import Workspace
+
+        arr = [self] if isinstance(self, Workspace) else []
+        for i in self.workspaces:
+            arr.extend(i.get_workspaces())
+
+        return arr
+
+    def get_todos(self):
+        from dooit.api.todo import Todo
+
+        arr = [self] if isinstance(self, Todo) else []
+        for i in self.todos:
+            arr.extend(i.get_todos())
+
+        return arr

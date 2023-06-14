@@ -13,7 +13,9 @@ from dooit.ui.events.events import (
     StatusType,
 )
 from dooit.ui.widgets.empty import EmptyWidget
+from dooit.ui.widgets.search_menu import SearchMenu
 from dooit.ui.widgets.sort_options import SortOptions
+from dooit.ui.widgets.status_bar import StatusBar
 from dooit.ui.widgets.status_bar_utils import Searcher
 from dooit.ui.widgets.todo import TodoWidget
 from dooit.ui.widgets.workspace import WorkspaceWidget
@@ -95,9 +97,23 @@ class Tree(Widget):
             if new:
                 try:
                     widget = self.get_widget_by_id(new)
+                    self.expand_parents(widget.id)
                     widget.highlight()
                 except Exception:
                     self.post_message(Notify("cant find old highlighted node"))
+
+    def expand_parents(self, id_: Optional[str]):
+        if not id_:
+            return
+
+        parent = self.get_widget_by_id(id_)
+        while not parent.display:
+            parent.display = True
+            if not parent.expanded:
+                parent.toggle_expand()
+
+            if grandparent := parent.parent:
+                parent = self.get_widget_by_id(grandparent.id)
 
     async def watch_current(self, old: Optional[str], new: Optional[str]):
         self.change_highlights(old, new)
@@ -332,7 +348,11 @@ class Tree(Widget):
         if widget := self.app.query(Searcher):
             widget.first().start_edit()
         else:
-            await self.app.query_one("StatusBar").start_search()
+            await self.app.query_one(StatusBar).start_search()
+            with self.app.batch_update():
+                self.display = False
+                search_menu = SearchMenu(self.model, self.ModelType.class_kind)
+                await self.app.mount(search_menu, before=self)
 
     async def stop_search(self):
         pass
@@ -360,5 +380,4 @@ class Tree(Widget):
                 if bind.check_for_cursor and self.current == -1:
                     return
 
-                await self.change_status("NORMAL")
                 await func(*bind.params)

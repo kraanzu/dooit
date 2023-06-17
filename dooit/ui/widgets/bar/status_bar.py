@@ -1,17 +1,17 @@
+from typing import Optional
 from rich.text import TextType
 from textual.app import ComposeResult
 from textual.widget import Widget
-from dooit.utils.conf_reader import Config
 from dooit.api import manager
 from dooit.ui.events import StatusType
-from .status_bar_utils import (
-    Searcher,
-    StatusMiddle,
-    bar,
-    AutoHorizontal,
-    StatusWidget,
-    StatusMessage,
-)
+from dooit.utils.conf_reader import Config
+
+from .status_widget import StatusWidget
+from .utils import AutoHorizontal, StatusMiddle
+from .status_message import StatusMessage
+
+conf = Config()
+bar = conf.get("bar")
 
 
 class StatusBar(Widget):
@@ -48,13 +48,14 @@ class StatusBar(Widget):
             "manager": manager,
         }
 
-    async def replace_middle(self, new_widget):
+    async def replace_middle(self, new_widget: Optional[StatusMiddle] = None):
         with self.app.batch_update():
             widget = self.query_one(StatusMiddle)
-            self.mount(new_widget, before=widget)
+            self.mount(new_widget or StatusMessage(), before=widget)
             widget.remove()
 
     async def start_search(self):
+        from .searcher import Searcher
         searcher = Searcher()
         await self.replace_middle(searcher)
         searcher.start_edit()

@@ -1,8 +1,7 @@
 from textual.app import App
 from textual import events, on, work
 from dooit.ui.widgets.empty import EmptyWidget
-from dooit.ui.widgets.search_menu import SearchMenu
-from dooit.ui.widgets.status_bar_utils import Searcher
+from dooit.ui.widgets.bar import Searcher
 from dooit.ui.widgets.tree import Tree
 from dooit.utils.watcher import Watcher
 from dooit.ui.events import (

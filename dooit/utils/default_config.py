@@ -57,7 +57,7 @@ orange = "#d08770"
 #            GENERAL            #
 #################################
 BACKGROUND = black
-BAR_BACKRGOUND = grey
+BAR_BACKGROUND = black
 BORDER_DIM = grey
 BORDER_LIT = cyan
 BORDER_TITLE_DIM = black

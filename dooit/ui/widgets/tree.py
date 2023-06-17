@@ -15,7 +15,7 @@ from dooit.ui.events.events import (
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.search_menu import SearchMenu
 from dooit.ui.widgets.sort_options import SortOptions
-from dooit.ui.widgets.status_bar import StatusBar
+from dooit.ui.widgets.bar.status_bar import StatusBar
 from dooit.ui.widgets.todo import TodoWidget
 from dooit.ui.widgets.workspace import WorkspaceWidget
 from dooit.utils.keybinder import KeyBinder

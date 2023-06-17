@@ -16,7 +16,6 @@ from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.search_menu import SearchMenu
 from dooit.ui.widgets.sort_options import SortOptions
 from dooit.ui.widgets.status_bar import StatusBar
-from dooit.ui.widgets.status_bar_utils import Searcher
 from dooit.ui.widgets.todo import TodoWidget
 from dooit.ui.widgets.workspace import WorkspaceWidget
 from dooit.utils.keybinder import KeyBinder
@@ -47,6 +46,7 @@ class Tree(Widget):
         self.border_title = self.__class__.__name__.replace(
             "Tree", "s"
         )  # Making it plural
+        self.current_visible_widget: Optional[Widget] = None
 
     @property
     def current_widget(self) -> WidgetType:
@@ -106,14 +106,21 @@ class Tree(Widget):
         if not id_:
             return
 
-        parent = self.get_widget_by_id(id_)
-        while not parent.display:
-            parent.display = True
-            if not parent.expanded:
-                parent.toggle_expand()
+        with self.app.batch_update():
+            parent = self.get_widget_by_id(id_)
+            flag = False
 
-            if grandparent := parent.parent:
-                parent = self.get_widget_by_id(grandparent.id)
+            while not parent.display:
+                flag = True
+                parent.display = True
+                if not parent.expanded:
+                    parent.toggle_expand()
+
+                if grandparent := parent.parent:
+                    parent = self.get_widget_by_id(grandparent.id)
+
+            if flag and not parent.expanded:
+                parent.toggle_expand()
 
     async def watch_current(self, old: Optional[str], new: Optional[str]):
         self.change_highlights(old, new)
@@ -324,19 +331,31 @@ class Tree(Widget):
             await parent.force_refresh()
 
         self.post_message(ChangeStatus("NORMAL"))
+        self.current_visible_widget = None
+
+    async def _start_sort(self):
+        for i in self.children:
+            i.add_class("sort-hide")
+
+        widget = SortOptions(self.ModelType, self.current_widget.model)
+        await self.mount(widget)
+
+        self.current_visible_widget = widget
+
+    async def _stop_sort(self):
+        self.query_one(SortOptions).remove()
+
+        for i in self.children:
+            i.remove_class("sort-hide")
+
+        self.post_message(ChangeStatus("NORMAL"))
+        self.current_visible_widget = None
 
     async def sort_menu_toggle(self):
-        if query := self.query(SortOptions):
-            query.first().remove()
-            for i in self.query("*"):
-                i.remove_class("sort-hide")
+        if not self.query(SortOptions):
+            return await self._start_sort()
 
-            self.post_message(ChangeStatus("NORMAL"))
-        else:
-            for i in self.query("*"):
-                i.add_class("sort-hide")
-
-            await self.mount(SortOptions(self.ModelType, self.current_widget.model))
+        return await self._stop_sort()
 
     async def spawn_help(self):
         self.post_message(SpawnHelp())
@@ -345,27 +364,34 @@ class Tree(Widget):
         self.post_message(ChangeStatus(status))
 
     async def start_search(self):
-        if widget := self.app.query(Searcher):
-            widget.first().start_edit()
-        else:
+        with self.app.batch_update():
             await self.app.query_one(StatusBar).start_search()
-            with self.app.batch_update():
-                self.display = False
-                search_menu = SearchMenu(self.model, self.ModelType.class_kind)
-                await self.app.mount(search_menu, before=self)
 
-    async def stop_search(self):
-        pass
+            for i in self.children:
+                i.add_class("search-hide")
+
+            search_menu = SearchMenu(self.model, self.ModelType.class_kind)
+            await self.mount(search_menu)
+
+        self.current_visible_widget = search_menu
+
+    async def stop_search(self, id_: Optional[str] = None):
+        with self.app.batch_update():
+            self.query_one(SearchMenu).remove()
+            for i in self.children:
+                i.remove_class("search-hide")
+
+            if id_:
+                self.current = id_
+
+        self.current_visible_widget = None
 
     async def keypress(self, key: str):
-        if query := self.app.query(Searcher):
-            widget = query.first()
-            if widget.is_editing:
-                await widget.keypress(key)
-                return
+        if self.current_visible_widget:
+            if hasattr(self.current_visible_widget, "keypress"):
+                return await getattr(self.current_visible_widget, "keypress")(key)
 
-        if query := self.query(SortOptions):
-            await query.first().keypress(key)
+            raise TypeError(self.current_visible_widget)
             return
 
         if self.current and self.current_widget._is_editing():

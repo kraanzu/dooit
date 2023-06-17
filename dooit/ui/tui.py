@@ -74,8 +74,7 @@ class Dooit(App):
         )
 
         if self.bar.status == "SEARCH":
-            await self.query_one(Searcher).keypress(key)
-            return
+            return await self.query_one(Searcher).keypress(key)
 
         if self.screen.name != "help":
             visible_focused = [i for i in self.query(".focus") if i.display][0]
@@ -132,11 +131,6 @@ class Dooit(App):
     @on(Notify)
     async def notify(self, event: Notify):
         self.query_one(StatusBar).set_message(event.message)
-
-    @on(StopSearch)
-    async def stop_search(self, event: StopSearch):
-        await self.app.query_one(StatusBar).stop_search()
-        self.app.query_one(SearchMenu).stop_search(event.id_)
 
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp):

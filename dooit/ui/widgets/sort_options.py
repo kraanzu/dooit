@@ -68,18 +68,20 @@ class SortOptions(Widget):
     async def sort_menu_toggle(self):
         self.visible = False
 
-    def sort(self, method: str):
-        self.model_widget
-
     async def keypress(self, key: str) -> None:
+        from dooit.ui.widgets.tree import Tree
+
         if key == "escape":
-            await self.parent.sort_menu_toggle()
+            if self.parent and isinstance(self.parent, Tree):
+                await self.parent._stop_sort()
+
             return
 
         if key == "enter":
-            option = self.options[self.highlighted]
-            await self.parent.apply_sort(option)
-            return
+            if self.parent and isinstance(self.parent, Tree):
+                option = self.options[self.highlighted]
+                await self.parent.apply_sort(option)
+                return
 
         self.key_manager.attach_key(key)
         bind = self.key_manager.get_method()

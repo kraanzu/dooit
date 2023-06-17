@@ -22,7 +22,7 @@ HelpScreen {{
     scrollbar-size: 1 1;
 }}
 
-WorkspaceTree, TodoTree, EmptyWidget, SearchMenu {{
+WorkspaceTree, TodoTree, EmptyWidget {{
     background: {BG};
     border: {DIM};
     border-title-background: {DIM};

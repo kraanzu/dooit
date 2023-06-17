@@ -30,7 +30,7 @@ classes = f"""
     border: none;
 }}
 
-.sort-hide {{
+.sort-hide, .search-hide {{
     display: none;
 }}
 

@@ -58,6 +58,9 @@ class Searcher(StatusMiddle, Input):
     }}
     """
 
+    def __init__(self):
+        super().__init__(classes="")
+
     async def on_mount(self):
         from dooit.ui.widgets.status_bar import StatusBar
 
@@ -70,11 +73,14 @@ class Searcher(StatusMiddle, Input):
 
     async def keypress(self, key: str) -> None:
         if key == "escape":
-            self.post_message(StopSearch())
+            await self.app.query_one(SearchMenu).cancel_search()
+            self.remove()
             return
 
         if key == "enter":
             self.post_message(ChangeStatus("NORMAL"))
+            self.remove()
+            return
 
         await super().keypress(key)
         self.app.query_one(SearchMenu).apply_filter(self.value)

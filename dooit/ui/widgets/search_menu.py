@@ -1,20 +1,17 @@
-from typing import Optional, Union
+from typing import Optional
 from rich.console import RenderableType
 from rich.text import Text
 from textual.widget import Widget
-from dooit.api.workspace import Workspace
-from dooit.api.todo import Todo
-from dooit.ui.events.events import StopSearch
+from dooit.api.model import Model
 from dooit.utils.keybinder import KeyBinder, KeyList
 
 
 class SearchMenu(Widget):
     key_manager = KeyBinder()
 
-    def __init__(self, model: Union[Todo, Workspace], children_type):
-        super().__init__(classes="focus")
+    def __init__(self, model: Model, children_type):
+        super().__init__()
         self.add_keys()
-        self.border_title = f"search {children_type}s"
         self.current = -1
         self.filter = []
         self.children_type = children_type
@@ -27,10 +24,14 @@ class SearchMenu(Widget):
         self.options = [(i.description, i.uuid) for i in options]
         self.visible_options = self.options[:]
 
+    @property
+    def current_option(self) -> Optional[str]:
+        if self.current:
+            return self.visible_options[self.current][1]
+
     def add_keys(self):
         additional_keys: KeyList = {
-            "signal_stop_search": "<escape>",
-            "signal_goto_item": "<enter>",
+            "stop_search": "<enter>",
         }
         self.key_manager.add_keys(additional_keys)
 
@@ -39,15 +40,6 @@ class SearchMenu(Widget):
 
     async def move_up(self):
         self.current = max(self.current - 1, 0)
-
-    async def signal_stop_search(self):
-        self.post_message(StopSearch())
-
-    async def signal_goto_item(self):
-        if self.current != -1:
-            self.post_message(StopSearch(self.visible_options[self.current][1]))
-        else:
-            await self.signal_stop_search()
 
     async def keypress(self, key):
         self.key_manager.attach_key(key)
@@ -71,23 +63,21 @@ class SearchMenu(Widget):
         self.reset_cursor()
         self.refresh()
 
-    def stop_search(self, id_: Optional[str] = None):
-        from dooit.ui.widgets.todo_tree import TodoTree
-        from dooit.ui.widgets.workspace_tree import WorkspaceTree
+    async def cancel_search(self):
+        from dooit.ui.widgets.tree import Tree
 
-        if self.children_type == "workspace":
-            w = WorkspaceTree
-            w = self.app.query_one(w)
-        else:
-            w = TodoTree
-            w = [i for i in self.app.query(w) if i.has_class("current")][0]
+        if self.parent:
+            parent = self.app.query_one(f"#{self.parent.id}", expect_type=Tree)
+            await parent.stop_search()
 
-        with self.app.batch_update():
-            if id_:
-                w.current = id_
+        self.remove()
 
-            w.display = True
-            self.remove()
+    async def stop_search(self):
+        from dooit.ui.widgets.tree import Tree
+
+        if self.parent and self.current_option:
+            parent = self.app.query_one(f"#{self.parent.id}", expect_type=Tree)
+            await parent.stop_search(self.current_option)
 
     def render(self) -> RenderableType:
         res = Text()

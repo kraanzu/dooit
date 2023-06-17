@@ -59,7 +59,7 @@ class TopicSelect(Message, bubble=True):
         self.model = model
 
 
-class StopSearch(Message):
+class StartSearch(Message):
     """
     Emitted to stop search
     """
@@ -67,6 +67,16 @@ class StopSearch(Message):
     def __init__(self, id_: Optional[str] = None) -> None:
         super().__init__()
         self.id_ = id_
+
+
+class StopSearch(Message):
+    """
+    Emitted to stop search
+    """
+
+    def __init__(self, cancel: bool = False) -> None:
+        super().__init__()
+        self.cancel = cancel
 
 
 class CommitData(Message):

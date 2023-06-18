@@ -5,8 +5,6 @@ from .events import (
     SortMethodType,
     TopicSelect,
     SwitchTab,
-    StartSearch,
-    StopSearch,
     SpawnHelp,
     CommitData,
     ExitApp,
@@ -20,8 +18,6 @@ __all__ = [
     "SortMethodType",
     "TopicSelect",
     "SwitchTab",
-    "StartSearch",
-    "StopSearch",
     "CommitData",
     "ExitApp",
 ]

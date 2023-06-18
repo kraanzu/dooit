@@ -59,26 +59,6 @@ class TopicSelect(Message, bubble=True):
         self.model = model
 
 
-class StartSearch(Message):
-    """
-    Emitted to stop search
-    """
-
-    def __init__(self, id_: Optional[str] = None) -> None:
-        super().__init__()
-        self.id_ = id_
-
-
-class StopSearch(Message):
-    """
-    Emitted to stop search
-    """
-
-    def __init__(self, cancel: bool = False) -> None:
-        super().__init__()
-        self.cancel = cancel
-
-
 class CommitData(Message):
     """
     Emitted when the local data needs to be updated

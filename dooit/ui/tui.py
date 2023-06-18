@@ -11,7 +11,6 @@ from dooit.ui.events import (
     ChangeStatus,
     SpawnHelp,
     CommitData,
-    StopSearch,
     ExitApp,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar

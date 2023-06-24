@@ -2,7 +2,7 @@ import pyperclip
 from typing import Optional
 from rich.text import Text
 from textual.widget import Widget
-from dooit.api.model import Result
+from dooit.api.model import Err, Ok, Result
 from dooit.api.todo import Todo
 from dooit.ui.events.events import ChangeStatus, CommitData
 from dooit.utils.conf_reader import Config
@@ -73,7 +73,7 @@ class Input(Widget):
         self.add_class("editing")
         self.refresh(layout=True)
 
-    def stop_edit(self) -> Optional[Result]:
+    async def stop_edit(self) -> Optional[Result]:
         self.remove_class("editing")
 
     def clear(self) -> None:
@@ -173,7 +173,7 @@ class Input(Widget):
             key = " "
 
         if key == "enter":
-            self.stop_edit()
+            await self.stop_edit()
 
         # Moving backward
         elif key == "left":
@@ -251,28 +251,39 @@ class SimpleInput(Input):
         self.styles.height = "auto"
         self.highlight_pattern = ""
 
-    def refresh_value(self):
+    def refresh_value(self) -> str:
         self.value = getattr(self.model, self._property)
         self.refresh(layout=True)
+        return self.value
 
-    def stop_edit(self, cancel: bool = False) -> Optional[Result]:
-        super().stop_edit()
+    async def stop_edit(self, cancel: bool = False) -> Optional[Result]:
+        await super().stop_edit()
+
         if not cancel:
-            self.model.edit(self._property, self.value)
+            res = self.model.edit(self._property, self.value)
+        else:
+            res = Ok() if self.refresh_value() else Err("cannot be empty")
 
-        self.post_message(ChangeStatus("NORMAL"))
         self.refresh_value()
+        self.post_message(ChangeStatus("NORMAL"))
         self.post_message(CommitData())
         self.refresh(layout=True)
 
-    def cancel_edit(self):
-        return self.stop_edit(cancel=True)
+        if res.cancel_op:
+            from dooit.ui.widgets.tree import Tree
+
+            await self.app.query_one(".focus", expect_type=Tree).remove_item()
+
+        return res
+
+    async def cancel_edit(self):
+        return await self.stop_edit(cancel=True)
 
     async def keypress(self, key: str) -> None:
         await super().keypress(key)
 
         if key == "escape":
-            self.cancel_edit()
+            await self.cancel_edit()
 
     def _colorize_by_status(self, text: str) -> str:
         return self._render_text_with_color(

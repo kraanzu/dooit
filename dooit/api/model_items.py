@@ -165,7 +165,7 @@ class Status(Item):
 
 
 class Description(Item):
-    _default = "placeholder_____"
+    _default = ""
     value = _default
 
     def clean(self, s: str):

@@ -63,10 +63,6 @@ class Node(Widget):
         self.query_one(f"#{self.id}-{property}", expect_type=SimpleInput).start_edit()
         self.refresh()
 
-    def stop_edit(self):
-        if widget := self._is_editing():
-            widget.stop_edit()
-
     def draw(self) -> Iterator[Widget]:
         raise NotImplementedError
 

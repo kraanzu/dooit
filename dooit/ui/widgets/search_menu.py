@@ -3,15 +3,12 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual.widget import Widget
 from dooit.api.model import Model
-from dooit.utils.keybinder import KeyBinder, KeyList
+from dooit.ui.widgets.kwidget import KeyWidget
 
 
-class SearchMenu(Widget):
-    key_manager = KeyBinder()
-
+class SearchMenu(KeyWidget, Widget):
     def __init__(self, model: Model, children_type):
         super().__init__()
-        self.add_keys()
         self.current = -1
         self.filter = []
         self.children_type = children_type
@@ -23,17 +20,12 @@ class SearchMenu(Widget):
 
         self.options = [(i.description, i.uuid) for i in options]
         self.visible_options = self.options[:]
+        self.add_keys({"stop_search": "<enter>"})
 
     @property
     def current_option(self) -> Optional[str]:
         if self.current:
             return self.visible_options[self.current][1]
-
-    def add_keys(self):
-        additional_keys: KeyList = {
-            "stop_search": "<enter>",
-        }
-        self.key_manager.add_keys(additional_keys)
 
     async def move_down(self):
         self.current = min(self.current + 1, len(self.visible_options) - 1)

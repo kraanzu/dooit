@@ -13,12 +13,12 @@ from dooit.ui.events.events import (
     StatusType,
 )
 from dooit.ui.widgets.empty import EmptyWidget
+from dooit.ui.widgets.kwidget import KeyWidget
 from dooit.ui.widgets.search_menu import SearchMenu
 from dooit.ui.widgets.sort_options import SortOptions
 from dooit.ui.widgets.bar.status_bar import StatusBar
 from dooit.ui.widgets.todo import TodoWidget
 from dooit.ui.widgets.workspace import WorkspaceWidget
-from dooit.utils.keybinder import KeyBinder
 
 PRINTABLE = (
     "0123456789"
@@ -27,9 +27,8 @@ PRINTABLE = (
 )
 
 
-class Tree(Widget):
+class Tree(KeyWidget, Widget):
     current = Reactive(None)
-    key_manager = KeyBinder()
     ModelType = Workspace
     WidgetType = WorkspaceWidget
 
@@ -387,23 +386,12 @@ class Tree(Widget):
         self.current_visible_widget = None
 
     async def keypress(self, key: str):
-        if self.current_visible_widget:
-            if hasattr(self.current_visible_widget, "keypress"):
-                return await getattr(self.current_visible_widget, "keypress")(key)
-
-            raise TypeError(self.current_visible_widget)
-            return
+        if self.current_visible_widget and hasattr(
+            self.current_visible_widget, "keypress"
+        ):
+            return await getattr(self.current_visible_widget, "keypress")(key)
 
         if self.current and self.current_widget._is_editing():
-            await self.current_widget.keypress(key)
-            return
+            return await self.current_widget.keypress(key)
 
-        self.key_manager.attach_key(key)
-        bind = self.key_manager.get_method()
-        if bind:
-            if hasattr(self, bind.func_name):
-                func = getattr(self, bind.func_name)
-                if bind.check_for_cursor and self.current == -1:
-                    return
-
-                await func(*bind.params)
+        await super().keypress(key)

@@ -5,16 +5,14 @@ from rich.text import Text
 from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
-from dooit.ui.events import ChangeStatus, Notify
-from dooit.utils import KeyBinder
+from dooit.ui.events import ChangeStatus
+from dooit.ui.widgets.kwidget import KeyWidget
 
 
-class SortOptions(Widget):
+class SortOptions(KeyWidget, Widget):
     """
     A list class to show and select the items in a list
     """
-
-    key_manager = KeyBinder()
 
     def __init__(
         self,
@@ -27,6 +25,7 @@ class SortOptions(Widget):
         self.options = model_type.sortable_fields
         self.model_widget = model
         self.highlighted = 0
+        self.add_keys({"cancel_sort": "<escape>", "apply_sort": "<enter>"})
 
     async def on_mount(self):
         self.post_message(ChangeStatus("SORT"))
@@ -68,33 +67,18 @@ class SortOptions(Widget):
     async def sort_menu_toggle(self):
         self.visible = False
 
-    async def keypress(self, key: str) -> None:
+    async def cancel_sort(self):
         from dooit.ui.widgets.tree import Tree
 
-        if key == "escape":
-            if self.parent and isinstance(self.parent, Tree):
-                await self.parent._stop_sort()
+        if self.parent and isinstance(self.parent, Tree):
+            await self.parent._stop_sort()
 
-            return
+    async def apply_sort(self):
+        from dooit.ui.widgets.tree import Tree
 
-        if key == "enter":
-            if self.parent and isinstance(self.parent, Tree):
-                option = self.options[self.highlighted]
-                await self.parent.apply_sort(option)
-                return
-
-        self.key_manager.attach_key(key)
-        bind = self.key_manager.get_method()
-        if bind:
-            if hasattr(self, bind.func_name):
-                func = getattr(self, bind.func_name)
-                await func(*bind.params)
-            else:
-                self.post_message(
-                    Notify("[yellow]No such operation for sort menu![/yellow]")
-                )
-
-        self.refresh()
+        if self.parent and isinstance(self.parent, Tree):
+            option = self.options[self.highlighted]
+            await self.parent.apply_sort(option)
 
     def add_option(self, option: str) -> None:
         self.options.append(option)

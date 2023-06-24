@@ -15,9 +15,9 @@ class Node(Widget):
     _expand = False
     ModelType: Type[Union[Workspace, Todo]]
 
-    def __init__(self, model, display: bool = True):
+    def __init__(self, model, force_display: bool = True):
         self.model = model
-        self.force_display = display
+        self.force_display = force_display
         super().__init__(id=self.model.uuid)
 
     @property
@@ -74,7 +74,7 @@ class Node(Widget):
             yield widget
 
         for child in self._get_model_children():
-            yield self.__class__(child, display=False)
+            yield self.__class__(child, force_display=False)
 
     async def force_refresh(self):
         children = self._get_model_children()
@@ -82,7 +82,7 @@ class Node(Widget):
             if query := self.query(f"#{i.uuid}"):
                 await self.mount(query.first())
             else:
-                child = self.__class__(i, display=False)
+                child = self.__class__(i, force_display=False)
                 await self.mount(child)
 
     # ------------------------------------------

@@ -3,21 +3,24 @@ from dooit.api import Todo
 from dooit.utils.conf_reader import Config
 from .formatter import Formatter
 
-c = Config()
-RED = c.get("red")
-GREEN = c.get("green")
-YELLOW = c.get("yellow")
-ORANGE = c.get("orange")
-DURATION_LEGEND = {
-    "m": "minute",
-    "h": "hour",
-    "d": "day",
-    "w": "week",
-}
+
 
 
 class TodoFormatter(Formatter):
     model_type = Todo
+    def __init__(self, format):
+        super().__init__(format)
+        self.c = Config()
+        self.RED = self.c.get("red")
+        self.GREEN = self.c.get("green")
+        self.YELLOW = self.c.get("yellow")
+        self.ORANGE = self.c.get("orange")
+        self.DURATION_LEGEND = {
+            "m": "minute",
+            "h": "hour",
+            "d": "day",
+            "w": "week",
+        }
 
     def todo_highlight(self, text: str, is_highlighted: bool, todo: Todo):
         color = self.status_color(todo)
@@ -29,11 +32,11 @@ class TodoFormatter(Formatter):
     def status_color(self, todo: Todo):
         status = todo.status
         if status == "COMPLETED":
-            return GREEN
+            return self.GREEN
         elif status == "PENDING":
-            return YELLOW
+            return self.YELLOW
         else:
-            return RED
+            return self.RED
 
     def style_description(
         self,
@@ -90,7 +93,7 @@ class TodoFormatter(Formatter):
             if recurrence:
                 if editing != "recurrence" or not is_highlighted:
                     frequency, value = recurrence[:-1], recurrence[-1]
-                    recurrence = f"{frequency} {DURATION_LEGEND.get(value)}"
+                    recurrence = f"{frequency} {self.DURATION_LEGEND.get(value)}"
                     if frequency != "1":
                         recurrence += "s"
 
@@ -131,13 +134,13 @@ class TodoFormatter(Formatter):
     ) -> str:
         val = item.urgency
         if val == 3:
-            color = ORANGE
+            color = self.ORANGE
         elif val == 2:
-            color = YELLOW
+            color = self.YELLOW
         elif val == 1:
-            color = GREEN
+            color = self.GREEN
         else:
-            color = RED
+            color = self.RED
 
         if item.status == "COMPLETED":
             color = "strike " + color

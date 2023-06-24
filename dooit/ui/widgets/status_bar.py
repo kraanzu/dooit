@@ -8,7 +8,6 @@ from dooit.utils.conf_reader import Config
 from dooit.api import manager
 from ..events import StatusType
 
-bar = Config().get("bar")
 
 
 class StatusBar(Widget):
@@ -18,6 +17,9 @@ class StatusBar(Widget):
 
     def __init__(self) -> None:
         super().__init__()
+        self.c = Config()
+        self.bar = self.c.get("bar")
+
         self.message = ""
         self.status = "NORMAL"
         self.set_interval(1, self.refresh)
@@ -56,7 +58,7 @@ class StatusBar(Widget):
 
         for col in "ABC":
             temp = Text()
-            for func in bar[col]:
+            for func in self.bar[col]:
                 if isinstance(func, Callable):
                     args = get_args(func).args
                     text = func(**{i: params[i] for i in args})

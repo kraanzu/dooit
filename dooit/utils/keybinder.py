@@ -3,9 +3,6 @@ from typing import DefaultDict, Dict, List, Optional, Union
 from dooit.utils.conf_reader import Config
 from copy import deepcopy
 
-customed_keys = Config().get("keybindings")
-
-
 class Bind:
     exclude_cursor_check = [
         "add_sibling",
@@ -25,51 +22,46 @@ class Bind:
         self.check_for_cursor = func_name not in self.exclude_cursor_check
 
 
-KeyList = Dict[str, Union[str, List]]
-PRINTABLE = (
-    "0123456789"
-    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
-)
-DEFAULTS = {
-    "stop search": "<escape>",
-    "switch pane": "<tab>",
-    "move up": ["k", "<up>"],
-    "shift up": ["K", "<shift+up>"],
-    "move down": ["j", "<down>"],
-    "shift down": ["J", "<shift+down>"],
-    "edit description": "i",
-    "toggle expand": "z",
-    "toggle expand parent": "Z",
-    "add child": "A",
-    "add sibling": "a",
-    "remove item": "x",
-    "move to top": ["g", "<home>"],
-    "move to bottom": ["G", "<end>"],
-    "sort menu toggle": "s",
-    "start search": "/",
-    "spawn help": "?",
-    "copy text": "y",
-    "toggle complete": "c",
-    "edit due": "d",
-    "edit tags": "t",
-    "edit recurrence": "r",
-    "increase urgency": ["+", "="],
-    "decrease urgency": ["-", "_"],
-    "exit": "<ctrl+q>",
-}
-configured_keys = deepcopy(DEFAULTS)
-configured_keys.update(customed_keys)
-
-
 class KeyBinder:
     # KEYBIND MANAGER FOR NORMAL MODE
 
     def __init__(self) -> None:
+        
+        self.c = Config()
+        self.customed_keys = self.c.get("keybindings")
         self.pressed = ""
         self.methods: Dict[str, Bind] = {}
         self.raw: DefaultDict[str, List[str]] = defaultdict(list)
-        self.add_keys(configured_keys)
+        self.DEFAULTS = {
+            "stop search": "<escape>",
+            "switch pane": "<tab>",
+            "move up": ["k", "<up>"],
+            "shift up": ["K", "<shift+up>"],
+            "move down": ["j", "<down>"],
+            "shift down": ["J", "<shift+down>"],
+            "edit description": "i",
+            "toggle expand": "z",
+            "toggle expand parent": "Z",
+            "add child": "A",
+            "add sibling": "a",
+            "remove item": "x",
+            "move to top": ["g", "<home>"],
+            "move to bottom": ["G", "<end>"],
+            "sort menu toggle": "s",
+            "start search": "/",
+            "spawn help": "?",
+            "copy text": "y",
+            "toggle complete": "c",
+            "edit due": "d",
+            "edit tags": "t",
+            "edit recurrence": "r",
+            "increase urgency": ["+", "="],
+            "decrease urgency": ["-", "_"],
+            "exit": "<ctrl+q>",
+        }
+        self.configured_keys = deepcopy(self.DEFAULTS)
+        self.configured_keys.update(self.customed_keys)
+        self.add_keys(self.configured_keys)
 
     def convert_to_bind(self, cmd: str):
         func_split = cmd.split()
@@ -78,7 +70,7 @@ class KeyBinder:
         else:
             return Bind("_".join(func_split), [])
 
-    def add_keys(self, keys: KeyList) -> None:
+    def add_keys(self, keys: Dict[str, Union[str, List[str]]]) -> None:
         for cmd, key in keys.items():
             if isinstance(key, str):
                 key = [key]
@@ -101,7 +93,7 @@ class KeyBinder:
     def clear(self) -> None:
         self.pressed = ""
 
-    def find_keys(self) -> List:
+    def find_keys(self) -> List[str]:
         possible_bindings = filter(
             lambda keybind: keybind.startswith(self.pressed),
             self.methods.keys(),

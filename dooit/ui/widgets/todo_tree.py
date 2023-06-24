@@ -5,30 +5,32 @@ from dooit.ui.events.events import SwitchTab
 from dooit.api import Workspace, Todo
 from .tree import TreeList
 
-conf = Config()
-EMPTY_TODO = conf.get("EMPTY_TODO")
-dashboard = conf.get("dashboard")
-COLUMN_ORDER = conf.get("COLUMN_ORDER")
-format = conf.get("TODO")
-PRINTABLE = (
-    "0123456789"
-    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
-)
-
 
 class TodoTree(TreeList):
     """
     Tree structured Class to manage todos
     """
 
-    options = Todo.sortable_fields
-    EMPTY = dashboard
-    model_kind = "todo"
-    model_type = Todo
-    styler = TodoFormatter(format)
-    COLS = COLUMN_ORDER
-    key_manager = KeyBinder()
+    def __init__(self):
+        super().__init__()
+        conf = Config()
+        self.EMPTY_TODO = conf.get("EMPTY_TODO")
+        self.dashboard = conf.get("dashboard")
+        self.COLUMN_ORDER = conf.get("COLUMN_ORDER")
+        self.format = conf.get("TODO")
+        self.PRINTABLE = (
+            "0123456789"
+            + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+        )
+
+        self.options = Todo.sortable_fields
+        self.EMPTY = self.dashboard
+        self.model_kind = "todo"
+        self.model_type = Todo
+        self.styler = TodoFormatter(self.format)
+        self.COLS = self.COLUMN_ORDER
+        self.key_manager = KeyBinder()
 
     def _get_children(self, model: Workspace):
         if model:
@@ -42,7 +44,7 @@ class TodoTree(TreeList):
         self.post_message(SwitchTab())
 
     async def update_table(self, model: Optional[Workspace] = None):
-        self.EMPTY = EMPTY_TODO if model else dashboard
+        self.EMPTY = self.EMPTY_TODO if model else self.dashboard
         self.model = model
         await self.rearrange()
         self.refresh()
@@ -52,14 +54,14 @@ class TodoTree(TreeList):
         return super().item
 
     def _setup_table(self) -> None:
-        super()._setup_table(format["pointer"])
-        for col in COLUMN_ORDER:
+        super()._setup_table(self.format["pointer"])
+        for col in self.COLUMN_ORDER:
             if col == "description":
                 d = {"ratio": 1}
             elif col == "due":
                 # 12 -> size of formatted date
                 # 02 -> padding
-                d = {"width": 12 + 2 + len(format["due_icon"])}
+                d = {"width": 12 + 2 + len(self.format["due_icon"])}
             elif col == "urgency":
                 d = {"width": 1}
             else:

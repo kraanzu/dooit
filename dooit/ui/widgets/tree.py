@@ -48,6 +48,10 @@ class Tree(KeyWidget, Widget):
         self.current_visible_widget: Optional[Widget] = None
 
     @property
+    def is_cursor_available(self) -> bool:
+        return bool(self.current) and self.current != -1
+
+    @property
     def current_widget(self) -> WidgetType:
         if isinstance(self.current, Reactive):
             val = self.current._default

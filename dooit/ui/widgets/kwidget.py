@@ -33,7 +33,7 @@ class KeyWidget(Widget):
         if bind:
             if hasattr(self, bind.func_name):
                 func = getattr(self, bind.func_name)
-                if bind.check_for_cursor and self.is_cursor_available == -1:
+                if bind.check_for_cursor and not self.is_cursor_available:
                     return
 
                 await func(*bind.params)

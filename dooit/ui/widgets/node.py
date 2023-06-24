@@ -28,7 +28,7 @@ class Node(Widget):
         raise NotImplementedError
 
     def _get_all_children(self):
-        return self.query(self.__class__)
+        return [i for i in self.children if isinstance(i, self.__class__)]
 
     def _is_editing(self) -> Union[Literal[False], SimpleInput]:
         if q := self.query(".editing"):

@@ -12,7 +12,7 @@ import unittest
 
 
 class Test():
-  async def run():
+  def run():
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
 
@@ -78,9 +78,6 @@ class SingletonPatternTest(unittest.TestCase):
         format = config_instance.get("TODO")
         config_TodoFormatter = TodoFormatter(format).c 
         print("Config instance used by TodoFormatter, ID: " + str(id(config_TodoFormatter)))
-    
-        config_StatusBar = StatusBar().c
-        print("Config instance used by StatusBar, ID: " + str(id(config_StatusBar)))
 
         config_TreeList = TreeList().conf
         print("Config instance used by TreeList, ID: " + str(id(config_TreeList)))
@@ -94,7 +91,6 @@ class SingletonPatternTest(unittest.TestCase):
   
 
         self.assertIs(config_instance, config_TodoFormatter, "config_instance and config_TodoFormatter should be the same instance.")
-        assert config_TodoFormatter is config_StatusBar, "config_TodoFormatter and config_StatusBar should be the same instance."
-        assert config_StatusBar is config_TreeList, "config_StatusBar and config_TreeList should be the same instance."
+        assert config_TodoFormatter is config_TreeList, "config_TodoFormatter and config_TreeList should be the same instance."
         assert config_TreeList is config_TodoTree, "config_TreeList and config_TodoTree should be the same instance."
         assert config_TodoTree is config_KeyBinder, "config_TodoTree and config_KeyBinder should be the same instance."

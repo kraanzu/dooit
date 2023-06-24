@@ -312,8 +312,10 @@ class Tree(KeyWidget, Widget):
 
     async def toggle_expand_parent(self):
         id_ = self.current_widget.toggle_expand_parent()
-        self.current = id_
-        await self.toggle_expand()
+        if id_:
+            self.current = id_
+            if self.current_widget.expanded:
+                await self.toggle_expand()
 
     async def copy_text(self):
         await self.current_widget.copy_text()

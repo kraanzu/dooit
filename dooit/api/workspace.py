@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 from ..api.todo import Todo
 from .model import Model
+from .item_concrete_creator import ItemConcreteCreator
 
 WORKSPACE = "workspace"
 TODO = "todo"
@@ -11,10 +12,10 @@ class Workspace(Model):
     sortable_fields = ["description"]
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
-        from .model_items import Description
 
         super().__init__(parent)
-        self._description = Description(self)
+        itemCreator = ItemConcreteCreator()
+        self._description = itemCreator.create_description(self)
 
     @property
     def path(self):

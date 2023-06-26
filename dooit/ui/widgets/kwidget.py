@@ -1,5 +1,7 @@
 from textual.widget import Widget
+from dooit.ui.events.events import Notify
 from dooit.utils.keybinder import KeyBinder, KeyList
+from dooit.api.model import Result
 
 
 class KeyWidget(Widget):
@@ -35,5 +37,7 @@ class KeyWidget(Widget):
                 func = getattr(self, bind.func_name)
                 if bind.check_for_cursor and not self.is_cursor_available:
                     return
-
-                await func(*bind.params)
+                
+                res = await func(*bind.params)
+                if isinstance(res, Result) and res.message:
+                    self.post_message(Notify(res.text()))

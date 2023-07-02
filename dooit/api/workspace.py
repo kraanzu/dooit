@@ -1,11 +1,10 @@
-from typing import Any, Dict, Optional
+from typing import Any, List, Dict, Optional
 from ..api.todo import Todo
 from .model import Model
 from .item_concrete_creator import ItemConcreteCreator
 
 WORKSPACE = "workspace"
 TODO = "todo"
-
 
 class Workspace(Model):
     fields = ["description"]
@@ -14,6 +13,8 @@ class Workspace(Model):
     def __init__(self, parent: Optional["Model"] = None) -> None:
 
         super().__init__(parent)
+        self.workspaces: List[Workspace] = []
+        self.todos: List[Todo] = []
         itemCreator = ItemConcreteCreator()
         self._description = itemCreator.create_description(self)
 
@@ -26,11 +27,38 @@ class Workspace(Model):
     def description(self):
         return self._description.value
 
+    def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:
+        """
+        Adds a child to specified index (Defaults to first position)
+        """
+
+        if kind == WORKSPACE:
+            child = Workspace(parent=self)
+        elif kind == TODO:
+            child = Todo(parent=self)
+            if inherit and isinstance(self, Todo):
+                child.fill_from_data(self.to_data())
+                child._description.value = ""
+                child._effort._value = 0
+                child._tags.value = ""
+                child.edit("status", "PENDING")
+
+        children = self._get_children(kind)
+        children.insert(index, child)
+
+        return child
+
+    def _get_children(self, kind: str) -> List:
+      if kind == WORKSPACE:
+        return self.workspaces
+      elif kind == TODO:
+        return self.todos
+
     def add_workspace(self, index: int = 0):
-        return super().add_child(WORKSPACE, index)
+        return self.add_child(WORKSPACE, index)
 
     def add_todo(self, index: int = 0) -> Todo:
-        return super().add_child(TODO, index)
+        return self.add_child(TODO, index)
 
     def commit(self) -> Dict[str, Any]:
         child_workspaces = {
@@ -55,7 +83,7 @@ class Workspace(Model):
                         todo.from_data(data)
                     continue
 
-                workspace = self.add_child("workspace", index=len(self.workspaces))
+                workspace = self.add_workspace(index=len(self.workspaces))
                 workspace.edit("description", i)
                 workspace.from_data(j)
 

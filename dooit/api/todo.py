@@ -72,14 +72,6 @@ class Todo(Model):
     def tags(self):
         return self._tags.value
 
-    def add_child(
-        self, kind: str = "todo", index: int = 0, inherit: bool = False
-    ) -> Any:
-        if kind != "todo":
-            raise TypeError(f"Cannot add child of kind {kind}")
-
-        return super().add_child(kind, index, inherit)
-
     def add_todo(self, index: int = 0, inherit: bool = False):
         return self.add_child(TODO, index, inherit)
 
@@ -138,3 +130,32 @@ class Todo(Model):
             for i in data[1]:
                 child_todo = self.add_child(kind="todo", index=len(self.todos))
                 child_todo.from_data(i)
+
+    def _get_children(self, kind: str) -> List:
+        """
+        Get children list (todo)
+        """
+        if kind not in ["todo"]:
+            raise TypeError(f"Cannot perform this operation for type {kind}")
+
+        return self.todos
+    
+    def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:     
+        """
+        Adds a child to specified index (Defaults to first position)
+        """
+        if kind != "todo":
+            raise TypeError(f"Cannot add child of kind {kind}")
+        child = Todo(parent=self)
+        if inherit and isinstance(self, Todo):
+            child.fill_from_data(self.to_data())
+            child._description.value = ""
+            child._effort._value = 0
+            child._tags.value = ""
+            child.edit("status", "PENDING")
+
+            children = self._get_children(kind)
+            children.insert(index, child)
+
+        return child
+

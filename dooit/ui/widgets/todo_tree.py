@@ -31,10 +31,11 @@ class TodoTree(TreeList):
         self.styler = TodoFormatter(self.format)
         self.COLS = self.COLUMN_ORDER
         self.key_manager = KeyBinder()
-
+        
     def _get_children(self, model: Workspace):
         if model:
-            return model.todos
+            if hasattr(model, 'todos'):
+                return model.todos
         return []
 
     async def switch_pane(self):

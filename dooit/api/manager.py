@@ -1,12 +1,12 @@
 from time import time
-from typing import Any, Dict, Optional
+from typing import Any, List, Dict, Optional
 from .model import Model
 from ..utils import Parser
 from ..api.workspace import Workspace
+from ..api.todo import Todo
 
 WORKSPACE = "workspace"
 parser = Parser()
-
 
 class Manager(Model):
     """
@@ -29,9 +29,15 @@ class Manager(Model):
 
     def __init__(self, parent: Optional["Model"] = None) -> None:
         super().__init__(parent)
+        self.workspaces: List[Workspace] = []
 
-    def add_workspace(self) -> Workspace:
-        return self.add_child(WORKSPACE)
+    def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:
+      child = Workspace(parent=self)
+      self.workspaces.append(child)
+      return child
+
+    def _get_children(self, kind: str) -> List:
+        return self.workspaces
 
     def _get_commit_data(self):
         return {
@@ -56,13 +62,12 @@ class Manager(Model):
             return
 
         self.workspaces.clear()
-        self.todos.clear()
         self.last_modified = parser.last_modified
         self.from_data(data)
 
     def from_data(self, data: Any) -> None:
         for i, j in data.items():
-            child = self.add_child(WORKSPACE, len(self.workspaces))
+            child = self.add_child(WORKSPACE)
             child.edit("description", i)
             child.from_data(j)
 

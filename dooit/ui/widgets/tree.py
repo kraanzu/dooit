@@ -19,10 +19,8 @@ from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
 from .utils import Component, VerticalView
 
-
 class SearchEnabledError(Exception):
     pass
-
 
 class TreeList(Widget):
     """
@@ -45,6 +43,7 @@ class TreeList(Widget):
         name: Optional[str] = None,
         model: Manager = manager,
     ) -> None:
+        from .user_commands import Invoker
         super().__init__(name=name)
         self.model = model
         self.conf = Config()
@@ -57,6 +56,7 @@ class TreeList(Widget):
             + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
         )
+        self.invoker = Invoker(self)
 
     async def on_mount(self) -> None:
         self.sort_menu = SortOptions()
@@ -241,44 +241,8 @@ class TreeList(Widget):
     async def change_status(self, status: StatusType):
         self.post_message(ChangeStatus(status))
 
-    async def start_search(self) -> None:
-        self.filter.on_focus()
-        await self.notify(self.filter.render())
-        await self.change_status("SEARCH")
-
-    async def stop_search(self, clear: bool = True) -> None:
-        if clear:
-            self.filter.clear()
-
-        self.filter.on_blur()
-        self._refresh_rows()
-        await self.notify(self.filter.render())
-        await self.change_status("NORMAL")
-
-    async def start_edit(self, field: Optional[str]) -> None:
-        if not field or field == "none":
-            return
-
-        if field not in self.component.fields.keys():
-            await self.notify(
-                f"[yellow]Can't change [b orange1]`{field}`[/b orange1] here![/yellow]"
-            )
-            return
-
-        if field == "description":
-            await self.change_status("INSERT")
-        elif field == "due":
-            await self.change_status("DATE")
-
-        ibox = self.component.fields[field]
-        ibox.value = getattr(self.item, f"{field}")
-
-        ibox.move_cursor_to_end()  # starting a new edit
-        self.component.fields[field].on_focus()
-        self.editing = field
-
     async def _cancel_edit(self):
-        await self.stop_edit(edit=False)
+        await self.invoker.stop_edit(edit=False)
 
     async def _move_to_item(self, item: Model, edit: Optional[str] = None) -> None:
         ancestors = [item]
@@ -298,7 +262,7 @@ class TreeList(Widget):
             self._refresh_rows()
 
         self.current = self._rows[ancestors[0].path].index
-        await self.start_edit(edit)
+        await self.invoker.start_edit(edit)
 
     async def move_up(self) -> None:
         self.current -= 1
@@ -316,9 +280,6 @@ class TreeList(Widget):
         await self.change_status("SORT")
         self.sort_menu.visible = True
 
-    async def switch_pane(self) -> None:
-        pass
-
     async def handle_key(self, event: events.Key) -> None:
         event.stop()
         key = (
@@ -333,7 +294,7 @@ class TreeList(Widget):
             if key == "escape":
                 await self._cancel_edit()
             elif key == "enter":
-                await self.stop_edit()
+                await self.invoker.stop_edit()
             else:
                 await field.handle_keypress(key)
 
@@ -343,11 +304,11 @@ class TreeList(Widget):
 
             elif self.filter.has_focus:
                 if key == "escape":
-                    await self.stop_search()
+                    await self.invoker.stop_search()
                 elif key == "enter":
-                    await self.stop_search(clear=False)
+                    await self.invoker.stop_search(clear=False)
                     if not self.row_vals:
-                        await self.stop_search()
+                        await self.invoker.stop_search()
                         await self.notify(f"[{self.RED}]No item found![/]")
                 else:
                     await self.filter.handle_keypress(key)
@@ -362,17 +323,28 @@ class TreeList(Widget):
                 bind = self.key_manager.get_method()
                 if bind:
                     await self.change_status("NORMAL")
-                    if hasattr(self, bind.func_name):
-                        func = getattr(self, bind.func_name)
+                    if hasattr(self, bind.func_name) or hasattr(self.invoker, bind.func_name):
                         if bind.check_for_cursor and self.current == -1:
                             return
 
                         try:
-                            await func(*bind.params)
+                            if bind.func_name in self.invoker.user_commands:
+                                invoker_func = getattr(self.invoker, bind.func_name)
+                                await invoker_func(*bind.params)
+                            else:
+                                func = getattr(self, bind.func_name)
+                                await func(*bind.params)
                         except SearchEnabledError:
                             if self.current != -1:
-                                await self.move_to_filter_item()
-                                await func(*bind.params)
+                                if hasattr(self, bind.func_name):
+                                    func = getattr(self, bind.func_name)
+                                    await self.move_to_filter_item()
+                                    await func(*bind.params)
+                                else:
+                                    invoker_func = getattr(self.invoker, bind.func_name)
+                                    await self.move_to_filter_item()
+                                    await invoker_func(*bind.params)
+
 
                     else:
                         await self.notify(
@@ -384,7 +356,7 @@ class TreeList(Widget):
     async def move_to_filter_item(self):
         if self.current != -1:
             item = self.item
-            await self.stop_search()
+            await self.invoker.stop_search()
             await self._move_to_item(item)
 
     async def spawn_help(self):
@@ -481,37 +453,6 @@ class TreeList(Widget):
             await self.notify("[red]No item selected![/]")
 
     # COMMANDS TO INTERACT WITH API
-    async def stop_edit(self, edit: bool = True) -> None:
-        if self.editing == "none" or self.current == -1:
-            return
-
-        editing = self.editing
-        simple_input = self.component.fields[editing]
-        old_val = getattr(self.component.item, self.editing)
-
-        if not edit:
-            simple_input.value = old_val
-
-        res = self.component.item.edit(self.editing, simple_input.value)
-
-        await self.notify(res.text())
-        if not res.ok:
-            if res.cancel_op:
-                await self.remove_item(move_cursor_up=True)
-            await self._current_change_callback()
-        else:
-            self.commit()
-
-        simple_input.on_blur()
-        if self.current != -1:
-            self.component.refresh()
-
-        self.editing = "none"
-        await self.change_status("NORMAL")
-
-        if edit and not old_val and editing == "description":
-            await self.add_sibling()
-
     def _drop(self) -> None:
         self.item.drop()
 
@@ -530,73 +471,6 @@ class TreeList(Widget):
 
     def _shift_up(self) -> None:
         return self.item.shift_up()
-
-    async def remove_item(self, move_cursor_up: bool = False) -> None:
-        commit = self.item.description != ""
-        self._drop()
-        self._refresh_rows()
-        self.current -= move_cursor_up
-        if commit:
-            self.commit()
-
-        await self._current_change_callback()
-
-    async def add_child(self) -> None:
-        if self.filter.value:
-            raise SearchEnabledError
-
-        if self.current != -1:
-            self.component.expand()
-
-        child = self._add_child()
-        self._refresh_rows()
-        await self._move_to_item(child, "description")
-
-    async def add_sibling(self) -> None:
-        if self.filter.value:
-            raise SearchEnabledError
-
-        if self.current == -1:
-            sibling = self._add_child()
-        else:
-            sibling = self._add_sibling()
-
-        self._refresh_rows()
-        await self._move_to_item(sibling, "description")
-
-    async def shift_up(self) -> None:
-        self._shift_up()
-        await self.move_up()
-        self._refresh_rows()
-        self.commit()
-
-    async def shift_down(self) -> None:
-        self._shift_down()
-        await self.move_down()
-        self._refresh_rows()
-        self.commit()
-
-    async def toggle_expand(self) -> None:
-        self.component.toggle_expand()
-        self._refresh_rows()
-
-    async def toggle_expand_parent(self) -> None:
-        parent = self.item.parent
-        if not parent:
-            return
-
-        if parent.path in self._rows:
-            index = self._rows[parent.path].index
-            self.current = index
-
-            await self.toggle_expand()
-
-    def sort(self, attr: str) -> None:
-        curr = self.item.path
-        self.item.sort(attr)
-        self._refresh_rows()
-        self.current = self._rows[curr].index
-        self.commit()
 
     async def exit(self):
         self.post_message(ExitApp())

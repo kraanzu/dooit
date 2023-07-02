@@ -37,12 +37,6 @@ class TodoTree(TreeList):
             return model.todos
         return []
 
-    async def switch_pane(self):
-        if self.filter.value:
-            await self.stop_search()
-
-        self.post_message(SwitchTab())
-
     async def update_table(self, model: Optional[Workspace] = None):
         self.EMPTY = self.EMPTY_TODO if model else self.dashboard
         self.model = model

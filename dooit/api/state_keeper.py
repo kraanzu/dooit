@@ -1,5 +1,5 @@
 from typing import List, Any
-from tree_state import TreeState
+from .tree_state import TreeState
 
 """
 Class that keep the states of the tree structure

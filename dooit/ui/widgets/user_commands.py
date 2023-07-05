@@ -2,6 +2,7 @@ from abc import ABC
 from typing import Optional
 from dooit.ui.events.events import SwitchTab
 from dooit.ui.widgets.tree import SearchEnabledError
+from dooit.api.state_keeper import StateKeeper
 
 #//===========================  Command pattern
 class Command(ABC):
@@ -232,6 +233,7 @@ class Invoker:
 
     def __init__(self, tree) -> None:
         self.tree = tree
+        self.state_keeper = StateKeeper()
         self.user_commands = ["add_sibling"
             , "add_child"
             , "start_edit"
@@ -246,23 +248,29 @@ class Invoker:
             , "shift_down"
             ]
 
-    def noasync_execute_command(self, command: Command):
+    def noasync_execute_command(self, command: Command, safe_state: bool = False):
+        if safe_state:
+          # TODO(Any): Safe state
+          safe_state
         command.execute()
 
-    async def execute_command(self, command: Command):
+    async def execute_command(self, command: Command, safe_state: bool = False):
+        if safe_state:
+          # TODO(Any): Safe state
+          safe_state
         await command.execute()
 
     async def add_sibling(self) -> None:
         command = AddSiblingCommand(self.tree)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def add_child(self) -> None:
         command = AddChildCommand(self.tree)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def remove_item(self, move_cursor_up: bool = False) -> None:
         command = RemoveItemCommand(self.tree, move_cursor_up)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def start_search(self) -> None:
         command = StartSearchCommand(self.tree)
@@ -274,11 +282,11 @@ class Invoker:
 
     async def start_edit(self, field: Optional[str]) -> None:
         command = StartEditCommand(self.tree, field)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def stop_edit(self, edit: bool = True) -> None:
         command = StopEditCommand(self.tree, edit)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
         
     async def toggle_expand(self) -> None:
         command = ToggleExpandCommand(self.tree)
@@ -292,11 +300,11 @@ class Invoker:
         await self.execute_command(SwitchPaneCommand(self.tree))
 
     def sort(self, attr: str) -> None:
-        self.noasync_execute_command(SortCommand(self.tree, attr))
+        self.noasync_execute_command(SortCommand(self.tree, attr), True)
         
     async def shift_up(self) -> None:
-        await self.execute_command(ShiftUpCommand(self.tree))
+        await self.execute_command(ShiftUpCommand(self.tree), True)
 
     async def shift_down(self) -> None:
-        await self.execute_command(ShiftDownCommand(self.tree))
+        await self.execute_command(ShiftDownCommand(self.tree), True)
         

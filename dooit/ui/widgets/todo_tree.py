@@ -75,11 +75,14 @@ class TodoTree(TreeList):
     async def increase_urgency(self):
         self.item.increase_urgency()
         self.commit()
+        self._refresh_rows(True)
 
     async def decrease_urgency(self):
         self.item.decrease_urgency()
         self.commit()
+        self._refresh_rows(True)
 
     async def toggle_complete(self):
         self.item.toggle_complete()
         self.commit()
+        self._refresh_rows(True)

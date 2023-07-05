@@ -62,7 +62,7 @@ class Dooit(App):
 
     async def on_apply_sort_method(self, event: ApplySortMethod):
         w = event.widget_obj
-        w.sort(attr=event.method)
+        w.invoker.sort(attr=event.method)
 
     async def on_change_status(self, event: ChangeStatus):
         self.bar.set_status(event.status)

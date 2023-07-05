@@ -19,12 +19,6 @@ from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
 from .utils import Component, VerticalView
 
-# TODO(Any): Delete this
-import logging
-
-# TODO(Any): Delete this
-logging.basicConfig(filename='registro.log', level=logging.INFO)
-
 class SearchEnabledError(Exception):
     pass
 
@@ -174,7 +168,7 @@ class TreeList(Widget):
     def _get_children(self, model: model_type) -> List[model_type]:
         raise NotImplementedError
 
-    def _refresh_rows(self, safe_state: bool = False) -> None:
+    def _refresh_rows(self) -> None:
         _rows_copy = {item.item.path: item.expanded for item in self._rows.values()}
         self._rows = {}
 
@@ -204,10 +198,6 @@ class TreeList(Widget):
         if self.model:
             for i in self._get_children(self.model):
                 add_rows(i)
-                
-        if safe_state:
-          # TODO(Any): Delete this
-          logging.info('Voy a guardar estado.')
 
         self.row_vals: List[Component] = list(self._rows.values())
         self.refresh()
@@ -542,7 +532,7 @@ class TreeList(Widget):
     async def remove_item(self, move_cursor_up: bool = False) -> None:
         commit = self.item.description != ""
         self._drop()
-        self._refresh_rows(True)
+        self._refresh_rows()
         self.current -= move_cursor_up
         if commit:
             self.commit()
@@ -557,7 +547,7 @@ class TreeList(Widget):
             self.component.expand()
 
         child = self._add_child()
-        self._refresh_rows(True)
+        self._refresh_rows()
         await self._move_to_item(child, "description")
 
     async def add_sibling(self) -> None:
@@ -569,19 +559,19 @@ class TreeList(Widget):
         else:
             sibling = self._add_sibling()
 
-        self._refresh_rows(True)
+        self._refresh_rows()
         await self._move_to_item(sibling, "description")
 
     async def shift_up(self) -> None:
         self._shift_up()
         await self.move_up()
-        self._refresh_rows(True)
+        self._refresh_rows()
         self.commit()
 
     async def shift_down(self) -> None:
         self._shift_down()
         await self.move_down()
-        self._refresh_rows(True)
+        self._refresh_rows()
         self.commit()
 
     async def toggle_expand(self) -> None:
@@ -602,7 +592,7 @@ class TreeList(Widget):
     def sort(self, attr: str) -> None:
         curr = self.item.path
         self.item.sort(attr)
-        self._refresh_rows(True)
+        self._refresh_rows()
         self.current = self._rows[curr].index
         self.commit()
 

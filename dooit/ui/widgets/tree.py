@@ -19,17 +19,6 @@ from dooit.utils.conf_reader import Config
 from .simple_input import SimpleInput
 from .utils import Component, VerticalView
 
-conf = Config()
-DIM = conf.get("BORDER_DIM")
-LIT = conf.get("BORDER_LIT")
-RED = conf.get("red")
-EMPTY_SEARCH = [f"[{RED}]No items found![/{RED}]"]
-PRINTABLE = (
-    "0123456789"
-    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
-)
-
 
 class SearchEnabledError(Exception):
     pass
@@ -58,6 +47,16 @@ class TreeList(Widget):
     ) -> None:
         super().__init__(name=name)
         self.model = model
+        self.conf = Config()
+        self.DIM = self.conf.get("BORDER_DIM")
+        self.LIT = self.conf.get("BORDER_LIT")
+        self.RED = self.conf.get("red")
+        self.EMPTY_SEARCH = [f"[{self.RED}]No items found![/{self.RED}]"]
+        self.PRINTABLE = (
+            "0123456789"
+            + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+        )
 
     async def on_mount(self) -> None:
         self.sort_menu = SortOptions()
@@ -324,7 +323,7 @@ class TreeList(Widget):
         event.stop()
         key = (
             event.character
-            if (event.character and (event.character in PRINTABLE))
+            if (event.character and (event.character in self.PRINTABLE))
             else event.key
         )
 
@@ -349,7 +348,7 @@ class TreeList(Widget):
                     await self.stop_search(clear=False)
                     if not self.row_vals:
                         await self.stop_search()
-                        await self.notify(f"[{RED}]No item found![/]")
+                        await self.notify(f"[{self.RED}]No item found![/]")
                 else:
                     await self.filter.handle_keypress(key)
                     await self.notify(self.filter.render())
@@ -451,7 +450,7 @@ class TreeList(Widget):
             return self.render_panel(self.table)
 
         if self.filter.value and not self.row_vals:
-            EMPTY = EMPTY_SEARCH
+            EMPTY = self.EMPTY_SEARCH
         else:
             EMPTY = self.EMPTY
 
@@ -471,7 +470,7 @@ class TreeList(Widget):
             expand=True,
             height=height,
             box=box.HEAVY,
-            border_style="b " + LIT if self._has_focus else "d " + DIM,
+            border_style="b " + self.LIT if self._has_focus else "d " + self.DIM,
         )
 
     async def copy_text(self) -> None:

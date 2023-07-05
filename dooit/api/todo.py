@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, TypeVar
 from .model import Model, Result
+from .item_concrete_creator import ItemConcreteCreator
 
 
 TODO = "todo"
@@ -27,24 +28,15 @@ class Todo(Model):
     ]
 
     def __init__(self, parent: Optional[T] = None) -> None:
-        from .model_items import (
-            Status,
-            Due,
-            Urgency,
-            Recurrence,
-            Tags,
-            Description,
-            Effort,
-        )
-
         super().__init__(parent)
-        self._status = Status(self)
-        self._description = Description(self)
-        self._urgency = Urgency(self)
-        self._effort = Effort(self)
-        self._tags = Tags(self)
-        self._recurrence = Recurrence(self)
-        self._due = Due(self)
+        itemCreator = ItemConcreteCreator()
+        self._status = itemCreator.create_status(self)
+        self._description = itemCreator.create_description(self)
+        self._urgency = itemCreator.create_urgency(self)
+        self._effort = itemCreator.create_effort(self)
+        self._tags = itemCreator.create_tags(self)
+        self._recurrence = itemCreator.create_recurrence(self)
+        self._due = itemCreator.create_due(self)
         self.todos: List[Todo] = []
 
     @property
@@ -79,14 +71,6 @@ class Todo(Model):
     @property
     def tags(self):
         return self._tags.value
-
-    def add_child(
-        self, kind: str = "todo", index: int = 0, inherit: bool = False
-    ) -> Any:
-        if kind != "todo":
-            raise TypeError(f"Cannot add child of kind {kind}")
-
-        return super().add_child(kind, index, inherit)
 
     def add_todo(self, index: int = 0, inherit: bool = False):
         return self.add_child(TODO, index, inherit)
@@ -146,3 +130,32 @@ class Todo(Model):
             for i in data[1]:
                 child_todo = self.add_child(kind="todo", index=len(self.todos))
                 child_todo.from_data(i)
+
+    def _get_children(self, kind: str) -> List:
+        """
+        Get children list (todo)
+        """
+        if kind not in ["todo"]:
+            raise TypeError(f"Cannot perform this operation for type {kind}")
+
+        return self.todos
+    
+    def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:     
+        """
+        Adds a child to specified index (Defaults to first position)
+        """
+        if kind != "todo":
+            raise TypeError(f"Cannot add child of kind {kind}")
+        child = Todo(parent=self)
+        if inherit and isinstance(self, Todo):
+            child.fill_from_data(self.to_data())
+            child._description.value = ""
+            child._effort._value = 0
+            child._tags.value = ""
+            child.edit("status", "PENDING")
+
+            children = self._get_children(kind)
+            children.insert(index, child)
+
+        return child
+

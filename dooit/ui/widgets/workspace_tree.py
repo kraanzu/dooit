@@ -38,18 +38,5 @@ class WorkspaceTree(TreeList):
         super()._setup_table(format["pointer"])
         self.table.add_column("description", ratio=1)
 
-    async def switch_pane(self) -> None:
-        if self.current == -1:
-            return
-
-        if self.filter.value:
-            if self.current != -1:
-                await self._current_change_callback()
-
-            await self.stop_search()
-            self.current = -1
-
-        self.post_message(SwitchTab())
-
     def _get_children(self, model: Manager) -> List[Workspace]:
         return model.workspaces

@@ -34,9 +34,17 @@ def combine_into(d: dict, to: dict) -> None:
 
 
 class Config:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self) -> None:
-        self._d = {}
-        self.update()
+        if not hasattr(self, '_d'):
+            self._d = {}
+            self.update()
 
     def update(self):
         for i in [default_spec, user_spec]:

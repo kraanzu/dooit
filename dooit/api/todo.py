@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, TypeVar
 from .model import Model, Result
+from .item_concrete_creator import ItemConcreteCreator
 
 
 TODO = "todo"
@@ -27,24 +28,15 @@ class Todo(Model):
     ]
 
     def __init__(self, parent: Optional[T] = None) -> None:
-        from .model_items import (
-            Status,
-            Due,
-            Urgency,
-            Recurrence,
-            Tags,
-            Description,
-            Effort,
-        )
-
         super().__init__(parent)
-        self._status = Status(self)
-        self._description = Description(self)
-        self._urgency = Urgency(self)
-        self._effort = Effort(self)
-        self._tags = Tags(self)
-        self._recurrence = Recurrence(self)
-        self._due = Due(self)
+        itemCreator = ItemConcreteCreator()
+        self._status = itemCreator.create_status(self)
+        self._description = itemCreator.create_description(self)
+        self._urgency = itemCreator.create_urgency(self)
+        self._effort = itemCreator.create_effort(self)
+        self._tags = itemCreator.create_tags(self)
+        self._recurrence = itemCreator.create_recurrence(self)
+        self._due = itemCreator.create_due(self)
         self.todos: List[Todo] = []
 
     @property

@@ -1,7 +1,7 @@
 from typing import Any
 
 """
-Class that store one state of the tree structure
+Class that stores states of the tree structure
 """
 class TreeState:
 
@@ -12,7 +12,7 @@ class TreeState:
     self._tree_states = tree_state
 
   """
-  Returns the value that is storage in the object
+  Returns the value that is stored in the object
   """
   def get_state(self) -> Any:
     return self._tree_states

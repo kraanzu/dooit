@@ -2,33 +2,41 @@ from typing import List, Any
 from .tree_state import TreeState
 
 """
-Class that keep the states of the tree structure
+Class that keeps the states of the tree structure
 """
 class StateKeeper:
 
   """
   List with the states of the tree structure
   """
-  _tree_states: List[Any]
+  tree_states: List[TreeState]
+  removed_states: List[TreeState]
 
   """
   Constructor of the StateKeeper class
   """
   def __init__(self) -> None:
-    self._tree_states = []
+    self.tree_states = []
+    self.removed_states = []
   
   """
-  Safe the actual state of the tree structure
+  Save the actual state of the tree structure
   """
-  def safe_state(self, new_state: Any) -> None:
+  def save_state(self, new_state: Any) -> None:
     if len(new_state) > 0:
-      self._tree_states.append(TreeState(new_state))
+      self.tree_states.append(TreeState(new_state))
 
   """
   Returns the last state of the tree structure
   """
   def return_state(self) -> Any:
-    if len(self._tree_states) > 0:
-      return self._tree_states.pop().get_state()
+    if len(self.tree_states) > 0:
+      previous_state = self.tree_states.pop()
+      self.removed_states.append(previous_state)
+      return previous_state.get_state()
     return []
 
+  def return_undo(self) -> Any:
+    if len(self.removed_states) > 0:
+      return self.removed_states.pop().get_state()
+    return []

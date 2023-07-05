@@ -58,6 +58,8 @@ class KeyBinder:
             "increase urgency": ["+", "="],
             "decrease urgency": ["-", "_"],
             "exit": "<ctrl+q>",
+            "undo": "<ctrl+z>",
+            "redo": "<ctrl+y>"
         }
         self.configured_keys = deepcopy(self.DEFAULTS)
         self.configured_keys.update(self.customed_keys)

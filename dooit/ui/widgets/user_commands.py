@@ -1,5 +1,6 @@
 from abc import ABC
 from typing import Optional
+from dooit.api import manager
 from dooit.ui.events.events import SwitchTab
 from dooit.ui.widgets.tree import SearchEnabledError
 from dooit.api.state_keeper import StateKeeper
@@ -229,9 +230,12 @@ class Invoker:
     Class that performs the user commands that are requested by the "handle_key" function from TreeList
     Invoker performs all the user commands through its "execute_command" function, using inheritance
     from the abstract command
+
+    TODO(any): Add memento and undo functionality
     """
 
     def __init__(self, tree) -> None:
+        self.navbar = None # WorkspaceTree
         self.tree = tree
         self.state_keeper = StateKeeper()
         self.user_commands = ["add_sibling"
@@ -246,27 +250,40 @@ class Invoker:
             , "switch_pane"
             , "shift_up"
             , "shift_down"
+            , "undo"
+            , "redo"
             ]
 
-    def noasync_execute_command(self, command: Command, safe_state: bool = False):
-        if safe_state:
+    def noasync_execute_command(self, command: Command, save_state: bool = False):
+        if save_state:
           # TODO(Any): Safe state
-          safe_state
+          save_state
         command.execute()
 
-    async def execute_command(self, command: Command, safe_state: bool = False):
-        if safe_state:
-          # TODO(Any): Safe state
-          safe_state
+    async def execute_command(self, command: Command, save_state: bool = False):
+        if save_state:
+          self.state_keeper.save_state(manager._get_commit_data())
         await command.execute()
+
+    async def undo(self):
+        if len(self.state_keeper.tree_states) > 0:
+            previous_state = self.state_keeper.return_state()
+            manager.setup(previous_state)
+            await self.navbar._refresh_data()
+
+    async def redo(self):
+        if len(self.state_keeper.removed_states) > 0:
+            removed_state = self.state_keeper.return_undo()
+            manager.setup(removed_state)
+            await self.navbar._refresh_data()
 
     async def add_sibling(self) -> None:
         command = AddSiblingCommand(self.tree)
-        await self.execute_command(command, True)
+        await self.execute_command(command)
 
     async def add_child(self) -> None:
         command = AddChildCommand(self.tree)
-        await self.execute_command(command, True)
+        await self.execute_command(command)
 
     async def remove_item(self, move_cursor_up: bool = False) -> None:
         command = RemoveItemCommand(self.tree, move_cursor_up)
@@ -286,7 +303,7 @@ class Invoker:
 
     async def stop_edit(self, edit: bool = True) -> None:
         command = StopEditCommand(self.tree, edit)
-        await self.execute_command(command, True)
+        await self.execute_command(command)
         
     async def toggle_expand(self) -> None:
         command = ToggleExpandCommand(self.tree)
@@ -300,11 +317,11 @@ class Invoker:
         await self.execute_command(SwitchPaneCommand(self.tree))
 
     def sort(self, attr: str) -> None:
-        self.noasync_execute_command(SortCommand(self.tree, attr), True)
+        self.noasync_execute_command(SortCommand(self.tree, attr))
         
     async def shift_up(self) -> None:
-        await self.execute_command(ShiftUpCommand(self.tree), True)
+        await self.execute_command(ShiftUpCommand(self.tree))
 
     async def shift_down(self) -> None:
-        await self.execute_command(ShiftDownCommand(self.tree), True)
+        await self.execute_command(ShiftDownCommand(self.tree))
         

@@ -24,6 +24,13 @@ class Dooit(App):
         self.todos = TodoTree()
         self.bar = StatusBar()
 
+        # Setting navbar for "undo" operations
+        self.navbar.invoker.navbar = self.navbar
+        self.todos.invoker.navbar = self.navbar
+
+        # Making the state_keeper be the same for each TreeList
+        self.navbar.invoker.state_keeper = self.todos.invoker.state_keeper
+
     async def on_mount(self):
         self.watcher = Watcher()
         self.current_focus = "navbar"

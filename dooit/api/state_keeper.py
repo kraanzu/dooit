@@ -38,5 +38,7 @@ class StateKeeper:
 
   def return_undo(self) -> Any:
     if len(self.removed_states) > 0:
-      return self.removed_states.pop().get_state()
+      previous_state = self.removed_states.pop()
+      self.tree_states.append(previous_state)
+      return previous_state.get_state()
     return []

@@ -28,7 +28,7 @@ class AddSiblingCommand(Command):
             sibling = self.tree._add_sibling()
 
         self.tree._refresh_rows()
-        await self.tree._move_to_item(sibling, "description") # TODO: TRY to make the command do this line
+        await self.tree._move_to_item(sibling, "description")
 
 class AddChildCommand(Command):
     def __init__(self, tree) -> None:
@@ -129,7 +129,6 @@ class StopEditCommand(Command):
         await self.tree.notify(res.text())
         if not res.ok:
             if res.cancel_op:
-                # REMOVE self.invoker and use self.tree.invoker
                 await self.tree.invoker.execute_command(RemoveItemCommand(self.tree, True))
             await self.tree._current_change_callback()
         else:
@@ -230,8 +229,6 @@ class Invoker:
     Class that performs the user commands that are requested by the "handle_key" function from TreeList
     Invoker performs all the user commands through its "execute_command" function, using inheritance
     from the abstract command
-
-    TODO(any): Add memento and undo functionality
     """
 
     def __init__(self, tree) -> None:
@@ -256,8 +253,7 @@ class Invoker:
 
     def noasync_execute_command(self, command: Command, save_state: bool = False):
         if save_state:
-          # TODO(Any): Safe state
-          save_state
+          self.state_keeper.save_state(manager._get_commit_data())
         command.execute()
 
     async def execute_command(self, command: Command, save_state: bool = False):
@@ -279,11 +275,11 @@ class Invoker:
 
     async def add_sibling(self) -> None:
         command = AddSiblingCommand(self.tree)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def add_child(self) -> None:
         command = AddChildCommand(self.tree)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def remove_item(self, move_cursor_up: bool = False) -> None:
         command = RemoveItemCommand(self.tree, move_cursor_up)
@@ -295,11 +291,11 @@ class Invoker:
 
     async def stop_search(self, clear: bool = True) -> None:
         command = StopSearchCommand(self.tree, clear)
-        await self.execute_command(command)
+        await self.execute_command(command, True)
 
     async def start_edit(self, field: Optional[str]) -> None:
         command = StartEditCommand(self.tree, field)
-        await self.execute_command(command, True)
+        await self.execute_command(command)
 
     async def stop_edit(self, edit: bool = True) -> None:
         command = StopEditCommand(self.tree, edit)

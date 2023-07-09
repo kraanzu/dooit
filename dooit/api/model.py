@@ -62,14 +62,8 @@ class Model:
         self,
         parent: Optional["Model"] = None,
     ) -> None:
-        from dooit.api.workspace import Workspace
-        from dooit.api.todo import Todo
-
         self.name = str(uuid4())
         self.parent = parent
-
-        self.workspaces: List[Workspace] = []
-        self.todos: List[Todo] = []
 
     @property
     def kind(self):
@@ -78,7 +72,7 @@ class Model:
     @property
     def path(self):
         """
-        Uniquie path for model
+        Unique path for model
         """
 
         return "$"
@@ -87,10 +81,7 @@ class Model:
         """
         Get children list (workspace/todo)
         """
-        if kind not in ["workspace", "todo"]:
-            raise TypeError(f"Cannot perform this operation for type {kind}")
-
-        return self.workspaces if kind.lower() == "workspace" else self.todos
+        pass
 
     def _get_child_index(self, kind: str, **kwargs) -> int:
         """
@@ -198,24 +189,7 @@ class Model:
         """
         Adds a child to specified index (Defaults to first position)
         """
-        from ..api.workspace import Workspace
-        from ..api.todo import Todo
-
-        if kind == "workspace":
-            child = Workspace(parent=self)
-        else:
-            child = Todo(parent=self)
-            if inherit and isinstance(self, Todo):
-                child.fill_from_data(self.to_data())
-                child._description.value = ""
-                child._effort._value = 0
-                child._tags.value = ""
-                child.edit("status", "PENDING")
-
-        children = self._get_children(kind)
-        children.insert(index, child)
-
-        return child
+        pass
 
     def remove_child(self, kind: str, name: str) -> Any:
         """
@@ -224,7 +198,7 @@ class Model:
 
         idx = self._get_child_index(kind, name=name)
         if idx != -1:
-            return self._get_children(kind).pop(idx)
+          return self._get_children(kind).pop(idx)
 
     def drop(self) -> None:
         """
@@ -247,21 +221,10 @@ class Model:
         """
         Get a object summary that can be stored
         """
-
-        return {
-            getattr(
-                child,
-                "descrption",
-            ): child.commit()
-            for child in self.workspaces
-        }
+        pass
 
     def from_data(self, data: Dict[str, Any]) -> None:
         """
         Fill in the attrs from data provided
         """
-
-        for i, j in data.items():
-            self.add_child("workspace")
-            self.workspaces[-1].edit("descrption", i)
-            self.workspaces[-1].from_data(j)
+        pass

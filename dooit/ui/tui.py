@@ -24,6 +24,13 @@ class Dooit(App):
         self.todos = TodoTree()
         self.bar = StatusBar()
 
+        # Setting navbar for "undo" operations
+        self.navbar.invoker.navbar = self.navbar
+        self.todos.invoker.navbar = self.navbar
+
+        # Making the state_keeper be the same for each TreeList
+        self.navbar.invoker.state_keeper = self.todos.invoker.state_keeper
+
     async def on_mount(self):
         self.watcher = Watcher()
         self.current_focus = "navbar"
@@ -62,7 +69,7 @@ class Dooit(App):
 
     async def on_apply_sort_method(self, event: ApplySortMethod):
         w = event.widget_obj
-        w.sort(attr=event.method)
+        w.invoker.sort(attr=event.method)
 
     async def on_change_status(self, event: ChangeStatus):
         self.bar.set_status(event.status)

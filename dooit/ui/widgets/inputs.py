@@ -22,7 +22,7 @@ GREEN = config.get("green")
 ORANGE = config.get("orange")
 
 TODO_SELECTOR = "TodoWidget > ExpandedHorizontal > ExpandedHorizontal > Description"
-WORKSPACE_SELCTOR = "WorkspaceWidget > Horizontal > Description"
+WORKSPACE_SELECTOR = "WorkspaceWidget > Horizontal > Description"
 DATE_MAX_WIDTH = 17
 
 
@@ -33,15 +33,15 @@ class Description(SimpleInput):
         height: auto;
     }}
 
-    {WORKSPACE_SELCTOR}.dim {{
+    {WORKSPACE_SELECTOR}.dim {{
         color: {workspace_dim};
     }}
 
-    {WORKSPACE_SELCTOR}.highlight {{
+    {WORKSPACE_SELECTOR}.highlight {{
         color: {workspace_highlight};
     }}
 
-    {WORKSPACE_SELCTOR}.editing {{
+    {WORKSPACE_SELECTOR}.editing {{
         color: {workspace_editing};
     }}
 

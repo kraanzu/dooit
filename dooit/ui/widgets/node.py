@@ -11,14 +11,23 @@ from .utils import Pointer
 
 
 class Node(Widget):
-    pointer = ">"
+    pointer_icon = ">"
     _expand = False
     ModelType: Type[Union[Workspace, Todo]]
 
     def __init__(self, model, force_display: bool = True):
+        super().__init__(id=model.uuid)
+
         self.model = model
         self.force_display = force_display
-        super().__init__(id=self.model.uuid)
+        self.pointer = Pointer(self.pointer_icon)
+        self.setup_children()
+
+    def setup_children(self) -> None:
+        pass
+
+    def get_child_inputs(self) -> List[SimpleInput]:
+        return []
 
     @property
     def expanded(self):
@@ -39,16 +48,15 @@ class Node(Widget):
         return False
 
     def highlight(self, on: bool = True):
-        pointer = self.query("Pointer").first()
-        if isinstance(pointer, Pointer):
-            pointer.show() if on else pointer.hide()
 
         if on:
-            for i in self.query(SimpleInput):
+            self.pointer.show()
+            for i in self.get_child_inputs():
                 i.remove_class("dim")
                 i.add_class("highlight")
         else:
-            for i in self.query(SimpleInput):
+            self.pointer.hide()
+            for i in self.get_child_inputs():
                 i.add_class("dim")
                 i.remove_class("highlight")
 

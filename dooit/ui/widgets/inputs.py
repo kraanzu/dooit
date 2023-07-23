@@ -2,24 +2,23 @@ from typing import Type
 from rich.console import RenderableType
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 from .simple_input import SimpleInput
 
-config = Config()
-TODOS = config.get("TODO")
+TODOS = config_man.get("TODO")
 todo_editing = TODOS.get("editing")
 todo_highlight = TODOS.get("highlight")
 todo_dim = TODOS.get("dim")
 
-WORKSPACES = config.get("WORKSPACE")
+WORKSPACES = config_man.get("WORKSPACE")
 workspace_editing = WORKSPACES.get("editing")
 workspace_highlight = WORKSPACES.get("highlight")
 workspace_dim = WORKSPACES.get("dim")
 
-RED = config.get("red")
-YELLOW = config.get("yellow")
-GREEN = config.get("green")
-ORANGE = config.get("orange")
+RED = config_man.get("red")
+YELLOW = config_man.get("yellow")
+GREEN = config_man.get("green")
+ORANGE = config_man.get("orange")
 
 TODO_SELECTOR = "TodoWidget > ExpandedHorizontal > ExpandedHorizontal > Description"
 WORKSPACE_SELECTOR = "WorkspaceWidget > Horizontal > Description"

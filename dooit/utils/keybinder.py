@@ -1,9 +1,9 @@
 from collections import defaultdict
 from typing import DefaultDict, Dict, List, Optional, Union
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 from copy import deepcopy
 
-customed_keys = Config().get("keybindings")
+customed_keys = config_man.get("keybindings")
 
 
 class Bind:

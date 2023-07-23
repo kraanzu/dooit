@@ -1,3 +1,1 @@
-from dooit.utils import Config
-
-conf = Config()
+from dooit.utils.conf_reader import config_man as conf

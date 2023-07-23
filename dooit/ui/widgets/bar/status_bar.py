@@ -4,14 +4,13 @@ from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.api import manager
 from dooit.ui.events import StatusType
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 
 from .status_widget import StatusWidget
 from .utils import AutoHorizontal, StatusMiddle
 from .status_message import StatusMessage
 
-conf = Config()
-bar = conf.get("bar")
+bar = config_man.get("bar")
 
 
 class StatusBar(Widget):

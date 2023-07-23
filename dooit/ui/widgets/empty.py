@@ -2,16 +2,15 @@ from typing import Literal
 from rich.align import Align
 from rich.console import Group, RenderableType
 from textual.widget import Widget
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 from .aligner import align_texts
 
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results", "dashboard"]
-config = Config()
 
 
 DASHBOARD, EMPTY_TODO, EMPTY_WORKSPACE, NO_SEARCH_RESULTS = [
     align_texts(
-        config.get(i),
+        config_man.get(i),
     )
     for i in ["DASHBOARD", "EMPTY_TODO", "EMPTY_WORKSPACE", "no_search_results"]
 ]

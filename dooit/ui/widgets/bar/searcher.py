@@ -2,10 +2,10 @@ from dooit.ui.events.events import ChangeStatus
 from dooit.ui.widgets.bar.status_bar import StatusBar
 from dooit.ui.widgets.search_menu import SearchMenu
 from dooit.ui.widgets.simple_input import Input
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 from .status_bar_utils import StatusMiddle
 
-BG = Config().get('BAR_BACKGROUND')
+BG = config_man.get('BAR_BACKGROUND')
 
 
 class Searcher(StatusMiddle, Input):

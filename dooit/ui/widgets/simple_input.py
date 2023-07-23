@@ -5,13 +5,12 @@ from textual.widget import Widget
 from dooit.api.model import Err, Ok, Result
 from dooit.api.todo import Todo
 from dooit.ui.events.events import ChangeStatus, CommitData
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 
-config = Config()
-RED = config.get("red")
-YELLOW = config.get("yellow")
-GREEN = config.get("green")
-SEARCH_COLOR = config.get("SEARCH_COLOR")
+RED = config_man.get("red")
+YELLOW = config_man.get("yellow")
+GREEN = config_man.get("green")
+SEARCH_COLOR = config_man.get("SEARCH_COLOR")
 
 
 class Input(Widget):

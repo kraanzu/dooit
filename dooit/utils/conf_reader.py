@@ -44,3 +44,5 @@ class Config:
 
     def get(self, var: str) -> Any:
         return self._d[var]
+
+Config().update()

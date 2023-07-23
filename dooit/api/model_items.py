@@ -2,7 +2,7 @@ import re
 from os import environ
 from typing import Any, Tuple
 from datetime import datetime, timedelta
-from dooit.utils.dateparser import parse
+from dooit.utils.date_parser import parse
 from .model import Result, Ok, Warn, Err
 
 DATE_ORDER = environ.get("DOOIT_DATE_ORDER", "DMY")

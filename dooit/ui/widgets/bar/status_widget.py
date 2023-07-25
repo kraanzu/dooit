@@ -1,8 +1,11 @@
+from typing import Callable, Tuple
 from textual.widget import Widget
 from textual import work
+from inspect import getfullargspec as get_args
 from rich.console import RenderableType
 from rich.text import Text
-from ..bar_widget import BarWidget
+
+BarWidgetConfig = Tuple[Callable, float]
 
 
 class StatusWidget(Widget):
@@ -14,31 +17,43 @@ class StatusWidget(Widget):
     """
     _value = Text()
 
-    def __init__(self, widget: BarWidget):
+    def __init__(self, config: BarWidgetConfig):
         super().__init__()
 
-        if not isinstance(widget, BarWidget):
-            exit(
-                "The method of creating bar widgets was changed."
-                + "\n"
-                + "Please refer to this: https://www.google.com"
-            )
+        if not isinstance(config, tuple):
+            if isinstance(config, Callable):
+                config = (config, 1)
+            else:
+                config = (lambda: str(config), 1)
+        else:
+            if len(config) == 1:
+                config = (config[0], 1)
 
-        self.widget = widget
+        self.func = config[0]
+        delay = config[1]
+
         self.refresh_value()
 
-        if widget.delay > 0:
-            self.set_interval(widget.delay, self.redraw)
+        if delay > 0:
+            self.set_interval(delay, self.redraw)
 
     def redraw(self):
         self.refresh_value()
         self.refresh(layout=True)
 
+    def get_value(self, **kwargs) -> Text:
+        args = get_args(self.func).args
+        value = self.func(**{i: kwargs[i] for i in args})
+        if isinstance(value, str):
+            value = Text.from_markup(value)
+
+        return value
+
     @work(exclusive=True)
     def refresh_value(self):
         try:
             params = self.app.query_one("StatusBar").get_params()
-            self._value = self.widget.get_value(**params)
+            self._value = self.get_value(**params)
         except:
             pass
 

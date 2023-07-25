@@ -55,6 +55,7 @@ class StatusBar(Widget):
 
     async def start_search(self):
         from .searcher import Searcher
+
         searcher = Searcher()
         await self.replace_middle(searcher)
         searcher.start_edit()

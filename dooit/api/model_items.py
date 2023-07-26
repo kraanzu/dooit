@@ -82,11 +82,11 @@ class Status(Item):
             return "PENDING"
 
         if due.hour or due.minute:
-            now = parse("now")
+            now = datetime.now()
             if due < now:
                 return "OVERDUE"
         else:
-            today = parse("today").date()
+            today = datetime.today().date()
             due = due.date()
             if today > due:
                 return "OVERDUE"

@@ -227,12 +227,15 @@ class Due(Item):
         if val.strip() == "today":
             val = "today 0:0"  # remove un-necessary time
 
-        res = parse(val)
-        if res:
-            self._value = res
-            return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
-
-        return Warn("Cannot parse the string!")
+        try:
+            res = parse(val)
+            if res:
+                self._value = res
+                return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
+        except:
+            pass
+        finally:
+            return Warn("Cannot parse the string!")
 
     def to_txt(self) -> str:
         if self._value:

@@ -3,7 +3,7 @@ from textual.app import ComposeResult
 from textual.reactive import Reactive
 from textual.widget import Widget
 
-from dooit.api import Workspace
+from dooit.api.workspace import Workspace
 from dooit.api.model import Model
 from dooit.ui.events.events import (
     ChangeStatus,

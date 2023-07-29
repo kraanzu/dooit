@@ -1,5 +1,6 @@
 from textual.app import App
 from textual import events, on, work
+from dooit.api.manager import manager
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.bar import Searcher
 from dooit.ui.widgets.tree import Tree
@@ -14,7 +15,6 @@ from dooit.ui.events import (
     ExitApp,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
-from dooit.api.manager import manager
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import HelpScreen
 

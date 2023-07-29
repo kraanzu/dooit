@@ -2,7 +2,7 @@ from typing import Optional
 from rich.text import TextType
 from textual.app import ComposeResult
 from textual.widget import Widget
-from dooit.api import manager
+from dooit.api.manager import manager
 from dooit.ui.events import StatusType
 from dooit.utils.conf_reader import config_man
 

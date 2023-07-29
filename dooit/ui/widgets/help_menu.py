@@ -4,7 +4,7 @@ from rich.console import Group, RenderableType
 from rich.style import StyleType
 from rich.table import Table
 from rich.text import Text
-from dooit.utils import KeyBinder
+from dooit.utils.keybinder import KeyBinder
 
 
 # UTILS

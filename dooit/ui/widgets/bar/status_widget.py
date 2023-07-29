@@ -22,15 +22,17 @@ class StatusWidget(Widget):
 
         if not isinstance(config, tuple):
             if isinstance(config, Callable):
-                config = (config, 1)
+                func = (config, 1)
             else:
-                config = (lambda: str(config), 1)
+                func = (lambda: str(config), 1)
         else:
             if len(config) == 1:
-                config = (config[0], 1)
+                func = (config[0], 1)
+            else:
+                func = config
 
-        self.func = config[0]
-        delay = config[1]
+        self.func = func[0]
+        delay = func[1]
 
         self.refresh_value()
 

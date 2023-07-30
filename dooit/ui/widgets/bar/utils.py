@@ -19,5 +19,6 @@ class StatusMiddle(Widget):
     DEFAULT_CSS = f"""
     StatusMiddle {{
         background: {BG} 10%;
+        padding: 0 1 0 1;
     }}
     """

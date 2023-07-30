@@ -268,12 +268,12 @@ class SimpleInput(Input):
         self.post_message(CommitData())
         self.refresh(layout=True)
 
+        self.app.post_message(Notify(res.text()))
         if res.cancel_op:
             from dooit.ui.widgets.tree import Tree
 
             await self.app.query_one(".focus", expect_type=Tree).remove_item()
 
-        self.post_message(Notify(res.text()))
         return res
 
     async def cancel_edit(self):

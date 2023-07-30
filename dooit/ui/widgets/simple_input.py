@@ -4,7 +4,7 @@ from rich.text import Text
 from textual.widget import Widget
 from dooit.api.model import Err, Ok, Result
 from dooit.api.todo import Todo
-from dooit.ui.events.events import ChangeStatus, CommitData
+from dooit.ui.events.events import ChangeStatus, CommitData, Notify
 from dooit.utils.conf_reader import config_man
 
 RED = config_man.get("red")
@@ -273,6 +273,7 @@ class SimpleInput(Input):
 
             await self.app.query_one(".focus", expect_type=Tree).remove_item()
 
+        self.post_message(Notify(res.text()))
         return res
 
     async def cancel_edit(self):

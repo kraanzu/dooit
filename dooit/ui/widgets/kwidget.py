@@ -37,7 +37,7 @@ class KeyWidget(Widget):
                 func = getattr(self, bind.func_name)
                 if bind.check_for_cursor and not self.is_cursor_available:
                     return
-                
+
                 res = await func(*bind.params)
                 if isinstance(res, Result) and res.message:
                     self.post_message(Notify(res.text()))

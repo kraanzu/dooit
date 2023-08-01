@@ -11,4 +11,10 @@ def parse(value: str) -> Optional[datetime]:
     if value == "none":
         return None
 
-    return cal.parseDT(value)[0]
+    is_time_included = any(i in value.lower() for i in [":", "@", "at", "am", "pm"])
+
+    parsed: datetime = cal.parseDT(value)[0]
+    if not is_time_included:
+        parsed = datetime(parsed.year, parsed.month, parsed.day)
+
+    return parsed

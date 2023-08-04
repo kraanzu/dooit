@@ -74,6 +74,7 @@ class Input(Widget):
 
     async def stop_edit(self) -> Optional[Result]:
         self.remove_class("editing")
+        self.app.post_message(ChangeStatus("NORMAL"))
 
     def clear(self) -> None:
         """
@@ -264,7 +265,6 @@ class SimpleInput(Input):
             res = Ok() if self.refresh_value() else Err("cannot be empty")
 
         self.refresh_value()
-        self.post_message(ChangeStatus("NORMAL"))
         self.post_message(CommitData())
         self.refresh(layout=True)
 

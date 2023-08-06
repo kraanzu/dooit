@@ -20,7 +20,7 @@ class SearchMenu(KeyWidget, Widget):
 
         self.options = [(i.description, i.uuid) for i in options]
         self.visible_options = self.options[:]
-        self.add_keys({"stop_search": "<enter>"})
+        self.add_keys({"stop_search": "<enter>", "cancel_search": "<escape>"})
 
     @property
     def current_option(self) -> Optional[str]:
@@ -56,11 +56,8 @@ class SearchMenu(KeyWidget, Widget):
         self.refresh()
 
     async def cancel_search(self):
-        from dooit.ui.widgets.tree import Tree
-
         if self.parent:
-            parent = self.app.query_one(f"#{self.parent.id}", expect_type=Tree)
-            await parent.stop_search()
+            await self.parent.stop_search()
 
         self.remove()
 

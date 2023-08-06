@@ -1,4 +1,3 @@
-from textual.screen import Screen
 from textual import events, on, work
 from dooit.api.manager import manager
 from dooit.ui.widgets.empty import EmptyWidget
@@ -13,16 +12,10 @@ from dooit.ui.events import (
     CommitData,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
+from .base import BaseScreen
 
 
-PRINTABLE = (
-    "0123456789"
-    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
-)
-
-
-class MainScreen(Screen):
+class MainScreen(BaseScreen):
     def compose(self):
         yield WorkspaceTree(manager)
         yield EmptyWidget("dashboard")
@@ -36,12 +29,7 @@ class MainScreen(Screen):
         return self.query_one(StatusBar)
 
     async def on_key(self, event: events.Key) -> None:
-        key = (
-            event.character
-            if (event.character and (event.character in PRINTABLE))
-            else event.key
-        )
-
+        key = self.resolve_key(event)
         if self.bar.status == "SEARCH":
             return await self.query_one(Searcher).keypress(key)
 

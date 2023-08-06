@@ -32,7 +32,6 @@ PRINTABLE = (
     + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 )
 DEFAULTS = {
-    "stop search": "<escape>",
     "switch pane": "<tab>",
     "move up": ["k", "<up>"],
     "shift up": ["K", "<shift+up>"],

@@ -3,6 +3,11 @@ from textual.widgets import Static
 from textual import events
 from dooit.ui.widgets.help_menu import HelpMenu
 
+PRINTABLE = (
+    "0123456789"
+    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+)
 
 class HelpScreen(Screen):
     """
@@ -19,6 +24,11 @@ class HelpScreen(Screen):
             yield Static(i)
 
     async def on_key(self, event: events.Key):
+        key = (
+            event.character
+            if (event.character and (event.character in PRINTABLE))
+            else event.key
+        )
         key = event.character
         if key in ["j", "down"]:
             self.scroll_down()

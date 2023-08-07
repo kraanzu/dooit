@@ -5,7 +5,7 @@ from dooit.ui.widgets.simple_input import Input
 from dooit.utils.conf_reader import config_man
 from .status_bar_utils import StatusMiddle
 
-BG = config_man.get('BAR_BACKGROUND')
+BG = config_man.get("BAR_BACKGROUND")
 
 
 class Searcher(StatusMiddle, Input):
@@ -16,7 +16,6 @@ class Searcher(StatusMiddle, Input):
     """
 
     def __init__(self):
-
         super().__init__(classes="")
         self.styles.background = BG
 

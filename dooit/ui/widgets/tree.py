@@ -4,7 +4,7 @@ from textual.reactive import Reactive
 from textual.widget import Widget
 
 from dooit.api.workspace import Workspace
-from dooit.api.model import Model
+from dooit.api.model import Model, Result
 from dooit.ui.events.events import (
     ChangeStatus,
     CommitData,
@@ -325,6 +325,15 @@ class Tree(KeyWidget, Widget):
 
     async def start_edit(self, field: str) -> None:
         self.current_widget.start_edit(field)
+
+    async def stop_edit(self, res: Result) -> None:
+        self.post_message(CommitData())
+        self.post_message(ChangeStatus("NORMAL"))
+        self.current_widget.refresh(layout=True)
+
+        self.post_message(Notify(res.text()))
+        if res.cancel_op:
+            await self.remove_item()
 
     async def apply_filter(self, filter):
         for i in self.query(self.widget_type):

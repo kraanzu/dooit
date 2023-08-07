@@ -2,7 +2,7 @@ import pyperclip
 from typing import Optional
 from rich.text import Text
 from textual.widget import Widget
-from dooit.api.model import Err, Ok, Result
+from dooit.api.model import Err, Ok, Result, Warn
 from dooit.api.todo import Todo
 from dooit.ui.events.events import ChangeStatus, CommitData, Notify
 from dooit.utils.conf_reader import config_man
@@ -74,7 +74,6 @@ class Input(Widget):
 
     async def stop_edit(self) -> Optional[Result]:
         self.remove_class("editing")
-        self.app.post_message(ChangeStatus("NORMAL"))
 
     def clear(self) -> None:
         """
@@ -258,22 +257,15 @@ class SimpleInput(Input):
 
     async def stop_edit(self, cancel: bool = False) -> Optional[Result]:
         await super().stop_edit()
+        from dooit.ui.widgets.tree import Tree
 
         if not cancel:
             res = self.model.edit(self._property, self.value)
         else:
-            res = Ok() if self.refresh_value() else Err("cannot be empty")
+            res = Ok() if self.refresh_value() else Warn("cannot be empty")
 
         self.refresh_value()
-        self.post_message(CommitData())
-        self.refresh(layout=True)
-
-        self.app.post_message(Notify(res.text()))
-        if res.cancel_op:
-            from dooit.ui.widgets.tree import Tree
-
-            await self.app.query_one(".focus", expect_type=Tree).remove_item()
-
+        await self.app.query_one(".focus", expect_type=Tree).stop_edit(res)
         return res
 
     async def cancel_edit(self):

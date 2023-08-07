@@ -48,7 +48,6 @@ class Node(Widget):
         return False
 
     def highlight(self, on: bool = True):
-
         if on:
             self.pointer.show()
             for i in self.get_child_inputs():
@@ -97,11 +96,11 @@ class Node(Widget):
 
     def show_children(self):
         for i in self._get_all_children():
-            self.query_one(f"#{i.id}").display = True
+            i.display = True
 
     def hide_children(self):
         for i in self._get_all_children():
-            self.query_one(f"#{i.id}").display = False
+            i.display = False
 
     def toggle_expand(self):
         self._expand = not self._expand

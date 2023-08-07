@@ -172,7 +172,7 @@ class Tree(KeyWidget, Widget):
         self.post_message(Notify(message))
 
     def next_node(self) -> Optional[str]:
-        nodes = self.nodes
+        nodes = [i for i in self.query(self.WidgetType) if i.is_visible]
 
         if not self.current:
             return nodes[0].id if nodes else None
@@ -184,7 +184,7 @@ class Tree(KeyWidget, Widget):
         return nodes[idx + 1].id
 
     def prev_node(self):
-        nodes = self.nodes
+        nodes = [i for i in self.query(self.WidgetType) if i.is_visible]
 
         if not self.current:
             return

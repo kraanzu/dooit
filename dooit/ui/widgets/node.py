@@ -94,6 +94,21 @@ class Node(Widget):
 
     # ------------------------------------------
 
+    @property
+    def is_visible(self) -> bool:
+        parent = self
+        while type(parent) == type(parent.parent):
+
+            if not parent:
+                break
+
+            if not parent.display:
+                return False
+
+            parent = parent.parent
+
+        return True
+
     def show_children(self):
         for i in self._get_all_children():
             i.display = True

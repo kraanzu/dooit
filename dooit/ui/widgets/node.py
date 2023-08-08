@@ -97,8 +97,7 @@ class Node(Widget):
     @property
     def is_visible(self) -> bool:
         parent = self
-        while type(parent) == type(parent.parent):
-
+        while isinstance(parent, self.__class__):
             if not parent:
                 break
 

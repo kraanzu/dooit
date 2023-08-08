@@ -228,9 +228,13 @@ class Due(Item):
             val = "today 0:0"  # remove un-necessary time
 
         try:
-            res = parse(val)
-            self._value = res
-            return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
+            res, ok = parse(val)
+            if ok:
+                self._value = res
+                return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
+            else:
+                return Warn("Cannot parse the string!")
+
         except Exception:
             return Warn("Cannot parse the string!")
 

@@ -56,7 +56,7 @@ class StatusWidget(Widget):
         try:
             params = self.app.query_one("StatusBar").get_params()
             self._value = self.get_value(**params)
-        except:
+        except Exception:
             pass
 
     def render(self) -> RenderableType:

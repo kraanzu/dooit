@@ -231,7 +231,7 @@ class Due(Item):
             res = parse(val)
             self._value = res
             return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
-        except:
+        except Exception:
             return Warn("Cannot parse the string!")
 
     def to_txt(self) -> str:

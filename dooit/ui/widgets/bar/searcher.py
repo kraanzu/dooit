@@ -9,10 +9,10 @@ BG = config_man.get("BAR_BACKGROUND")
 
 
 class Searcher(StatusMiddle, Input):
-    DEFAULT_CSS = f"""
-    Searcher {{
+    DEFAULT_CSS = """
+    Searcher {
         padding-left: 1;
-    }}
+    }
     """
 
     def __init__(self):

@@ -2,9 +2,8 @@ import pyperclip
 from typing import Optional
 from rich.text import Text
 from textual.widget import Widget
-from dooit.api.model import Err, Ok, Result, Warn
+from dooit.api.model import Ok, Result, Warn
 from dooit.api.todo import Todo
-from dooit.ui.events.events import ChangeStatus, CommitData, Notify
 from dooit.utils.conf_reader import config_man
 
 RED = config_man.get("red")

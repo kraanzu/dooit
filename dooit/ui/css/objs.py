@@ -9,17 +9,20 @@ DIM = conf.get("BORDER_DIM")
 BORDER_TITLE_DIM = conf.get("BORDER_TITLE_DIM")
 
 OBJS = f"""
-Screen {{
+MainScreen {{
     background: {BG};
-    layout: grid;
-    grid-size: 2 2;
-    grid-columns: 2fr 8fr;
-    grid-rows: 1fr 1;
+    layout: vertical;
 }}
 
 HelpScreen {{
     layout: vertical;
     scrollbar-size: 1 1;
+}}
+
+DualSplit {{
+    layout: grid;
+    grid-size: 2;
+    grid-columns: 2fr 8fr;
 }}
 
 WorkspaceTree, TodoTree, EmptyWidget {{

@@ -51,7 +51,7 @@ class StatusWidget(Widget):
 
         return value
 
-    @work(exclusive=True)
+    @work(exclusive=True, thread=True)
     def refresh_value(self):
         try:
             params = self.app.query_one("StatusBar").get_params()

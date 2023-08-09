@@ -45,7 +45,7 @@ class MainScreen(BaseScreen):
             if not isinstance(i.parent, Tree):
                 i.remove()
 
-    @work(exclusive=True, thread=True)
+    @work(exclusive=True)
     async def mount_todos(self, model):
         with self.app.batch_update():
             await self.clear_right()

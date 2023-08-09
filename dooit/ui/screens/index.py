@@ -1,4 +1,5 @@
 from textual import events, on, work
+from textual.containers import Container
 from dooit.api.manager import manager
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.bar import Searcher
@@ -15,10 +16,16 @@ from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
 from .base import BaseScreen
 
 
+class DualSplit(Container):
+    pass
+
+
 class MainScreen(BaseScreen):
     def compose(self):
-        yield WorkspaceTree(manager)
-        yield EmptyWidget("dashboard")
+        with DualSplit():
+            yield WorkspaceTree(manager)
+            yield EmptyWidget("dashboard")
+
         yield StatusBar()
 
     def set_message(self, message: str):

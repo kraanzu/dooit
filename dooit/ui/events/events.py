@@ -1,6 +1,7 @@
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 from rich.text import TextType, Text
 from textual.message import Message
+from dooit.api.model import Result
 from dooit.api.workspace import Workspace
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
@@ -42,10 +43,15 @@ class Notify(Message, bubble=True):
     Emitted when A notification message on status bar is to be shown
     """
 
-    def __init__(self, message: TextType) -> None:
+    def __init__(self, message: Union[TextType, Result]) -> None:
         super().__init__()
+
         if isinstance(message, Text):
             message = message.markup
+
+        if isinstance(message, Result):
+            message = message.text()
+
         self.message = message
 
 
@@ -57,6 +63,18 @@ class TopicSelect(Message, bubble=True):
     def __init__(self, model: Optional[Workspace] = None) -> None:
         super().__init__()
         self.model = model
+
+
+class ApplySort(Message, bubble=True):
+    """
+    Emitted when the user wants to sort a tree
+    """
+
+    def __init__(self, query: str, widget_id: str, method: SortMethodType) -> None:
+        super().__init__()
+        self.query = query
+        self.widget_id = widget_id
+        self.method = method
 
 
 class CommitData(Message):

@@ -3,7 +3,6 @@ from textual.containers import Container
 from dooit.api.manager import manager
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.bar import Searcher
-from dooit.ui.widgets.tree import Tree
 from dooit.ui.events import (
     TopicSelect,
     SwitchTab,
@@ -20,11 +19,22 @@ class DualSplit(Container):
     pass
 
 
+class DualSplitLeft(Container):
+    pass
+
+
+class DualSplitRight(Container):
+    pass
+
+
 class MainScreen(BaseScreen):
     def compose(self):
         with DualSplit():
-            yield WorkspaceTree(manager)
-            yield EmptyWidget("dashboard")
+            with DualSplitLeft():
+                yield WorkspaceTree(manager)
+
+            with DualSplitRight():
+                yield EmptyWidget("dashboard")
 
         yield StatusBar()
 
@@ -44,13 +54,10 @@ class MainScreen(BaseScreen):
         await visible_focused.keypress(key)
 
     async def clear_right(self):
-        for i in self.query(TodoTree):
-            i.display = False
-            i.remove_class("current")
-
-        for i in self.query(EmptyWidget):
-            if not isinstance(i.parent, Tree):
-                i.remove()
+        try:
+            self.query_one("TodoTree.current").remove_class("current")
+        except Exception:
+            pass
 
     @work(exclusive=True)
     async def mount_todos(self, model):
@@ -58,12 +65,11 @@ class MainScreen(BaseScreen):
             await self.clear_right()
             if widgets := self.query(f"#Tree-{model.uuid}"):
                 current_widget = widgets.first()
-                current_widget.display = True
                 current_widget.add_class("current")
             else:
                 current_widget = TodoTree(model)
                 current_widget.add_class("current")
-                await self.mount(current_widget, after=self.query_one(WorkspaceTree))
+                await self.query_one(DualSplitRight).mount(current_widget)
 
     async def mount_dashboard(self):
         await self.clear_right()
@@ -80,8 +86,11 @@ class MainScreen(BaseScreen):
     @on(SwitchTab)
     async def switch_tab(self, _: SwitchTab):
         self.query_one(WorkspaceTree).toggle_class("focus")
-        visible_todo = [i for i in self.query(TodoTree) if i.display][0]
-        visible_todo.toggle_class("focus")
+        try:
+            visible_todo = self.query_one("TodoTree.current")
+            visible_todo.toggle_class("focus")
+        except Exception:
+            pass
 
     @on(ChangeStatus)
     async def change_status(self, event: ChangeStatus):

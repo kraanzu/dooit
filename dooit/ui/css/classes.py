@@ -49,4 +49,8 @@ classes = f"""
 .dock-right {{
     dock: right;
 }}
+
+.current {{
+    layer: mid;
+}}
 """

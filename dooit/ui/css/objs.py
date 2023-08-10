@@ -25,6 +25,10 @@ DualSplit {{
     grid-columns: 2fr 8fr;
 }}
 
+DualSplitLeft, DualSplitRight {{
+    layers: bottom mid top;
+}}
+
 WorkspaceTree, TodoTree, EmptyWidget {{
     background: {BG};
     border: {DIM};

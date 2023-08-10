@@ -25,7 +25,12 @@ class SortOptions(KeyWidget, Widget):
         self.options = model_type.sortable_fields
         self.model_widget = model
         self.highlighted = 0
-        self.add_keys({"cancel_sort": "<escape>", "apply_sort": "<enter>"})
+        self.add_keys(
+            {
+                "cancel_sort": "<escape>",
+                "apply_sort": "<enter>",
+            }
+        )
 
     async def on_mount(self):
         self.post_message(ChangeStatus("SORT"))
@@ -34,8 +39,12 @@ class SortOptions(KeyWidget, Widget):
         self.highlighted = id
         self.refresh(layout=True)
 
+    def reset(self):
+        self.highlight(0)
+
     def hide(self) -> None:
-        self.visible = False
+        self.reset()
+        self.display = False
 
     async def move_down(self) -> None:
         """

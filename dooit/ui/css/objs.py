@@ -25,8 +25,8 @@ DualSplit {{
     grid-columns: 2fr 8fr;
 }}
 
-DualSplitLeft, DualSplitRight {{
-    layers: bottom mid top;
+Tree {{
+     layers: L1 L2 L3 L4;
 }}
 
 WorkspaceTree, TodoTree, EmptyWidget {{
@@ -37,6 +37,7 @@ WorkspaceTree, TodoTree, EmptyWidget {{
     padding: 1;
     width: 100%;
     height: 100%;
+    layer: L2;
 }}
 
 SortOptions {{

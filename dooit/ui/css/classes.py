@@ -51,6 +51,6 @@ classes = f"""
 }}
 
 .current {{
-    layer: mid;
+    layer: L3;
 }}
 """

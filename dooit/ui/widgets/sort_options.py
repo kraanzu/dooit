@@ -6,6 +6,7 @@ from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.events import ChangeStatus
+from dooit.ui.events.events import ApplySort
 from dooit.ui.widgets.kwidget import KeyWidget
 
 
@@ -14,37 +15,62 @@ class SortOptions(KeyWidget, Widget):
     A list class to show and select the items in a list
     """
 
-    def __init__(
-        self,
-        model_type: Union[Type[Workspace], Type[Todo]],
-        model: Union[Workspace, Todo],
-    ) -> None:
+    DEFAULT_CSS = """
+    SortOptions {
+        layer: L1;
+        visibility: hidden;
+    }
+    """
+
+    def __init__(self, model_type: Union[Type[Workspace], Type[Todo]]) -> None:
         super().__init__(classes="no-border")
         self.model_type = model_type
-        self.model = model
         self.options = model_type.sortable_fields
-        self.model_widget = model
         self.highlighted = 0
+        self._prev_highlighted = 0
         self.add_keys(
             {
                 "cancel_sort": "<escape>",
-                "apply_sort": "<enter>",
+                "stop": "<enter>",
             }
         )
 
-    async def on_mount(self):
-        self.post_message(ChangeStatus("SORT"))
+    @property
+    def selected_option(self):
+        return self.options[self.highlighted]
+
+    def set_id(self, widget_id: str):
+        self.widget_id = widget_id
 
     def highlight(self, id: int) -> None:
         self.highlighted = id
         self.refresh(layout=True)
 
-    def reset(self):
-        self.highlight(0)
+    def hide(self):
+        self.styles.layer = "L1"
+        self.styles.visibility = "hidden"
 
-    def hide(self) -> None:
-        self.reset()
-        self.display = False
+    async def start(self):
+        self.styles.layer = "L4"
+        self.styles.visibility = "visible"
+        self._prev_highlighted = self.highlighted
+        self.post_message(ChangeStatus("SORT"))
+
+    async def stop(self):
+        self.hide()
+        if self.model_type == Workspace:
+            query = "WorkspaceTree"
+        else:
+            query = "TodoTree.current"
+
+        self.post_message(ApplySort(query, self.widget_id, self.selected_option))
+        self.post_message(ChangeStatus("NORMAL"))
+
+    async def toggle_visibility(self):
+        if self.visible:
+            await self.stop()
+        else:
+            await self.start()
 
     async def move_down(self) -> None:
         """
@@ -77,17 +103,8 @@ class SortOptions(KeyWidget, Widget):
         self.visible = False
 
     async def cancel_sort(self):
-        from dooit.ui.widgets.tree import Tree
-
-        if self.parent and isinstance(self.parent, Tree):
-            await self.parent._stop_sort()
-
-    async def apply_sort(self):
-        from dooit.ui.widgets.tree import Tree
-
-        if self.parent and isinstance(self.parent, Tree):
-            option = self.options[self.highlighted]
-            await self.parent.apply_sort(option)
+        self.highlighted = self._prev_highlighted
+        self.hide()
 
     def add_option(self, option: str) -> None:
         self.options.append(option)

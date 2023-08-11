@@ -348,9 +348,7 @@ class Tree(KeyWidget, Widget):
     async def apply_sort(self, id_: str, method: str):
         widget = self.get_widget_by_id(id_)
         widget.model.sort(method)
-        if parent := widget.parent:
-            await parent.force_refresh()
-
+        await self.force_refresh()
         self.post_message(ChangeStatus("NORMAL"))
 
     @property

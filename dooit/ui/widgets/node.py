@@ -83,15 +83,6 @@ class Node(Widget):
         for child in self._get_model_children():
             yield self.__class__(child, force_display=False)
 
-    async def force_refresh(self):
-        children = self._get_model_children()
-        for i in children:
-            if query := self.query(f"#{i.uuid}"):
-                await self.mount(query.first())
-            else:
-                child = self.__class__(i, force_display=False)
-                await self.mount(child)
-
     # ------------------------------------------
 
     @property

@@ -10,8 +10,10 @@ from dooit.ui.events import (
     ChangeStatus,
     SpawnHelp,
     CommitData,
+    ApplySort,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
+from dooit.ui.widgets.tree import Tree
 from .base import BaseScreen
 
 
@@ -74,6 +76,12 @@ class MainScreen(BaseScreen):
     async def mount_dashboard(self):
         await self.clear_right()
         await self.mount(EmptyWidget(), after=self.query_one(WorkspaceTree))
+
+    @on(ApplySort)
+    async def apply_sort(self, event: ApplySort):
+        await self.query_one(event.query, expect_type=Tree).apply_sort(
+            event.widget_id, event.method
+        )
 
     @on(TopicSelect)
     async def topic_select(self, event: TopicSelect):

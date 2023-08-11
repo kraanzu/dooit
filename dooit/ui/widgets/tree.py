@@ -4,7 +4,7 @@ from textual.reactive import Reactive
 from textual.widget import Widget
 
 from dooit.api.workspace import Workspace
-from dooit.api.model import Model, Result
+from dooit.api.model import Model, Result, Warn
 from dooit.ui.events.events import (
     ChangeStatus,
     CommitData,
@@ -45,7 +45,7 @@ class Tree(KeyWidget, Widget):
         self.border_title = self.__class__.__name__.replace(
             "Tree", "s"
         )  # Making it plural
-        self.current_visible_widget: Optional[Widget] = None
+        self.sort_menu = SortOptions(self.ModelType)
 
     @property
     def is_cursor_available(self) -> bool:
@@ -79,6 +79,11 @@ class Tree(KeyWidget, Widget):
     @property
     def widget_type(self) -> Union[Type[WorkspaceWidget], Type[TodoWidget]]:
         raise NotImplementedError
+
+    @property
+    def current_visible_widget(self) -> Optional[Widget]:
+        if self.sort_menu.styles.layer == "L4":
+            return self.sort_menu
 
     def get_children(self, parent: Model) -> List[ModelType]:
         return parent.workspaces
@@ -129,6 +134,7 @@ class Tree(KeyWidget, Widget):
         self.change_highlights(old, new)
 
     def compose(self) -> ComposeResult:
+        yield self.sort_menu
         children = self.get_children(self.model)
 
         if not children:
@@ -139,7 +145,7 @@ class Tree(KeyWidget, Widget):
 
     async def force_refresh(self, model: Optional[Model] = None):
         was_expanded = dict()
-        for i in self.query("*"):
+        for i in self.query(self.WidgetType):
             was_expanded[i.id] = getattr(i, "expanded", False)
             i.remove()
 
@@ -339,37 +345,27 @@ class Tree(KeyWidget, Widget):
         for i in self.query(self.widget_type):
             await i.apply_filter(filter)
 
-    async def apply_sort(self, method):
-        self.current_widget.model.sort(method)
-        if parent := self.current_widget.parent:
+    async def apply_sort(self, id_: str, method: str):
+        widget = self.get_widget_by_id(id_)
+        widget.model.sort(method)
+        if parent := widget.parent:
             await parent.force_refresh()
 
         self.post_message(ChangeStatus("NORMAL"))
-        self.current_visible_widget = None
 
-    async def _start_sort(self):
-        for i in self.children:
-            i.add_class("sort-hide")
-
-        widget = SortOptions(self.ModelType, self.current_widget.model)
-        await self.mount(widget)
-
-        self.current_visible_widget = widget
-
-    async def _stop_sort(self):
-        self.query_one(SortOptions).remove()
-
-        for i in self.children:
-            i.remove_class("sort-hide")
-
-        self.post_message(ChangeStatus("NORMAL"))
-        self.current_visible_widget = None
+    @property
+    def dual_split_position(self) -> str:
+        return "DualSplitLeft"
 
     async def sort_menu_toggle(self):
-        if not self.query(SortOptions):
-            return await self._start_sort()
+        if not self.current:
+            self.post_message(Notify(Warn("No item selected!")))
+            return
 
-        return await self._stop_sort()
+        self.sort_menu.set_id(self.current)
+        await self.sort_menu.toggle_visibility()
+        # if self.sort_menu.visible:
+        #     self.current_visible_widget = self.sort_menu
 
     async def spawn_help(self):
         self.post_message(SpawnHelp())
@@ -387,8 +383,6 @@ class Tree(KeyWidget, Widget):
             search_menu = SearchMenu(self.model, self.ModelType.class_kind)
             await self.mount(search_menu)
 
-        self.current_visible_widget = search_menu
-
     async def stop_search(self, id_: Optional[str] = None):
         with self.app.batch_update():
             self.query_one(SearchMenu).remove()
@@ -397,8 +391,6 @@ class Tree(KeyWidget, Widget):
 
             if id_:
                 self.current = id_
-
-        self.current_visible_widget = None
 
     async def keypress(self, key: str):
         if self.current_visible_widget and hasattr(

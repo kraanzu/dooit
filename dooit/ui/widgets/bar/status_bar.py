@@ -53,10 +53,10 @@ class StatusBar(Widget):
             self.mount(new_widget or StatusMessage(), before=widget)
             widget.remove()
 
-    async def start_search(self):
+    async def start_search(self, id_: str):
         from .searcher import Searcher
 
-        searcher = Searcher()
+        searcher = Searcher(id_)
         await self.replace_middle(searcher)
         searcher.start_edit()
 

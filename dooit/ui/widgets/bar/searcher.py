@@ -15,9 +15,10 @@ class Searcher(StatusMiddle, Input):
     }
     """
 
-    def __init__(self):
+    def __init__(self, menu_id: str):
         super().__init__(classes="")
         self.styles.background = BG
+        self.menu_id = f"#{menu_id}"
 
     async def on_mount(self):
         from .status_bar import StatusBar
@@ -31,7 +32,9 @@ class Searcher(StatusMiddle, Input):
 
     async def keypress(self, key: str) -> None:
         if key == "escape":
-            await self.app.query_one(SearchMenu).cancel_search()
+            await self.app.query_one(
+                self.menu_id, expect_type=SearchMenu
+            ).cancel_search()
             await self.app.query_one(StatusBar).replace_middle()
 
             self.remove()
@@ -43,4 +46,7 @@ class Searcher(StatusMiddle, Input):
             return
 
         await super().keypress(key)
-        self.app.query_one(SearchMenu).apply_filter(self.value)
+        self.app.query_one(
+            self.menu_id,
+            expect_type=SearchMenu,
+        ).apply_filter(self.value)

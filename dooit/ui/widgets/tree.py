@@ -46,6 +46,8 @@ class Tree(KeyWidget, Widget):
             "Tree", "s"
         )  # Making it plural
         self.sort_menu = SortOptions(self.ModelType)
+        self.search_menu = SearchMenu(self.model, self.ModelType.class_kind)
+        # raise TypeError(self.search_menu.options)
 
     @property
     def is_cursor_available(self) -> bool:
@@ -85,6 +87,9 @@ class Tree(KeyWidget, Widget):
         if self.sort_menu.styles.layer == "L4":
             return self.sort_menu
 
+        if self.search_menu.styles.layer == "L4":
+            return self.search_menu
+
     def get_children(self, parent: Model) -> List[ModelType]:
         return parent.workspaces
 
@@ -105,7 +110,7 @@ class Tree(KeyWidget, Widget):
             if new:
                 try:
                     widget = self.get_widget_by_id(new)
-                    self.expand_parents(widget.id)
+                    self.expand_parents(new)
                     widget.highlight()
                 except Exception:
                     self.post_message(Notify("cant find old highlighted node"))
@@ -118,22 +123,22 @@ class Tree(KeyWidget, Widget):
             parent = self.get_widget_by_id(id_)
             flag = False
 
-            while not parent.display:
+            while parent and not parent.display:
                 flag = True
                 parent.display = True
                 if not parent.expanded:
                     parent.toggle_expand()
 
-                if grandparent := parent.parent:
-                    parent = self.get_widget_by_id(grandparent.id)
+                parent = parent.parent
 
-            if flag and not parent.expanded:
+            if flag and parent and not parent.expanded:
                 parent.toggle_expand()
 
     async def watch_current(self, old: Optional[str], new: Optional[str]):
         self.change_highlights(old, new)
 
     def compose(self) -> ComposeResult:
+        yield self.search_menu
         yield self.sort_menu
         children = self.get_children(self.model)
 
@@ -372,23 +377,19 @@ class Tree(KeyWidget, Widget):
         self.post_message(ChangeStatus(status))
 
     async def start_search(self):
-        with self.app.batch_update():
-            await self.app.query_one(StatusBar).start_search()
+        await self.search_menu.start_search()
+        await self.app.query_one(StatusBar).start_search(self.search_menu.id)
 
-            for i in self.children:
-                i.add_class("search-hide")
-
-            search_menu = SearchMenu(self.model, self.ModelType.class_kind)
-            await self.mount(search_menu)
+        # with self.app.batch_update():
+        #
+        #     for i in self.children:
+        #         i.add_class("search-hide")
+        #
+        #     search_menu = SearchMenu(self.model, self.ModelType.class_kind)
+        #     await self.mount(search_menu)
 
     async def stop_search(self, id_: Optional[str] = None):
-        with self.app.batch_update():
-            self.query_one(SearchMenu).remove()
-            for i in self.children:
-                i.remove_class("search-hide")
-
-            if id_:
-                self.current = id_
+        await self.search_menu.stop_search()
 
     async def keypress(self, key: str):
         if self.current_visible_widget and hasattr(

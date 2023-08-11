@@ -7,11 +7,19 @@ from dooit.ui.widgets.kwidget import KeyWidget
 
 
 class SearchMenu(KeyWidget, Widget):
+    DEFAULT_CSS = """
+    SearchMenu {
+        layer: L1;
+        display: none;
+    }
+    """
+
     def __init__(self, model: Model, children_type):
         super().__init__()
-        self.current = -1
+        self.current = 0
         self.filter = []
         self.children_type = children_type
+        self.model = model
 
         if children_type == "workspace":
             options = model.get_workspaces()
@@ -20,12 +28,12 @@ class SearchMenu(KeyWidget, Widget):
 
         self.options = [(i.description, i.uuid) for i in options]
         self.visible_options = self.options[:]
+        self.id = f"SearchMenu-{model.uuid}"
         self.add_keys({"stop_search": "<enter>", "cancel_search": "<escape>"})
 
     @property
     def current_option(self) -> Optional[str]:
-        if self.current:
-            return self.visible_options[self.current][1]
+        return self.visible_options[self.current][1]
 
     async def move_down(self):
         self.current = min(self.current + 1, len(self.visible_options) - 1)
@@ -55,18 +63,35 @@ class SearchMenu(KeyWidget, Widget):
         self.reset_cursor()
         self.refresh()
 
-    async def cancel_search(self):
-        if self.parent:
-            await self.parent.stop_search()
+    def hide(self):
+        self.styles.layer = "L1"
+        self.display = False
 
-        self.remove()
+    async def start_search(self):
+        self.styles.layer = "L4"
+        self.display = True
+        self.apply_filter("")
+
+    async def cancel_search(self):
+        self.hide()
 
     async def stop_search(self):
         from dooit.ui.widgets.tree import Tree
 
-        if self.parent and self.current_option:
-            parent = self.app.query_one(f"#{self.parent.id}", expect_type=Tree)
-            await parent.stop_search(self.current_option)
+        if self.current_option:
+            query = (
+                "WorkspaceTree"
+                if self.children_type == "workspace"
+                else "TodoTree.current"
+            )
+            self.app.query_one(
+                query,
+                expect_type=Tree,
+            ).current = self.current_option
+            # raise TypeError(widget)
+            # await parent.stop_search(self.current_option)
+
+        self.hide()
 
     def render(self) -> RenderableType:
         res = Text()

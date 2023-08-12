@@ -47,7 +47,6 @@ class Tree(KeyWidget, Widget):
         )  # Making it plural
         self.sort_menu = SortOptions(self.ModelType)
         self.search_menu = SearchMenu(self.model, self.ModelType.class_kind)
-        # raise TypeError(self.search_menu.options)
 
     @property
     def is_cursor_available(self) -> bool:

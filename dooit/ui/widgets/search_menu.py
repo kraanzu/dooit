@@ -87,8 +87,6 @@ class SearchMenu(KeyWidget, Widget):
                 query,
                 expect_type=Tree,
             ).current = self.current_option
-            # raise TypeError(widget)
-            # await parent.stop_search(self.current_option)
 
         self.hide()
 

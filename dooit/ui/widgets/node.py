@@ -1,6 +1,7 @@
 from typing_extensions import Self
 from typing import Iterator, List, Literal, Optional, Type, Union
 import pyperclip
+from rich.console import RenderableType
 from textual.app import ComposeResult
 from textual.widget import Widget
 from dooit.api.todo import Todo
@@ -143,3 +144,6 @@ class Node(Widget):
             f"#{self.model.uuid}-description", expect_type=Description
         )
         pyperclip.copy(widget.value)
+
+    def render(self) -> RenderableType:
+        return ""

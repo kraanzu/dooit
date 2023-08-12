@@ -20,19 +20,21 @@ class SearchMenu(KeyWidget, Widget):
         self.filter = []
         self.children_type = children_type
         self.model = model
-
-        if children_type == "workspace":
-            options = model.get_workspaces()
-        else:
-            options = model.get_todos()
-
-        self.options = [(i.description, i.uuid) for i in options]
-        self.visible_options = self.options[:]
         self.add_keys({"stop_search": "<enter>", "cancel_search": "<escape>"})
 
     @property
     def current_option(self) -> Optional[str]:
         return self.visible_options[self.current][1]
+
+    def refresh_options(self):
+        self.filter = []
+        if self.children_type == "workspace":
+            options = self.model.get_workspaces()
+        else:
+            options = self.model.get_todos()
+
+        self.options = [(i.description, i.uuid) for i in options]
+        self.visible_options = self.options[:]
 
     async def move_down(self):
         self.current = min(self.current + 1, len(self.visible_options) - 1)

@@ -372,6 +372,7 @@ class Tree(KeyWidget, Widget):
 
     async def start_search(self):
         if self.search_menu.id:
+            self.search_menu.refresh_options()
             await self.search_menu.start_search()
             await self.app.query_one(StatusBar).start_search(self.search_menu.id)
 

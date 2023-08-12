@@ -9,9 +9,13 @@ from .node import Node
 
 
 class WorkspaceWidget(Node):
+    """
+    Subclass of `Node` class to visualize workspace
+    """
+
     ModelType = Workspace
 
-    def setup_children(self):
+    def setup_children(self) -> None:
         self.description = Description(self.model)
 
     def get_child_inputs(self) -> List[SimpleInput]:

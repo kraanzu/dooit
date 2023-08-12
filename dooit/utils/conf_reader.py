@@ -34,6 +34,10 @@ def combine_into(d: dict, to: dict) -> None:
 
 
 class Config:
+    """
+    Config class to parse configuration file
+    """
+
     def __init__(self) -> None:
         self._d = {}
         self.update()

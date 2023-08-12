@@ -24,7 +24,7 @@ class EmptyWidget(Widget):
         super().__init__(classes=classes)
         self.set_screen(item)
 
-    def set_screen(self, screen: EmptyWidgetType):
+    def set_screen(self, screen: EmptyWidgetType) -> None:
         if screen == "todo":
             self.item = EMPTY_TODO
         elif screen == "workspace":

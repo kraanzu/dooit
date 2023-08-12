@@ -1,3 +1,4 @@
+from textual.app import ComposeResult
 from textual.widgets import Static
 from textual import events
 from dooit.ui.widgets.help_menu import HelpMenu
@@ -20,7 +21,7 @@ class HelpScreen(BaseScreen):
         ("question_mark", "app.pop_screen", "Pop screen"),
     ]
 
-    def compose(self):
+    def compose(self) -> ComposeResult:
         for i in HelpMenu().items():
             yield Static(i)
 

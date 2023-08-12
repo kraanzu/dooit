@@ -55,14 +55,14 @@ class MainScreen(BaseScreen):
         visible_focused = [i for i in self.query(".focus") if i.display][0]
         await visible_focused.keypress(key)
 
-    async def clear_right(self):
+    async def clear_right(self) -> None:
         try:
             self.query_one("TodoTree.current").remove_class("current")
         except Exception:
             pass
 
     @work(exclusive=True)
-    async def mount_todos(self, model):
+    async def mount_todos(self, model) -> None:
         with self.app.batch_update():
             await self.clear_right()
             if widgets := self.query(f"#Tree-{model.uuid}"):
@@ -73,18 +73,18 @@ class MainScreen(BaseScreen):
                 current_widget.add_class("current")
                 await self.query_one(DualSplitRight).mount(current_widget)
 
-    async def mount_dashboard(self):
+    async def mount_dashboard(self) -> None:
         await self.clear_right()
         await self.mount(EmptyWidget(), after=self.query_one(WorkspaceTree))
 
     @on(ApplySort)
-    async def apply_sort(self, event: ApplySort):
+    async def apply_sort(self, event: ApplySort) -> None:
         await self.query_one(event.query, expect_type=Tree).apply_sort(
             event.widget_id, event.method
         )
 
     @on(TopicSelect)
-    async def topic_select(self, event: TopicSelect):
+    async def topic_select(self, event: TopicSelect) -> None:
         event.stop()
         if model := event.model:
             self.mount_todos(model)
@@ -92,7 +92,7 @@ class MainScreen(BaseScreen):
             await self.mount_dashboard()
 
     @on(SwitchTab)
-    async def switch_tab(self, _: SwitchTab):
+    async def switch_tab(self, _: SwitchTab) -> None:
         self.query_one(WorkspaceTree).toggle_class("focus")
         try:
             visible_todo = self.query_one("TodoTree.current")
@@ -101,17 +101,17 @@ class MainScreen(BaseScreen):
             pass
 
     @on(ChangeStatus)
-    async def change_status(self, event: ChangeStatus):
+    async def change_status(self, event: ChangeStatus) -> None:
         self.query_one(StatusBar).set_status(event.status)
 
     @on(SpawnHelp)
-    async def spawn_help(self, _: SpawnHelp):
+    async def spawn_help(self, _: SpawnHelp) -> None:
         self.app.push_screen("help")
 
     @on(Notify)
-    async def notify(self, event: Notify):
+    async def notify(self, event: Notify) -> None:
         self.query_one(StatusBar).set_message(event.message)
 
     @on(CommitData)
-    async def commit_data(self, _: CommitData):
+    async def commit_data(self, _: CommitData) -> None:
         manager.commit()

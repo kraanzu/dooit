@@ -34,7 +34,7 @@ class Input(Widget):
 
         return text
 
-    def apply_filter(self, pattern: str):
+    def apply_filter(self, pattern: str) -> None:
         self.highlight_pattern = pattern
         self.refresh()
 
@@ -155,12 +155,12 @@ class Input(Widget):
             self.value = self.value[:prev] + self.value[self._cursor_position :]
             self._cursor_position = prev  # Because the cursor never actually moved :)
 
-    async def clear_input(self):
+    async def clear_input(self) -> None:
         self.move_cursor_to_end()
         while self.value:
             await self.keypress("backspace")
 
-    def move_cursor_to_end(self):
+    def move_cursor_to_end(self) -> None:
         self._cursor_position = len(self.value)
 
     async def keypress(self, key: str) -> None:
@@ -249,14 +249,14 @@ class SimpleInput(Input):
         self.styles.height = "auto"
         self.highlight_pattern = ""
 
+    @property
+    def empty_result(self) -> Result:
+        return Warn(f"{self.__class__.__name__} cannot be empty!")
+
     def refresh_value(self) -> str:
         self.value = getattr(self.model, self._property)
         self.refresh(layout=True)
         return self.value
-
-    @property
-    def empty_result(self) -> Result:
-        return Warn(f"{self.__class__.__name__} cannot be empty!")
 
     async def stop_edit(self, cancel: bool = False) -> Optional[Result]:
         await super().stop_edit()
@@ -275,7 +275,7 @@ class SimpleInput(Input):
         await self.app.query_one(".focus", expect_type=Tree).stop_edit(res)
         return res
 
-    async def cancel_edit(self):
+    async def cancel_edit(self) -> Optional[Result]:
         return await self.stop_edit(cancel=True)
 
     async def keypress(self, key: str) -> None:

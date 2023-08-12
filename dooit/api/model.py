@@ -1,8 +1,10 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from typing_extensions import Self
 from uuid import uuid4
 from dataclasses import dataclass
 from rich.text import Text
+
+SortMethodType = Literal["description", "status", "date", "urgency"]
 
 
 @dataclass
@@ -55,7 +57,7 @@ class Model:
     """
 
     fields: List
-    sortable_fields: List[str]
+    sortable_fields: List[SortMethodType]
 
     def __init__(
         self,
@@ -298,22 +300,20 @@ class Model:
             self.workspaces[-1].edit("descrption", i)
             self.workspaces[-1].from_data(j)
 
-    # ------ HELPERS -----------
-
-    def get_workspaces(self):
+    def get_all_workspaces(self) -> List:
         from dooit.api.workspace import Workspace
 
         arr = [self] if isinstance(self, Workspace) else []
         for i in self.workspaces:
-            arr.extend(i.get_workspaces())
+            arr.extend(i.get_all_workspaces())
 
         return arr
 
-    def get_todos(self):
+    def get_all_todos(self) -> List:
         from dooit.api.todo import Todo
 
         arr = [self] if isinstance(self, Todo) else []
         for i in self.todos:
-            arr.extend(i.get_todos())
+            arr.extend(i.get_all_todos())
 
         return arr

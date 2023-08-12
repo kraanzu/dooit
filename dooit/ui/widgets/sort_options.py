@@ -3,6 +3,7 @@ from rich.console import RenderableType
 from rich.table import Table
 from rich.text import Text
 from textual.widget import Widget
+from dooit.api.model import SortMethodType
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.events import ChangeStatus
@@ -36,37 +37,43 @@ class SortOptions(KeyWidget, Widget):
         )
 
     @property
-    def selected_option(self):
+    def selected_option(self) -> SortMethodType:
         return self.options[self.highlighted]
 
-    def set_id(self, widget_id: str):
+    def set_id(self, widget_id: str) -> None:
         self.widget_id = widget_id
 
     def highlight(self, id: int) -> None:
         self.highlighted = id
         self.refresh(layout=True)
 
-    def hide(self):
+    def hide(self) -> None:
         self.styles.layer = "L1"
         self.styles.visibility = "hidden"
 
-    async def start(self):
+    async def start(self) -> None:
         self.styles.layer = "L4"
         self.styles.visibility = "visible"
         self._prev_highlighted = self.highlighted
         self.post_message(ChangeStatus("SORT"))
 
-    async def stop(self):
+    async def stop(self) -> None:
         self.hide()
         if self.model_type == Workspace:
             query = "WorkspaceTree"
         else:
             query = "TodoTree.current"
 
-        self.post_message(ApplySort(query, self.widget_id, self.selected_option))
+        self.post_message(
+            ApplySort(
+                query,
+                self.widget_id,
+                self.selected_option,
+            )
+        )
         self.post_message(ChangeStatus("NORMAL"))
 
-    async def toggle_visibility(self):
+    async def toggle_visibility(self) -> None:
         if self.visible:
             await self.stop()
         else:
@@ -99,14 +106,14 @@ class SortOptions(KeyWidget, Widget):
 
         self.highlight(len(self.options) - 1)
 
-    async def sort_menu_toggle(self):
+    async def sort_menu_toggle(self) -> None:
         self.visible = False
 
-    async def cancel_sort(self):
+    async def cancel_sort(self) -> None:
         self.highlighted = self._prev_highlighted
         self.hide()
 
-    def add_option(self, option: str) -> None:
+    def add_option(self, option: SortMethodType) -> None:
         self.options.append(option)
         self.refresh()
 

@@ -1,3 +1,4 @@
+from typing_extensions import Self
 from typing import Iterator, List, Literal, Optional, Type, Union
 import pyperclip
 from textual.app import ComposeResult
@@ -11,6 +12,10 @@ from .utils import Pointer
 
 
 class Node(Widget):
+    """
+    Base Widget to represent a Model class
+    """
+
     pointer_icon = ">"
     _expand = False
     ModelType: Type[Union[Workspace, Todo]]
@@ -23,20 +28,20 @@ class Node(Widget):
         self.pointer = Pointer(self.pointer_icon)
         self.setup_children()
 
+    @property
+    def expanded(self) -> bool:
+        return self._expand
+
     def setup_children(self) -> None:
         pass
 
     def get_child_inputs(self) -> List[SimpleInput]:
         return []
 
-    @property
-    def expanded(self):
-        return self._expand
-
     def _get_model_children(self) -> List[Union[Workspace, Todo]]:
         raise NotImplementedError
 
-    def _get_all_children(self):
+    def _get_all_children(self) -> List[Self]:
         return [i for i in self.children if isinstance(i, self.__class__)]
 
     def _is_editing(self) -> Union[Literal[False], SimpleInput]:
@@ -47,7 +52,7 @@ class Node(Widget):
 
         return False
 
-    def highlight(self, on: bool = True):
+    def highlight(self, on: bool = True) -> None:
         if on:
             self.pointer.show()
             for i in self.get_child_inputs():
@@ -61,7 +66,7 @@ class Node(Widget):
 
         self.scroll_visible()
 
-    def start_edit(self, property: str):
+    def start_edit(self, property: str) -> None:
         if property == "due":
             self.post_message(ChangeStatus("DATE"))
         else:
@@ -99,15 +104,15 @@ class Node(Widget):
 
         return True
 
-    def show_children(self):
+    def show_children(self) -> None:
         for i in self._get_all_children():
             i.display = True
 
-    def hide_children(self):
+    def hide_children(self) -> None:
         for i in self._get_all_children():
             i.display = False
 
-    def toggle_expand(self):
+    def toggle_expand(self) -> None:
         self._expand = not self._expand
         if self._expand:
             self.show_children()
@@ -118,12 +123,12 @@ class Node(Widget):
         if self.model.has_same_parent_kind:
             return self.model.parent.uuid
 
-    async def refresh_value(self, input_type: Optional[Type] = None):
+    async def refresh_value(self, input_type: Optional[Type] = None) -> None:
         input_type = input_type or SimpleInput
         for i in self.query(input_type):
             i.refresh_value()
 
-    async def keypress(self, key: str):
+    async def keypress(self, key: str) -> None:
         if w := self._is_editing():
             await w.keypress(key)
 
@@ -133,7 +138,7 @@ class Node(Widget):
         )
         widget.apply_filter(filter)
 
-    async def copy_text(self):
+    async def copy_text(self) -> None:
         widget = self.query_one(
             f"#{self.model.uuid}-description", expect_type=Description
         )

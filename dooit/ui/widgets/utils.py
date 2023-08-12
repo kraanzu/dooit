@@ -5,6 +5,10 @@ from textual.widgets import Label
 
 
 class Pointer(Widget):
+    """
+    Pointer Widget to show current selected widget
+    """
+
     _show = False
 
     def __init__(self, symbol: TextType):

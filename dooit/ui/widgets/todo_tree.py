@@ -8,6 +8,10 @@ from .tree import Tree
 
 
 class TodoTree(Tree):
+    """
+    Subclass of `Tree` widget to represent todos
+    """
+
     _empty = "todo"
 
     ModelType = Todo
@@ -20,21 +24,25 @@ class TodoTree(Tree):
     def widget_type(self) -> Type[TodoWidget]:
         return TodoWidget
 
-    def get_children(self, parent: Model) -> List[ModelType]:
-        return parent.todos
-
-    async def switch_pane(self):
-        self.post_message(SwitchTab())
-
-    async def increase_urgency(self):
-        await self.current_widget.increase_urgency()
-
-    async def decrease_urgency(self):
-        await self.current_widget.decrease_urgency()
-
-    async def toggle_complete(self):
-        await self.current_widget.toggle_complete()
-
     @property
     def model_class_kind(self) -> Literal["todo"]:
         return "todo"
+
+    @property
+    def current_widget(self) -> TodoWidget:
+        return super().current_widget
+
+    def get_children(self, parent: Model) -> List[ModelType]:
+        return parent.todos
+
+    async def switch_pane(self) -> None:
+        self.post_message(SwitchTab())
+
+    async def increase_urgency(self) -> None:
+        await self.current_widget.increase_urgency()
+
+    async def decrease_urgency(self) -> None:
+        await self.current_widget.decrease_urgency()
+
+    async def toggle_complete(self) -> None:
+        await self.current_widget.toggle_complete()

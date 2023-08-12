@@ -21,7 +21,7 @@ class Parser:
     def __init__(self) -> None:
         self.check_files()
 
-    def save(self, data):
+    def save(self, data) -> None:
         """
         Save the todos to data file
         """

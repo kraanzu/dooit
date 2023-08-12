@@ -69,7 +69,7 @@ class KeyBinder:
         self.raw: DefaultDict[str, List[str]] = defaultdict(list)
         self.add_keys(configured_keys)
 
-    def convert_to_bind(self, cmd: str):
+    def convert_to_bind(self, cmd: str) -> Bind:
         func_split = cmd.split()
         if func_split[0] == "edit":
             return Bind("start_edit", [func_split[1]])
@@ -99,7 +99,7 @@ class KeyBinder:
     def clear(self) -> None:
         self.pressed = ""
 
-    def find_keys(self) -> List:
+    def find_keys(self) -> List[str]:
         possible_bindings = filter(
             lambda keybind: keybind.startswith(self.pressed),
             self.methods.keys(),

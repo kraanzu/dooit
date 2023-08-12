@@ -254,6 +254,10 @@ class SimpleInput(Input):
         self.refresh(layout=True)
         return self.value
 
+    @property
+    def empty_result(self) -> Result:
+        return Warn(f"{self.__class__.__name__} cannot be empty!")
+
     async def stop_edit(self, cancel: bool = False) -> Optional[Result]:
         await super().stop_edit()
         from dooit.ui.widgets.tree import Tree
@@ -261,7 +265,11 @@ class SimpleInput(Input):
         if not cancel:
             res = self.model.edit(self._property, self.value)
         else:
-            res = Ok() if self.refresh_value() else Warn("cannot be empty")
+            value = self.refresh_value()
+            if value:
+                res = Ok()
+            else:
+                res = Ok() if self.refresh_value() else self.empty_result
 
         self.refresh_value()
         await self.app.query_one(".focus", expect_type=Tree).stop_edit(res)

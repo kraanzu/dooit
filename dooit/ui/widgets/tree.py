@@ -289,6 +289,7 @@ class Tree(KeyWidget, Widget):
         widget.model.drop()
         await widget.remove()
         self.post_message(CommitData())
+        await self.change_status("NORMAL")
 
     async def move_down(self):
         if id_ := self.next_node():

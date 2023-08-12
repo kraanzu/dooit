@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, TypeVar, Union, Dict
+from typing import Any, List, Optional, Union, Dict
 from .model import Model, Result
 
 
@@ -8,7 +8,6 @@ OPTS = {
     "COMPLETED": "X",
     "OVERDUE": "O",
 }
-T = TypeVar("T", bound="Model")
 
 
 def reversed_dict(d):
@@ -26,7 +25,7 @@ class Todo(Model):
         "recurrence",
     ]
 
-    def __init__(self, parent: Optional[T] = None) -> None:
+    def __init__(self, parent: Optional[Model] = None) -> None:
         from .model_items import (
             Status,
             Due,

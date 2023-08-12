@@ -1,9 +1,8 @@
-from typing import Any, Dict, List, Optional, TypeVar
+from typing import Any, Dict, List, Optional
+from typing_extensions import Self
 from uuid import uuid4
 from dataclasses import dataclass
 from rich.text import Text
-
-T = TypeVar("T", bound="Model")
 
 
 @dataclass
@@ -191,7 +190,7 @@ class Model:
         arr[idx], arr[idx + 1] = arr[idx + 1], arr[idx]
         return True
 
-    def prev_sibling(self: T) -> Optional[T]:
+    def prev_sibling(self) -> Optional[Self]:
         """
         Returns previous sibling item, if any, else None
         """
@@ -204,7 +203,7 @@ class Model:
         if idx:
             return self.parent._get_children(self.kind)[idx - 1]
 
-    def next_sibling(self: T) -> Optional[T]:
+    def next_sibling(self) -> Optional[Self]:
         """
         Returns next sibling item, if any, else None
         """
@@ -218,7 +217,7 @@ class Model:
         if idx < len(arr) - 1:
             return arr[idx + 1]
 
-    def add_sibling(self: T, inherit: bool = False) -> T:
+    def add_sibling(self, inherit: bool = False) -> Self:
         """
         Add item sibling
         """

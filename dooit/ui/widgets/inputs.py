@@ -1,5 +1,6 @@
 from typing import Type
 from rich.console import RenderableType
+from dooit.api.model import Err, Result
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.utils.conf_reader import config_man
@@ -56,6 +57,10 @@ class Description(SimpleInput):
         color: {todo_editing};
     }}
     """
+
+    @property
+    def empty_result(self) -> Result:
+        return Err("Description cannot be empty!")
 
     def draw(self) -> str:
         model = self.model

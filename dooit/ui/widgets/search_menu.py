@@ -15,7 +15,7 @@ class SearchMenu(KeyWidget, Widget):
     """
 
     def __init__(self, model: Model, children_type):
-        super().__init__()
+        super().__init__(id=f"SearchMenu-{model.uuid}")
         self.current = 0
         self.filter = []
         self.children_type = children_type
@@ -28,7 +28,6 @@ class SearchMenu(KeyWidget, Widget):
 
         self.options = [(i.description, i.uuid) for i in options]
         self.visible_options = self.options[:]
-        self.id = f"SearchMenu-{model.uuid}"
         self.add_keys({"stop_search": "<enter>", "cancel_search": "<escape>"})
 
     @property

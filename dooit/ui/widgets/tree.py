@@ -356,10 +356,6 @@ class Tree(KeyWidget, Widget):
         await self.force_refresh()
         self.post_message(ChangeStatus("NORMAL"))
 
-    @property
-    def dual_split_position(self) -> str:
-        return "DualSplitLeft"
-
     async def sort_menu_toggle(self):
         if not self.current:
             self.post_message(Notify(Warn("No item selected!")))
@@ -367,8 +363,6 @@ class Tree(KeyWidget, Widget):
 
         self.sort_menu.set_id(self.current)
         await self.sort_menu.toggle_visibility()
-        # if self.sort_menu.visible:
-        #     self.current_visible_widget = self.sort_menu
 
     async def spawn_help(self):
         self.post_message(SpawnHelp())
@@ -377,19 +371,9 @@ class Tree(KeyWidget, Widget):
         self.post_message(ChangeStatus(status))
 
     async def start_search(self):
-        await self.search_menu.start_search()
-        await self.app.query_one(StatusBar).start_search(self.search_menu.id)
-
-        # with self.app.batch_update():
-        #
-        #     for i in self.children:
-        #         i.add_class("search-hide")
-        #
-        #     search_menu = SearchMenu(self.model, self.ModelType.class_kind)
-        #     await self.mount(search_menu)
-
-    async def stop_search(self, id_: Optional[str] = None):
-        await self.search_menu.stop_search()
+        if self.search_menu.id:
+            await self.search_menu.start_search()
+            await self.app.query_one(StatusBar).start_search(self.search_menu.id)
 
     async def keypress(self, key: str):
         if self.current_visible_widget and hasattr(

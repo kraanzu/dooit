@@ -334,6 +334,12 @@ class Tree(KeyWidget, Widget):
     async def switch_pane(self):
         pass
 
+    async def switch_pane_workspace(self):
+        pass
+
+    async def switch_pane_todo(self):
+        pass
+
     async def start_edit(self, field: str) -> None:
         self.current_widget.start_edit(field)
 

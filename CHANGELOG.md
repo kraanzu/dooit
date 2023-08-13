@@ -11,13 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Dooit now allows duplicate descriptions to be added(closes https://github.com/kraanzu/dooit/issues/113)
 - Clear due date when selected (closes https://github.com/kraanzu/dooit/issues/111)
-
+- Add support for h / l to switch between panes (closes https://github.com/kraanzu/dooit/issues/96)
 
 ### Fixed
 - Text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)
 - Todos disappearing when wrapping descriptions with tags/quotes/brackets (closes https://github.com/kraanzu/dooit/issues/107)
 - Use background color specified in config for help menu
-
 
 ## 1.0.1
 

@@ -14,6 +14,7 @@ class Bind:
         "move_up",
         "switch_pane",
         "spawn_help",
+        "switch_pane_workspace",
         "start_search",
         "stop_search",
         "exit",
@@ -55,7 +56,10 @@ DEFAULTS = {
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],
     "exit": "<ctrl+q>",
+    "switch pane workspace": ["h"],
+    "switch pane todo": ["l"]
 }
+
 configured_keys = deepcopy(DEFAULTS)
 configured_keys.update(customed_keys)
 

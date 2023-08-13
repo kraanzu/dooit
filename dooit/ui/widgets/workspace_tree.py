@@ -30,3 +30,6 @@ class WorkspaceTree(Tree):
     async def switch_pane(self) -> None:
         if self.current:
             self.post_message(SwitchTab())
+
+    async def switch_pane_todo(self):
+        await self.switch_pane()

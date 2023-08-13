@@ -46,3 +46,6 @@ class TodoTree(Tree):
 
     async def toggle_complete(self) -> None:
         await self.current_widget.toggle_complete()
+
+    async def switch_pane_workspace(self):
+        await self.switch_pane()

@@ -2,26 +2,19 @@ from typing import Type, Union
 from rich.console import RenderableType
 from rich.table import Table
 from rich.text import Text
-from textual.widget import Widget
 from dooit.api.model import SortMethodType
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
-from dooit.ui.events import ChangeStatus
 from dooit.ui.events.events import ApplySort
-from dooit.ui.widgets.base import KeyWidget
+from dooit.ui.widgets.base import HelperWidget
 
 
-class SortOptions(KeyWidget, Widget):
+class SortOptions(HelperWidget):
     """
     A list class to show and select the items in a list
     """
 
-    DEFAULT_CSS = """
-    SortOptions {
-        layer: L1;
-        visibility: hidden;
-    }
-    """
+    _status = "SORT"
 
     def __init__(self, model_type: Union[Type[Workspace], Type[Todo]]) -> None:
         super().__init__(classes="no-border")
@@ -31,7 +24,7 @@ class SortOptions(KeyWidget, Widget):
         self._prev_highlighted = 0
         self.add_keys(
             {
-                "cancel_sort": "<escape>",
+                "cancel": "<escape>",
                 "stop": "<enter>",
             }
         )
@@ -47,18 +40,11 @@ class SortOptions(KeyWidget, Widget):
         self.highlighted = id
         self.refresh(layout=True)
 
-    def hide(self) -> None:
-        self.styles.layer = "L1"
-        self.styles.visibility = "hidden"
-
     async def start(self) -> None:
-        self.styles.layer = "L4"
-        self.styles.visibility = "visible"
+        await super().start()
         self._prev_highlighted = self.highlighted
-        self.post_message(ChangeStatus("SORT"))
 
     async def stop(self) -> None:
-        self.hide()
         if self.model_type == Workspace:
             query = "WorkspaceTree"
         else:
@@ -71,13 +57,9 @@ class SortOptions(KeyWidget, Widget):
                 self.selected_option,
             )
         )
-        self.post_message(ChangeStatus("NORMAL"))
 
-    async def toggle_visibility(self) -> None:
-        if self.visible:
-            await self.stop()
-        else:
-            await self.start()
+        await self.hide()
+        await super().stop()
 
     async def move_down(self) -> None:
         """
@@ -109,9 +91,9 @@ class SortOptions(KeyWidget, Widget):
     async def sort_menu_toggle(self) -> None:
         self.visible = False
 
-    async def cancel_sort(self) -> None:
+    async def cancel(self) -> None:
         self.highlighted = self._prev_highlighted
-        self.hide()
+        await self.hide()
 
     def add_option(self, option: SortMethodType) -> None:
         self.options.append(option)

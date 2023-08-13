@@ -1,18 +1,12 @@
 from typing import Optional
 from rich.console import RenderableType
 from rich.text import Text
-from textual.widget import Widget
 from dooit.api.model import Model
-from dooit.ui.widgets.base import KeyWidget
+from dooit.ui.widgets.base import HelperWidget
 
 
-class SearchMenu(KeyWidget, Widget):
-    DEFAULT_CSS = """
-    SearchMenu {
-        layer: L1;
-        display: none;
-    }
-    """
+class SearchMenu(HelperWidget):
+    _status = "SEARCH"
 
     def __init__(self, model: Model, children_type):
         super().__init__(id=f"SearchMenu-{model.uuid}")
@@ -20,7 +14,7 @@ class SearchMenu(KeyWidget, Widget):
         self.filter = []
         self.children_type = children_type
         self.model = model
-        self.add_keys({"stop_search": "<enter>", "cancel_search": "<escape>"})
+        self.add_keys({"stop": "<enter>", "cancel": "<escape>"})
 
     @property
     def current_option(self) -> Optional[str]:
@@ -42,15 +36,6 @@ class SearchMenu(KeyWidget, Widget):
     async def move_up(self) -> None:
         self.current = max(self.current - 1, 0)
 
-    async def keypress(self, key) -> None:
-        self.key_manager.attach_key(key)
-        bind = self.key_manager.get_method()
-        if bind:
-            if hasattr(self, bind.func_name):
-                func = getattr(self, bind.func_name)
-                await func(*bind.params)
-        self.refresh()
-
     def reset_cursor(self) -> None:
         self.current = 0
 
@@ -63,18 +48,6 @@ class SearchMenu(KeyWidget, Widget):
         self.filter = words
         self.reset_cursor()
         self.refresh()
-
-    def hide(self) -> None:
-        self.styles.layer = "L1"
-        self.display = False
-
-    async def start(self) -> None:
-        self.styles.layer = "L4"
-        self.display = True
-        self.apply_filter("")
-
-    async def cancel(self) -> None:
-        self.hide()
 
     async def stop(self) -> None:
         from dooit.ui.widgets.tree import Tree
@@ -90,7 +63,8 @@ class SearchMenu(KeyWidget, Widget):
                 expect_type=Tree,
             ).current = self.current_option
 
-        self.hide()
+        await self.hide()
+        self.apply_filter("")
 
     def render(self) -> RenderableType:
         res = Text()

@@ -362,7 +362,10 @@ class Tree(KeyWidget, Widget):
             return
 
         self.sort_menu.set_id(self.current)
-        await self.sort_menu.toggle_visibility()
+        if self.sort_menu.visible:
+            await self.sort_menu.start()
+        else:
+            await self.sort_menu.stop()
 
     async def spawn_help(self):
         self.post_message(SpawnHelp())

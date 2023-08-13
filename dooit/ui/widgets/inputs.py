@@ -93,7 +93,7 @@ class Description(SimpleInput):
 class Due(SimpleInput):
     DEFAULT_CSS = f"""
     Due {{
-            width: {DATE_MAX_WIDTH};
+        width: {DATE_MAX_WIDTH};
         min-width: {DATE_MAX_WIDTH};
         max-width: {DATE_MAX_WIDTH};
     }}
@@ -118,6 +118,10 @@ class Due(SimpleInput):
             return ""
 
         return self._colorize_by_status(icon) + value
+
+    def start_edit(self) -> None:
+        self.value = "";
+        return super().start_edit()
 
 
 class Urgency(SimpleInput):

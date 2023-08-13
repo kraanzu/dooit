@@ -41,3 +41,7 @@ class KeyWidget(Widget):
                 res = await func(*bind.params)
                 if isinstance(res, Result) and res.message:
                     self.post_message(Notify(res.text()))
+
+
+class HelperWidget(KeyWidget):
+    pass

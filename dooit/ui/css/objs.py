@@ -16,6 +16,7 @@ MainScreen {{
 
 HelpScreen {{
     layout: vertical;
+    background: {BG};
     scrollbar-size: 1 1;
 }}
 

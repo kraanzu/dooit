@@ -3,7 +3,7 @@ from rich.console import RenderableType
 from rich.text import Text
 from textual.widget import Widget
 from dooit.api.model import Model
-from dooit.ui.widgets.kwidget import KeyWidget
+from dooit.ui.widgets.base import KeyWidget
 
 
 class SearchMenu(KeyWidget, Widget):

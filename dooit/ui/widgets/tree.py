@@ -13,7 +13,7 @@ from dooit.ui.events.events import (
     StatusType,
 )
 from dooit.ui.widgets.empty import EmptyWidget
-from dooit.ui.widgets.kwidget import KeyWidget
+from dooit.ui.widgets.base import KeyWidget
 from dooit.ui.widgets.search_menu import SearchMenu
 from dooit.ui.widgets.sort_options import SortOptions
 from dooit.ui.widgets.bar.status_bar import StatusBar

@@ -8,7 +8,7 @@ from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.events import ChangeStatus
 from dooit.ui.events.events import ApplySort
-from dooit.ui.widgets.kwidget import KeyWidget
+from dooit.ui.widgets.base import KeyWidget
 
 
 class SortOptions(KeyWidget, Widget):

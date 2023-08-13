@@ -32,9 +32,7 @@ class Searcher(StatusMiddle, Input):
 
     async def keypress(self, key: str) -> None:
         if key == "escape":
-            await self.app.query_one(
-                self.menu_id, expect_type=SearchMenu
-            ).cancel_search()
+            await self.app.query_one(self.menu_id, expect_type=SearchMenu).cancel()
             await self.app.query_one(StatusBar).replace_middle()
 
             self.remove()

@@ -68,15 +68,15 @@ class SearchMenu(KeyWidget, Widget):
         self.styles.layer = "L1"
         self.display = False
 
-    async def start_search(self) -> None:
+    async def start(self) -> None:
         self.styles.layer = "L4"
         self.display = True
         self.apply_filter("")
 
-    async def cancel_search(self) -> None:
+    async def cancel(self) -> None:
         self.hide()
 
-    async def stop_search(self) -> None:
+    async def stop(self) -> None:
         from dooit.ui.widgets.tree import Tree
 
         if self.current_option:

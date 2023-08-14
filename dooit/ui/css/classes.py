@@ -6,6 +6,7 @@ from . import conf
 
 LIT = conf.get("BORDER_LIT")
 BORDER_TITLE_LIT = conf.get("BORDER_TITLE_LIT")
+YANK = conf.get("YANK_COLOR")
 
 classes = f"""
 .dim {{
@@ -52,5 +53,9 @@ classes = f"""
 
 .current {{
     layer: L3;
+}}
+
+.yank {{
+    background: {YANK};
 }}
 """

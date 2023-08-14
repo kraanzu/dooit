@@ -341,6 +341,7 @@ class Tree(KeyWidget, Widget):
 
     async def yank(self) -> None:
         self.clipboard.copy(self.current_widget)
+        self.current_widget.flash()
         self.post_message(Notify(Ok("Node was copied to clipboard!")))
 
     async def paste(self) -> None:

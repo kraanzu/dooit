@@ -67,6 +67,17 @@ class Node(Widget):
 
         self.scroll_visible()
 
+    def unflash(self) -> None:
+        self.remove_class("yank")
+
+    def flash(self) -> None:
+        """
+        Function to flash the node when yanked
+        """
+
+        self.add_class("yank")
+        self.set_timer(0.5, self.unflash)
+
     def start_edit(self, property: str) -> None:
         if property == "due":
             self.post_message(ChangeStatus("DATE"))

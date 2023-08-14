@@ -241,7 +241,7 @@ class Model:
         else:
             child = Todo(parent=self)
             if inherit and isinstance(self, Todo):
-                child.fill_from_data(self.to_data())
+                child.fill_from_data(self.to_data(), overwrite_uuid=False)
                 child._description.value = ""
                 child._effort._value = 0
                 child.edit("status", "PENDING")
@@ -291,14 +291,7 @@ class Model:
         }
 
     def from_data(self, data: Dict[str, Any]) -> None:
-        """
-        Fill in the attrs from data provided
-        """
-
-        for i, j in data.items():
-            self.add_child("workspace")
-            self.workspaces[-1].edit("descrption", i)
-            self.workspaces[-1].from_data(j)
+        raise NotImplementedError
 
     def get_all_workspaces(self) -> List:
         from dooit.api.workspace import Workspace

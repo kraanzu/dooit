@@ -49,7 +49,9 @@ DEFAULTS = {
     "sort menu toggle": "s",
     "start search": "/",
     "spawn help": "?",
-    "copy text": "y",
+    "copy text": "Y",
+    "yank": "y",
+    "paste": "p",
     "toggle complete": "c",
     "edit due": "d",
     "edit recurrence": "r",
@@ -57,7 +59,7 @@ DEFAULTS = {
     "decrease urgency": ["-", "_"],
     "exit": "<ctrl+q>",
     "switch pane workspace": ["h"],
-    "switch pane todo": ["l"]
+    "switch pane todo": ["l"],
 }
 
 configured_keys = deepcopy(DEFAULTS)

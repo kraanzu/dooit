@@ -108,11 +108,13 @@ class Todo(Model):
             "recurrence": self._recurrence.value,
         }
 
-    def fill_from_data(self, data: Union[Dict, str]) -> None:
+    def fill_from_data(
+        self, data: Union[Dict, str], overwrite_uuid: bool = True
+    ) -> None:
         if isinstance(data, str):
             self.extract_data_old(data)
         else:
-            self.extract_data_new(data)
+            self.extract_data_new(data, overwrite_uuid)
 
     # WARNING: This will be deprecated in future versions
     def extract_data_old(self, data: str):
@@ -123,11 +125,13 @@ class Todo(Model):
         self._recurrence.from_txt(data)
         self._effort.from_txt(data)
 
-    def extract_data_new(self, data: Dict[str, str]):
+    def extract_data_new(self, data: Dict[str, str], overwrite_uuid: bool = True):
         def get(key: str) -> str:
             return data.get(key, "")
 
-        self._uuid = get("uuid")
+        if overwrite_uuid:
+            self._uuid = get("uuid")
+
         self._status.set(get("status"))
         self._urgency.set(get("urgency"))
         self._due.set(get("due"))
@@ -144,9 +148,9 @@ class Todo(Model):
         else:
             return [self.to_data()]
 
-    def from_data(self, data: List) -> None:
-        self.fill_from_data(data[0])
+    def from_data(self, data: List, overwrite_uuid: bool = True) -> None:
+        self.fill_from_data(data[0], overwrite_uuid)
         if len(data) > 1:
             for i in data[1]:
                 child_todo = self.add_child(kind="todo", index=len(self.todos))
-                child_todo.from_data(i)
+                child_todo.from_data(i, overwrite_uuid)

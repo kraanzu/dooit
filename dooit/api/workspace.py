@@ -53,25 +53,27 @@ class Workspace(Model):
             workspace.edit("description", i)
             workspace.from_data(j)
 
-    def extract_data_new(self, data: Dict):
-        self._uuid = data["uuid"]
+    def extract_data_new(self, data: Dict, overwrite_uuid: bool):
+        if overwrite_uuid:
+            self._uuid = data["uuid"]
+
         self._description.set(data["description"])
 
         for todo in data["todos"]:
             child_todo = self.add_todo(index=len(self.todos))
-            child_todo.from_data(todo)
+            child_todo.from_data(todo, overwrite_uuid)
 
         for workspace in data["workspaces"]:
             child_workspace = self.add_workspace(len(self.workspaces))
-            child_workspace.from_data(workspace)
+            child_workspace.from_data(workspace, overwrite_uuid)
 
-    def from_data(self, data: Any) -> None:
+    def from_data(self, data: Any, overwrite_uuid: bool = True) -> None:
         if isinstance(data, dict):
             if "uuid" not in data:
                 self.extract_data_old(data)
             else:
-                self.extract_data_new(data)
+                self.extract_data_new(data, overwrite_uuid)
 
         elif isinstance(data, list):
             todo = self.add_todo(index=len(self.todos))
-            todo.from_data(data)
+            todo.from_data(data, overwrite_uuid)

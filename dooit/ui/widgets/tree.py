@@ -4,7 +4,7 @@ from textual.reactive import Reactive
 from textual.widget import Widget
 
 from dooit.api.workspace import Workspace
-from dooit.api.model import Model, Result, Warn
+from dooit.api.model import Model, Ok, Result, Warn
 from dooit.ui.events.events import (
     ChangeStatus,
     CommitData,
@@ -12,6 +12,7 @@ from dooit.ui.events.events import (
     SpawnHelp,
     StatusType,
 )
+from dooit.ui.widgets.clipboard import Clipboard
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.base import KeyWidget
 from dooit.ui.widgets.search_menu import SearchMenu
@@ -31,6 +32,7 @@ class Tree(KeyWidget, Widget):
     current = Reactive(None)
     ModelType = Workspace
     WidgetType = WorkspaceWidget
+    clipboard = Clipboard()
 
     DEFAULT_CSS = """
     Tree {
@@ -243,7 +245,7 @@ class Tree(KeyWidget, Widget):
         self.current = new_widget.id
         await self.start_edit("description")
 
-    async def add_node(self, type_: Literal["child", "sibling"]):
+    async def add_node(self, type_: Literal["child", "sibling"], edit: bool = True):
         if not self.get_children(self.model) or not self.current:
             return await self.add_first_child()
 
@@ -263,7 +265,9 @@ class Tree(KeyWidget, Widget):
             await self.current_widget.mount(widget)
 
         self.current = new_node.uuid
-        widget.start_edit("description")
+
+        if edit:
+            widget.start_edit("description")
 
     async def remove_item(self):
         if not self.current:
@@ -330,9 +334,21 @@ class Tree(KeyWidget, Widget):
 
     async def copy_text(self):
         await self.current_widget.copy_text()
+        self.post_message(Notify(Ok("Text was copied to clipboard!")))
 
     async def switch_pane(self):
         pass
+
+    async def yank(self) -> None:
+        self.clipboard.copy(self.current_widget)
+        self.post_message(Notify(Ok("Node was copied to clipboard!")))
+
+    async def paste(self) -> None:
+        model = self.current_widget.model.add_sibling()
+        model.from_data(self.clipboard.data, False)
+        widget = self.WidgetType(model)
+        await self.mount(widget, after=self.current_widget)
+        self.current = model.uuid
 
     async def switch_pane_workspace(self):
         pass

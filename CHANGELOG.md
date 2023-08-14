@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)
 - Todos disappearing when wrapping descriptions with tags/quotes/brackets (closes https://github.com/kraanzu/dooit/issues/107)
 - Use background color specified in config for help menu
+- Bar did not pick color from config and used the regular background
 
 ## 1.0.1
 

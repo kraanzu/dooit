@@ -342,7 +342,9 @@ class Tree(KeyWidget, Widget):
     async def yank(self) -> None:
         self.clipboard.copy(self.current_widget)
         self.current_widget.flash()
-        self.post_message(Notify(Ok("Node was copied to clipboard!")))
+        self.post_message(
+            Notify(Ok(f"{self.ModelType.__name__} was copied to clipboard!"))
+        )
 
     async def paste(self) -> None:
         model = self.current_widget.model.add_sibling()

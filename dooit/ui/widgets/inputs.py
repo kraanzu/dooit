@@ -120,7 +120,7 @@ class Due(SimpleInput):
         return self._colorize_by_status(icon) + value
 
     def start_edit(self) -> None:
-        self.value = "";
+        self.value = ""
         return super().start_edit()
 
 

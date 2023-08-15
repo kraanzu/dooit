@@ -64,6 +64,7 @@ BORDER_TITLE_DIM = black
 BORDER_TITLE_LIT = white
 SEARCH_COLOR = red
 YANK_COLOR = blue
+SAVE_ON_ESCAPE = False
 
 #################################
 #          DASHBOARD            #

@@ -10,6 +10,7 @@ RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 SEARCH_COLOR = config_man.get("SEARCH_COLOR")
+SAVE_ON_ESCAPE = config_man.get("SAVE_ON_ESCAPE")
 
 
 class Input(Widget):
@@ -282,7 +283,10 @@ class SimpleInput(Input):
         await super().keypress(key)
 
         if key == "escape":
-            await self.cancel_edit()
+            if SAVE_ON_ESCAPE:
+                await self.stop_edit()
+            else:
+                await self.cancel_edit()
 
     def _colorize_by_status(self, text: str) -> str:
         return self._render_text_with_color(

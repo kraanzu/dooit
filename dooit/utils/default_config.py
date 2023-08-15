@@ -98,7 +98,7 @@ WORKSPACE = {
     "children_hint": "+",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
-    "🍻",
+    ":(",
     "No workspaces yet?",
     f"Press {colored('a', cyan)} to add some!",
 ]
@@ -119,22 +119,22 @@ TODO = {
         " ({done}/{total})", green
     ),  # vars: remaining, done, total
     # "children_hint": "[b magenta]({remaining}!)[/b magenta]",
-    "due_icon": "🕑",
-    "effort_icon": "🗲 ",
+    "due_icon": "? ",
+    "effort_icon": "+",
     "effort_color": yellow,
-    "recurrence_icon": "⟲ ",
+    "recurrence_icon": "!",
     "recurrence_color": blue,
-    "completed_icon": "✓",
-    "pending_icon": "●",
-    "overdue_icon": "!",
-    "urgency1_icon": "🅐",
-    "urgency2_icon": "🅑",
-    "urgency3_icon": "🅒",
-    "urgency4_icon": "🅓",
+    "completed_icon": "x",
+    "pending_icon": "o",
+    "overdue_icon": "o",
+    "urgency1_icon": "A",
+    "urgency2_icon": "B",
+    "urgency3_icon": "C",
+    "urgency4_icon": "D",
 }
 
 EMPTY_TODO = [
-    "🤘",
+    ":(",
     "Wow so Empty!?",
     "Add some todos to get started!",
 ]

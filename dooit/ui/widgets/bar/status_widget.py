@@ -5,10 +5,15 @@ from inspect import getfullargspec as get_args
 from rich.console import RenderableType
 from rich.text import Text
 
+
 BarWidgetConfig = Tuple[Callable, float]
 
 
 class StatusWidget(Widget):
+    """
+    Custom Widgets for status bar!
+    """
+
     DEFAULT_CSS = """
     StatusWidget {
         width: auto;
@@ -53,8 +58,10 @@ class StatusWidget(Widget):
 
     @work(exclusive=True, thread=True)
     def refresh_value(self):
+        from dooit.ui.widgets.bar.status_bar import StatusBar
+
         try:
-            params = self.app.query_one("StatusBar").get_params()
+            params = self.app.query_one(StatusBar).get_params()
             self._value = self.get_value(**params)
         except Exception:
             pass

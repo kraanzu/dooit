@@ -2,7 +2,6 @@ from typing import Any, List, Literal, Optional, Type, Union
 from textual.app import ComposeResult
 from textual.reactive import Reactive
 from textual.widget import Widget
-
 from dooit.api.workspace import Workspace
 from dooit.api.model import Model, Ok, Result, Warn
 from dooit.ui.events.events import (
@@ -29,9 +28,13 @@ PRINTABLE = (
 
 
 class Tree(KeyWidget, Widget):
-    current = Reactive(None)
+    """
+    Tree Widget to render items in tree format + funcs
+    """
+
     ModelType = Workspace
     WidgetType = WorkspaceWidget
+    current = Reactive(None)
     clipboard = Clipboard()
 
     DEFAULT_CSS = """
@@ -44,9 +47,9 @@ class Tree(KeyWidget, Widget):
     def __init__(self, model: Model, classes: str = ""):
         super().__init__(id=f"Tree-{model.uuid}", classes=classes)
         self.model = model
-        self.border_title = self.__class__.__name__.replace(
-            "Tree", "s"
-        )  # Making it plural
+
+        tree_name = self.__class__.__name__
+        self.border_title = tree_name.replace("Tree", "s")  # Making it plural
         self.sort_menu = SortOptions(self.ModelType)
         self.search_menu = SearchMenu(self.model, self.ModelType.class_kind)
 
@@ -100,7 +103,7 @@ class Tree(KeyWidget, Widget):
             expect_type=self.WidgetType,
         )
 
-    def change_highlights(self, old, new):
+    def change_highlights(self, old, new) -> None:
         with self.app.batch_update():
             if old:
                 try:
@@ -116,7 +119,11 @@ class Tree(KeyWidget, Widget):
                 except Exception:
                     self.post_message(Notify("cant find old highlighted node"))
 
-    def expand_parents(self, id_: Optional[str]):
+    def expand_parents(self, id_: Optional[str]) -> None:
+        """
+        Expands all the ancestors in case of selection
+        """
+
         if not id_:
             return
 
@@ -135,7 +142,7 @@ class Tree(KeyWidget, Widget):
             if flag and parent and not parent.expanded:
                 parent.toggle_expand()
 
-    async def watch_current(self, old: Optional[str], new: Optional[str]):
+    async def watch_current(self, old: Optional[str], new: Optional[str]) -> None:
         self.change_highlights(old, new)
 
     def compose(self) -> ComposeResult:
@@ -150,6 +157,10 @@ class Tree(KeyWidget, Widget):
             yield self.WidgetType(i)
 
     async def force_refresh(self, model: Optional[Model] = None):
+        """
+        Refreshes the whole tree in case of change in storage file
+        """
+
         was_expanded = dict()
         for i in self.query(self.WidgetType):
             was_expanded[i.id] = getattr(i, "expanded", False)
@@ -180,7 +191,7 @@ class Tree(KeyWidget, Widget):
         except Exception:
             pass
 
-    async def notify(self, message: str):
+    async def notify(self, message: str) -> None:
         self.post_message(Notify(message))
 
     def next_node(self) -> Optional[str]:
@@ -195,7 +206,7 @@ class Tree(KeyWidget, Widget):
 
         return nodes[idx + 1].id
 
-    def prev_node(self):
+    def prev_node(self) -> Optional[str]:
         nodes = [i for i in self.query(self.WidgetType) if i.is_visible]
 
         if not self.current:
@@ -207,7 +218,7 @@ class Tree(KeyWidget, Widget):
 
         return nodes[idx - 1].id
 
-    async def shift_node(self, position: Literal["up", "down"]):
+    async def shift_node(self, position: Literal["up", "down"]) -> None:
         node = self.node
 
         sibling = node.next_sibling() if position == "down" else node.prev_sibling()
@@ -233,7 +244,7 @@ class Tree(KeyWidget, Widget):
             new_widget.highlight()
             self.post_message(CommitData())
 
-    async def add_first_child(self):
+    async def add_first_child(self) -> None:
         for i in self.query(EmptyWidget):
             self.styles.overflow_y = "auto"
             self.styles.overflow_x = "auto"
@@ -245,7 +256,9 @@ class Tree(KeyWidget, Widget):
         self.current = new_widget.id
         await self.start_edit("description")
 
-    async def add_node(self, type_: Literal["child", "sibling"], edit: bool = True):
+    async def add_node(
+        self, type_: Literal["child", "sibling"], edit: bool = True
+    ) -> None:
         if not self.get_children(self.model) or not self.current:
             return await self.add_first_child()
 
@@ -269,7 +282,7 @@ class Tree(KeyWidget, Widget):
         if edit:
             widget.start_edit("description")
 
-    async def remove_item(self):
+    async def remove_item(self) -> None:
         if not self.current:
             return
 
@@ -294,49 +307,49 @@ class Tree(KeyWidget, Widget):
         self.post_message(CommitData())
         await self.change_status("NORMAL")
 
-    async def move_down(self):
+    async def move_down(self) -> None:
         if id_ := self.next_node():
             self.current = id_
 
-    async def move_up(self):
+    async def move_up(self) -> None:
         if id_ := self.prev_node():
             self.current = id_
 
-    async def move_to_top(self):
+    async def move_to_top(self) -> None:
         if self.nodes:
             self.current = self.nodes[0].id
 
-    async def move_to_bottom(self):
+    async def move_to_bottom(self) -> None:
         if self.nodes:
             self.current = self.nodes[-1].id
 
-    async def shift_down(self):
+    async def shift_down(self) -> None:
         return await self.shift_node("down")
 
-    async def shift_up(self):
+    async def shift_up(self) -> None:
         return await self.shift_node("up")
 
-    async def add_child(self):
+    async def add_child(self) -> None:
         await self.add_node("child")
 
-    async def add_sibling(self):
+    async def add_sibling(self) -> None:
         await self.add_node("sibling")
 
-    async def toggle_expand(self):
+    async def toggle_expand(self) -> None:
         self.current_widget.toggle_expand()
 
-    async def toggle_expand_parent(self):
+    async def toggle_expand_parent(self) -> None:
         id_ = self.current_widget.toggle_expand_parent()
         if id_:
             self.current = id_
             if self.current_widget.expanded:
                 await self.toggle_expand()
 
-    async def copy_text(self):
+    async def copy_text(self) -> None:
         await self.current_widget.copy_text()
         self.post_message(Notify(Ok("Text was copied to clipboard!")))
 
-    async def switch_pane(self):
+    async def switch_pane(self) -> None:
         pass
 
     async def yank(self) -> None:
@@ -353,10 +366,10 @@ class Tree(KeyWidget, Widget):
         await self.mount(widget, after=self.current_widget)
         self.current = model.uuid
 
-    async def switch_pane_workspace(self):
+    async def switch_pane_workspace(self) -> None:
         pass
 
-    async def switch_pane_todo(self):
+    async def switch_pane_todo(self) -> None:
         pass
 
     async def start_edit(self, field: str) -> None:
@@ -371,17 +384,17 @@ class Tree(KeyWidget, Widget):
         if res.cancel_op:
             await self.remove_item()
 
-    async def apply_filter(self, filter):
+    async def apply_filter(self, filter) -> None:
         for i in self.query(self.widget_type):
             await i.apply_filter(filter)
 
-    async def apply_sort(self, id_: str, method: str):
+    async def apply_sort(self, id_: str, method: str) -> None:
         widget = self.get_widget_by_id(id_)
         widget.model.sort(method)
         await self.force_refresh()
         self.post_message(ChangeStatus("NORMAL"))
 
-    async def sort_menu_toggle(self):
+    async def sort_menu_toggle(self) -> None:
         if not self.current:
             self.post_message(Notify(Warn("No item selected!")))
             return
@@ -392,19 +405,19 @@ class Tree(KeyWidget, Widget):
         else:
             await self.sort_menu.stop()
 
-    async def spawn_help(self):
+    async def spawn_help(self) -> None:
         self.post_message(SpawnHelp())
 
-    async def change_status(self, status: StatusType):
+    async def change_status(self, status: StatusType) -> None:
         self.post_message(ChangeStatus(status))
 
-    async def start_search(self):
+    async def start_search(self) -> None:
         if self.search_menu.id:
             self.search_menu.refresh_options()
             await self.search_menu.start()
             await self.app.query_one(StatusBar).start_search(self.search_menu.id)
 
-    async def keypress(self, key: str):
+    async def keypress(self, key: str) -> None:
         if self.current_visible_widget and hasattr(
             self.current_visible_widget, "keypress"
         ):

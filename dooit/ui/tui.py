@@ -21,7 +21,6 @@ class Dooit(App):
 
     async def on_mount(self):
         self.watcher = Watcher()
-        self.x = 1
         self.set_interval(1, self.poll)
         self.push_screen("main")
 

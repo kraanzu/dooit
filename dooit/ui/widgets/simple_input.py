@@ -1,5 +1,7 @@
+import re
 import pyperclip
 from typing import Optional
+from rich.style import Style
 from rich.text import Text
 from textual.widget import Widget
 from dooit.api.model import Ok, Result, Warn
@@ -43,8 +45,20 @@ class Input(Widget):
         """
         Renders a Panel for the Text Input Box
         """
+
+        def make_links(text: Text):
+            """
+            Apply link opens to urls
+            """
+
+            pattern = r"https?://\S+|ftp://\S+"
+            for i in re.findall(pattern, text.plain):
+                style = Style.from_meta({"@click": f"app.open_url('{i}')"})
+                text.highlight_words([i], style)
+
         value = Text.from_markup(self.draw().strip())
         value.highlight_regex(r"\@\w+", "red")
+        make_links(value)
 
         if self.highlight_pattern:
             value.highlight_words(

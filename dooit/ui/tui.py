@@ -1,3 +1,4 @@
+import webbrowser
 from textual.app import App
 from dooit.api.manager import manager
 from dooit.utils.watcher import Watcher
@@ -43,6 +44,9 @@ class Dooit(App):
     async def action_quit(self) -> None:
         manager.commit()
         return await super().action_quit()
+
+    async def action_open_url(self, url: str) -> None:
+        webbrowser.open(url, new=2)
 
 
 if __name__ == "__main__":

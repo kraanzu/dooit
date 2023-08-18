@@ -9,6 +9,12 @@ DIM = conf.get("BORDER_DIM")
 BORDER_TITLE_DIM = conf.get("BORDER_TITLE_DIM")
 
 OBJS = f"""
+* {{
+    link-style: italic;
+    link-hover-style: underline italic bold;
+    link-hover-background: #fff 0%;
+}}
+
 MainScreen {{
     background: {BG};
     layout: vertical;

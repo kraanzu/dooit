@@ -28,10 +28,6 @@ class TodoTree(Tree):
     def model_class_kind(self) -> Literal["todo"]:
         return "todo"
 
-    @property
-    def current_widget(self) -> TodoWidget:
-        return super().current_widget
-
     def get_children(self, parent: Model) -> List[ModelType]:
         return parent.todos
 
@@ -39,13 +35,13 @@ class TodoTree(Tree):
         self.post_message(SwitchTab())
 
     async def increase_urgency(self) -> None:
-        await self.current_widget.increase_urgency()
+        await self.current.increase_urgency()
 
     async def decrease_urgency(self) -> None:
-        await self.current_widget.decrease_urgency()
+        await self.current.decrease_urgency()
 
     async def toggle_complete(self) -> None:
-        await self.current_widget.toggle_complete()
+        await self.current.toggle_complete()
 
     async def switch_pane_workspace(self):
         await self.switch_pane()

@@ -16,7 +16,7 @@ PyYAML = "^6.0"
 tzlocal = "2.1"
 appdirs = "^1.4.4"
 parsedatetime = "^2.6"
-textual = "^0.32.0"
+textual = "^0.33.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.261"

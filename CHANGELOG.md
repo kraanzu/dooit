@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for changing due date format (due/remaining time) (closes https://github.com/kraanzu/dooit/issues/116)
 
 ### Fixed
+- Slowness due to un-necessary rendering of the app
+- Slow loading of app because of dateparser (see https://github.com/kraanzu/dooit/issues/136)
 - Text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)
 - Todos disappearing when wrapping descriptions with tags/quotes/brackets (closes https://github.com/kraanzu/dooit/issues/107)
 - Use background color specified in config for help menu

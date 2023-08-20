@@ -159,12 +159,15 @@ class Tree(KeyWidget, Widget):
         Refreshes the whole tree in case of change in storage file
         """
 
+        highlighted = None
+        if self.current:
+            highlighted = self.current.id
+
         was_expanded = dict()
         for i in self.query(self.WidgetType):
             was_expanded[i.id] = getattr(i, "expanded", False)
             i.remove()
 
-        highlighted = self.current
         if model:
             self.model = model
 

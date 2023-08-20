@@ -1,6 +1,7 @@
 from textual import events, on, work
 from textual.containers import Container
 from dooit.api.manager import manager
+from dooit.ui.events.events import DateModeSwitch
 from dooit.ui.widgets.empty import EmptyWidget
 from dooit.ui.widgets.bar import Searcher
 from dooit.ui.events import (
@@ -13,6 +14,7 @@ from dooit.ui.events import (
     ApplySort,
 )
 from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
+from dooit.ui.widgets.inputs import Due
 from dooit.ui.widgets.tree import Tree
 from .base import BaseScreen
 
@@ -30,6 +32,8 @@ class DualSplitRight(Container):
 
 
 class MainScreen(BaseScreen):
+    date_style = "classic"
+
     def compose(self):
         with DualSplit():
             with DualSplitLeft():
@@ -111,6 +115,11 @@ class MainScreen(BaseScreen):
     @on(Notify)
     async def notify(self, event: Notify) -> None:
         self.query_one(StatusBar).set_message(event.message)
+
+    @on(DateModeSwitch)
+    async def date_mode_switch(self, _: DateModeSwitch) -> None:
+        self.date_style = "classic" if self.date_style != "classic" else "remaining"
+        [i.refresh() for i in self.query(Due)]
 
     @on(CommitData)
     async def commit_data(self, _: CommitData) -> None:

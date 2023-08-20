@@ -1,3 +1,4 @@
+import pendulum
 from typing import Type
 from rich.console import RenderableType
 from dooit.api.model import Err, Result
@@ -113,9 +114,18 @@ class Due(SimpleInput):
 
     def draw(self) -> str:
         icon = TODOS["due_icon"]
-        value = super().draw()
-        if not value:
-            return ""
+        style = getattr(self.screen, "date_style")
+
+        if style == "classic":
+            value = super().draw()
+            if not value:
+                return ""
+        else:
+            due = getattr(self.model, f"_{self._property}")._value
+            if not due:
+                return ""
+
+            value = pendulum.instance(due).diff_for_humans()
 
         return self._colorize_by_status(icon) + value
 

@@ -7,6 +7,7 @@ from dooit.api.model import Model, Ok, Result, Warn
 from dooit.ui.events.events import (
     ChangeStatus,
     CommitData,
+    DateModeSwitch,
     Notify,
     SpawnHelp,
     StatusType,
@@ -435,6 +436,9 @@ class Tree(KeyWidget, Widget):
             self.search_menu.refresh_options()
             await self.search_menu.start()
             await self.app.query_one(StatusBar).start_search(self.search_menu.id)
+
+    async def switch_date_style(self):
+        self.post_message(DateModeSwitch())
 
     async def keypress(self, key: str) -> None:
         if self.current_visible_widget and hasattr(

@@ -80,3 +80,13 @@ class CommitData(Message):
     """
     Emitted when the local data needs to be updated
     """
+
+
+class DateModeSwitch(Message):
+    """
+    Emitted when the user switches how the dates should render
+
+    ```
+    <day> month -> X days left
+    ```
+    """

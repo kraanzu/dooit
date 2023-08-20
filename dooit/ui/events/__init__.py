@@ -8,6 +8,7 @@ from .events import (
     SwitchTab,
     SpawnHelp,
     CommitData,
+    DateModeSwitch,
     ExitApp,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     "TopicSelect",
     "SwitchTab",
     "CommitData",
+    "DateModeSwitch",
     "ExitApp",
 ]

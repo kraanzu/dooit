@@ -17,6 +17,7 @@ tzlocal = "2.1"
 appdirs = "^1.4.4"
 parsedatetime = "^2.6"
 textual = "^0.33.0"
+pendulum = "^2.1.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.261"

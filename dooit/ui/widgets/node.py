@@ -136,9 +136,6 @@ class Node(Widget):
             return self.model.parent.uuid
 
     async def refresh_value(self, input_type: Optional[Type] = None) -> None:
-        # for i in self.query(self.__class__):
-        #     await self.refresh_value()
-
         input_type = input_type or SimpleInput
         for i in self.query(input_type):
             i.refresh_value()

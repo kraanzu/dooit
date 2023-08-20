@@ -16,13 +16,13 @@ def reversed_dict(d):
 
 class Todo(Model):
     fields = ["description", "due", "urgency", "effort", "status", "recurrence"]
+
     sortable_fields = [
         "description",
         "due",
         "urgency",
         "effort",
         "status",
-        "recurrence",
     ]
 
     def __init__(self, parent: Optional[Model] = None) -> None:

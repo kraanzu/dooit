@@ -4,7 +4,7 @@ from uuid import uuid4
 from dataclasses import dataclass
 from rich.text import Text
 
-SortMethodType = Literal["description", "status", "date", "urgency"]
+SortMethodType = Literal["description", "status", "due", "urgency", "effort"]
 
 
 @dataclass

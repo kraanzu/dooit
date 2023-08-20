@@ -118,7 +118,7 @@ class Due(SimpleInput):
 
         if style == "classic":
             value = super().draw()
-            if not value:
+            if not value or value == "none":
                 return ""
         else:
             due = getattr(self.model, f"_{self._property}")._value

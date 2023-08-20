@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for h / l to switch between panes (closes https://github.com/kraanzu/dooit/issues/96)
 - Add support for yank whole todos/workspaces (closes https://github.com/kraanzu/dooit/issues/76)
 - Add support for `save on escape` (closes https://github.com/kraanzu/dooit/issues/106)
+- Add support for opening and highlighting urls (closes https://github.com/kraanzu/dooit/issues/108)
 
 ### Fixed
 - Text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)

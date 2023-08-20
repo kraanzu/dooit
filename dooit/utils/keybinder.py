@@ -54,6 +54,7 @@ DEFAULTS = {
     "paste": "p",
     "toggle complete": "c",
     "edit due": "d",
+    "switch date style": "D",
     "edit recurrence": "r",
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],

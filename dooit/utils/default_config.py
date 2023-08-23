@@ -126,7 +126,7 @@ TODO = {
     "recurrence_color": blue,
     "completed_icon": "x",
     "pending_icon": "o",
-    "overdue_icon": "o",
+    "overdue_icon": "!",
     "urgency1_icon": "A",
     "urgency2_icon": "B",
     "urgency3_icon": "C",

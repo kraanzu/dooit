@@ -54,6 +54,12 @@ class Item:
         """
         raise NotImplementedError
 
+    def save(self) -> str:
+        return self.value
+
+    def setup(self, value: str) -> None:
+        self.set(value)
+
     def to_txt(self) -> str:
         """
         Convert to storable format
@@ -237,6 +243,19 @@ class Due(Item):
 
         except Exception:
             return Warn("Cannot parse the string!")
+
+    def save(self) -> str:
+        if not self._value:
+            return super().save()
+
+        return str(self._value.timestamp())
+
+    def setup(self, value: str) -> None:
+        if value:
+            try:
+                self._value = datetime.fromtimestamp(float(value))
+            except ValueError:
+                super().setup(value)
 
     def to_txt(self) -> str:
         if self._value:

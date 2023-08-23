@@ -100,12 +100,12 @@ class Todo(Model):
 
         return {
             "uuid": self._uuid,
-            "status": self._status.value,
-            "urgency": self._urgency.value,
-            "description": self._description.value,
-            "due": self._due.value,
-            "effort": self._effort.value,
-            "recurrence": self._recurrence.value,
+            "status": self._status.save(),
+            "urgency": self._urgency.save(),
+            "description": self._description.save(),
+            "due": self._due.save(),
+            "effort": self._effort.save(),
+            "recurrence": self._recurrence.save(),
         }
 
     def fill_from_data(
@@ -132,12 +132,12 @@ class Todo(Model):
         if overwrite_uuid:
             self._uuid = get("uuid")
 
-        self._status.set(get("status"))
-        self._urgency.set(get("urgency"))
-        self._due.set(get("due"))
-        self._description.set(get("description"))
-        self._recurrence.set(get("recurrence"))
-        self._effort.set(get("effort"))
+        self._status.setup(get("status"))
+        self._urgency.setup(get("urgency"))
+        self._due.setup(get("due"))
+        self._description.setup(get("description"))
+        self._recurrence.setup(get("recurrence"))
+        self._effort.setup(get("effort"))
 
     def commit(self) -> List[Any]:
         if self.todos:

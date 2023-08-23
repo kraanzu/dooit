@@ -37,6 +37,7 @@ class Tree(KeyWidget, Widget):
     WidgetType = WorkspaceWidget
     current: Reactive[Optional[WidgetType]] = Reactive(None)
     clipboard = Clipboard()
+    _rebuild_cache = True
 
     DEFAULT_CSS = """
     Tree {
@@ -64,6 +65,19 @@ class Tree(KeyWidget, Widget):
             return self.current.model
 
         return self.model
+
+    @property
+    def visible_nodes(self) -> List[WidgetType]:
+        if self._rebuild_cache:
+            self._build()
+
+        return self._visible_nodes_cache
+
+    def _build(self):
+        self._rebuild_cache = False
+        self._visible_nodes_cache = [
+            i for i in self.query(self.WidgetType) if i.is_visible
+        ]
 
     @property
     def nodes(self) -> List[WidgetType]:
@@ -191,12 +205,13 @@ class Tree(KeyWidget, Widget):
             self.current = self.get_widget_by_id(highlighted)
         except Exception:
             pass
+        self._rebuild_cache = True
 
     async def notify(self, message: str) -> None:
         self.post_message(Notify(message))
 
     def next_node(self) -> Optional[WidgetType]:
-        nodes = [i for i in self.query(self.WidgetType) if i.is_visible]
+        nodes = self.visible_nodes
 
         if not self.current:
             return nodes[0] if nodes else None
@@ -208,7 +223,7 @@ class Tree(KeyWidget, Widget):
         return nodes[idx + 1]
 
     def prev_node(self) -> Optional[WidgetType]:
-        nodes = [i for i in self.query(self.WidgetType) if i.is_visible]
+        nodes = self.visible_nodes
 
         if not self.current:
             return
@@ -245,6 +260,7 @@ class Tree(KeyWidget, Widget):
             self.current = new_widget
             new_widget.highlight()
             self.post_message(CommitData())
+            self._rebuild_cache = True
 
     async def add_first_child(self) -> None:
         for i in self.query(EmptyWidget):
@@ -308,6 +324,7 @@ class Tree(KeyWidget, Widget):
         await widget.remove()
         self.post_message(CommitData())
         await self.change_status("NORMAL")
+        self._rebuild_cache = True
 
     async def move_down(self) -> None:
         if id_ := self.next_node():
@@ -342,6 +359,7 @@ class Tree(KeyWidget, Widget):
             return
 
         self.current.toggle_expand()
+        self._rebuild_cache = True
 
     async def toggle_expand_parent(self) -> None:
         if not self.current:
@@ -352,6 +370,7 @@ class Tree(KeyWidget, Widget):
             self.current = self.get_widget_by_id(id_)
             if self.current.expanded:
                 await self.toggle_expand()
+        self._rebuild_cache = True
 
     async def copy_text(self) -> None:
         if not self.current:

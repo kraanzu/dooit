@@ -4,6 +4,7 @@ import pyperclip
 from rich.console import RenderableType
 from textual.app import ComposeResult
 from textual.widget import Widget
+from dooit.api.model import Ok, Result, Warn
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.events.events import ChangeStatus
@@ -78,7 +79,10 @@ class Node(Widget):
         self.add_class("yank")
         self.set_timer(0.5, self.unflash)
 
-    def start_edit(self, property: str) -> None:
+    def start_edit(self, property: str) -> Result:
+        if not hasattr(self.model, property):
+            return Warn(f"{self.model.__class__.__name__} has no property `{property}`")
+
         if property == "due":
             self.post_message(ChangeStatus("DATE"))
         else:
@@ -86,6 +90,7 @@ class Node(Widget):
 
         self.query_one(f"#{self.id}-{property}", expect_type=SimpleInput).start_edit()
         self.refresh()
+        return Ok()
 
     def draw(self) -> Iterator[Widget]:
         raise NotImplementedError

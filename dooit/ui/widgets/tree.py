@@ -408,11 +408,11 @@ class Tree(KeyWidget, Widget):
     async def switch_pane_todo(self) -> None:
         pass
 
-    async def start_edit(self, field: str) -> None:
+    async def start_edit(self, field: str) -> Result:
         if not self.current:
             return
 
-        self.current.start_edit(field)
+        return self.current.start_edit(field)
 
     async def stop_edit(self, res: Result) -> None:
         if not self.current:

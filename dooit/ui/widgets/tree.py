@@ -399,15 +399,19 @@ class Tree(KeyWidget, Widget):
             Notify(Ok(f"{self.ModelType.__name__} was copied to clipboard!"))
         )
 
-    async def paste(self) -> None:
+    async def paste(self) -> Result:
         if not self.current:
-            return
+            return Warn()
+
+        if not self.clipboard.has_data:
+            return Warn("Nothing in the clipboard!")
 
         model = self.current.model.add_sibling()
         model.from_data(self.clipboard.data, False)
         widget = self.WidgetType(model)
         await self.mount(widget, after=self.current)
         self.current = model.uuid
+        return Ok()
 
     async def switch_pane_workspace(self) -> None:
         pass

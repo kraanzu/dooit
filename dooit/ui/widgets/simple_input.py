@@ -8,6 +8,7 @@ from dooit.api.model import Ok, Result, Warn
 from dooit.api.todo import Todo
 from dooit.utils.conf_reader import config_man
 
+WHITE = config_man.get("white")
 RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
@@ -18,6 +19,12 @@ SAVE_ON_ESCAPE = config_man.get("SAVE_ON_ESCAPE")
 class Input(Widget):
     """
     A simple single line Text Input widget
+    """
+
+    DEFAULT_CSS = f"""
+    Input {{
+        color: {WHITE};
+    }}
     """
 
     _cursor_position: int = 0

@@ -22,6 +22,12 @@ class Node(Widget):
     _expand = False
     ModelType: Type[Union[Workspace, Todo]]
 
+    DEFAULT_CSS = """
+    Node {
+        opacity: 75%;
+    }
+    """
+
     def __init__(self, model, force_display: bool = True):
         super().__init__(id=model.uuid)
 
@@ -57,14 +63,10 @@ class Node(Widget):
     def highlight(self, on: bool = True) -> None:
         if on:
             self.pointer.show()
-            for i in self.get_child_inputs():
-                i.remove_class("dim")
-                i.add_class("highlight")
+            self.add_class("highlight")
         else:
             self.pointer.hide()
-            for i in self.get_child_inputs():
-                i.add_class("dim")
-                i.remove_class("highlight")
+            self.remove_class("highlight")
 
         self.scroll_visible()
 
@@ -80,6 +82,7 @@ class Node(Widget):
         self.set_timer(0.5, self.unflash)
 
     def start_edit(self, property: str) -> Result:
+        self.add_class("editing")
         if not hasattr(self.model, property):
             return Warn(f"{self.model.__class__.__name__} has no property `{property}`")
 

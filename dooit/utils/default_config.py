@@ -91,8 +91,6 @@ no_search_results = ["🔍", colored("No results found!", red)]
 #           WORKSPACE           #
 #################################
 WORKSPACE = {
-    "dim": grey,
-    "highlight": white,
     "editing": cyan,
     "pointer": ">",
     "children_hint": "+",  # "[{count}]", # vars: count
@@ -111,8 +109,6 @@ EMPTY_WORKSPACE = [
 COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
 TODO = {
     "color_todos": False,
-    "dim": grey,
-    "highlight": white,
     "editing": cyan,
     "pointer": ">",
     "children_hint": colored(

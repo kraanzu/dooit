@@ -9,15 +9,8 @@ BORDER_TITLE_LIT = conf.get("BORDER_TITLE_LIT")
 YANK = conf.get("YANK_COLOR")
 
 classes = f"""
-.dim {{
-    opacity: 70%;
-}}
-
 .highlight {{
-    text-style: bold;
-}}
-
-.editing{{
+    opacity: 100%;
     text-style: bold;
 }}
 

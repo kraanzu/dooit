@@ -8,55 +8,22 @@ from dooit.utils.conf_reader import config_man
 from .simple_input import SimpleInput
 
 TODOS = config_man.get("TODO")
-todo_editing = TODOS.get("editing")
-todo_highlight = TODOS.get("highlight")
-todo_dim = TODOS.get("dim")
-
 WORKSPACES = config_man.get("WORKSPACE")
-workspace_editing = WORKSPACES.get("editing")
-workspace_highlight = WORKSPACES.get("highlight")
-workspace_dim = WORKSPACES.get("dim")
 
 RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 ORANGE = config_man.get("orange")
 
-TODO_SELECTOR = "TodoWidget > ExpandedHorizontal > ExpandedHorizontal > Description"
-WORKSPACE_SELECTOR = "WorkspaceWidget > Horizontal > Description"
 DATE_MAX_WIDTH = 17
 
 
 class Description(SimpleInput):
-    DEFAULT_CSS = f"""
-    Description {{
+    DEFAULT_CSS = """
+    Description {
         width: auto;
         height: auto;
-    }}
-
-    {WORKSPACE_SELECTOR}.dim {{
-        color: {workspace_dim};
-    }}
-
-    {WORKSPACE_SELECTOR}.highlight {{
-        color: {workspace_highlight};
-    }}
-
-    {WORKSPACE_SELECTOR}.editing {{
-        color: {workspace_editing};
-    }}
-
-    {TODO_SELECTOR}.dim {{
-        color: {todo_dim};
-    }}
-
-    {TODO_SELECTOR}.highlight {{
-        color: {todo_highlight};
-    }}
-
-    {TODO_SELECTOR}.editing {{
-        color: {todo_editing};
-    }}
+    }
     """
 
     @property
@@ -97,18 +64,6 @@ class Due(SimpleInput):
         width: {DATE_MAX_WIDTH};
         min-width: {DATE_MAX_WIDTH};
         max-width: {DATE_MAX_WIDTH};
-    }}
-
-    Due.dim {{
-        color: {todo_dim}
-    }}
-
-    Due.highlight {{
-        color: {todo_highlight}
-    }}
-
-    Due.editing {{
-        color: {todo_editing}
     }}
     """
 

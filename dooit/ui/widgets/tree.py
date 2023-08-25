@@ -417,7 +417,7 @@ class Tree(KeyWidget, Widget):
 
     async def start_edit(self, field: str) -> Result:
         if not self.current:
-            return
+            return Warn("Nothing to edit!")
 
         return self.current.start_edit(field)
 

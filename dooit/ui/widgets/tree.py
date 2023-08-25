@@ -235,7 +235,11 @@ class Tree(KeyWidget, Widget):
         return nodes[idx - 1]
 
     async def shift_node(self, position: Literal["up", "down"]) -> None:
+        if not self.current:
+            return
+
         node = self.node
+        expaned = self.current.expanded
 
         sibling = node.next_sibling() if position == "down" else node.prev_sibling()
 
@@ -258,6 +262,9 @@ class Tree(KeyWidget, Widget):
                 await self.mount(new_widget, before=sibling_widget)
 
             self.current = new_widget
+            if expaned:
+                self.current.toggle_expand()
+
             new_widget.highlight()
             self.post_message(CommitData())
             self._rebuild_cache = True

@@ -12,16 +12,23 @@ from dooit.ui.widgets.inputs import (
 )
 from dooit.ui.widgets.simple_input import SimpleInput
 from dooit.ui.widgets.utils import Padding
+from dooit.utils.conf_reader import config_man
 from .node import Node
+
+EDITING = config_man.get("TODO").get("editing")
 
 
 class TodoWidget(Node):
-    DEFAULT_CSS = """
-    TodoWidget {
+    DEFAULT_CSS = f"""
+    TodoWidget {{
         layout: grid;
         grid-size: 5;
         grid-columns: auto auto 1fr auto auto;
-    }
+    }}
+
+    TodoWidget > Horizontal > Description.editing {{
+        color: {EDITING};
+    }}
     """
     ModelType = Todo
 

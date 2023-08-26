@@ -4,7 +4,10 @@ from dooit.api.workspace import Workspace
 from dooit.ui.widgets.inputs import Description
 from dooit.ui.widgets.simple_input import SimpleInput
 from dooit.ui.widgets.utils import Padding
+from dooit.utils.conf_reader import config_man
 from .node import Node
+
+EDITING = config_man.get("WORKSPACE").get("editing")
 
 
 class WorkspaceWidget(Node):
@@ -12,12 +15,16 @@ class WorkspaceWidget(Node):
     Subclass of `Node` class to visualize workspace
     """
 
-    DEFAULT_CSS = """
-    WorkspaceWidget {
+    DEFAULT_CSS = f"""
+    WorkspaceWidget {{
         layout: grid;
         grid-size: 3;
         grid-columns: auto auto 1fr;
-    }
+    }}
+
+    WorkspaceWidget > Description.editing {{
+        color: {EDITING};
+    }}
     """
 
     ModelType = Workspace

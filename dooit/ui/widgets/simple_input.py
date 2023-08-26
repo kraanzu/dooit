@@ -63,9 +63,12 @@ class Input(Widget):
                 style = Style.from_meta({"@click": f"app.open_url('{i}')"})
                 text.highlight_words([i], style)
 
+        def make_tags(text: Text):
+            text.highlight_regex(r"\@\w+", RED)
+
         value = Text.from_markup(self.draw().strip())
-        value.highlight_regex(r"\@\w+", "red")
         make_links(value)
+        make_tags(value)
 
         if self.highlight_pattern:
             value.highlight_words(

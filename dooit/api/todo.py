@@ -154,3 +154,14 @@ class Todo(Model):
             for i in data[1]:
                 child_todo = self.add_child(kind="todo", index=len(self.todos))
                 child_todo.from_data(i, overwrite_uuid)
+
+    # ----------- HELPER FUNCTIONS --------------
+
+    def is_completed(self) -> bool:
+        return self.status == "COMPLETED"
+
+    def is_pending(self) -> bool:
+        return self.status == "PENDING"
+
+    def is_overdue(self) -> bool:
+        return self.status == "OVERDUE"

@@ -1,4 +1,5 @@
 from typing import Iterator, List
+from textual.containers import Horizontal
 from textual.widget import Widget
 from dooit.api.todo import Todo
 from dooit.ui.widgets.inputs import (
@@ -14,19 +15,14 @@ from dooit.ui.widgets.utils import Padding
 from .node import Node
 
 
-class ExpandedHorizontal(Widget):
+class TodoWidget(Node):
     DEFAULT_CSS = """
-    ExpandedHorizontal {
-        layout: horizontal;
-        height: auto;
+    TodoWidget {
+        layout: grid;
+        grid-size: 5;
+        grid-columns: auto auto 1fr auto auto;
     }
     """
-
-    def on_mount(self) -> None:
-        self.styles.width = "1fr"
-
-
-class TodoWidget(Node):
     ModelType = Todo
 
     def setup_children(self):
@@ -73,15 +69,14 @@ class TodoWidget(Node):
         await self.refresh_value()
 
     def draw(self) -> Iterator[Widget]:
-        with ExpandedHorizontal():
-            yield self.pointer
-            yield Padding(self.model.nest_level)
+        yield self.pointer
+        yield Padding(self.model.nest_level)
 
-            with ExpandedHorizontal():
-                yield self.status
-                yield self.description
-                yield self.effort
-                yield self.recurrence
+        with Horizontal():
+            yield self.status
+            yield self.description
+            yield self.effort
+            yield self.recurrence
 
-            yield self.due
-            yield self.urgency
+        yield self.due
+        yield self.urgency

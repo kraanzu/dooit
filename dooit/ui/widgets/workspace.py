@@ -1,5 +1,4 @@
 from typing import Iterator, List
-from textual.containers import Horizontal
 from textual.widget import Widget
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.inputs import Description
@@ -11,6 +10,14 @@ from .node import Node
 class WorkspaceWidget(Node):
     """
     Subclass of `Node` class to visualize workspace
+    """
+
+    DEFAULT_CSS = """
+    WorkspaceWidget {
+        layout: grid;
+        grid-size: 3;
+        grid-columns: auto auto 1fr;
+    }
     """
 
     ModelType = Workspace
@@ -25,7 +32,6 @@ class WorkspaceWidget(Node):
         return self.model.workspaces
 
     def draw(self) -> Iterator[Widget]:
-        with Horizontal():
-            yield self.pointer
-            yield Padding(self.model.nest_level)
-            yield self.description
+        yield self.pointer
+        yield Padding(self.model.nest_level)
+        yield self.description

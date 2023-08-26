@@ -43,9 +43,6 @@ class Node(Widget):
     def setup_children(self) -> None:
         pass
 
-    def get_child_inputs(self) -> List[SimpleInput]:
-        return []
-
     def _get_model_children(self) -> List[Union[Workspace, Todo]]:
         raise NotImplementedError
 

@@ -10,7 +10,6 @@ from dooit.ui.widgets.inputs import (
     Status,
     Urgency,
 )
-from dooit.ui.widgets.simple_input import SimpleInput
 from dooit.ui.widgets.utils import Padding
 from dooit.utils.conf_reader import config_man
 from .node import Node
@@ -39,17 +38,6 @@ class TodoWidget(Node):
         self.recurrence = Recurrence(model=self.model)
         self.due = Due(model=self.model)
         self.urgency = Urgency(model=self.model)
-
-    def get_child_inputs(self) -> List[SimpleInput]:
-        return [
-            self.status,
-            self.description,
-            self.description,
-            self.effort,
-            self.recurrence,
-            self.due,
-            self.urgency,
-        ]
 
     def _get_model_children(self) -> List[ModelType]:
         return self.model.todos

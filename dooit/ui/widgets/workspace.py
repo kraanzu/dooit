@@ -2,7 +2,6 @@ from typing import Iterator, List
 from textual.widget import Widget
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.inputs import Description
-from dooit.ui.widgets.simple_input import SimpleInput
 from dooit.ui.widgets.utils import Padding
 from dooit.utils.conf_reader import config_man
 from .node import Node
@@ -31,9 +30,6 @@ class WorkspaceWidget(Node):
 
     def setup_children(self) -> None:
         self.description = Description(self.model)
-
-    def get_child_inputs(self) -> List[SimpleInput]:
-        return [self.description]
 
     def _get_model_children(self) -> List[Workspace]:
         return self.model.workspaces

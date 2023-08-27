@@ -15,6 +15,7 @@ from dooit.utils.conf_reader import config_man
 from .node import Node
 
 EDITING = config_man.get("TODO").get("editing")
+POINTER_ICON = config_man.get("TODO").get("pointer")
 
 
 class TodoGrid(Widget):
@@ -34,6 +35,7 @@ class TodoGrid(Widget):
 
 class TodoWidget(Node):
     ModelType = Todo
+    pointer_icon = POINTER_ICON
 
     def setup_children(self):
         self.status = Status(model=self.model)

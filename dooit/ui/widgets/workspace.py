@@ -7,6 +7,7 @@ from dooit.utils.conf_reader import config_man
 from .node import Node
 
 EDITING = config_man.get("WORKSPACE").get("editing")
+POINTER_ICON = config_man.get("WORKSPACE").get("pointer")
 
 
 class WorkspaceGrid(Widget):
@@ -30,6 +31,7 @@ class WorkspaceWidget(Node):
     """
 
     ModelType = Workspace
+    pointer_icon = POINTER_ICON
 
     def setup_children(self) -> None:
         self.description = Description(self.model)

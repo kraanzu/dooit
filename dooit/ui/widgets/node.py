@@ -22,12 +22,6 @@ class Node(Widget):
     _expand = False
     ModelType: Type[Union[Workspace, Todo]]
 
-    DEFAULT_CSS = """
-    Node {
-        opacity: 75%;
-    }
-    """
-
     def __init__(self, model, force_display: bool = True):
         super().__init__(id=model.uuid)
 

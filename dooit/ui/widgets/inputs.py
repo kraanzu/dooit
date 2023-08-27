@@ -1,4 +1,4 @@
-import pendulum
+from datetime import datetime, timedelta
 from typing import Type
 from rich.console import RenderableType
 from dooit.api.model import Err, Result
@@ -67,6 +67,49 @@ class Due(SimpleInput):
     }}
     """
 
+    def timedelta_to_words(self, delta: timedelta):
+        is_negative = delta.total_seconds() <= 0
+        if not is_negative:
+            delta = delta + timedelta(days=1)
+
+        days = abs(delta.days)
+
+        years = days // 365
+        months = (days % 365) // 30
+        days = (days % 365) % 30
+        hours, remainder = divmod(abs(delta.seconds), 3600)
+        minutes, _ = divmod(remainder, 60)
+
+        if years:
+            return (
+                f"{years}"
+                + f"{'yr' if years == 1 else 'yrs'}"
+                + f"{'ago' if is_negative else ''}"
+            )
+        if months:
+            return (
+                f"{months}"
+                + f"{'mo' if months == 1 else 'mos'} "
+                + f"{'ago' if is_negative else ''}"
+            )
+        if days:
+            return (
+                f"{days}"
+                + f"{'day' if days == 1 else 'days'} "
+                + f"{'ago' if is_negative else ''}"
+            )
+
+        time_parts = []
+        if hours:
+            time_parts.append(f"{hours} {'hr' if hours == 1 else 'hrs'}")
+        if minutes:
+            time_parts.append(f"{minutes} {'min' if minutes == 1 else 'mins'}")
+
+        if is_negative:
+            time_parts.append("ago")
+
+        return " ".join(time_parts) if time_parts else "0 mins"
+
     def draw(self) -> str:
         icon = TODOS["due_icon"]
         style = getattr(self.screen, "date_style")
@@ -77,10 +120,11 @@ class Due(SimpleInput):
                 return ""
         else:
             due = getattr(self.model, f"_{self._property}")._value
+            now = datetime.now()
             if not due:
                 return ""
 
-            value = pendulum.instance(due).diff_for_humans()
+            value = self.timedelta_to_words(due - now)
 
         return self._colorize_by_status(icon) + value
 

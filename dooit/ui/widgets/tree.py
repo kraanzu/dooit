@@ -316,10 +316,10 @@ class Tree(KeyWidget, Widget):
 
         widget = self.current
 
-        if id_ := self.next_node():
-            self.current = id_
-        elif id_ := self.prev_node():
-            self.current = id_
+        if node := self.next_node():
+            self.current = node
+        elif node := self.prev_node():
+            self.current = node
         else:
             self.current = None
 
@@ -337,12 +337,12 @@ class Tree(KeyWidget, Widget):
         self._rebuild_cache = True
 
     async def move_down(self) -> None:
-        if id_ := self.next_node():
-            self.current = id_
+        if node := self.next_node():
+            self.current = node
 
     async def move_up(self) -> None:
-        if id_ := self.prev_node():
-            self.current = id_
+        if node := self.prev_node():
+            self.current = node
 
     async def move_to_top(self) -> None:
         if self.nodes:
@@ -413,7 +413,7 @@ class Tree(KeyWidget, Widget):
         model.from_data(self.clipboard.data, False)
         widget = self.WidgetType(model)
         await self.mount(widget, after=self.current)
-        self.current = model.uuid
+        self.current = widget
         return Ok()
 
     async def switch_pane_workspace(self) -> None:

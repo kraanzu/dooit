@@ -58,10 +58,11 @@ class SearchMenu(HelperWidget):
                 if self.children_type == "workspace"
                 else "TodoTree.current"
             )
-            self.app.query_one(
+            tree = self.app.query_one(
                 query,
                 expect_type=Tree,
-            ).current = self.current_option
+            )
+            tree.current = tree.get_widget_by_id(self.current_option)
 
         await self.hide()
         self.apply_filter("")

@@ -17,18 +17,22 @@ from .node import Node
 EDITING = config_man.get("TODO").get("editing")
 
 
-class TodoWidget(Node):
+class TodoGrid(Widget):
     DEFAULT_CSS = f"""
-    TodoWidget {{
+    TodoGrid {{
         layout: grid;
         grid-size: 5;
         grid-columns: auto auto 1fr auto auto;
+        height: auto;
     }}
 
-    TodoWidget > Horizontal > Description.editing {{
+    TodoGrid > Horizontal > Description.editing {{
         color: {EDITING};
     }}
     """
+
+
+class TodoWidget(Node):
     ModelType = Todo
 
     def setup_children(self):
@@ -64,14 +68,15 @@ class TodoWidget(Node):
         await self.refresh_value()
 
     def draw(self) -> Iterator[Widget]:
-        yield self.pointer
-        yield Padding(self.model.nest_level)
+        with TodoGrid():
+            yield self.pointer
+            yield Padding(self.model.nest_level)
 
-        with Horizontal():
-            yield self.status
-            yield self.description
-            yield self.effort
-            yield self.recurrence
+            with Horizontal():
+                yield self.status
+                yield self.description
+                yield self.effort
+                yield self.recurrence
 
-        yield self.due
-        yield self.urgency
+            yield self.due
+            yield self.urgency

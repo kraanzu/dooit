@@ -308,6 +308,7 @@ class Tree(KeyWidget, Widget):
 
         if edit:
             widget.start_edit("description")
+        self._rebuild_cache = True
 
     async def remove_item(self) -> None:
         if not self.current:

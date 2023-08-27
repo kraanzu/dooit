@@ -9,21 +9,24 @@ from .node import Node
 EDITING = config_man.get("WORKSPACE").get("editing")
 
 
-class WorkspaceWidget(Node):
-    """
-    Subclass of `Node` class to visualize workspace
-    """
-
+class WorkspaceGrid(Widget):
     DEFAULT_CSS = f"""
-    WorkspaceWidget {{
+    WorkspaceGrid {{
         layout: grid;
         grid-size: 3;
         grid-columns: auto auto 1fr;
+        height: auto;
     }}
 
-    WorkspaceWidget > Description.editing {{
+    WorkspaceGrid > Description.editing {{
         color: {EDITING};
     }}
+    """
+
+
+class WorkspaceWidget(Node):
+    """
+    Subclass of `Node` class to visualize workspace
     """
 
     ModelType = Workspace
@@ -35,6 +38,7 @@ class WorkspaceWidget(Node):
         return self.model.workspaces
 
     def draw(self) -> Iterator[Widget]:
-        yield self.pointer
-        yield Padding(self.model.nest_level)
-        yield self.description
+        with WorkspaceGrid():
+            yield self.pointer
+            yield Padding(self.model.nest_level)
+            yield self.description

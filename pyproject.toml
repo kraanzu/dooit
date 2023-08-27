@@ -16,7 +16,6 @@ PyYAML = "^6.0"
 tzlocal = "2.1"
 appdirs = "^1.4.4"
 parsedatetime = "^2.6"
-pendulum = "^2.1.2"
 textual = "^0.34.0"
 
 [tool.poetry.group.dev.dependencies]

@@ -10,8 +10,7 @@ YANK = conf.get("YANK_COLOR")
 
 classes = f"""
 .highlight {{
-    opacity: 100%;
-    text-style: bold;
+    background: #fff 10%;
 }}
 
 .focus {{

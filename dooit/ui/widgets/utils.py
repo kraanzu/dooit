@@ -9,10 +9,18 @@ class Pointer(Widget):
     Pointer Widget to show current selected widget
     """
 
+    DEFAULT_CSS = """
+    Pointer {
+        padding-left: 1;
+        padding-right: 1;
+        width: auto;
+    }
+    """
+
     _show = False
 
     def __init__(self, symbol: TextType):
-        super().__init__(classes="padding")
+        super().__init__()
         self.symbol = symbol
 
     def show(self):

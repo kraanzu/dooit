@@ -40,6 +40,7 @@ def get_username():
 #            COLORS             #
 #################################
 
+dark_black = "#252a34"
 black = "#2e3440"
 white = "#e5e9f0"
 grey = "#d8dee9"
@@ -58,10 +59,12 @@ orange = "#d08770"
 #################################
 BACKGROUND = black
 BAR_BACKGROUND = black
+WORKSPACES_BACKGROUND = black
+TODOS_BACKGROUND = black
 BORDER_DIM = grey + " 50%"
-BORDER_LIT = cyan
-BORDER_TITLE_DIM = black
-BORDER_TITLE_LIT = white
+BORDER_LIT = blue
+BORDER_TITLE_DIM = grey, dark_black
+BORDER_TITLE_LIT = white, blue
 SEARCH_COLOR = red
 YANK_COLOR = blue
 SAVE_ON_ESCAPE = False

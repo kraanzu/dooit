@@ -78,7 +78,7 @@ regex_style = {
     "6": blue,
     "a": blue,
     "#": yellow,
-    "(?<=\()[^()\n]+(?=\))": white,
+    r"(?<=\()[^()\n]+(?=\))": white,
 }
 
 

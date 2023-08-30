@@ -108,6 +108,8 @@ class Due(SimpleInput):
                 return ""
         else:
             due: datetime = getattr(self.model, f"_{self._property}")._value
+            if not due.hour:
+                due = due.replace(day=due.day + 1)
             now = datetime.now()
             if not due:
                 return ""

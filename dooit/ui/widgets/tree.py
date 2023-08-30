@@ -144,11 +144,13 @@ class Tree(KeyWidget, Widget):
                 parent.display = True
                 if not parent.expanded:
                     parent.toggle_expand()
+                    self._rebuild_cache = True
 
                 parent = parent.parent
 
             if flag and parent and not parent.expanded:
                 parent.toggle_expand()
+                self._rebuild_cache = True
 
     async def watch_current(
         self,

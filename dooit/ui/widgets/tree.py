@@ -227,6 +227,9 @@ class Tree(KeyWidget, Widget):
     def prev_node(self) -> Optional[WidgetType]:
         nodes = self.visible_nodes
 
+        if not nodes:
+            return
+
         if not self.current:
             return
 

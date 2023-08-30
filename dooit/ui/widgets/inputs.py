@@ -81,34 +81,22 @@ class Due(SimpleInput):
         minutes, _ = divmod(remainder, 60)
 
         if years:
-            return (
-                f"{years}"
-                + f"{'yr' if years == 1 else 'yrs'}"
-                + f"{'ago' if is_negative else ''}"
-            )
+            return f"{years}yr" + f" {'ago' if is_negative else ''}"
         if months:
-            return (
-                f"{months}"
-                + f"{'mo' if months == 1 else 'mos'} "
-                + f"{'ago' if is_negative else ''}"
-            )
+            return f"{months}mo" + f" {'ago' if is_negative else ''}"
         if days:
-            return (
-                f"{days}"
-                + f"{'day' if days == 1 else 'days'} "
-                + f"{'ago' if is_negative else ''}"
-            )
+            return f"{days}d" + f" {'ago' if is_negative else ''}"
 
         time_parts = []
         if hours:
-            time_parts.append(f"{hours} {'hr' if hours == 1 else 'hrs'}")
+            time_parts.append(f"{hours}h")
         if minutes:
-            time_parts.append(f"{minutes} {'min' if minutes == 1 else 'mins'}")
+            time_parts.append(f"{minutes}min")
 
         if is_negative:
             time_parts.append("ago")
 
-        return " ".join(time_parts) if time_parts else "0 mins"
+        return " ".join(time_parts) if time_parts else "0 min"
 
     def draw(self) -> str:
         icon = TODOS["due_icon"]
@@ -119,7 +107,7 @@ class Due(SimpleInput):
             if not value or value == "none":
                 return ""
         else:
-            due = getattr(self.model, f"_{self._property}")._value
+            due: datetime = getattr(self.model, f"_{self._property}")._value
             now = datetime.now()
             if not due:
                 return ""

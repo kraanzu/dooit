@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, List, Optional, Union, Dict
 from .model import Model, Result
 
@@ -156,6 +157,12 @@ class Todo(Model):
                 child_todo.from_data(i, overwrite_uuid)
 
     # ----------- HELPER FUNCTIONS --------------
+    def has_due_date(self) -> bool:
+        return bool(self._due._value)
+
+    def is_due_today(self) -> bool:
+        value = self._due._value
+        return bool(value and (value.date() == datetime.today().date()))
 
     def is_completed(self) -> bool:
         return self.status == "COMPLETED"

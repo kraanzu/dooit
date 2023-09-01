@@ -12,6 +12,7 @@ class Pointer(Widget):
     DEFAULT_CSS = """
     Pointer {
         padding-left: 1;
+        padding-right: 1;
         width: auto;
     }
     """

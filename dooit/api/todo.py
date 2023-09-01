@@ -69,6 +69,10 @@ class Todo(Model):
     def status(self):
         return self._status.value
 
+    @property
+    def tags(self) -> List[str]:
+        return [i for i in self.description.split() if i[0] == "@"]
+
     def add_child(
         self, kind: str = "todo", index: int = 0, inherit: bool = False
     ) -> Any:

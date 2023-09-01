@@ -1,55 +1,35 @@
-from typing import List
-from dooit.ui.formatters import WorkspaceFormatter
-from dooit.utils.keybinder import KeyBinder
-from dooit.api import Manager, Workspace
-from dooit.ui.events import TopicSelect, SwitchTab
-from dooit.utils.conf_reader import Config
-from .tree import TreeList
-
-conf = Config()
-EMPTY_WORKSPACE = conf.get("EMPTY_WORKSPACE")
-format = conf.get("WORKSPACE")
+from typing import Literal, Optional, Type
+from dooit.api.model import Model
+from dooit.ui.events.events import SwitchTab, TopicSelect
+from dooit.ui.widgets.workspace import WorkspaceWidget
+from .tree import Tree
 
 
-class WorkspaceTree(TreeList):
+class WorkspaceTree(Tree):
     """
-    NavBar class to manage UI's navbar
+    Subclass of `Tree` class to display workspaces
     """
 
-    options = Workspace.sortable_fields
-    EMPTY = EMPTY_WORKSPACE
-    model_kind = "workspace"
-    model_type = Workspace
-    styler = WorkspaceFormatter(format)
-    COLS = ["description"]
-    key_manager = KeyBinder()
+    _empty = "workspace"
 
-    async def _current_change_callback(self) -> None:
-        if self.current == -1:
-            self.post_message(TopicSelect(None))
-        else:
-            self.post_message(TopicSelect(self.item))
+    def __init__(self, model: Model):
+        super().__init__(model, "focus left-dock")
 
-    async def _refresh_data(self):
-        await self.rearrange()
-        await self._current_change_callback()
+    @property
+    def widget_type(self) -> Type[WorkspaceWidget]:
+        return WorkspaceWidget
 
-    def _setup_table(self) -> None:
-        super()._setup_table(format["pointer"])
-        self.table.add_column("description", ratio=1)
+    @property
+    def model_class_kind(self) -> Literal["workspace"]:
+        return "workspace"
+
+    async def watch_current(self, old: Optional[str], new: Optional[str]) -> None:
+        await super().watch_current(old, new)
+        self.post_message(TopicSelect(None if not new else self.node))
 
     async def switch_pane(self) -> None:
-        if self.current == -1:
-            return
+        if self.current:
+            self.post_message(SwitchTab())
 
-        if self.filter.value:
-            if self.current != -1:
-                await self._current_change_callback()
-
-            await self.stop_search()
-            self.current = -1
-
-        self.post_message(SwitchTab())
-
-    def _get_children(self, model: Manager) -> List[Workspace]:
-        return model.workspaces
+    async def switch_pane_todo(self):
+        await self.switch_pane()

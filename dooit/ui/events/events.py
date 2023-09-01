@@ -1,9 +1,12 @@
-from typing import Literal
+from typing import Literal, Optional, Union
 from rich.text import TextType, Text
 from textual.message import Message
+from dooit.api.model import Result, SortMethodType
+from dooit.api.workspace import Workspace
 
 StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
-SortMethodType = Literal["description", "status", "date", "urgency"]
+EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
+PositionType = Literal["workspace", "todo"]
 
 
 class ExitApp(Message, bubble=True):
@@ -39,22 +42,16 @@ class Notify(Message, bubble=True):
     Emitted when A notification message on status bar is to be shown
     """
 
-    def __init__(self, message: TextType) -> None:
+    def __init__(self, message: Union[TextType, Result]) -> None:
         super().__init__()
+
         if isinstance(message, Text):
             message = message.markup
+
+        if isinstance(message, Result):
+            message = message.text()
+
         self.message = message
-
-
-class ApplySortMethod(Message, bubble=True):
-    """
-    Emitted when the user selects a sort method from sort-menu
-    """
-
-    def __init__(self, widget_obj: str, method: str) -> None:
-        super().__init__()
-        self.method = method
-        self.widget_obj = widget_obj
 
 
 class TopicSelect(Message, bubble=True):
@@ -62,6 +59,34 @@ class TopicSelect(Message, bubble=True):
     Emitted when the user selects a todo from search list
     """
 
-    def __init__(self, item) -> None:
+    def __init__(self, model: Optional[Workspace] = None) -> None:
         super().__init__()
-        self.item = item
+        self.model = model
+
+
+class ApplySort(Message, bubble=True):
+    """
+    Emitted when the user wants to sort a tree
+    """
+
+    def __init__(self, query: str, widget_id: str, method: SortMethodType) -> None:
+        super().__init__()
+        self.query = query
+        self.widget_id = widget_id
+        self.method = method
+
+
+class CommitData(Message):
+    """
+    Emitted when the local data needs to be updated
+    """
+
+
+class DateModeSwitch(Message):
+    """
+    Emitted when the user switches how the dates should render
+
+    ```
+    <day> month -> X days left
+    ```
+    """

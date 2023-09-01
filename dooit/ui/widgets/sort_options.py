@@ -1,48 +1,65 @@
-from typing import Optional, Type, List
-from rich.align import Align
-from rich.box import HEAVY
+from typing import Type, Union
 from rich.console import RenderableType
-from rich.tree import Tree
-from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
-from rich.style import StyleType
-from textual.widget import Widget
-from dooit.ui.events import ApplySortMethod, ChangeStatus, Notify
-from dooit.utils import KeyBinder
+from dooit.api.model import SortMethodType
+from dooit.api.todo import Todo
+from dooit.api.workspace import Workspace
+from dooit.ui.events.events import ApplySort
+from dooit.ui.widgets.base import HelperWidget
 
 
-class SortOptions(Widget):
+class SortOptions(HelperWidget):
     """
     A list class to show and select the items in a list
     """
 
-    key_manager = KeyBinder()
+    _status = "SORT"
 
-    def __init__(
-        self,
-        name: Optional[str] = None,
-        options: List[str] = [],
-        parent_widget: Optional[Widget] = None,
-        style_unfocused: StyleType = "white",
-        style_focused: StyleType = "bold reverse green ",
-        pad: bool = True,
-        wrap: bool = True,
-    ) -> None:
-        super().__init__(name=name)
-        self.options = options
-        self.style_unfocused = style_unfocused
-        self.style_focused = style_focused
-        self.pad = pad
-        self.wrap = wrap
-        self.parent_widget = parent_widget
+    def __init__(self, model_type: Union[Type[Workspace], Type[Todo]]) -> None:
+        super().__init__(classes="no-border")
+        self.model_type = model_type
+        self.options = model_type.sortable_fields
         self.highlighted = 0
+        self._prev_highlighted = 0
+        self.add_keys(
+            {
+                "cancel": "<escape>",
+                "stop": "<enter>",
+            }
+        )
+
+    @property
+    def selected_option(self) -> SortMethodType:
+        return self.options[self.highlighted]
+
+    def set_id(self, widget_id: str) -> None:
+        self.widget_id = widget_id
 
     def highlight(self, id: int) -> None:
         self.highlighted = id
         self.refresh(layout=True)
 
-    def hide(self) -> None:
-        self.visible = False
+    async def start(self) -> None:
+        await super().start()
+        self._prev_highlighted = self.highlighted
+
+    async def stop(self) -> None:
+        if self.model_type == Workspace:
+            query = "WorkspaceTree"
+        else:
+            query = "TodoTree.current"
+
+        self.post_message(
+            ApplySort(
+                query,
+                self.widget_id,
+                self.selected_option,
+            )
+        )
+
+        await self.hide()
+        await super().stop()
 
     async def move_down(self) -> None:
         """
@@ -71,81 +88,31 @@ class SortOptions(Widget):
 
         self.highlight(len(self.options) - 1)
 
-    async def sort_menu_toggle(self):
-        await self.send_message(ChangeStatus, "NORMAL")
+    async def sort_menu_toggle(self) -> None:
         self.visible = False
 
-    async def send_message(self, event: Type, *args):
-        if self.parent_widget:
-            self.parent_widget.post_message(
-                event(
-                    *args,
-                )
-            )
+    async def cancel(self) -> None:
+        self.highlighted = self._prev_highlighted
+        await self.hide()
 
-    async def handle_key(self, key: str) -> None:
-
-        if key == "escape":
-            await self.sort_menu_toggle()
-            return
-
-        if key == "enter":
-            await self.send_message(
-                ApplySortMethod, self.parent_widget, self.options[self.highlighted]
-            )
-            await self.sort_menu_toggle()
-            return
-
-        self.key_manager.attach_key(key)
-        bind = self.key_manager.get_method()
-        if bind:
-            if hasattr(self, bind.func_name):
-                func = getattr(self, bind.func_name)
-                await func(*bind.params)
-            else:
-                self.post_message(
-                    Notify("[yellow]No such operation for sort menu![/yellow]")
-                )
-
-        self.refresh()
-
-    def add_option(self, option: str) -> None:
+    def add_option(self, option: SortMethodType) -> None:
         self.options.append(option)
         self.refresh()
 
     def render(self) -> RenderableType:
-
-        tree = Tree("")
-        tree.hide_root = True
-        tree.expanded = True
+        table = Table.grid()
+        table.add_column("")
 
         for index, option in enumerate(self.options):
-            label = Text(option)
-            label = Text("  ") + label
-
-            label.pad_right(self.size.width)
-            label.plain = label.plain.ljust(20)
             if index != self.highlighted:
-                label.stylize(self.style_unfocused)
+                option = "  " + option
+                style = "dim"
             else:
-                label.stylize(self.style_focused)
+                option = "> " + option
+                style = "bold"
 
-            meta = {
-                "selected": index,
-            }
-            label.apply_meta(meta)
-            tree.add(label)
+            label = Text(option, style)
+            label = Text("  ") + label
+            table.add_row(label)
 
-        return self.render_panel(tree)
-
-    def render_panel(self, tree) -> RenderableType:
-        return Align.center(
-            Panel.fit(
-                tree,
-                title="Sort",
-                width=20,
-                box=HEAVY,
-            ),
-            vertical="middle",
-            height=self._size.height,
-        )
+        return table

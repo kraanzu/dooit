@@ -1,77 +1,53 @@
+import webbrowser
 from textual.app import App
-from textual import events
-from dooit.ui.events.events import ExitApp
-from dooit.utils.watcher import Watcher
-from dooit.ui.events import (
-    TopicSelect,
-    SwitchTab,
-    ApplySortMethod,
-    ChangeStatus,
-    Notify,
-    SpawnHelp,
-)
-from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar, HelpScreen
 from dooit.api.manager import manager
-from dooit.ui.css.screen import screen_CSS
+from dooit.utils.watcher import Watcher
+from dooit.ui.widgets import WorkspaceTree, TodoTree
+from dooit.ui.css.main import screen_CSS
+from dooit.ui.screens import MainScreen, HelpScreen
+
+PRINTABLE = (
+    "0123456789"
+    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+)
 
 
 class Dooit(App):
     CSS = screen_CSS
-    SCREENS = {"help": HelpScreen(name="help")}
-
-    async def on_load(self):
-        self.navbar = WorkspaceTree()
-        self.todos = TodoTree()
-        self.bar = StatusBar()
+    SCREENS = {
+        "main": MainScreen(name="main"),
+        "help": HelpScreen(name="help"),
+    }
 
     async def on_mount(self):
         self.watcher = Watcher()
-        self.current_focus = "navbar"
-        self.navbar.toggle_highlight()
         self.set_interval(1, self.poll)
+        self.push_screen("main")
 
     async def poll(self):
-        if not manager.is_locked() and self.watcher.has_modified():
-            if manager.refresh_data():
-                await self.navbar._refresh_data()
+        # TODO: implement auto refresh for modified data
 
-    def compose(self):
-        yield self.navbar
-        yield self.todos
-        yield self.bar
+        if (
+            not manager.is_locked()
+            and self.watcher.has_modified()
+            and manager.refresh_data()
+        ):
+            await self.query_one(WorkspaceTree).force_refresh(manager)
+            for i in self.query(TodoTree):
+                index = manager._get_child_index("workspace", uuid=i.model.uuid)
+                if index == -1:
+                    i.remove()
+                else:
+                    await i.force_refresh(manager._get_children("workspace")[index])
 
     async def action_quit(self) -> None:
         manager.commit()
         return await super().action_quit()
 
-    def toggle_highlight(self):
-        self.navbar.toggle_highlight()
-        self.todos.toggle_highlight()
+    async def action_open_url(self, url: str) -> None:
+        webbrowser.open(url, new=2)
 
-    async def on_key(self, event: events.Key) -> None:
-        if self.navbar.has_focus:
-            await self.navbar.handle_key(event)
-        else:
-            await self.todos.handle_key(event)
 
-    async def on_topic_select(self, event: TopicSelect):
-        await self.todos.update_table(event.item)
-
-    async def on_switch_tab(self, _: SwitchTab):
-        self.toggle_highlight()
-
-    async def on_apply_sort_method(self, event: ApplySortMethod):
-        w = event.widget_obj
-        w.sort(attr=event.method)
-
-    async def on_change_status(self, event: ChangeStatus):
-        self.bar.set_status(event.status)
-
-    async def on_notify(self, event: Notify):
-        self.bar.set_message(event.message)
-
-    async def on_spawn_help(self, event: SpawnHelp):
-        self.push_screen("help")
-
-    async def on_exit_app(self, event: ExitApp):
-        await self.action_quit()
+if __name__ == "__main__":
+    Dooit().run()

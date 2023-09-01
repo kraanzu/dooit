@@ -1,9 +1,9 @@
 from collections import defaultdict
 from typing import DefaultDict, Dict, List, Optional, Union
-from dooit.utils.conf_reader import Config
+from dooit.utils.conf_reader import config_man
 from copy import deepcopy
 
-customed_keys = Config().get("keybindings")
+customed_keys = config_man.get("keybindings")
 
 
 class Bind:
@@ -14,6 +14,7 @@ class Bind:
         "move_up",
         "switch_pane",
         "spawn_help",
+        "switch_pane_workspace",
         "start_search",
         "stop_search",
         "exit",
@@ -32,7 +33,6 @@ PRINTABLE = (
     + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
 )
 DEFAULTS = {
-    "stop search": "<escape>",
     "switch pane": "<tab>",
     "move up": ["k", "<up>"],
     "shift up": ["K", "<shift+up>"],
@@ -49,15 +49,20 @@ DEFAULTS = {
     "sort menu toggle": "s",
     "start search": "/",
     "spawn help": "?",
-    "copy text": "y",
+    "copy text": "Y",
+    "yank": "y",
+    "paste": "p",
     "toggle complete": "c",
     "edit due": "d",
-    "edit tags": "t",
+    "switch date style": "D",
     "edit recurrence": "r",
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],
     "exit": "<ctrl+q>",
+    "switch pane workspace": ["h"],
+    "switch pane todo": ["l"],
 }
+
 configured_keys = deepcopy(DEFAULTS)
 configured_keys.update(customed_keys)
 
@@ -71,7 +76,7 @@ class KeyBinder:
         self.raw: DefaultDict[str, List[str]] = defaultdict(list)
         self.add_keys(configured_keys)
 
-    def convert_to_bind(self, cmd: str):
+    def convert_to_bind(self, cmd: str) -> Bind:
         func_split = cmd.split()
         if func_split[0] == "edit":
             return Bind("start_edit", [func_split[1]])
@@ -101,7 +106,7 @@ class KeyBinder:
     def clear(self) -> None:
         self.pressed = ""
 
-    def find_keys(self) -> List:
+    def find_keys(self) -> List[str]:
         possible_bindings = filter(
             lambda keybind: keybind.startswith(self.pressed),
             self.methods.keys(),

@@ -1,82 +1,47 @@
-from typing import Optional
-from dooit.ui.formatters import TodoFormatter
-from dooit.utils import KeyBinder, Config
+from typing import List, Literal, Type
+from dooit.api.model import Model
+from dooit.api.todo import Todo
+from dooit.api.workspace import Workspace
 from dooit.ui.events.events import SwitchTab
-from dooit.api import Workspace, Todo
-from .tree import TreeList
-
-conf = Config()
-EMPTY_TODO = conf.get("EMPTY_TODO")
-dashboard = conf.get("dashboard")
-COLUMN_ORDER = conf.get("COLUMN_ORDER")
-format = conf.get("TODO")
-PRINTABLE = (
-    "0123456789"
-    + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    + "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
-)
+from dooit.ui.widgets.todo import TodoWidget
+from .tree import Tree
 
 
-class TodoTree(TreeList):
+class TodoTree(Tree):
     """
-    Tree structured Class to manage todos
+    Subclass of `Tree` widget to represent todos
     """
 
-    options = Todo.sortable_fields
-    EMPTY = dashboard
-    model_kind = "todo"
-    model_type = Todo
-    styler = TodoFormatter(format)
-    COLS = COLUMN_ORDER
-    key_manager = KeyBinder()
+    _empty = "todo"
 
-    def _get_children(self, model: Workspace):
-        if model:
-            return model.todos
-        return []
+    ModelType = Todo
+    WidgetType = TodoWidget
 
-    async def switch_pane(self):
-        if self.filter.value:
-            await self.stop_search()
-
-        self.post_message(SwitchTab())
-
-    async def update_table(self, model: Optional[Workspace] = None):
-        self.EMPTY = EMPTY_TODO if model else dashboard
-        self.model = model
-        await self.rearrange()
-        self.refresh()
+    def __init__(self, model: Workspace):
+        super().__init__(model, classes="right-dock")
 
     @property
-    def item(self) -> Todo:
-        return super().item
+    def widget_type(self) -> Type[TodoWidget]:
+        return TodoWidget
 
-    def _setup_table(self) -> None:
-        super()._setup_table(format["pointer"])
-        for col in COLUMN_ORDER:
-            if col == "description":
-                d = {"ratio": 1}
-            elif col == "due":
-                # 12 -> size of formatted date
-                # 02 -> padding
-                d = {"width": 12 + 2 + len(format["due_icon"])}
-            elif col == "urgency":
-                d = {"width": 1}
-            else:
-                raise TypeError
+    @property
+    def model_class_kind(self) -> Literal["todo"]:
+        return "todo"
 
-            self.table.add_column(col, **d)
+    def get_children(self, parent: Model) -> List[ModelType]:
+        return parent.todos
 
-    # ##########################################
+    async def switch_pane(self) -> None:
+        self.post_message(SwitchTab())
 
-    async def increase_urgency(self):
-        self.item.increase_urgency()
-        self.commit()
+    async def increase_urgency(self) -> None:
+        await self.current.increase_urgency()
 
-    async def decrease_urgency(self):
-        self.item.decrease_urgency()
-        self.commit()
+    async def decrease_urgency(self) -> None:
+        await self.current.decrease_urgency()
 
-    async def toggle_complete(self):
-        self.item.toggle_complete()
-        self.commit()
+    async def toggle_complete(self) -> None:
+        await self.current.toggle_complete()
+
+    async def switch_pane_workspace(self):
+        await self.switch_pane()

@@ -1,83 +1,51 @@
-from typing import Iterable
-from .simple_input import SimpleInput
+from rich.console import RenderableType
+from rich.text import TextType
+from textual.widget import Widget
+from textual.widgets import Label
 
 
-class Component:
+class Pointer(Widget):
     """
-    Component class to maintain each row's data
-    """
-
-    def __init__(
-        self,
-        item,
-        depth: int = 0,
-        index: int = 0,
-        expanded: bool = False,
-    ) -> None:
-        self.item = item
-        self.expanded = expanded
-        self.depth = depth
-        self.index = index
-        self.fields = {
-            field: SimpleInput(
-                value=getattr(item, field),
-            )
-            for field in item.fields
-        }
-
-    def refresh(self) -> None:
-        for field in self.fields.keys():
-            self.fields[field] = SimpleInput(
-                value=getattr(
-                    self.item,
-                    field,
-                )
-            )
-
-    def get_field_values(self) -> Iterable[SimpleInput]:
-        return self.fields.values()
-
-    def toggle_expand(self) -> None:
-        self.expanded = not self.expanded
-
-    def expand(self, expand: bool = True) -> None:
-        self.expanded = expand
-
-
-class VerticalView:
-    """
-    Vertical view to manage scrolling
+    Pointer Widget to show current selected widget
     """
 
-    def __init__(self, a: int, b: int) -> None:
-        self.a = a
-        self.b = b
+    DEFAULT_CSS = """
+    Pointer {
+        padding-left: 1;
+        padding-right: 1;
+        width: auto;
+    }
+    """
 
-    def fix_view(self, current: int) -> None:
-        if self.a < 0:
-            self.shift(abs(self.a))
+    _show = False
 
-        if current <= self.a:
-            self.shift(current - self.a)
+    def __init__(self, symbol: TextType):
+        super().__init__()
+        self.symbol = symbol
 
-        if self.b <= current:
-            self.shift(current - self.b)
+    def show(self):
+        self._show = True
+        self.refresh()
 
-    def shift_upper(self, delta) -> None:
-        self.a += delta
+    def hide(self):
+        self._show = False
+        self.refresh()
 
-    def shift_lower(self, delta) -> None:
-        self.b += delta
+    def render(self) -> RenderableType:
+        return self.symbol if self._show else " " * len(self.symbol)
 
-    def shift(self, delta: int) -> None:
-        self.shift_lower(delta)
-        self.shift_upper(delta)
 
-    def height(self) -> int:
-        return self.b - self.a
+class Padding(Label):
+    DEFAULT_CSS = """
+    Padding {
+        height: 1;
+        width: auto;
+    }
+    """
 
-    def range(self) -> Iterable[int]:
-        if self.a < 0:
-            self.shift(abs(self.a))
+    def __init__(self, width):
+        self.padding_width = width
+        super().__init__()
 
-        return range(self.a, self.b + 1)
+    def render(self) -> RenderableType:
+        return "  " * self.padding_width

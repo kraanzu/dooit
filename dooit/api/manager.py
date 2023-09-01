@@ -1,5 +1,5 @@
 from time import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from .model import Model
 from ..utils import Parser
 from ..api.workspace import Workspace
@@ -31,12 +31,10 @@ class Manager(Model):
         super().__init__(parent)
 
     def add_workspace(self) -> Workspace:
-        return self.add_child(WORKSPACE)
+        return self.add_child("workspace")
 
     def _get_commit_data(self):
-        return {
-            getattr(child, "description"): child.commit() for child in self.workspaces
-        }
+        return [child.commit() for child in self.workspaces]
 
     def commit(self) -> None:
         if self.is_locked():
@@ -60,14 +58,25 @@ class Manager(Model):
         self.last_modified = parser.last_modified
         self.from_data(data)
 
-    def from_data(self, data: Any) -> None:
+    # WARNING: This will be deprecated in future versions
+    def extract_data_old(self, data: Dict):
         for i, j in data.items():
             child = self.add_child(WORKSPACE, len(self.workspaces))
             child.edit("description", i)
             child.from_data(j)
 
-    def refresh_data(self) -> bool:
+    def extract_data_new(self, data: List):
+        for i in data:
+            child = self.add_child(WORKSPACE, len(self.workspaces))
+            child.from_data(i)
 
+    def from_data(self, data: Any) -> None:
+        if isinstance(data, Dict):
+            self.extract_data_old(data)
+        else:
+            self.extract_data_new(data)
+
+    def refresh_data(self) -> bool:
         if abs(self.last_modified - parser.last_modified) <= 2:
             return False
 

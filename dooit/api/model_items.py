@@ -2,7 +2,7 @@ import re
 from os import environ
 from typing import Any, Tuple
 from datetime import datetime, timedelta
-from dooit.utils.dateparser import parse
+from dooit.utils.date_parser import parse
 from .model import Result, Ok, Warn, Err
 
 DATE_ORDER = environ.get("DOOIT_DATE_ORDER", "DMY")
@@ -54,6 +54,12 @@ class Item:
         """
         raise NotImplementedError
 
+    def save(self) -> str:
+        return self.value
+
+    def setup(self, value: str) -> None:
+        self.set(value)
+
     def to_txt(self) -> str:
         """
         Convert to storable format
@@ -82,11 +88,11 @@ class Status(Item):
             return "PENDING"
 
         if due.hour or due.minute:
-            now = parse("now")
+            now = datetime.now()
             if due < now:
                 return "OVERDUE"
         else:
-            today = parse("today").date()
+            today = datetime.today().date()
             due = due.date()
             if today > due:
                 return "OVERDUE"
@@ -126,7 +132,6 @@ class Status(Item):
         return Ok()
 
     def update_others(self):
-
         # Update ancestors
         current = self.model
         while parent := current.parent:
@@ -140,7 +145,6 @@ class Status(Item):
 
         # Update children
         def update_children(todo=self.model, status=self.pending):
-
             todo._status.pending = status
             for i in todo.todos:
                 update_children(i, status)
@@ -167,33 +171,21 @@ class Status(Item):
 
 
 class Description(Item):
-    value = ""
+    _default = ""
+    value = _default
 
     def clean(self, s: str):
         for i, j in enumerate(s):
-            if j not in "@+%":  # left striping as this messes up with other attrs
+            if j not in "+%":  # left striping as this messes up with other attrs
                 return s[i:]
 
         return s
 
     def set(self, value: Any) -> Result:
         value = self.clean(value)
-        if value:
-            new_index = -1
-            if self.model:
-                new_index = self.model.parent._get_child_index(
-                    self.model_kind, description=value
-                )
-
-            old_index = self.model._get_index(self.model_kind)
-
-            if new_index != -1 and new_index != old_index:
-                return Err(
-                    f"A {self.model_kind} with same description is already present"
-                )
-            else:
-                self.value = value
-                return Ok()
+        if value and value != self._default:
+            self.value = value
+            return Ok()
 
         return Err("Can't leave description empty!")
 
@@ -241,12 +233,29 @@ class Due(Item):
         if val.strip() == "today":
             val = "today 0:0"  # remove un-necessary time
 
-        res = parse(val)
-        if res:
-            self._value = res
-            return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
+        try:
+            res, ok = parse(val)
+            if ok:
+                self._value = res
+                return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
+            else:
+                return Warn("Cannot parse the string!")
 
-        return Warn("Cannot parse the string!")
+        except Exception:
+            return Warn("Cannot parse the string!")
+
+    def save(self) -> str:
+        if not self._value:
+            return super().save()
+
+        return str(self._value.timestamp())
+
+    def setup(self, value: str) -> None:
+        if value:
+            try:
+                self._value = datetime.fromtimestamp(float(value))
+            except ValueError:
+                super().setup(value)
 
     def to_txt(self) -> str:
         if self._value:
@@ -281,7 +290,6 @@ class Urgency(Item):
         return self.set(self.value - 1)
 
     def set(self, val: Any) -> Result:
-
         val = int(val)
         if val < 1:
             return Warn("Urgency cannot be decreased further!")
@@ -299,31 +307,6 @@ class Urgency(Item):
 
     def get_sortable(self) -> Any:
         return -self.value
-
-
-class Tags(Item):
-    value = ""
-
-    def set(self, val: str) -> Result:
-        tags = [i.strip() for i in val.split(",") if i]
-        self.value = ",".join(set(tags))
-        return Ok()
-
-    def add_tag(self, tag: str):
-        return self.set(self.value + "," + tag)
-
-    def to_txt(self):
-        return " ".join(f"@{i}" for i in self.value.split(",") if i)
-
-    def from_txt(self, txt: str) -> None:
-        flag = True
-        for i in txt.split()[3:]:
-            if i[0] == "@":
-                self.add_tag(i[1:])
-                flag = False
-            else:
-                if not flag:
-                    break
 
 
 class Recurrence(Item):

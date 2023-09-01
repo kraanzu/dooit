@@ -6,11 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## 1.0.2 [Unreleased]
+## 2.0.0 [Unreleased]
+
+### Added
+- Dooit now allows duplicate descriptions to be added(closes https://github.com/kraanzu/dooit/issues/113)
+- Clear due date when selected (closes https://github.com/kraanzu/dooit/issues/111)
+- Add support for h / l to switch between panes (closes https://github.com/kraanzu/dooit/issues/96)
+- Add support for yank whole todos/workspaces (closes https://github.com/kraanzu/dooit/issues/76)
+- Add support for `save on escape` (closes https://github.com/kraanzu/dooit/issues/106)
+- Add support for opening and highlighting urls (closes https://github.com/kraanzu/dooit/issues/108)
+- Add support for changing due date format (due/remaining time) (closes https://github.com/kraanzu/dooit/issues/116)
 
 ### Fixed
-- text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)
-
+- Slowness due to un-necessary rendering of the app
+- Slow loading of app because of dateparser (see https://github.com/kraanzu/dooit/issues/136)
+- Text disappearing for non-alphabet characters in description(closes https://github.com/kraanzu/dooit/issues/112)
+- Todos disappearing when wrapping descriptions with tags/quotes/brackets (closes https://github.com/kraanzu/dooit/issues/107)
+- Use background color specified in config for help menu
+- Bar did not pick color from config and used the regular background
 
 ## 1.0.1
 

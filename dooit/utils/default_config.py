@@ -39,6 +39,8 @@ def get_username():
 #################################
 #            COLORS             #
 #################################
+
+dark_black = "#252a34"
 black = "#2e3440"
 white = "#e5e9f0"
 grey = "#d8dee9"
@@ -56,41 +58,84 @@ orange = "#d08770"
 #            GENERAL            #
 #################################
 BACKGROUND = black
-BORDER_DIM = white
-BORDER_LIT = cyan
+BAR_BACKGROUND = black
+WORKSPACES_BACKGROUND = black
+TODOS_BACKGROUND = black
+BORDER_DIM = grey + " 50%"
+BORDER_LIT = blue
+BORDER_TITLE_DIM = grey, dark_black
+BORDER_TITLE_LIT = white, blue
+SEARCH_COLOR = red
+YANK_COLOR = blue
+SAVE_ON_ESCAPE = False
 
 #################################
 #          DASHBOARD            #
 #################################
+legend = {"B": blue, "O": orange, "G": green, "M": magenta}
+legend = {i + "]": j + "]" for i, j in legend.items()}
 
-ART = """
-██████╗  █████╗ ███████╗██╗  ██╗██████╗  ██████╗  █████╗ ██████╗ ██████╗
-██╔══██╗██╔══██╗██╔════╝██║  ██║██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██╔══██╗
-██║  ██║███████║███████╗███████║██████╔╝██║   ██║███████║██████╔╝██║  ██║
-██║  ██║██╔══██║╚════██║██╔══██║██╔══██╗██║   ██║██╔══██║██╔══██╗██║  ██║
-██████╔╝██║  ██║███████║██║  ██║██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝
-╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝\
-"""
+regex_style = {
+    "U": red,
+    "Y": grey,
+    "6": blue,
+    "a": blue,
+    "#": yellow,
+    r"(?<=\()[^()\n]+(?=\))": white,
+}
 
-ART = colored(ART, frost_green)
+
+def change(s: str):
+    for i, j in legend.items():
+        s = s.replace(i, j)
+
+    return s
+
+
+def stylize(art):
+    art = "\n".join([change(i) for i in art])
+    art = Text.from_markup(art)
+    for i, j in regex_style.items():
+        art.highlight_regex(i, j)
+
+    return art
+
+
+art = [
+    r"[B]       __I___       [/B][M]                                      [/M]",
+    r"[B]   .-''  .  ''-.    [/B][M]                                      [/M]",
+    r"[B] .'  / . ' . \  '.  [/B][M]                                      [/M]",
+    r"[B]/_.-..-..-..-..-._\ [/B][G] .----------------------------------. [/G]",
+    r"[O]         #  _,,_    [/O][G]( Can you complete your tasks today? )[/G]",
+    r"[O]         #/`    `\  [/O][G]/'----------------------------------' [/G]",
+    r"[O]         / / 6 6\ \ [/O][M]                                      [/M]",
+    r"[O]         \/\  Y /\/ [/O][M]       /\_/\                          [/M]",
+    r"[O]         #/ `'U` \  [/O][M]      /a a  \               _         [/M]",
+    r"[O]       , (  \   | \ [/O][M]     =\ Y  =/-~~~~~~-,_____/ /        [/M]",
+    r"[O]       |\|\_/#  \_/ [/O][M]       '^--'          ______/         [/M]",
+    r"[O]       \/'.  \  /'\ [/O][M]         \           /                [/M]",
+    r"[O]        \    /=\  / [/O][M]         ||  |---'\  \                [/M]",
+    r"[O]        /____)/____)[/O][M]        (_(__|   ((__|                [/M]",
+]
+
+ART = stylize(art)
 NL = " \n"
 SEP = colored("─" * 60, "d " + grey)
 help_message = f"Press {colored('?', magenta)} to spawn help menu"
-dashboard = [ART, NL, SEP, NL, NL, NL, help_message]
+DASHBOARD = [ART, NL, SEP, NL, NL, NL, help_message]
+no_search_results = ["🔍", colored("No results found!", red)]
 
 
 #################################
 #           WORKSPACE           #
 #################################
 WORKSPACE = {
-    "dim": grey,
-    "highlight": white,
     "editing": cyan,
-    "pointer": "> ",
-    "children_hint": "",  # "[{count}]", # vars: count
+    "pointer": ">",
+    "children_hint": "+",  # "[{count}]", # vars: count
 }
 EMPTY_WORKSPACE = [
-    "🍻",
+    ":(",
     "No workspaces yet?",
     f"Press {colored('a', cyan)} to add some!",
 ]
@@ -103,33 +148,29 @@ EMPTY_WORKSPACE = [
 COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
 TODO = {
     "color_todos": False,
-    "dim": grey,
-    "highlight": white,
     "editing": cyan,
-    "pointer": "> ",
+    "pointer": ">",
     "children_hint": colored(
         " ({done}/{total})", green
     ),  # vars: remaining, done, total
     # "children_hint": "[b magenta]({remaining}!)[/b magenta]",
-    "due_icon": "🕑",
-    "effort_icon": "🗲 ",
+    "due_icon": "? ",
+    "effort_icon": "+",
     "effort_color": yellow,
-    "recurrence_icon": " ⟲ ",
+    "recurrence_icon": "!",
     "recurrence_color": blue,
-    "tags_icon": "🖈 ",
-    "tags_seperator": "icon",  # icon, pipe, comma
     "tags_color": red,
-    "completed_icon": "✓ ",
-    "pending_icon": "● ",
-    "overdue_icon": "! ",
-    "urgency1_icon": "🅐",
-    "urgency2_icon": "🅑",
-    "urgency3_icon": "🅒",
-    "urgency4_icon": "🅓",
+    "completed_icon": "x",
+    "pending_icon": "o",
+    "overdue_icon": "!",
+    "urgency1_icon": "A",
+    "urgency2_icon": "B",
+    "urgency3_icon": "C",
+    "urgency4_icon": "D",
 }
 
 EMPTY_TODO = [
-    "🤘",
+    ":(",
     "Wow so Empty!?",
     "Add some todos to get started!",
 ]
@@ -138,9 +179,8 @@ EMPTY_TODO = [
 #          STATUS BAR           #
 #################################
 bar = {
-    "A": [get_status],
-    "B": [get_message],
-    "C": [get_clock, get_username],
+    "A": [(get_status, 0.1)],
+    "C": [(get_clock, 1), (get_username)],
 }
 
 #################################
@@ -151,7 +191,6 @@ keybindings = {
     "sort menu toggle": "<ctrl+s>",
     "start search": ["/", "S"],
     "remove item": "xx",
-    "edit tags": "t",
     "edit effort": "e",
     "edit recurrence": "r",
 }

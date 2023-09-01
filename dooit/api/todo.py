@@ -1,4 +1,5 @@
-from typing import Any, List, Optional, TypeVar
+from datetime import datetime
+from typing import Any, List, Optional, Union, Dict
 from .model import Model, Result
 
 
@@ -8,7 +9,6 @@ OPTS = {
     "COMPLETED": "X",
     "OVERDUE": "O",
 }
-T = TypeVar("T", bound="Model")
 
 
 def reversed_dict(d):
@@ -16,23 +16,22 @@ def reversed_dict(d):
 
 
 class Todo(Model):
-    fields = ["description", "due", "urgency", "effort", "tags", "status", "recurrence"]
+    fields = ["description", "due", "urgency", "effort", "status", "recurrence"]
+
     sortable_fields = [
         "description",
         "due",
         "urgency",
         "effort",
         "status",
-        "recurrence",
     ]
 
-    def __init__(self, parent: Optional[T] = None) -> None:
+    def __init__(self, parent: Optional[Model] = None) -> None:
         from .model_items import (
             Status,
             Due,
             Urgency,
             Recurrence,
-            Tags,
             Description,
             Effort,
         )
@@ -42,15 +41,9 @@ class Todo(Model):
         self._description = Description(self)
         self._urgency = Urgency(self)
         self._effort = Effort(self)
-        self._tags = Tags(self)
         self._recurrence = Recurrence(self)
         self._due = Due(self)
         self.todos: List[Todo] = []
-
-    @property
-    def path(self):
-        parent_path = self.parent.path if self.parent else ""
-        return self.description + "/" + parent_path
 
     @property
     def effort(self):
@@ -58,7 +51,7 @@ class Todo(Model):
 
     @property
     def urgency(self):
-        return self._urgency.value
+        return str(self._urgency.value)
 
     @property
     def description(self):
@@ -77,8 +70,8 @@ class Todo(Model):
         return self._status.value
 
     @property
-    def tags(self):
-        return self._tags.value
+    def tags(self) -> List[str]:
+        return [i for i in self.description.split() if i[0] == "@"]
 
     def add_child(
         self, kind: str = "todo", index: int = 0, inherit: bool = False
@@ -105,31 +98,51 @@ class Todo(Model):
     def increase_urgency(self) -> None:
         self._urgency.increase()
 
-    def to_data(self) -> str:
+    def to_data(self) -> Dict[str, str]:
         """
-        Return todo.txt format of the todo
+        Return storable form of todo
         """
 
-        status = self._status.to_txt()
-        urgency = self._urgency.to_txt()
-        due = self._due.to_txt()
-        effort = self._effort.to_txt()
-        tags = self._tags.to_txt()
-        recur = self._recurrence.to_txt()
-        description = self._description.to_txt()
+        return {
+            "uuid": self._uuid,
+            "status": self._status.save(),
+            "urgency": self._urgency.save(),
+            "description": self._description.save(),
+            "due": self._due.save(),
+            "effort": self._effort.save(),
+            "recurrence": self._recurrence.save(),
+        }
 
-        arr = [status, urgency, due, effort, tags, recur, description]
-        arr = [i for i in arr if i]
-        return " ".join(arr)
+    def fill_from_data(
+        self, data: Union[Dict, str], overwrite_uuid: bool = True
+    ) -> None:
+        if isinstance(data, str):
+            self.extract_data_old(data)
+        else:
+            self.extract_data_new(data, overwrite_uuid)
 
-    def fill_from_data(self, data: str) -> None:
+    # WARNING: This will be deprecated in future versions
+    def extract_data_old(self, data: str):
         self._status.from_txt(data)
         self._urgency.from_txt(data)
         self._due.from_txt(data)
         self._description.from_txt(data)
         self._recurrence.from_txt(data)
         self._effort.from_txt(data)
-        self._tags.from_txt(data)
+
+    def extract_data_new(self, data: Dict[str, str], overwrite_uuid: bool = True):
+        def get(key: str) -> str:
+            return data.get(key, "")
+
+        if overwrite_uuid:
+            self._uuid = get("uuid")
+
+        self._status.setup(get("status"))
+        self._urgency.setup(get("urgency"))
+        self._due.setup(get("due"))
+        self._description.setup(get("description"))
+        self._recurrence.setup(get("recurrence"))
+        self._effort.setup(get("effort"))
 
     def commit(self) -> List[Any]:
         if self.todos:
@@ -140,9 +153,26 @@ class Todo(Model):
         else:
             return [self.to_data()]
 
-    def from_data(self, data: List) -> None:
-        self.fill_from_data(data[0])
+    def from_data(self, data: List, overwrite_uuid: bool = True) -> None:
+        self.fill_from_data(data[0], overwrite_uuid)
         if len(data) > 1:
             for i in data[1]:
                 child_todo = self.add_child(kind="todo", index=len(self.todos))
-                child_todo.from_data(i)
+                child_todo.from_data(i, overwrite_uuid)
+
+    # ----------- HELPER FUNCTIONS --------------
+    def has_due_date(self) -> bool:
+        return bool(self._due._value)
+
+    def is_due_today(self) -> bool:
+        value = self._due._value
+        return bool(value and (value.date() == datetime.today().date()))
+
+    def is_completed(self) -> bool:
+        return self.status == "COMPLETED"
+
+    def is_pending(self) -> bool:
+        return self.status == "PENDING"
+
+    def is_overdue(self) -> bool:
+        return self.status == "OVERDUE"

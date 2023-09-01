@@ -1,14 +1,10 @@
 from typing import Dict, List
-from textual.containers import Vertical
-from textual.screen import Screen
-from textual.widgets import Static
 from rich.align import Align
 from rich.console import Group, RenderableType
-from rich.style import StyleType
+from rich.style import Style, StyleType
 from rich.table import Table
 from rich.text import Text
-from textual import events
-from dooit.utils import KeyBinder
+from dooit.utils.keybinder import KeyBinder
 
 
 # UTILS
@@ -99,7 +95,9 @@ NORMAL_KB = {
     "move up": "Move up in list",
     "shift up": "Shift todo up in list",
     "toggle complete": "Toggle todo status as complete/incomplete**",
-    "copy text": "Copy todo's text",
+    "copy text": "Copy (todo/workspace)'s text",
+    "yank": "Copy a whole todo/workspace",
+    "paste": "Paste the yanked todo/workspace",
     "move to top": "Move to top of list",
     "move to bottom": "Move to bottom of list",
     "toggle expand": "Toggle-expand highlighted item",
@@ -109,14 +107,16 @@ NORMAL_KB = {
     "add child": "Add child todo/workspace",
     "sort menu toggle": "Launch sort menu",
     "start search": "Start Search Mode",
-    "switch pane": "Change focused pane",
+    "switch pane": "Toggle focused pane",
+    "switch pane workspace": "Change focus to workspace",
+    "switch pane todo": "Change focus to todo",
     "edit due": "Edit date**",
     "edit description": "Edit description**",
     "edit effort": "Edit effort for todo**",
     "edit recurrence": "Edit recurrence for todo**",
-    "edit tags": "Edit tags for todo**",
     "increase urgency": "Increase urgency**",
     "decrease urgency": "Decrease urgency**",
+    "switch date style": "switch due from date or time remaining ",
     "exit": "Quit the Application",
 }
 
@@ -138,8 +138,7 @@ DATE_KB = {
 
 DATE_NB = [
     colored("Only digits and hyphen allowed format:", "grey50")
-    + " "
-    + colored("dd-mm-yyyy", "yellow")
+    + (colored("dd-mm-yyyy", "yellow"))
 ]
 
 SEARCH_KB = {
@@ -173,6 +172,13 @@ Documentation below will walk you through the controls:
 """
 
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
+SPONSOR_URL = "https://github.com/sponsors/kraanzu"
+SPONSOR1 = f"{colored('You can also sponsor this project on github!', 'yellow')}"
+SPONSOR2 = Text(
+    "Github Sponsor",
+    style=Style.from_meta({"@click": f"app.open_url('{SPONSOR_URL}')"}),
+    justify="center",
+)
 AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{seperator.markup}{NL}"
 
 OUTRO = (
@@ -192,6 +198,7 @@ class HelpMenu:
     thanks = Text.from_markup(THANKS, justify="center")
     author = Text.from_markup(AUTHOR, justify="center")
     outro = Text.from_markup(OUTRO, justify="center")
+    sponsor = Text.from_markup(SPONSOR1, justify="center")
 
     def items(self) -> List[RenderableType]:
         arr = []
@@ -203,33 +210,9 @@ class HelpMenu:
         arr.append(generate_kb_table(SEARCH_KB, "SEARCH"))
         arr.append(generate_kb_table(SORT_KB, "SORT"))
         arr.append(self.thanks)
+        arr.append(self.sponsor)
+        arr.append(SPONSOR2)
         arr.append(self.author)
         arr.append(self.outro)
 
         return arr
-
-
-class HelpScreen(Screen):
-    """
-    Help Screen to view Help Menu
-    """
-
-    BINDINGS = [
-        ("escape", "app.pop_screen", "Pop screen"),
-        ("question_mark", "app.pop_screen", "Pop screen"),
-    ]
-    view = Vertical(*[Static(i) for i in HelpMenu().items()])
-
-    def compose(self):
-        yield self.view
-
-    async def on_key(self, event: events.Key):
-        key = event.character
-        if key in ["j", "down"]:
-            self.view.scroll_down()
-        elif key in ["k", "up"]:
-            self.view.scroll_up()
-        elif key in ["home", "g"]:
-            self.view.scroll_home()
-        elif key in ["end", "G"]:
-            self.view.scroll_end()

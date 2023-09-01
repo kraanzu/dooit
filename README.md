@@ -48,14 +48,12 @@ brew install dooit --HEAD
 > Some features that dooit comes with:
 
 - An interactive & beautiful UI
-- An API automate stuff with python scripts and integrate with other apps (!plugin support in pipeline!)
 - Configurable icons, themes and bar!
 - Vim like keybindings
 - Topicwise separated Todo Lists (With branching)
 - Nested todos!
 - Support for recurrence todos
 - Sort options with menu (Name, Date, Urgency, Status)
-- Search & edit on the fly!
 
 **Note: See [CHANGELOG.md]() to get more details on changes and feature additions!**
 
@@ -66,7 +64,9 @@ Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know
 
 
 # Screenshots 🖼️
-![Screenshot](https://user-images.githubusercontent.com/97718086/221467485-fae198f7-51b1-4a71-91d9-88b51897aeeb.png)
+![dooit](https://github.com/kraanzu/dooit/assets/97718086/55d37e59-e651-45e7-9c8d-4321e566b655)
+
+
 
 # Contribution 🤝
 - Want to contribute? Feel free to open a PR! 😸

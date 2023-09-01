@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use background color specified in config for help menu
 - Bar did not pick color from config and used the regular background
 
+### Breaking Changes
+- Tags are now built-in within the description. They start with @ symbol (eg bring milk @chore)
+- Todos are no longer stored in a todo.txt format yaml file. This shouldn't break anything and the new version will take care of that!
+
 ## 1.0.1
 
 ### Fixed

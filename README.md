@@ -64,7 +64,8 @@ Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know
 
 
 # Screenshots 🖼️
-![Screenshot](https://user-images.githubusercontent.com/97718086/221467485-fae198f7-51b1-4a71-91d9-88b51897aeeb.png)
+![dooit](https://github.com/kraanzu/dooit/assets/97718086/31ea0ec7-ccd6-474c-b5bf-3327d5cd04fd)
+
 
 # Contribution 🤝
 - Want to contribute? Feel free to open a PR! 😸

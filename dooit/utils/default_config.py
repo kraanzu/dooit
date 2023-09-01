@@ -159,6 +159,7 @@ TODO = {
     "effort_color": yellow,
     "recurrence_icon": "!",
     "recurrence_color": blue,
+    "tags_color": red,
     "completed_icon": "x",
     "pending_icon": "o",
     "overdue_icon": "!",

@@ -14,6 +14,7 @@ YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 SEARCH_COLOR = config_man.get("SEARCH_COLOR")
 SAVE_ON_ESCAPE = config_man.get("SAVE_ON_ESCAPE")
+TAGS_COLOR = config_man.get("TODO").get("tags_color")
 
 
 class Input(Widget):
@@ -64,7 +65,7 @@ class Input(Widget):
                 text.highlight_words([i], style)
 
         def make_tags(text: Text):
-            text.highlight_regex(r"\@\w+", RED)
+            text.highlight_regex(r"\@\w+", TAGS_COLOR)
 
         value = Text.from_markup(self.draw().strip())
         make_links(value)

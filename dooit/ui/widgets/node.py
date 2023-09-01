@@ -7,7 +7,7 @@ from textual.widget import Widget
 from dooit.api.model import Ok, Result, Warn
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
-from dooit.ui.events.events import ChangeStatus
+from dooit.ui.events.events import ChangeStatus, DateModeSwitch
 from dooit.ui.widgets.inputs import Description
 from dooit.ui.widgets.simple_input import SimpleInput
 from .utils import Pointer
@@ -78,6 +78,10 @@ class Node(Widget):
             return Warn(f"{self.model.__class__.__name__} has no property `{property}`")
 
         if property == "due":
+            style = getattr(self.screen, "date_style")
+            if style != "classic":
+                self.post_message(DateModeSwitch())
+
             self.post_message(ChangeStatus("DATE"))
         else:
             self.post_message(ChangeStatus("INSERT"))

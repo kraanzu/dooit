@@ -1,7 +1,7 @@
 from typing import Dict, List
 from rich.align import Align
 from rich.console import Group, RenderableType
-from rich.style import StyleType
+from rich.style import Style, StyleType
 from rich.table import Table
 from rich.text import Text
 from dooit.utils.keybinder import KeyBinder
@@ -172,6 +172,13 @@ Documentation below will walk you through the controls:
 """
 
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
+SPONSOR_URL = "https://github.com/sponsors/kraanzu"
+SPONSOR1 = f"{colored('You can also sponsor this project on github!', 'yellow')}"
+SPONSOR2 = Text(
+    "Github Sponsor",
+    style=Style.from_meta({"@click": f"app.open_url('{SPONSOR_URL}')"}),
+    justify="center",
+)
 AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{seperator.markup}{NL}"
 
 OUTRO = (
@@ -191,6 +198,7 @@ class HelpMenu:
     thanks = Text.from_markup(THANKS, justify="center")
     author = Text.from_markup(AUTHOR, justify="center")
     outro = Text.from_markup(OUTRO, justify="center")
+    sponsor = Text.from_markup(SPONSOR1, justify="center")
 
     def items(self) -> List[RenderableType]:
         arr = []
@@ -202,6 +210,8 @@ class HelpMenu:
         arr.append(generate_kb_table(SEARCH_KB, "SEARCH"))
         arr.append(generate_kb_table(SORT_KB, "SORT"))
         arr.append(self.thanks)
+        arr.append(self.sponsor)
+        arr.append(SPONSOR2)
         arr.append(self.author)
         arr.append(self.outro)
 

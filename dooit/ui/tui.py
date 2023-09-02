@@ -5,6 +5,7 @@ from dooit.utils.watcher import Watcher
 from dooit.ui.widgets import WorkspaceTree, TodoTree
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
+from textual.binding import Binding
 
 PRINTABLE = (
     "0123456789"
@@ -19,6 +20,11 @@ class Dooit(App):
         "main": MainScreen(name="main"),
         "help": HelpScreen(name="help"),
     }
+
+    BINDINGS = [
+        Binding("ctrl+c", "quit", "Quit", show=False, priority=True),
+        Binding("ctrl+q", "quit", "Quit", show=False, priority=True),
+    ]
 
     async def on_mount(self):
         self.watcher = Watcher()

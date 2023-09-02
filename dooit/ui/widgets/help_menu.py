@@ -117,7 +117,6 @@ NORMAL_KB = {
     "increase urgency": "Increase urgency**",
     "decrease urgency": "Decrease urgency**",
     "switch date style": "switch due from date or time remaining ",
-    "exit": "Quit the Application",
 }
 
 NORMAL_NB = [

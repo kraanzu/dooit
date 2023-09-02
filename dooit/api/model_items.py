@@ -2,6 +2,7 @@ import re
 from os import environ
 from typing import Any, Tuple
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from dooit.utils.date_parser import parse
 from .model import Result, Ok, Warn, Err
 
@@ -230,12 +231,14 @@ class Due(Item):
             self._value = None
             return Ok("Due removed for the todo")
 
-        if val.strip() == "today":
-            val = "today 0:0"  # remove un-necessary time
-
         try:
             res, ok = parse(val)
-            if ok:
+            current_year = str(datetime.now().year)
+
+            if ok and res:
+                if res < datetime.today() and current_year not in val:
+                    res = res + relativedelta(years=1)
+
                 self._value = res
                 return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
             else:

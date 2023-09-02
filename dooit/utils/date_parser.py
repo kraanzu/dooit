@@ -9,5 +9,5 @@ def parse(value: str) -> Tuple[Optional[datetime], bool]:
     DAY_FIRST = config_man.get("USE_DAY_FIRST")
     try:
         return parser.parse(value, dayfirst=DAY_FIRST), True
-    except:
+    except parser.ParserError:
         return None, False

@@ -17,7 +17,6 @@ class Bind:
         "switch_pane_workspace",
         "start_search",
         "stop_search",
-        "exit",
     ]
 
     def __init__(self, func_name: str, params: List[str]) -> None:
@@ -58,7 +57,6 @@ DEFAULTS = {
     "edit recurrence": "r",
     "increase urgency": ["+", "="],
     "decrease urgency": ["-", "_"],
-    "exit": "<ctrl+q>",
     "switch pane workspace": ["h"],
     "switch pane todo": ["l"],
 }

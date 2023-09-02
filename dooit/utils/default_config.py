@@ -68,6 +68,7 @@ BORDER_TITLE_LIT = white, blue
 SEARCH_COLOR = red
 YANK_COLOR = blue
 SAVE_ON_ESCAPE = False
+USE_DAY_FIRST = True
 
 #################################
 #          DASHBOARD            #

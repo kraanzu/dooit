@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Optional, Tuple
 from dateutil import parser
-from os import environ
+from dooit.utils.conf_reader import config_man
 
-DATE_ORDER = environ.get("DOOIT_DATE_ORDER", "DMY")
+DAY_FIRST = config_man.get("USE_DAY_FIRST")
 
 
 def parse(value: str) -> Tuple[Optional[datetime], bool]:
     try:
-        return parser.parse(value), True
+        return parser.parse(value, dayfirst=DAY_FIRST), True
     except:
         return None, False

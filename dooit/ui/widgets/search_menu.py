@@ -1,6 +1,6 @@
 from typing import Optional
 from rich.console import RenderableType
-from rich.text import Text
+from rich.text import Span, Text
 from dooit.api.model import Model
 from dooit.ui.widgets.base import HelperWidget
 
@@ -70,12 +70,21 @@ class SearchMenu(HelperWidget):
     def render(self) -> RenderableType:
         res = Text()
         for index, (description, _) in enumerate(self.visible_options):
+            if isinstance(self.filter, list):
+                filter = " ".join(self.filter)
+            else:
+                filter = self.filter
+
             description = Text(description)
-            description.highlight_words(
-                self.filter,
-                "red",
-                case_sensitive=False,
-            )
+            plain = description.plain.lower()
+            filter = filter.lower()
+
+            if filter in plain:
+                highlight_start = plain.index(filter)
+                highlight_end = highlight_start + len(self.filter)
+                span = Span(highlight_start, highlight_end, "red")
+                description.spans.append(span)
+
             if index == self.current:
                 pointer = Text("> ")
             else:

@@ -736,17 +736,6 @@ files = [
 ]
 
 [[package]]
-name = "parsedatetime"
-version = "2.6"
-description = "Parse human-readable date/time text."
-optional = false
-python-versions = "*"
-files = [
-    {file = "parsedatetime-2.6-py3-none-any.whl", hash = "sha256:cb96edd7016872f58479e35879294258c71437195760746faffedb692aef000b"},
-    {file = "parsedatetime-2.6.tar.gz", hash = "sha256:4cb368fbb18a0b7231f4d76119165451c8d2e35951455dfee97c62a87b04d455"},
-]
-
-[[package]]
 name = "pathspec"
 version = "0.11.2"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -1145,4 +1134,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "964622483bd1a1746e4d4227b979ccf196492be957b8611615bf42bba7c79f51"
+content-hash = "647e979b711a96adba8ef9b4d140767b4f3669d63fa96184671735e6c7cdd2e2"

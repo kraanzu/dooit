@@ -78,11 +78,11 @@ def generate_kb_table(
         notes = [colored(" Note:", "d white")] + notes
 
     return Align.center(
-        Group(table, *[Text.from_markup(i) for i in notes], NL, seperator, NL)
+        Group(table, *[Text.from_markup(i) for i in notes], NL, separator, NL)
     )
 
 
-seperator = Text.from_markup(f"{colored('─' * 60, 'b d black')}", justify="center")
+separator = Text.from_markup(f"{colored('─' * 60, 'b d black')}", justify="center")
 
 # ---------------- X -------------------------
 
@@ -161,13 +161,13 @@ SORT_KB = {
 # --------------------------------------------
 HEADER = f"""
 {colored("Welcome to the help menu!", 'yellow')}
-{seperator.markup}
+{separator.markup}
 """
 
 BODY = f"""{colored('Dooit is built to be used from the keyboard!', 'green')}
 
 Documentation below will walk you through the controls:
-{seperator.markup}
+{separator.markup}
 """
 
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
@@ -178,7 +178,7 @@ SPONSOR2 = Text(
     style=Style.from_meta({"@click": f"app.open_url('{SPONSOR_URL}')"}),
     justify="center",
 )
-AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{seperator.markup}{NL}"
+AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{separator.markup}{NL}"
 
 OUTRO = (
     f"Press {colored('escape', 'green')} or {colored('?', 'green')} to exit help menu"

@@ -18,6 +18,9 @@ class SearchMenu(HelperWidget):
 
     @property
     def current_option(self) -> Optional[str]:
+        if not self.visible_options:
+            return
+
         return self.visible_options[self.current][1]
 
     def refresh_options(self) -> None:

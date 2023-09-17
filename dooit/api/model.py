@@ -285,7 +285,7 @@ class Model:
         return {
             getattr(
                 child,
-                "descrption",
+                "description",
             ): child.commit()
             for child in self.workspaces
         }

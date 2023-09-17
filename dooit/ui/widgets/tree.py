@@ -125,7 +125,7 @@ class Tree(KeyWidget, Widget):
                     self.expand_parents(new)
                     new.highlight()
                 except Exception:
-                    self.post_message(Notify("cant find old highlighted node"))
+                    self.post_message(Notify("can't find old highlighted node"))
 
     def expand_parents(self, widget: Optional[WidgetType]) -> None:
         """
@@ -246,7 +246,7 @@ class Tree(KeyWidget, Widget):
             return
 
         node = self.node
-        expaned = self.current.expanded
+        expanded = self.current.expanded
 
         sibling = node.next_sibling() if position == "down" else node.prev_sibling()
 
@@ -269,7 +269,7 @@ class Tree(KeyWidget, Widget):
                 await self.mount(new_widget, before=sibling_widget)
 
             self.current = new_widget
-            if expaned:
+            if expanded:
                 self.current.toggle_expand()
 
             new_widget.highlight()

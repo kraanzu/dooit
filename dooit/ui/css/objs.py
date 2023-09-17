@@ -1,5 +1,5 @@
 """
-CSS File for python classses
+CSS File for python classes
 """
 
 from . import conf

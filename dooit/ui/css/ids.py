@@ -1,5 +1,5 @@
 """
-CSS File for propery `id`
+CSS File for property `id`
 """
 
 ids = """

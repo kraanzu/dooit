@@ -32,8 +32,6 @@ class Dooit(App):
         self.push_screen("main")
 
     async def poll(self):
-        # TODO: implement auto refresh for modified data
-
         if (
             not manager.is_locked()
             and self.watcher.has_modified()

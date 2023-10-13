@@ -236,11 +236,13 @@ class Input(Widget):
             await self._insert_text("\t")
 
         # COPY-PASTA
-        elif key == "ctrl+v":
-            try:
-                await self._insert_text()
-            except Exception:
-                return
+        # elif key == "ctrl+v":
+        #     try:
+        #         await self._insert_text()
+        #     except Exception:
+        #         return
+        elif key.startswith('events.Paste:'):
+            await self._insert_text(key[13:])
 
         elif len(key) == 1:
             await self._insert_text(key)

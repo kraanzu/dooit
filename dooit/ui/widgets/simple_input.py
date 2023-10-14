@@ -193,9 +193,6 @@ class Input(Widget):
         """
         Handles Keypresses
         """
-        if key == "space":
-            key = " "
-
         if key == "enter":
             await self.stop_edit()
 
@@ -239,13 +236,15 @@ class Input(Widget):
             await self._insert_text("\t")
 
         # COPY-PASTA
-        elif key == "ctrl+v":
-            try:
-                await self._insert_text()
-            except Exception:
-                return
+        # elif key == "ctrl+v":
+        #     try:
+        #         await self._insert_text()
+        #     except Exception:
+        #         return
+        elif key.startswith('events.Paste:'):
+            await self._insert_text(key[13:])
 
-        if len(key) == 1:
+        elif len(key) == 1:
             await self._insert_text(key)
 
         self.refresh(layout=True)

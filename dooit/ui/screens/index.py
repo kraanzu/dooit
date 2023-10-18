@@ -57,7 +57,7 @@ class MainScreen(BaseScreen):
 
         key = self.resolve_key(event)
         await self.send_keypress(key)
-    
+
     async def send_keypress(self, key: str):
         if self.bar.status == "SEARCH":
             return await self.query_one(Searcher).keypress(key)
@@ -86,13 +86,14 @@ class MainScreen(BaseScreen):
     async def mount_dashboard(self) -> None:
         await self.clear_right()
         await self.mount(EmptyWidget(), after=self.query_one(WorkspaceTree))
-    
+
     @on(events.Paste)
     async def paste_texts(self, event: events.Paste) -> None:
         event.prevent_default()
         event.stop()
-        if not event.text: return
-        await self.send_keypress(f'events.Paste:{event.text}')
+        if not event.text:
+            return
+        await self.send_keypress(f"events.Paste:{event.text}")
 
     @on(ApplySort)
     async def apply_sort(self, event: ApplySort) -> None:

@@ -10,10 +10,13 @@ from .simple_input import SimpleInput
 TODOS = config_man.get("TODO")
 WORKSPACES = config_man.get("WORKSPACE")
 
+
 RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 ORANGE = config_man.get("orange")
+
+DATE_FORMAT = config_man.get("DATE_FORMAT")
 
 DATE_MAX_WIDTH = 17
 
@@ -102,12 +105,19 @@ class Due(SimpleInput):
         icon = TODOS["due_icon"]
         style = getattr(self.screen, "date_style")
 
+        due: datetime = getattr(self.model, f"_{self._property}")._value
+
         if style == "classic":
-            value = super().draw()
-            if not value or value == "none":
+            if not due:
                 return ""
+
+            time = due.time()
+            if time.hour == time.minute == 0:
+                return due.strftime(DATE_FORMAT)
+            else:
+                return due.strftime(f"{DATE_FORMAT} %H:%M")
+
         else:
-            due: datetime = getattr(self.model, f"_{self._property}")._value
             if not due:
                 return ""
 

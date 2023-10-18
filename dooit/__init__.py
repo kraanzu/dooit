@@ -1,6 +1,6 @@
 import argparse
 from importlib.metadata import version
-from .ui.tui import Dooit
+from dooit.ui.tui import Dooit
 
 
 def main():

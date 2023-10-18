@@ -35,6 +35,11 @@ jobs:
       with:
         name: dooit-windows
         path: ./dist/dooit.exe
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: win-dooit.exe
+        files: ./dist/dooit.exe
 
   linux-build:
     runs-on: ubuntu-latest
@@ -58,6 +63,11 @@ jobs:
       with:
         name: dooit-linux
         path: ./dist/dooit
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: linux-dooit
+        files: ./dist/dooit
 
   macOS-build:
     runs-on: macOS-latest
@@ -81,3 +91,8 @@ jobs:
       with:
         name: dooit-macos
         path: ./dist/dooit
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: mac-dooit
+        files: ./dist/dooit

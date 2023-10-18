@@ -29,17 +29,19 @@ jobs:
     - name: Package app with pyinstaller
       run: |
         python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
-        pyinstaller --clean -F dooit.py  --add-data=dooit/utils/default_config.py:dooit/utils/
+        pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: dooit-windows
         path: ./dist/dooit.exe
+    - name: Rename final file
+      run: cp ./dist/dooit.exe ./dist/windows-dooit.exe
     - name: Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        name: win-dooit.exe
-        files: ./dist/dooit.exe
+        files: ./dist/windows-dooit.exe
 
   linux-build:
     runs-on: ubuntu-latest
@@ -57,17 +59,20 @@ jobs:
     - name: Package app with pyinstaller
       run: |
         python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
-        pyinstaller --clean -F dooit.py  --add-data=dooit/utils/default_config.py:dooit/utils/
+        pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: dooit-linux
         path: ./dist/dooit
+    - name: Rename final file
+      run: cp ./dist/dooit ./dist/linux-dooit
     - name: Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         name: linux-dooit
-        files: ./dist/dooit
+        files: ./dist/linux-dooit
 
   macOS-build:
     runs-on: macOS-latest
@@ -85,14 +90,17 @@ jobs:
     - name: Package app with pyinstaller
       run: |
         python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
-        pyinstaller --clean -F dooit.py  --add-data=dooit/utils/default_config.py:dooit/utils/
+        pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: dooit-macos
         path: ./dist/dooit
+    - name: Rename final file
+      run: cp ./dist/dooit ./dist/macos-dooit
     - name: Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         name: mac-dooit
-        files: ./dist/dooit
+        files: ./dist/macos-dooit

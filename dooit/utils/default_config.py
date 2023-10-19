@@ -70,6 +70,7 @@ YANK_COLOR = blue
 SAVE_ON_ESCAPE = False
 USE_DAY_FIRST = True
 DATE_FORMAT = "%d %h"
+TIME_FORMAT = "%H:%M"
 
 #################################
 #          DASHBOARD            #

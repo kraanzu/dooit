@@ -17,6 +17,7 @@ GREEN = config_man.get("green")
 ORANGE = config_man.get("orange")
 
 DATE_FORMAT = config_man.get("DATE_FORMAT")
+TIME_FORMAT = config_man.get("TIME_FORMAT")
 
 DATE_MAX_WIDTH = 17
 
@@ -115,7 +116,7 @@ class Due(SimpleInput):
             if time.hour == time.minute == 0:
                 return due.strftime(DATE_FORMAT)
             else:
-                return due.strftime(f"{DATE_FORMAT} %H:%M")
+                return due.strftime(f"{DATE_FORMAT} {TIME_FORMAT}")
 
         else:
             if not due:

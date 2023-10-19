@@ -69,7 +69,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        name: linux-dooit
         files: ./dist/linux-dooit
 
   macOS-build:
@@ -100,5 +99,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        name: mac-dooit
         files: ./dist/macos-dooit

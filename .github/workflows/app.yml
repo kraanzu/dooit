@@ -3,7 +3,12 @@
 
 name: Python application
 
-on: release
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
 
 jobs:
   windows-build:

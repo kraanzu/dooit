@@ -10,10 +10,14 @@ from .simple_input import SimpleInput
 TODOS = config_man.get("TODO")
 WORKSPACES = config_man.get("WORKSPACE")
 
+
 RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 ORANGE = config_man.get("orange")
+
+DATE_FORMAT = config_man.get("DATE_FORMAT")
+TIME_FORMAT = config_man.get("TIME_FORMAT")
 
 DATE_MAX_WIDTH = 17
 
@@ -102,20 +106,30 @@ class Due(SimpleInput):
         icon = TODOS["due_icon"]
         style = getattr(self.screen, "date_style")
 
-        if style == "classic":
+        due: datetime = getattr(self.model, f"_{self._property}")._value
+
+        if self.is_editing:
             value = super().draw()
-            if not value or value == "none":
-                return ""
         else:
-            due: datetime = getattr(self.model, f"_{self._property}")._value
-            if not due:
-                return ""
+            if style == "classic":
+                if not due:
+                    return ""
 
-            now = datetime.now()
-            if not due.hour:
-                due = due.replace(day=due.day + 1)
+                time = due.time()
+                if time.hour == time.minute == 0:
+                    value = due.strftime(DATE_FORMAT)
+                else:
+                    value = due.strftime(f"{DATE_FORMAT} {TIME_FORMAT}")
 
-            value = self.timedelta_to_words(due - now)
+            else:
+                if not due:
+                    return ""
+
+                now = datetime.now()
+                if not due.hour:
+                    due = due.replace(day=due.day + 1)
+
+                value = self.timedelta_to_words(due - now)
 
         return self._colorize_by_status(icon) + value
 

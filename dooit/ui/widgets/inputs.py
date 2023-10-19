@@ -108,25 +108,28 @@ class Due(SimpleInput):
 
         due: datetime = getattr(self.model, f"_{self._property}")._value
 
-        if style == "classic":
-            if not due:
-                return ""
-
-            time = due.time()
-            if time.hour == time.minute == 0:
-                return due.strftime(DATE_FORMAT)
-            else:
-                return due.strftime(f"{DATE_FORMAT} {TIME_FORMAT}")
-
+        if self.is_editing:
+            value = super().draw()
         else:
-            if not due:
-                return ""
+            if style == "classic":
+                if not due:
+                    return ""
 
-            now = datetime.now()
-            if not due.hour:
-                due = due.replace(day=due.day + 1)
+                time = due.time()
+                if time.hour == time.minute == 0:
+                    value = due.strftime(DATE_FORMAT)
+                else:
+                    value = due.strftime(f"{DATE_FORMAT} {TIME_FORMAT}")
 
-            value = self.timedelta_to_words(due - now)
+            else:
+                if not due:
+                    return ""
+
+                now = datetime.now()
+                if not due.hour:
+                    due = due.replace(day=due.day + 1)
+
+                value = self.timedelta_to_words(due - now)
 
         return self._colorize_by_status(icon) + value
 

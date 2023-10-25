@@ -1,3 +1,4 @@
+from typing import Optional
 from textual.widget import Widget
 from dooit.ui.events.events import ChangeStatus, Notify, StatusType
 from dooit.utils.keybinder import KeyBinder, KeyList
@@ -12,9 +13,9 @@ class KeyWidget(Widget):
     def __init__(
         self,
         *children: Widget,
-        name: str | None = None,
-        id: str | None = None,
-        classes: str | None = None,
+        name: Optional[str] = None,
+        id: Optional[str] = None,
+        classes: Optional[str] = None,
         disabled: bool = False
     ) -> None:
         super().__init__(

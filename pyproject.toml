@@ -15,7 +15,7 @@ pyperclip = "^1.8.2"
 PyYAML = "^6.0"
 tzlocal = "2.1"
 appdirs = "^1.4.4"
-textual = "^0.41.0"
+textual = "^0.44.1"
 python-dateutil = "^2.8.2"
 
 [tool.poetry.group.dev.dependencies]

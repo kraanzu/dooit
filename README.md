@@ -26,7 +26,7 @@ pip install dooit
 
 ### With AUR helper 📦
 ```
-yay -S dooit-git
+yay -S dooit
 ```
 
 ### With Homebrew 🍻

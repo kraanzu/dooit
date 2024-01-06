@@ -16,8 +16,8 @@ WORKSPACES_BG = conf.get("WORKSPACES_BACKGROUND")
 OBJS = f"""
 * {{
     link-style: italic;
-    link-hover-style: underline italic bold;
-    link-hover-background: #fff 0%;
+    link-style-hover: underline italic bold;
+    link-background-hover: #fff 0%;
 }}
 
 MainScreen {{

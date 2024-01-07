@@ -30,10 +30,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install poetry
-    - name: Create virtualenv
-      run: poetry shell
-    - name: Build package
-      run: poetry build
+        pip install .
     - name: Configure TOKEN
       run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
     - name: Publish package

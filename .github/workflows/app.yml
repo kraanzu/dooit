@@ -8,7 +8,8 @@ on:
     types: [published]
 
 permissions:
-  contents: read
+  contents: write
+  discussions: write
 
 jobs:
   windows-build:

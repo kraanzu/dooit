@@ -39,6 +39,7 @@ DEFAULTS = {
     "shift down": ["J", "<shift+down>"],
     "edit description": "i",
     "toggle expand": "z",
+    "toggle expand recursive": "<ctrl+z>",
     "toggle expand parent": "Z",
     "add child": "A",
     "add sibling": "a",

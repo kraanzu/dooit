@@ -385,12 +385,24 @@ class Tree(KeyWidget, Widget):
     async def add_sibling(self) -> None:
         await self.add_node("sibling")
 
-    async def toggle_expand(self) -> None:
+    async def toggle_expand(self, recursive: bool = False) -> None:
         if not self.current:
             return
 
         self.current.toggle_expand()
+
+        if recursive:
+            nodes = [*self.current.children]
+            while nodes:
+                node = nodes.pop()
+                if isinstance(node, TodoWidget):
+                    nodes.extend(node.children)
+                    node.toggle_expand()
+
         self._rebuild_cache = True
+
+    async def toggle_expand_recursive(self) -> None:
+        await self.toggle_expand(recursive=True)
 
     async def toggle_expand_parent(self) -> None:
         if not self.current:

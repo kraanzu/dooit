@@ -8,6 +8,7 @@ from .node import Node
 
 EDITING = config_man.get("WORKSPACE").get("editing")
 POINTER_ICON = config_man.get("WORKSPACE").get("pointer")
+EXPANDED = config_man.get("WORKSPACE").get("start_expanded")
 
 
 class WorkspaceGrid(Widget):
@@ -32,6 +33,7 @@ class WorkspaceWidget(Node):
 
     ModelType = Workspace
     pointer_icon = POINTER_ICON
+    _default_display = EXPANDED
 
     def setup_children(self) -> None:
         self.description = Description(self.model)

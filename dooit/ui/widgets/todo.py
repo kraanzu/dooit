@@ -16,6 +16,7 @@ from .node import Node
 
 EDITING = config_man.get("TODO").get("editing")
 POINTER_ICON = config_man.get("TODO").get("pointer")
+EXPANDED = config_man.get("TODO").get("start_expanded")
 
 
 class TodoGrid(Widget):
@@ -36,6 +37,7 @@ class TodoGrid(Widget):
 class TodoWidget(Node):
     ModelType = Todo
     pointer_icon = POINTER_ICON
+    _default_display = EXPANDED
 
     def setup_children(self):
         self.status = Status(model=self.model)

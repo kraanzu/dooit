@@ -170,6 +170,7 @@ TODO = {
     "urgency2_icon": "B",
     "urgency3_icon": "C",
     "urgency4_icon": "D",
+    "initial_urgency": 1
 }
 
 EMPTY_TODO = [

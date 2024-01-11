@@ -48,6 +48,10 @@ class TodoWidget(Node):
     def _get_model_children(self) -> List[ModelType]:
         return self.model.todos
 
+    async def set_urgency(self, val: int):
+        self.model.set_urgency(val)
+        await self.refresh_value()
+
     async def increase_urgency(self):
         self.model.increase_urgency()
         await self.refresh_value()

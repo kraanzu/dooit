@@ -92,6 +92,9 @@ class Todo(Model):
     def toggle_complete(self) -> bool:
         return self._status.toggle_done()
 
+    def set_urgency(self, value: int) -> None:
+        self._urgency.set(value)
+
     def decrease_urgency(self) -> None:
         self._urgency.decrease()
 

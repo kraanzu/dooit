@@ -4,7 +4,10 @@ from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.events.events import SwitchTab
 from dooit.ui.widgets.todo import TodoWidget
+from dooit.utils.conf_reader import config_man
 from .tree import Tree
+
+INITIAL_URGENCY = config_man.get("TODO").get("initial_urgency")
 
 
 class TodoTree(Tree):
@@ -30,6 +33,12 @@ class TodoTree(Tree):
 
     def get_children(self, parent: Model) -> List[ModelType]:
         return parent.todos
+
+    async def add_node(
+        self, type_: Literal["child", "sibling"], edit: bool = True
+    ) -> None:
+        await super().add_node(type_, edit=edit)
+        await self.current.set_urgency(INITIAL_URGENCY)
 
     async def switch_pane(self) -> None:
         self.post_message(SwitchTab())

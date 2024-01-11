@@ -170,7 +170,11 @@ TODO = {
     "urgency2_icon": "B",
     "urgency3_icon": "C",
     "urgency4_icon": "D",
-    "initial_urgency": 1
+    "initial_urgency": 1,
+    "urgency1_color": "green",
+    "urgency2_color": "yellow",
+    "urgency3_color": "orange",
+    "urgency4_color": "red",
 }
 
 EMPTY_TODO = [

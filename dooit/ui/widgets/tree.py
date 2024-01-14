@@ -312,6 +312,10 @@ class Tree(KeyWidget, Widget):
             if type_ == "child"
             else self.node.add_sibling()
         )
+        # Neccessary to call this after node creation,
+        # otherwise the parent node won't show the child_hint until the program
+        # is restarted or the node gets collapsed and uncollapsed
+        await self.current.refresh_value()
 
         widget = self.WidgetType(new_node)
         if type_ == "sibling":

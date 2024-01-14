@@ -212,7 +212,7 @@ class Tree(KeyWidget, Widget):
     async def notify(self, message: str) -> None:
         self.post_message(Notify(message))
 
-    def next_node(self) -> Optional[WidgetType]:
+    def next_node(self, is_sibling=False) -> Optional[WidgetType]:
         nodes = self.visible_nodes
         if not nodes:
             return
@@ -224,7 +224,17 @@ class Tree(KeyWidget, Widget):
         if idx == len(nodes) - 1:
             return
 
-        return nodes[idx + 1]
+        next_node = nodes[idx + 1]
+
+        while is_sibling:
+            try:
+                next_node = nodes[idx + 1]
+            except IndexError:
+                return None
+            if next_node in self.current.siblings:
+                return next_node
+            idx += 1
+        return next_node
 
     def prev_node(self) -> Optional[WidgetType]:
         nodes = self.visible_nodes
@@ -302,6 +312,10 @@ class Tree(KeyWidget, Widget):
             if type_ == "child"
             else self.node.add_sibling()
         )
+        # Neccessary to call this after node creation,
+        # otherwise the parent node won't show the child_hint until the program
+        # is restarted or the node gets collapsed and uncollapsed
+        await self.current.refresh_value()
 
         widget = self.WidgetType(new_node)
         if type_ == "sibling":
@@ -321,7 +335,9 @@ class Tree(KeyWidget, Widget):
 
         widget = self.current
 
-        if node := self.next_node():
+        # We only want to get sibling and not children, otherwise selecting the new
+        # self.current will crash as it was deleted with its parent
+        if node := self.next_node(is_sibling=True):
             self.current = node
         elif node := self.prev_node():
             self.current = node

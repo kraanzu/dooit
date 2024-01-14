@@ -146,7 +146,7 @@ class Urgency(SimpleInput):
             color = GREEN
         elif urgency == 2:
             color = YELLOW
-        elif urgency == 2:
+        elif urgency == 3:
             color = ORANGE
         else:
             color = RED

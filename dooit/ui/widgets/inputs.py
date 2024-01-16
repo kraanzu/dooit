@@ -15,6 +15,10 @@ RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 ORANGE = config_man.get("orange")
+COLOR_URGENCY_1 = config_man.get(TODOS.get('urgency1_color'))
+COLOR_URGENCY_2 = config_man.get(TODOS.get('urgency2_color'))
+COLOR_URGENCY_3 = config_man.get(TODOS.get('urgency3_color'))
+COLOR_URGENCY_4 = config_man.get(TODOS.get('urgency4_color'))
 
 DATE_FORMAT = config_man.get("DATE_FORMAT")
 TIME_FORMAT = config_man.get("TIME_FORMAT")
@@ -143,13 +147,13 @@ class Urgency(SimpleInput):
         urgency = int(self.model.urgency)
         icon = TODOS.get(f"urgency{urgency}_icon")
         if urgency == 1:
-            color = GREEN
+            color = COLOR_URGENCY_1
         elif urgency == 2:
-            color = YELLOW
+            color = COLOR_URGENCY_2
         elif urgency == 3:
-            color = ORANGE
+            color = COLOR_URGENCY_3
         else:
-            color = RED
+            color = COLOR_URGENCY_4
 
         return self._render_text_with_color(icon, color)
 

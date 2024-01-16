@@ -21,6 +21,7 @@ class Node(Widget):
     pointer_icon = ">"
     _expand = False
     ModelType: Type[Union[Workspace, Todo]]
+    _default_display = False
 
     def __init__(self, model, force_display: bool = True):
         super().__init__(id=model.uuid)
@@ -95,7 +96,7 @@ class Node(Widget):
 
     def compose(self) -> ComposeResult:
         if not self.force_display and self.model.nest_level:
-            self.display = False
+            self.display = self._default_display
 
         for widget in self.draw():
             yield widget

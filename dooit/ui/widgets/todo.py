@@ -16,6 +16,7 @@ from .node import Node
 
 EDITING = config_man.get("TODO").get("editing")
 POINTER_ICON = config_man.get("TODO").get("pointer")
+EXPANDED = config_man.get("TODO").get("start_expanded")
 
 
 class TodoGrid(Widget):
@@ -36,6 +37,7 @@ class TodoGrid(Widget):
 class TodoWidget(Node):
     ModelType = Todo
     pointer_icon = POINTER_ICON
+    _default_display = EXPANDED
 
     def setup_children(self):
         self.status = Status(model=self.model)
@@ -47,6 +49,10 @@ class TodoWidget(Node):
 
     def _get_model_children(self) -> List[ModelType]:
         return self.model.todos
+
+    async def set_urgency(self, val: int):
+        self.model.set_urgency(val)
+        await self.refresh_value()
 
     async def increase_urgency(self):
         self.model.increase_urgency()

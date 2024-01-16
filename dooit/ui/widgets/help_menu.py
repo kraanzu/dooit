@@ -101,6 +101,7 @@ NORMAL_KB = {
     "move to top": "Move to top of list",
     "move to bottom": "Move to bottom of list",
     "toggle expand": "Toggle-expand highlighted item",
+    "toggle expand recursive": "Toggle-expand highlighted item and all it's children",
     "toggle expand parent": "Toggle-expand parent item",
     "remove item": "Remove highlighted node",
     "add sibling": "Add sibling todo/workspace",

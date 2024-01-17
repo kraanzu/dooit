@@ -241,7 +241,7 @@ class Input(Widget):
         #         await self._insert_text()
         #     except Exception:
         #         return
-        elif key.startswith('events.Paste:'):
+        elif key.startswith("events.Paste:"):
             await self._insert_text(key[13:])
 
         elif len(key) == 1:

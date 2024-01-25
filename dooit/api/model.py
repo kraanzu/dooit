@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, ClassVar, Dict, List, Literal, Optional
 from typing_extensions import Self
 from uuid import uuid4
 from dataclasses import dataclass
@@ -56,6 +56,7 @@ class Model:
     Model class to for the base tree structure
     """
 
+    class_kind: ClassVar[str]
     fields: List
     sortable_fields: List[SortMethodType]
 
@@ -76,14 +77,9 @@ class Model:
     def uuid(self) -> str:
         return self._uuid
 
-    @classmethod
-    @property
-    def class_kind(cls) -> str:
-        return cls.__name__.lower()
-
     @property
     def kind(self):
-        return self.__class__.__name__.lower()
+        return self.class_kind
 
     @property
     def nest_level(self):
@@ -310,3 +306,9 @@ class Model:
             arr.extend(i.get_all_todos())
 
         return arr
+
+    def __init_subclass__(cls) -> None:
+        cls.class_kind = cls.__name__.lower()
+
+
+Model.__init_subclass__()

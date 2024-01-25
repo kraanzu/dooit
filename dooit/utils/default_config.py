@@ -136,6 +136,7 @@ WORKSPACE = {
     "editing": cyan,
     "pointer": ">",
     "children_hint": "+",  # "[{count}]", # vars: count
+    "start_expanded": False,
 }
 EMPTY_WORKSPACE = [
     ":(",
@@ -170,6 +171,12 @@ TODO = {
     "urgency2_icon": "B",
     "urgency3_icon": "C",
     "urgency4_icon": "D",
+    "start_expanded": False,
+    "initial_urgency": 1,
+    "urgency1_color": "green",
+    "urgency2_color": "yellow",
+    "urgency3_color": "orange",
+    "urgency4_color": "red",
 }
 
 EMPTY_TODO = [

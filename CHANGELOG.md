@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - App crashes when an opened workspace is deleted (closes https://github.com/kraanzu/dooit/issues/169)
+- App crash on adding a workspace (closes https://github.com/kraanzu/dooit/issues/167)
 
 ## 2.0.2
 

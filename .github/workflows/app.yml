@@ -27,7 +27,7 @@ jobs:
         pip install pyinstaller
     - name: Package app with pyinstaller
       run: |
-        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
+        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
         pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
@@ -57,7 +57,7 @@ jobs:
         pip install pyinstaller
     - name: Package app with pyinstaller
       run: |
-        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
+        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
         pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
@@ -87,7 +87,7 @@ jobs:
         pip install pyinstaller
     - name: Package app with pyinstaller
       run: |
-        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
+        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
         pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0

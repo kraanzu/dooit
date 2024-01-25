@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 2.1.0
+
+### Added
 - Add support for changing the default urgency of a todo with `TODO.initial_urgency`
 - Add support for changing urgency colors with `TODO.urgency1_color` to `TODO.urgency4_color`
 - Add shortcut for recursively expanding and closing todos (Ctrl + Z)
 - Add `WORKSPACE.start_expanded` and `TODO.start_expanded` to launch with the Workspace and Todo tree fully expanded
+- Dooit can now also be launched with `python -m dooit`
+
+### Fixed
+
+- App crashes when an opened workspace is deleted (closes https://github.com/kraanzu/dooit/issues/169)
 
 ## 2.0.2
 

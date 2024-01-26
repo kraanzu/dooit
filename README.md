@@ -74,5 +74,5 @@ Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know
 
 #### Other TUI projects 🤓 :
 If you liked dooit then you might wanna try out some of my other TUI projects as well
-- [termtyper](https://github.com/kraanzu/termtyper) - A typing-test app for terminal
+- [smassh](https://github.com/kraanzu/smassh) - A typing-test app for terminal
 - [gupshup](https://github.com/kraanzu/gupshup) - A localhost TUI chat client

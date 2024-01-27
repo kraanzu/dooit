@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  app_name: smassh
+  app_name: dooit
 
 jobs:
   build:

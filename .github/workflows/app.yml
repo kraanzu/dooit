@@ -1,103 +1,75 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
 name: Python application
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
 permissions:
   contents: write
-  discussions: write
+
+env:
+  app_name: smassh
 
 jobs:
-  windows-build:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-        pip install pyinstaller
-    - name: Package app with pyinstaller
-      run: |
-        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
-        pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.0
-      with:
-        name: dooit-windows
-        path: ./dist/dooit.exe
-    - name: Rename final file
-      run: cp ./dist/dooit.exe ./dist/windows-dooit.exe
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: ./dist/windows-dooit.exe
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
-  linux-build:
-    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-        pip install pyinstaller
-    - name: Package app with pyinstaller
-      run: |
-        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
-        pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.0
-      with:
-        name: dooit-linux
-        path: ./dist/dooit
-    - name: Rename final file
-      run: cp ./dist/dooit ./dist/linux-dooit
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: ./dist/linux-dooit
+      - uses: actions/checkout@v3
 
-  macOS-build:
-    runs-on: macOS-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-        pip install pyinstaller
-    - name: Package app with pyinstaller
-      run: |
-        python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
-        pyinstaller --clean -F dooit.py --add-data=dooit/utils/default_config.py:dooit/utils/
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.0
-      with:
-        name: dooit-macos
-        path: ./dist/dooit
-    - name: Rename final file
-      run: cp ./dist/dooit ./dist/macos-dooit
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: ./dist/macos-dooit
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install pyinstaller
+
+      - name: Package app with pyinstaller
+        run: |
+          python -c "with open('$app_name.py', 'w') as f: f.write('from $app_name.__main__ import main\nmain()\n')"
+          pyinstaller --clean -F dooit.py --add-data="$app_name/utils/default_config.py:$app_name/utils/"
+
+      # Setup File name
+      - name: Set Binary file name on Linux and Mac
+        if: matrix.os != 'windows-latest'
+        run: echo "BINARY_FILE_NAME=$app_name" >> $GITHUB_ENV
+
+      - name: Set Binary file name on Windows
+        if: matrix.os == 'windows-latest'
+        run: Add-Content -Path $env:GITHUB_ENV -Value "BINARY_FILE_NAME=$app_name.exe"
+
+      # Setup final release file names
+      - name: Set Final file name on Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: echo "FINAL_FILE_NAME=linux-$app_name" >> $GITHUB_ENV
+
+      - name: Set Final file name on MacOs
+        if: matrix.os == 'macos-latest'
+        run: echo "FINAL_FILE_NAME=macos-$app_name" >> $GITHUB_ENV
+
+      - name: Set Final file name on Windows
+        if: matrix.os == 'windows-latest'
+        run: Add-Content -Path $env:GITHUB_ENV -Value "FINAL_FILE_NAME=windows-$app_name.exe"
+
+      - name: Rename build files
+        run: cp ./dist/${{ env.BINARY_FILE_NAME }} ./dist/${{ env.FINAL_FILE_NAME }}
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: ${{ env.FINAL_FILE_NAME }}
+          path: ./dist/${{ env.BINARY_FILE_NAME }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ./dist/${{ env.FINAL_FILE_NAME }}

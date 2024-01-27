@@ -1,4 +1,4 @@
-<img src="https://user-images.githubusercontent.com/97718086/174438959-d8887b62-76de-4587-9619-91a4ecd6e1d6.png" align="right" alt="Todo Icon" width="150" height="150">
+![DOOIT](imgs/banner.png)
 
 # Dooit ✔️
 *A todo manager that you didn't ask for, but needed !* \
@@ -55,7 +55,7 @@ brew install dooit --HEAD
 - Support for recurrence todos
 - Sort options with menu (Name, Date, Urgency, Status)
 
-**Note: See [CHANGELOG.md]() to get more details on changes and feature additions!**
+**Note: See [CHANGELOG.md](CHANGELOG.md) to get more details on changes and feature additions!**
 
 # Usage and configuration :gear:
 After launching the app, You can press the `?` key to get started with the app :)\
@@ -64,7 +64,7 @@ Head over to [wiki](https://github.com/kraanzu/dooit/wiki/Configuration) to know
 
 
 # Screenshots 🖼️
-![dooit](https://github.com/kraanzu/dooit/assets/97718086/55d37e59-e651-45e7-9c8d-4321e566b655)
+![PREVIEW](imgs/preview.png)
 
 # Contribution 🤝
 - Want to contribute? Feel free to open a PR! 😸

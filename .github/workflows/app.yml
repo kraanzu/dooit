@@ -8,9 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  app_name: dooit
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -34,30 +31,30 @@ jobs:
 
       - name: Package app with pyinstaller
         run: |
-          python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
+          python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__init__ import main\nmain()\n')"
           pyinstaller --clean -F dooit.py --add-data="dooit/utils/default_config.py:dooit/utils/"
 
       # Setup File name
       - name: Set Binary file name on Linux and Mac
         if: matrix.os != 'windows-latest'
-        run: echo "BINARY_FILE_NAME=$app_name" >> $GITHUB_ENV
+        run: echo "BINARY_FILE_NAME=dooit" >> $GITHUB_ENV
 
       - name: Set Binary file name on Windows
         if: matrix.os == 'windows-latest'
-        run: Add-Content -Path $env:GITHUB_ENV -Value "BINARY_FILE_NAME=$app_name.exe"
+        run: Add-Content -Path $env:GITHUB_ENV -Value "BINARY_FILE_NAME=dooit.exe"
 
       # Setup final release file names
       - name: Set Final file name on Linux
         if: matrix.os == 'ubuntu-latest'
-        run: echo "FINAL_FILE_NAME=linux-$app_name" >> $GITHUB_ENV
+        run: echo "FINAL_FILE_NAME=linux-dooit" >> $GITHUB_ENV
 
       - name: Set Final file name on MacOs
         if: matrix.os == 'macos-latest'
-        run: echo "FINAL_FILE_NAME=macos-$app_name" >> $GITHUB_ENV
+        run: echo "FINAL_FILE_NAME=macos-dooit" >> $GITHUB_ENV
 
       - name: Set Final file name on Windows
         if: matrix.os == 'windows-latest'
-        run: Add-Content -Path $env:GITHUB_ENV -Value "FINAL_FILE_NAME=windows-$app_name.exe"
+        run: Add-Content -Path $env:GITHUB_ENV -Value "FINAL_FILE_NAME=windows-dooit.exe"
 
       - name: Rename build files
         run: cp ./dist/${{ env.BINARY_FILE_NAME }} ./dist/${{ env.FINAL_FILE_NAME }}

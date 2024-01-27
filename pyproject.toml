@@ -8,6 +8,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/kraanzu/dooit"
 repository = "https://github.com/kraanzu/dooit"
+exclude = ["imgs"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

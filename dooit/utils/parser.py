@@ -1,6 +1,7 @@
 import appdirs
 import msgpack
 import os
+import yaml
 from typing import Dict
 from pathlib import Path
 from os import makedirs
@@ -50,10 +51,19 @@ class Parser:
 
         self.todo_data = XDG_DATA / "todo.dat"
         self.config_file = XDG_CONFIG / "config.py"
+        self.todo_data_yaml = XDG_DATA / "todo.yaml"
 
-        if not Path.is_file(self.todo_data):
+        if Path.is_file(self.todo_data_yaml):
+            self.migrate_to_msgpack()
+        elif not Path.is_file(self.todo_data):
             self.save(dict())
 
         if not Path.is_file(self.config_file):
             with open(self.config_file, "w") as _:
                 pass
+
+    def migrate_to_msgpack(self):
+        with open(self.todo_data_yaml, "r") as stream:
+            self.save(yaml.safe_load(stream))
+
+        os.remove(self.todo_data_yaml)

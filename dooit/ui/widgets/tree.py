@@ -446,6 +446,8 @@ class Tree(KeyWidget, Widget):
         model.from_data(self.clipboard.data, False)
         widget = self.WidgetType(model)
         await self.mount(widget, after=self.current)
+
+        self._rebuild_cache = True
         self.current = widget
         return Ok()
 

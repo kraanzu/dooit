@@ -1,8 +1,8 @@
 import os
 import appdirs
-from dooit.utils.parser import TODO_DATA
 
 DIR = appdirs.user_data_dir("dooit")
+filename = os.path.join(DIR, "todo.yaml")
 
 
 class Watcher:
@@ -12,7 +12,7 @@ class Watcher:
 
     def __init__(self):
         self._cached_stamp = -1
-        self.filename = TODO_DATA
+        self.filename = filename
 
     def has_modified(self) -> bool:
         """

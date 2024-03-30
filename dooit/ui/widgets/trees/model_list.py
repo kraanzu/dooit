@@ -1,6 +1,4 @@
-from typing import List, Union
-from textual.widgets import OptionList
-from textual.widgets.option_list import Option
+from typing import Union
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from collections import defaultdict
@@ -17,56 +15,6 @@ class ModelList(BaseList):
 
     @property
     def model(self):
-        raise NotImplementedError
-
-    @property
-    def current_node(self) -> Option:
-        if self.highlighted is None:
-            raise ValueError("No node is currently highlighted")
-
-        return self.get_option_at_index(self.highlighted)
-
-    def expand_node(self) -> None:
-        node = self.current_node
-        index = self.highlighted
-
-        if index is None:
-            raise ValueError("No node is currently highlighted")
-
-        if not node.id:
-            raise ValueError("Node has no id")
-
-        self.expaned[node.id] = True
-        options = self._get_children(node.id)
-        self._insert_nodes(index + 1, options)
-
-    def collapse_node(self) -> None:
-        node = self.current_node
-        index = self.highlighted
-
-        if index is None:
-            raise ValueError("No node is currently highlighted")
-
-        if not node.id:
-            raise ValueError("Node has no id")
-
-        self.expaned[node.id] = False
-        children = self._get_children(node.id)
-        for child in children:
-            if _id := child.id:
-                self.remove_option(_id)
-
-    def toggle_expand(self) -> None:
-        if self.highlighted is None:
-            return
-
-        expanded = self.expaned[self.current_node.id]
-        if expanded:
-            self.collapse_node()
-        else:
-            self.expand_node()
-
-    def _get_children(self, id: str) -> List[Option]:
         raise NotImplementedError
 
     def force_refresh(self) -> None:

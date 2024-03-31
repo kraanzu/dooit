@@ -2,12 +2,12 @@ from typing import Union
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from collections import defaultdict
-from .base_list import BaseList
+from .base_list import BaseTree
 
 ModelType = Union[Todo, Workspace]
 
 
-class ModelList(BaseList):
+class ModelTree(BaseTree):
     def __init__(self, model: ModelType) -> None:
         super().__init__()
         self._model = model

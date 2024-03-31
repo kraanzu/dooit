@@ -1,11 +1,11 @@
 from typing import List
 
 from textual.widgets.option_list import Option
-from .model_list import ModelList, Workspace
+from .model_list import ModelTree, Workspace
 from ..renderers.workspace_renderer import WorkspaceRender
 
 
-class WorkspacesList(ModelList):
+class WorkspacesTree(ModelTree):
     @property
     def model(self) -> Workspace:
         return self._model

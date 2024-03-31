@@ -1,8 +1,8 @@
-from .model_list import ModelList, Todo
+from .model_list import ModelTree, Todo
 from ..renderers.todo_renderer import TodoRender
 
 
-class TodosList(ModelList):
+class TodosTree(ModelTree):
     @property
     def model(self) -> Todo:
         return self._model

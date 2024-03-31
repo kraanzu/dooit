@@ -1,6 +1,5 @@
 from textual import events, on, work
 from textual.containers import Container
-from textual.widgets import Static
 from dooit.api.manager import manager
 from dooit.ui.events.events import DateModeSwitch
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
@@ -18,7 +17,6 @@ from dooit.ui.widgets import StatusBar
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
 from dooit.ui.widgets.inputs import WORKSPACES, Due
-from dooit.ui.widgets.tree import Tree
 from .base import BaseScreen
 
 

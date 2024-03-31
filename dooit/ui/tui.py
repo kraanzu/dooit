@@ -2,7 +2,6 @@ import webbrowser
 from textual.app import App
 from dooit.api.manager import manager
 from dooit.utils.watcher import Watcher
-from dooit.ui.widgets import WorkspaceTree, TodoTree
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding

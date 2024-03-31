@@ -17,7 +17,8 @@ class ModelTree(BaseTree):
     """
 
     def __init__(self, model: ModelType) -> None:
-        super().__init__(id=self.__class__.__name__)
+        tree = self.__class__.__name__
+        super().__init__(id=f"{tree}_{model.uuid}")
         self._model = model
         self.expaned = defaultdict(bool)
 

@@ -1,7 +1,7 @@
 from typing import List
 
 from textual.widgets.option_list import Option
-from .model_list import ModelTree, Workspace
+from .model_tree import ModelTree, Workspace
 from ..renderers.workspace_renderer import WorkspaceRender
 
 

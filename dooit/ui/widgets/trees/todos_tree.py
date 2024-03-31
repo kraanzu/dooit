@@ -1,4 +1,4 @@
-from .model_list import ModelTree, Todo
+from .model_tree import ModelTree, Todo
 from ..renderers.todo_renderer import TodoRender
 
 

@@ -2,7 +2,7 @@ from typing import Union
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from collections import defaultdict
-from .base_list import BaseTree
+from .base_tree import BaseTree
 
 ModelType = Union[Todo, Workspace]
 

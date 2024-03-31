@@ -1,8 +1,9 @@
 from textual import events, on, work
 from textual.containers import Container
+from textual.widgets import Static
 from dooit.api.manager import manager
 from dooit.ui.events.events import DateModeSwitch
-from dooit.ui.widgets.empty import EmptyWidget
+from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.widgets.bar import Searcher
 from dooit.ui.events import (
     TopicSelect,
@@ -13,8 +14,10 @@ from dooit.ui.events import (
     CommitData,
     ApplySort,
 )
-from dooit.ui.widgets import WorkspaceTree, TodoTree, StatusBar
-from dooit.ui.widgets.inputs import Due
+from dooit.ui.widgets import StatusBar
+from dooit.ui.widgets.switcher import FlexibleSwitcher
+from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
+from dooit.ui.widgets.inputs import WORKSPACES, Due
 from dooit.ui.widgets.tree import Tree
 from .base import BaseScreen
 
@@ -36,11 +39,12 @@ class MainScreen(BaseScreen):
 
     def compose(self):
         with DualSplit():
-            with DualSplitLeft():
-                yield WorkspaceTree(manager)
+            with FlexibleSwitcher(initial=WORKSPACE_EMPTY_WIDGETS[0].id):
+                yield from WORKSPACE_EMPTY_WIDGETS
+                yield WorkspacesTree(manager)
 
-            with DualSplitRight():
-                yield EmptyWidget("dashboard")
+            with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id):
+                yield from TODO_EMPTY_WIDGETS
 
         yield StatusBar()
 
@@ -62,8 +66,8 @@ class MainScreen(BaseScreen):
         if self.bar.status == "SEARCH":
             return await self.query_one(Searcher).keypress(key)
 
-        visible_focused = [i for i in self.query(".focus") if i.display][0]
-        await visible_focused.keypress(key)
+        # visible_focused = [i for i in self.query(".focus") if i.display][0]
+        # await visible_focused.keypress(key)
 
     async def clear_right(self) -> None:
         try:
@@ -79,13 +83,13 @@ class MainScreen(BaseScreen):
                 current_widget = widgets.first()
                 current_widget.add_class("current")
             else:
-                current_widget = TodoTree(model)
+                current_widget = TodosTree(model)
                 current_widget.add_class("current")
                 await self.query_one(DualSplitRight).mount(current_widget)
 
     async def mount_dashboard(self) -> None:
         await self.clear_right()
-        await self.mount(EmptyWidget(), after=self.query_one(WorkspaceTree))
+        await self.mount(EmptyWidget(), after=self.query_one(WorkspacesTree))
 
     @on(events.Paste)
     async def paste_texts(self, event: events.Paste) -> None:
@@ -111,7 +115,7 @@ class MainScreen(BaseScreen):
 
     @on(SwitchTab)
     async def switch_tab(self, _: SwitchTab) -> None:
-        self.query_one(WorkspaceTree).toggle_class("focus")
+        self.query_one(WorkspacesTree).toggle_class("focus")
         try:
             visible_todo = self.query_one("TodoTree.current")
             visible_todo.toggle_class("focus")

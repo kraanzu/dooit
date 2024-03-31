@@ -44,11 +44,11 @@ class MainScreen(BaseScreen):
                 else WORKSPACE_EMPTY_WIDGETS[0].id
             )
 
-            with FlexibleSwitcher(initial=initial):
+            with FlexibleSwitcher(initial=initial, id="workspace_switcher"):
                 yield from WORKSPACE_EMPTY_WIDGETS
                 yield workspaces_tree
 
-            with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id):
+            with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
                 yield from TODO_EMPTY_WIDGETS
 
         yield StatusBar()

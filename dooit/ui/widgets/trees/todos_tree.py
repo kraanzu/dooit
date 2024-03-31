@@ -1,3 +1,4 @@
+from typing import Iterable
 from .model_tree import ModelTree, Todo
 from ..renderers.todo_renderer import TodoRender
 
@@ -16,6 +17,10 @@ class TodosTree(ModelTree):
             raise ValueError(f"Expected TodoRender, got {type(option)}")
 
         return option
+
+    def _get_children(self, id: str) -> Iterable[TodoRender]:
+        todo_model = self.get_option(id).model
+        return [TodoRender(todo) for todo in todo_model.todos]
 
     def force_refresh(self) -> None:
         self.clear_options()

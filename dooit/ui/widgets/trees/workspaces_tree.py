@@ -1,6 +1,4 @@
 from typing import List
-
-from textual.widgets.option_list import Option
 from .model_tree import ModelTree, Workspace
 from ..renderers.workspace_renderer import WorkspaceRender
 
@@ -20,9 +18,9 @@ class WorkspacesTree(ModelTree):
 
         return option
 
-    def _get_children(self, id: str) -> List[Option]:
-        obj = [i for i in self.model.workspaces if i.uuid == id][0]
-        return [WorkspaceRender(workspace) for workspace in obj.workspaces]
+    def _get_children(self, id: str) -> List[WorkspaceRender]:
+        workspace_model = self.get_option(id).model
+        return [WorkspaceRender(workspace) for workspace in workspace_model.workspaces]
 
     def force_refresh(self) -> None:
         self.clear_options()

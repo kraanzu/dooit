@@ -43,3 +43,16 @@ class EmptyWorkspaceWidget(EmptyWidget):
 
 class NoSearchResultsWidget(EmptyWidget):
     item = NO_SEARCH_RESULTS
+
+
+# ----------------- #
+
+WORKSPACE_EMPTY_WIDGETS = [
+    EmptyWorkspaceWidget(id="empty-workspace"),
+    NoSearchResultsWidget(id="no-search-results-workspace"),
+]
+TODO_EMPTY_WIDGETS = [
+    Dashboard(id="dashboard"),
+    EmptyTodoWidget(id="empty-todo"),
+    NoSearchResultsWidget(id="no-search-results-todo"),
+]

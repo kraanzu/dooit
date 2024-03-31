@@ -16,7 +16,7 @@ from dooit.ui.events import (
 from dooit.ui.widgets import StatusBar
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
-from dooit.ui.widgets.inputs import WORKSPACES, Due
+from dooit.ui.widgets.inputs import Due
 from .base import BaseScreen
 
 
@@ -37,9 +37,16 @@ class MainScreen(BaseScreen):
 
     def compose(self):
         with DualSplit():
-            with FlexibleSwitcher(initial=WORKSPACE_EMPTY_WIDGETS[0].id):
+            workspaces_tree = WorkspacesTree(manager)
+            initial = (
+                workspaces_tree.id
+                if manager.workspaces
+                else WORKSPACE_EMPTY_WIDGETS[0].id
+            )
+
+            with FlexibleSwitcher(initial=initial):
                 yield from WORKSPACE_EMPTY_WIDGETS
-                yield WorkspacesTree(manager)
+                yield workspaces_tree
 
             with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id):
                 yield from TODO_EMPTY_WIDGETS
@@ -127,10 +134,6 @@ class MainScreen(BaseScreen):
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp) -> None:
         self.app.push_screen("help")
-
-    @on(Notify)
-    async def notify(self, event: Notify) -> None:
-        self.query_one(StatusBar).set_message(event.message)
 
     @on(DateModeSwitch)
     async def date_mode_switch(self, _: DateModeSwitch) -> None:

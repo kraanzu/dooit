@@ -1,10 +1,11 @@
 from typing import Union
+from dooit.api.manager import Manager
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from collections import defaultdict
 from .base_tree import BaseTree
 
-ModelType = Union[Todo, Workspace]
+ModelType = Union[Todo, Workspace, Manager]
 
 
 class ModelTree(BaseTree):
@@ -16,7 +17,7 @@ class ModelTree(BaseTree):
     """
 
     def __init__(self, model: ModelType) -> None:
-        super().__init__()
+        super().__init__(id=self.__class__.__name__)
         self._model = model
         self.expaned = defaultdict(bool)
 

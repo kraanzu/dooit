@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 from rich.align import Align
 from rich.console import Group, RenderableType
 from textual.widget import Widget
@@ -19,9 +19,13 @@ DASHBOARD, EMPTY_TODO, EMPTY_WORKSPACE, NO_SEARCH_RESULTS = [
 class EmptyWidget(Widget):
     item = DASHBOARD
 
-    def __init__(self, item: EmptyWidgetType = "dashboard"):
+    def __init__(
+        self,
+        item: EmptyWidgetType = "dashboard",
+        id: Optional[str] = None,
+    ):
         classes = "no-border" if item != "dashboard" else ""
-        super().__init__(classes=classes)
+        super().__init__(classes=classes, id=id)
         self.set_screen(item)
 
     def set_screen(self, screen: EmptyWidgetType) -> None:

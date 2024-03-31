@@ -8,6 +8,13 @@ ModelType = Union[Todo, Workspace]
 
 
 class ModelTree(BaseTree):
+    DEFAULT_CSS = """
+    ModelTree {
+        height: 100%;
+        width: 100%;
+    }
+    """
+
     def __init__(self, model: ModelType) -> None:
         super().__init__()
         self._model = model

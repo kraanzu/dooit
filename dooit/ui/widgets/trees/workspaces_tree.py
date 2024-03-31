@@ -1,12 +1,17 @@
 from typing import List
+
+from textual import on
+from dooit.api.manager import Manager
+
+from dooit.ui.widgets.switcher import FlexibleSwitcher
 from .model_tree import ModelTree, Workspace
 from ..renderers.workspace_renderer import WorkspaceRender
 
 
 class WorkspacesTree(ModelTree):
     @property
-    def model(self) -> Workspace:
-        if not isinstance(self._model, Workspace):
+    def model(self) -> Workspace | Manager:
+        if not isinstance(self._model, (Workspace, Manager)):
             raise ValueError(f"Expected Workspace, got {type(self._model)}")
 
         return self._model
@@ -27,3 +32,8 @@ class WorkspacesTree(ModelTree):
 
         for workspace in self.model.workspaces:
             self.add_option(WorkspaceRender(workspace))
+
+    @on(ModelTree.OptionHighlighted)
+    def update_todo_tree(self, event: ModelTree.OptionHighlighted):
+        switcher = self.screen.query_one("#todo_switcher", expect_type=FlexibleSwitcher)
+        self.notify(f"highlighted: {event.option_id}")

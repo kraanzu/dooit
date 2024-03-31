@@ -1,9 +1,9 @@
-from typing import Literal, Optional
+from typing import List, Literal, Optional
 from rich.align import Align
 from rich.console import Group, RenderableType
 from textual.widget import Widget
 from dooit.utils.conf_reader import config_man
-from .aligner import align_texts
+from ..aligner import align_texts
 
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results", "dashboard"]
 
@@ -17,33 +17,29 @@ DASHBOARD, EMPTY_TODO, EMPTY_WORKSPACE, NO_SEARCH_RESULTS = [
 
 
 class EmptyWidget(Widget):
-    item = DASHBOARD
+    item: List[RenderableType]
 
-    def __init__(
-        self,
-        item: EmptyWidgetType = "dashboard",
-        id: Optional[str] = None,
-    ):
-        classes = "no-border" if item != "dashboard" else ""
-        super().__init__(classes=classes, id=id)
-        self.set_screen(item)
-
-    def set_screen(self, screen: EmptyWidgetType) -> None:
-        if screen == "todo":
-            self.item = EMPTY_TODO
-        elif screen == "workspace":
-            self.item = EMPTY_WORKSPACE
-        elif screen == "no_search_results":
-            self.item = NO_SEARCH_RESULTS
-        elif screen == "dashboard":
-            self.item = DASHBOARD
-        else:
-            self.item = []
-
-        self.refresh()
+    def __init__(self, id: Optional[str] = None):
+        super().__init__(id=id)
 
     def render(self) -> RenderableType:
         return Align.center(
             Group(*[Align.center(i) for i in self.item]),
             vertical="middle",
         )
+
+
+class Dashboard(EmptyWidget):
+    item = DASHBOARD
+
+
+class EmptyTodoWidget(EmptyWidget):
+    item = EMPTY_TODO
+
+
+class EmptyWorkspaceWidget(EmptyWidget):
+    item = EMPTY_WORKSPACE
+
+
+class NoSearchResultsWidget(EmptyWidget):
+    item = NO_SEARCH_RESULTS

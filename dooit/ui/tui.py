@@ -26,11 +26,13 @@ class Dooit(App):
     ]
 
     async def on_mount(self):
+        self.auto_refresh = 0.1
         self.watcher = Watcher()
         self.set_interval(1, self.poll)
         self.push_screen("main")
 
     async def poll(self):
+        return
         if (
             not manager.is_locked()
             and self.watcher.has_modified()

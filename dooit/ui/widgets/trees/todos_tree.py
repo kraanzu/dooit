@@ -1,16 +1,9 @@
 from typing import Iterable
-from .model_tree import ModelTree, Todo
+from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 
 
 class TodosTree(ModelTree):
-    @property
-    def model(self) -> Todo:
-        if not isinstance(self._model, Todo):
-            raise ValueError(f"Expected Todo, got {type(self._model)}")
-
-        return self._model
-
     def get_option(self, option_id: str) -> TodoRender:
         option = super().get_option(option_id)
         if not isinstance(option, TodoRender):

@@ -1,11 +1,6 @@
-from typing import Union
-from dooit.api.manager import Manager
-from dooit.api.todo import Todo
-from dooit.api.workspace import Workspace
+from dooit.api.model import Model
 from collections import defaultdict
 from .base_tree import BaseTree
-
-ModelType = Union[Todo, Workspace, Manager]
 
 
 class ModelTree(BaseTree):
@@ -16,15 +11,15 @@ class ModelTree(BaseTree):
     }
     """
 
-    def __init__(self, model: ModelType) -> None:
+    def __init__(self, model: Model) -> None:
         tree = self.__class__.__name__
         super().__init__(id=f"{tree}_{model.uuid}")
         self._model = model
         self.expaned = defaultdict(bool)
 
     @property
-    def model(self):
-        raise NotImplementedError
+    def model(self) -> Model:
+        return self._model
 
     def force_refresh(self) -> None:
         raise NotImplementedError

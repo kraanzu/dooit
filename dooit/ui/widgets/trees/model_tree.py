@@ -29,8 +29,3 @@ class ModelTree(BaseTree):
 
     def key_question_mark(self):
         self.app.push_screen("help")
-
-    def key_p(self):
-        if self.highlighted is not None:
-            self.notify(str(self.highlighted))
-            self.toggle_expand()

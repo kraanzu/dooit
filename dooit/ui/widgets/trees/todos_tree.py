@@ -1,4 +1,6 @@
-from typing import Iterable
+from typing import Iterable, Optional
+
+from dooit.api.todo import Todo
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 
@@ -10,6 +12,11 @@ class TodosTree(ModelTree):
             raise ValueError(f"Expected TodoRender, got {type(option)}")
 
         return option
+
+    def _get_parent(self, id: str) -> Optional[TodoRender]:
+        todo_model = self.get_option(id).model
+        if isinstance(todo_model.parent, Todo):
+            return TodoRender(todo_model.parent)
 
     def _get_children(self, id: str) -> Iterable[TodoRender]:
         todo_model = self.get_option(id).model

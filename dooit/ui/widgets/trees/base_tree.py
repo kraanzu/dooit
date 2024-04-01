@@ -18,6 +18,9 @@ class BaseTree(OptionList):
 
         return self.get_option_at_index(self.highlighted)
 
+    def _get_parent(self, id: str) -> Optional[Option]:
+        raise NotImplementedError
+
     def _get_children(self, id: str) -> Iterable[Option]:
         raise NotImplementedError
 
@@ -40,14 +43,15 @@ class BaseTree(OptionList):
 
         self._insert_nodes(index, items)
 
-    def _expand_node(self, index: int, _id: str) -> None:
+    def _expand_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = True
         options = self._get_children(_id)
+        index = self.get_option_index(_id)
         self._insert_nodes(index + 1, options)
 
     def expand_node(self) -> None:
         if self.highlighted is not None and self.node.id:
-            self._expand_node(self.highlighted, self.node.id)
+            self._expand_node(self.node.id)
 
     def _collapse_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = False
@@ -60,12 +64,31 @@ class BaseTree(OptionList):
         if self.node.id:
             self._collapse_node(self.node.id)
 
+    def _toggle_expand_node(self, _id: str) -> None:
+        expanded = self.expanded_nodes[_id]
+        if expanded:
+            self._collapse_node(_id)
+        else:
+            self._expand_node(_id)
+
     def toggle_expand(self) -> None:
+        if self.highlighted is None or not self.node.id:
+            return
+
+        self._toggle_expand_node(self.node.id)
+
+    def _toggle_expand_parent(self, _id: str) -> None:
+        parent = self._get_parent(_id)
+        if not parent or not parent.id:
+            return
+
+        self._toggle_expand_node(parent.id)
+
+    def toggle_expand_parent(self) -> None:
         if self.highlighted is None:
             return
 
-        expanded = self.expanded_nodes[self.node.id]
-        if expanded:
-            self.collapse_node()
-        else:
-            self.expand_node()
+        if not self.node.id:
+            return
+
+        self._toggle_expand_parent(self.node.id)

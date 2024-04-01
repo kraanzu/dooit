@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 
 from textual import on
+from dooit.api.workspace import Workspace
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from .model_tree import ModelTree
@@ -14,6 +15,11 @@ class WorkspacesTree(ModelTree):
             raise ValueError(f"Expected WorkspaceRender, got {type(option)}")
 
         return option
+
+    def _get_parent(self, id: str) -> Optional[WorkspaceRender]:
+        todo_model = self.get_option(id).model
+        if isinstance(todo_model.parent, Workspace):
+            return WorkspaceRender(todo_model.parent)
 
     def _get_children(self, id: str) -> List[WorkspaceRender]:
         workspace_model = self.get_option(id).model

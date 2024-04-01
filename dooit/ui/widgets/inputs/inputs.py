@@ -15,10 +15,10 @@ RED = config_man.get("red")
 YELLOW = config_man.get("yellow")
 GREEN = config_man.get("green")
 ORANGE = config_man.get("orange")
-COLOR_URGENCY_1 = config_man.get(TODOS.get('urgency1_color'))
-COLOR_URGENCY_2 = config_man.get(TODOS.get('urgency2_color'))
-COLOR_URGENCY_3 = config_man.get(TODOS.get('urgency3_color'))
-COLOR_URGENCY_4 = config_man.get(TODOS.get('urgency4_color'))
+COLOR_URGENCY_1 = config_man.get(TODOS.get("urgency1_color"))
+COLOR_URGENCY_2 = config_man.get(TODOS.get("urgency2_color"))
+COLOR_URGENCY_3 = config_man.get(TODOS.get("urgency3_color"))
+COLOR_URGENCY_4 = config_man.get(TODOS.get("urgency4_color"))
 
 DATE_FORMAT = config_man.get("DATE_FORMAT")
 TIME_FORMAT = config_man.get("TIME_FORMAT")
@@ -108,7 +108,7 @@ class Due(SimpleInput):
 
     def draw(self) -> str:
         icon = TODOS["due_icon"]
-        style = getattr(self.screen, "date_style")
+        style = "classic"
 
         due: datetime = getattr(self.model, f"_{self._property}")._value
 
@@ -135,7 +135,7 @@ class Due(SimpleInput):
 
                 value = self.timedelta_to_words(due - now)
 
-        return self._colorize_by_status(icon) + value
+        return icon + value
 
     def start_edit(self) -> None:
         self.value = ""
@@ -146,16 +146,8 @@ class Urgency(SimpleInput):
     def draw(self) -> str:
         urgency = int(self.model.urgency)
         icon = TODOS.get(f"urgency{urgency}_icon")
-        if urgency == 1:
-            color = COLOR_URGENCY_1
-        elif urgency == 2:
-            color = COLOR_URGENCY_2
-        elif urgency == 3:
-            color = COLOR_URGENCY_3
-        else:
-            color = COLOR_URGENCY_4
 
-        return self._render_text_with_color(icon, color)
+        return icon
 
 
 class Effort(SimpleInput):
@@ -166,7 +158,7 @@ class Effort(SimpleInput):
     }}
     """
 
-    def draw(self) -> RenderableType:
+    def draw(self) -> str:
         icon = TODOS["effort_icon"]
         value = super().draw()
         if not value:
@@ -186,7 +178,7 @@ class Status(SimpleInput):
     def draw(self) -> str:
         status = super().draw().lower()
         icon = TODOS.get(f"{status}_icon")
-        return self._colorize_by_status(icon)
+        return icon
 
 
 class Recurrence(SimpleInput):
@@ -196,7 +188,7 @@ class Recurrence(SimpleInput):
     }}
     """
 
-    def draw(self) -> RenderableType:
+    def draw(self) -> str:
         icon = TODOS["recurrence_icon"]
         value = super().draw()
         if not value:

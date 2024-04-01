@@ -29,3 +29,17 @@ class ModelTree(BaseTree):
 
     def key_question_mark(self):
         self.app.push_screen("help")
+
+    # NOTE: remove thse methods later
+
+    def key_j(self):
+        self.action_cursor_down()
+
+    def key_k(self):
+        self.action_cursor_up()
+
+    def key_z(self):
+        self.toggle_expand()
+
+    def key_upper_z(self):
+        self.toggle_expand_parent()

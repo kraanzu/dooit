@@ -9,6 +9,14 @@ from ..renderers.workspace_renderer import WorkspaceRender
 
 
 class WorkspacesTree(ModelTree):
+    @property
+    def node(self) -> WorkspaceRender:
+        option = super().node
+        if not isinstance(option, WorkspaceRender):
+            raise ValueError(f"Expected WorkspaceRender, got {type(option)}")
+
+        return option
+
     def get_option(self, option_id: str) -> WorkspaceRender:
         option = super().get_option(option_id)
         if not isinstance(option, WorkspaceRender):
@@ -44,3 +52,10 @@ class WorkspacesTree(ModelTree):
             switcher.add_widget(tree)
 
         switcher.current = tree.id
+
+    def key_tab(self) -> None:
+        if not self.node.id:
+            return
+
+        tree = TodosTree(self.node.model)
+        self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()

@@ -6,6 +6,14 @@ from ..renderers.todo_renderer import TodoRender
 
 
 class TodosTree(ModelTree):
+    @property
+    def node(self) -> TodoRender:
+        option = super().node
+        if not isinstance(option, TodoRender):
+            raise ValueError(f"Expected WorkspaceRender, got {type(option)}")
+
+        return option
+
     def get_option(self, option_id: str) -> TodoRender:
         option = super().get_option(option_id)
         if not isinstance(option, TodoRender):
@@ -27,3 +35,9 @@ class TodosTree(ModelTree):
 
         for todo in self.model.todos:
             self.add_option(TodoRender(todo))
+
+    def key_tab(self) -> None:
+        if not self.node.id:
+            return
+
+        self.screen.query_one(f"WorkspacesTree").focus()

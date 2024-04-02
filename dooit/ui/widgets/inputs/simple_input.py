@@ -5,7 +5,6 @@ from rich.style import Style
 from rich.text import Text
 from dooit.api.model import Ok, Result, Warn
 from dooit.api.todo import Todo
-from dooit.utils.conf_reader import config_man
 
 
 class Input:
@@ -149,9 +148,6 @@ class Input:
         self._cursor_position = len(self.value)
 
     def keypress(self, key: str) -> None:
-        """
-        Handles Keypresses
-        """
         if key == "enter":
             self.stop_edit()
 

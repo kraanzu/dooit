@@ -18,6 +18,10 @@ class ModelTree(BaseTree):
         self.expaned = defaultdict(bool)
 
     @property
+    def is_editing(self) -> bool:
+        raise NotImplementedError
+
+    @property
     def model(self) -> Model:
         return self._model
 

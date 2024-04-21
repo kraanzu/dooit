@@ -10,6 +10,10 @@ from ..renderers.workspace_renderer import WorkspaceRender
 
 class WorkspacesTree(ModelTree):
     @property
+    def is_editing(self) -> bool:
+        return bool(self.node.editing)
+
+    @property
     def node(self) -> WorkspaceRender:
         option = super().node
         if not isinstance(option, WorkspaceRender):
@@ -64,3 +68,8 @@ class WorkspacesTree(ModelTree):
         self.notify("start")
         self.node.start_edit("description")
         self.refresh_options()
+
+    def key_escape(self):
+        if self.is_editing:
+            self.node.stop_edit()
+            self.refresh_options()

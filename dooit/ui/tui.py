@@ -1,12 +1,11 @@
 import webbrowser
-from textual import on
-from textual.app import App, events
+from textual.app import App
 from dooit.api.manager import manager
 from dooit.utils.watcher import Watcher
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
-from .dooit_api import DooitAPI
+from .api import DooitAPI
 
 PRINTABLE = (
     "0123456789"

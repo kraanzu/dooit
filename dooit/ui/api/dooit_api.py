@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from .tui import Dooit
+    from ..tui import Dooit
 
 
 class DooitAPI:

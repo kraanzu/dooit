@@ -1,5 +1,9 @@
+from typing import TYPE_CHECKING
 from textual.app import events
 from textual.screen import Screen
+
+if TYPE_CHECKING:
+    from dooit.ui.dooit_api import DooitAPI
 
 
 class BaseScreen(Screen):
@@ -12,6 +16,10 @@ class BaseScreen(Screen):
         "\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b"
     )
 
+    @property
+    def api(self) -> "DooitAPI":
+        return self.app.api
+
     def resolve_key(self, event: events.Key) -> str:
         if not event.character:
             return event.key
@@ -20,3 +28,7 @@ class BaseScreen(Screen):
             return event.character
 
         return event.key
+
+    def on_key(self, event: events.Key) -> None:
+        key = self.resolve_key(event)
+        self.api.handle_key(key)

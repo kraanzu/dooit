@@ -58,13 +58,6 @@ class MainScreen(BaseScreen):
     def bar(self):
         return self.query_one(StatusBar)
 
-    async def on_key(self, event: events.Key) -> None:
-        event.prevent_default()
-        event.stop()
-
-        key = self.resolve_key(event)
-        await self.send_keypress(key)
-
     async def send_keypress(self, key: str):
         if self.bar.status == "SEARCH":
             return await self.query_one(Searcher).keypress(key)

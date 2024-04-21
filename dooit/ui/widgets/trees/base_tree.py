@@ -8,7 +8,7 @@ from collections import defaultdict
 ModelType = Union[Todo, Workspace]
 
 
-class BaseTree(OptionList):
+class BaseTree(OptionList, can_focus=False):
     expanded_nodes = defaultdict(bool)
 
     @property

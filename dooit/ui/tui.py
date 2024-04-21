@@ -1,10 +1,12 @@
 import webbrowser
-from textual.app import App
+from textual import on
+from textual.app import App, events
 from dooit.api.manager import manager
 from dooit.utils.watcher import Watcher
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
+from .dooit_api import DooitAPI
 
 PRINTABLE = (
     "0123456789"
@@ -26,6 +28,7 @@ class Dooit(App):
     ]
 
     async def on_mount(self):
+        self.api = DooitAPI(self)
         self.auto_refresh = 0.1
         self.watcher = Watcher()
         self.set_interval(1, self.poll)

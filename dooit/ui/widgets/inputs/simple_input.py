@@ -4,7 +4,7 @@ from typing import Optional
 from rich.style import Style
 from rich.text import Text
 from dooit.api.model import Ok, Result, Warn
-from dooit.api.todo import Todo
+from dooit.ui.widgets.renderers.base_renderer import ModelType
 
 
 class Input:
@@ -206,7 +206,7 @@ class SimpleInput(Input):
     _cursor: str = "|"
     _property = __name__.lower()
 
-    def __init__(self, model: Todo) -> None:
+    def __init__(self, model: ModelType) -> None:
         self.model = model
         self.value = getattr(model, self._property)
         self._cursor_position = len(self.value)

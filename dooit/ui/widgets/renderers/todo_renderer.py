@@ -43,6 +43,10 @@ class TodoRender(BaseRenderer):
     def get_table_config(self) -> Dict[str, List]:
         return {}
 
-    def make_renderable(self) -> RenderableType:
+    @property
+    def prompt(self) -> RenderableType:
         config = self.get_table_config()
         return self._draw_table(config)
+
+    def edit(self, param: str):
+        pass

@@ -6,10 +6,11 @@ from dooit.api.workspace import Workspace
 
 ModelType = Union[Todo, Workspace]
 
+
 class BaseRenderer(Option):
     def __init__(self, model: ModelType):
         self._model = model
-        super().__init__(self.make_renderable(), id=model.uuid)
+        super().__init__("", id=model.uuid)
 
     @property
     def model(self) -> ModelType:

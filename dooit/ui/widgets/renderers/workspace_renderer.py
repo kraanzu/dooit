@@ -9,5 +9,6 @@ class WorkspaceRender(BaseRenderer):
             raise ValueError(f"Expected Workspace, got {type(self._model)}")
         return self._model
 
-    def make_renderable(self) -> RenderableType:
+    @property
+    def prompt(self) -> RenderableType:
         return self.model.description

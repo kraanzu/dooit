@@ -92,3 +92,7 @@ class BaseTree(OptionList):
             return
 
         self._toggle_expand_parent(self.node.id)
+
+    def refresh_options(self):
+        self._refresh_content_tracking(force=True)
+        self.refresh()

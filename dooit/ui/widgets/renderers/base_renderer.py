@@ -11,6 +11,10 @@ class BaseRenderer(Option):
     def __init__(self, model: ModelType):
         self._model = model
         super().__init__("", id=model.uuid)
+        self.post_init()
+
+    def post_init(self):
+        pass
 
     @property
     def model(self) -> ModelType:

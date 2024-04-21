@@ -59,3 +59,8 @@ class WorkspacesTree(ModelTree):
 
         tree = TodosTree(self.node.model)
         self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
+
+    def key_i(self):
+        self.notify("start")
+        self.node.start_edit("description")
+        self.refresh_options()

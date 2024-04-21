@@ -41,3 +41,6 @@ class TodosTree(ModelTree):
             return
 
         self.screen.query_one(f"WorkspacesTree").focus()
+
+    def key_i(self):
+        self.node.edit("description")

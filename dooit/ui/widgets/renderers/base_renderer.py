@@ -8,6 +8,8 @@ ModelType = Union[Todo, Workspace]
 
 
 class BaseRenderer(Option):
+    editing: str = ""
+
     def __init__(self, model: ModelType):
         self._model = model
         super().__init__("", id=model.uuid)
@@ -22,3 +24,11 @@ class BaseRenderer(Option):
 
     def make_renderable(self) -> RenderableType:
         raise NotImplementedError
+
+    def start_edit(self, param: str):
+        getattr(self, param).start_edit()
+        self.editing = param
+
+    def stop_edit(self):
+        getattr(self, self.editing).stop_edit()
+        self.editing = ""

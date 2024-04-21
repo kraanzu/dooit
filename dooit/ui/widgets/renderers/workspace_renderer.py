@@ -16,6 +16,3 @@ class WorkspaceRender(BaseRenderer):
     @property
     def prompt(self) -> RenderableType:
         return self.description.render()
-
-    def start_edit(self, param: str):
-        self.description.start_edit()

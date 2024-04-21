@@ -3,7 +3,7 @@ from .simple_input import SimpleInput
 
 
 class TodoDescription(SimpleInput):
-    _property = "Description"
+    _property = "description"
 
     @property
     def empty_result(self) -> Result:
@@ -11,13 +11,7 @@ class TodoDescription(SimpleInput):
 
 
 class WorkspaceDescription(SimpleInput):
-    _property = "Description"
-    DEFAULT_CSS = """
-    Description {
-        width: auto;
-        height: auto;
-    }
-    """
+    _property = "description"
 
     @property
     def empty_result(self) -> Result:

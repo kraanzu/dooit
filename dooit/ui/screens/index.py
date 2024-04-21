@@ -7,7 +7,6 @@ from dooit.ui.widgets.bar import Searcher
 from dooit.ui.events import (
     TopicSelect,
     SwitchTab,
-    Notify,
     ChangeStatus,
     SpawnHelp,
     CommitData,
@@ -16,7 +15,6 @@ from dooit.ui.events import (
 from dooit.ui.widgets import StatusBar
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
-from dooit.ui.widgets.inputs import Due
 from .base import BaseScreen
 
 
@@ -94,7 +92,6 @@ class MainScreen(BaseScreen):
 
     async def mount_dashboard(self) -> None:
         await self.clear_right()
-        await self.mount(EmptyWidget(), after=self.query_one(WorkspacesTree))
 
     @on(events.Paste)
     async def paste_texts(self, event: events.Paste) -> None:
@@ -103,12 +100,6 @@ class MainScreen(BaseScreen):
         if not event.text:
             return
         await self.send_keypress(f"events.Paste:{event.text}")
-
-    @on(ApplySort)
-    async def apply_sort(self, event: ApplySort) -> None:
-        await self.query_one(event.query, expect_type=Tree).apply_sort(
-            event.widget_id, event.method
-        )
 
     @on(TopicSelect)
     async def topic_select(self, event: TopicSelect) -> None:
@@ -134,11 +125,6 @@ class MainScreen(BaseScreen):
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp) -> None:
         self.app.push_screen("help")
-
-    @on(DateModeSwitch)
-    async def date_mode_switch(self, _: DateModeSwitch) -> None:
-        self.date_style = "classic" if self.date_style != "classic" else "remaining"
-        [i.refresh() for i in self.query(Due)]
 
     @on(CommitData)
     async def commit_data(self, _: CommitData) -> None:

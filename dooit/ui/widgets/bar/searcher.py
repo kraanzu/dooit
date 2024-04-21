@@ -1,14 +1,13 @@
 from dooit.ui.events.events import ChangeStatus
 from dooit.ui.widgets.bar.status_bar import StatusBar
 from dooit.ui.widgets.search_menu import SearchMenu
-from dooit.ui.widgets.simple_input import Input
 from dooit.utils.conf_reader import config_man
 from .status_bar_utils import StatusMiddle
 
 BG = config_man.get("BAR_BACKGROUND")
 
 
-class Searcher(StatusMiddle, Input):
+class Searcher(StatusMiddle):
     DEFAULT_CSS = """
     Searcher {
         padding-left: 1;
@@ -43,8 +42,8 @@ class Searcher(StatusMiddle, Input):
             await self.app.query_one(StatusBar).replace_middle()
             return
 
-        await super().keypress(key)
-        self.app.query_one(
-            self.menu_id,
-            expect_type=SearchMenu,
-        ).apply_filter(self.value)
+        # await super().keypress(key)
+        # self.app.query_one(
+        #     self.menu_id,
+        #     expect_type=SearchMenu,
+        # ).apply_filter(self.value)

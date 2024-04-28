@@ -11,3 +11,6 @@ class EventDecorator:
 
 
 startup = EventDecorator("startup")
+shutdown = EventDecorator("shutdown")
+
+mode_changed = EventDecorator("mode_changed")

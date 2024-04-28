@@ -1,6 +1,9 @@
 import webbrowser
+from textual import on
 from textual.app import App
+from textual.message import Message
 from dooit.api.manager import manager
+from dooit.ui.events.events import DooitEvent, Startup
 from dooit.utils.watcher import Watcher
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
@@ -26,12 +29,16 @@ class Dooit(App):
         Binding("ctrl+q", "quit", "Quit", show=False, priority=True),
     ]
 
-    async def on_mount(self):
+    def __init__(self):
+        super().__init__()
         self.api = DooitAPI(self)
+
+    async def on_mount(self):
         self.auto_refresh = 0.1
         self.watcher = Watcher()
         self.set_interval(1, self.poll)
         self.push_screen("main")
+        self.post_message(Startup())
 
     async def poll(self):
         return
@@ -47,6 +54,10 @@ class Dooit(App):
                     i.remove()
                 else:
                     await i.force_refresh(manager._get_children("workspace")[index])
+
+    @on(DooitEvent)
+    def global_message(self, event: Message):
+        self.api.trigger_event(event)
 
     async def action_quit(self) -> None:
         manager.commit()

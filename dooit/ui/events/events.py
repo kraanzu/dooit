@@ -9,25 +9,37 @@ EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
 
 
-class ExitApp(Message, bubble=True):
+class DooitEvent(Message, bubble=True):
+    """
+    Base class for all events
+    """
+
+
+class Startup(DooitEvent):
+    """
+    Emitted when the app starts
+    """
+
+
+class ExitApp(DooitEvent):
     """
     Emitted when user presses the exit app keybind
     """
 
 
-class SwitchTab(Message, bubble=True):
+class SwitchTab(DooitEvent):
     """
     Emitted when user needs to focus other pane
     """
 
 
-class SpawnHelp(Message, bubble=True):
+class SpawnHelp(DooitEvent):
     """
     Emitted when user presses `?` in NORMAL mode
     """
 
 
-class ChangeStatus(Message, bubble=True):
+class ChangeStatus(DooitEvent):
     """
     Emitted when there is a change in the `status`
     """
@@ -37,7 +49,7 @@ class ChangeStatus(Message, bubble=True):
         self.status: StatusType = status
 
 
-class Notify(Message, bubble=True):
+class Notify(DooitEvent):
     """
     Emitted when A notification message on status bar is to be shown
     """
@@ -54,7 +66,7 @@ class Notify(Message, bubble=True):
         self.message = message
 
 
-class TopicSelect(Message, bubble=True):
+class TopicSelect(DooitEvent):
     """
     Emitted when the user selects a todo from search list
     """
@@ -64,7 +76,7 @@ class TopicSelect(Message, bubble=True):
         self.model = model
 
 
-class ApplySort(Message, bubble=True):
+class ApplySort(DooitEvent):
     """
     Emitted when the user wants to sort a tree
     """
@@ -76,13 +88,13 @@ class ApplySort(Message, bubble=True):
         self.method = method
 
 
-class CommitData(Message):
+class CommitData(DooitEvent):
     """
     Emitted when the local data needs to be updated
     """
 
 
-class DateModeSwitch(Message):
+class DateModeSwitch(DooitEvent):
     """
     Emitted when the user switches how the dates should render
 

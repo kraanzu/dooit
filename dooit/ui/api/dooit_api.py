@@ -1,3 +1,4 @@
+from collections import defaultdict
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 from textual.message import Message
@@ -17,6 +18,7 @@ class DooitAPI:
         self.app = app
         self.plugin_manager = PluginManager()
         self.plugin_manager.scan()
+        self.keybinds = defaultdict(lambda: lambda: None)
 
     def no_op(self):
         pass
@@ -24,16 +26,18 @@ class DooitAPI:
     def notify(self, message: str) -> None:
         self.app.notify(message)
 
-    def disable_arrow_keys(self):
-        pass
-
     def set_key(self, key: str, callback: Callable) -> None:
-        pass
+        self.keybinds[key] = callback
 
     def handle_key(self, key: str) -> None:
-        pass
+        self.keybinds[key]()
 
     def trigger_event(self, event: Message):
         event_name = camel_to_snake(event.__class__.__name__)
         for obj in self.plugin_manager.events[event_name]:
             obj(self)
+
+    # -----------------------------------------
+
+    def switch_focus(self):
+        self.app.switch_focus()

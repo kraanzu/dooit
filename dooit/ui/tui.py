@@ -4,6 +4,8 @@ from textual.app import App
 from textual.message import Message
 from dooit.api.manager import manager
 from dooit.ui.events.events import DooitEvent, Startup
+from dooit.ui.widgets.trees.todos_tree import TodosTree
+from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.utils.watcher import Watcher
 from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
@@ -39,6 +41,13 @@ class Dooit(App):
         self.set_interval(1, self.poll)
         self.push_screen("main")
         self.post_message(Startup())
+
+    def switch_focus(self):
+        if isinstance(self.focused, WorkspacesTree):
+            return self.focused._switch_to_todos()
+
+        if isinstance(self.focused, TodosTree):
+            self.focused._switch_to_workspace()
 
     async def poll(self):
         return

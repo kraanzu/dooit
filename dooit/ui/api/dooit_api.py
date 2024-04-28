@@ -18,6 +18,9 @@ class DooitAPI:
         self.plugin_manager = PluginManager()
         self.plugin_manager.scan()
 
+    def no_op(self):
+        pass
+
     def notify(self, message: str) -> None:
         self.app.notify(message)
 

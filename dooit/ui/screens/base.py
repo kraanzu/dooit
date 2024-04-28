@@ -3,7 +3,7 @@ from textual.app import events
 from textual.screen import Screen
 
 if TYPE_CHECKING:
-    from dooit.ui.dooit_api import DooitAPI
+    from ..api import DooitAPI
 
 
 class BaseScreen(Screen):

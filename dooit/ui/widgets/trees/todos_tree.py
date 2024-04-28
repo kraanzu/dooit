@@ -36,11 +36,8 @@ class TodosTree(ModelTree):
         for todo in self.model.todos:
             self.add_option(TodoRender(todo))
 
-    def key_tab(self) -> None:
+    def _switch_to_workspace(self) -> None:
         if not self.node.id:
             return
 
         self.screen.query_one(f"WorkspacesTree").focus()
-
-    def key_i(self):
-        self.node.edit("description")

@@ -57,19 +57,9 @@ class WorkspacesTree(ModelTree):
 
         switcher.current = tree.id
 
-    def key_tab(self) -> None:
+    def _switch_to_todos(self) -> None:
         if not self.node.id:
             return
 
         tree = TodosTree(self.node.model)
         self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
-
-    def key_i(self):
-        self.notify("start")
-        self.node.start_edit("description")
-        self.refresh_options()
-
-    def key_escape(self):
-        if self.is_editing:
-            self.node.stop_edit()
-            self.refresh_options()

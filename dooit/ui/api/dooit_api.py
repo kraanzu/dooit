@@ -1,11 +1,15 @@
 from collections.abc import Callable
 from typing import TYPE_CHECKING
-
+from textual.message import Message
 from dooit.ui.api.plug import PluginManager
 
 
 if TYPE_CHECKING:
     from ..tui import Dooit
+
+
+def camel_to_snake(name: str) -> str:
+    return "".join(["_" + i.lower() if i.isupper() else i for i in name]).lstrip("_")
 
 
 class DooitAPI:
@@ -26,6 +30,7 @@ class DooitAPI:
     def handle_key(self, key: str) -> None:
         pass
 
-    def trigger_event(self, event: str):
-        for obj in self.plugin_manager.events[event]:
+    def trigger_event(self, event: Message):
+        event_name = camel_to_snake(event.__class__.__name__)
+        for obj in self.plugin_manager.events[event_name]:
             obj(self)

@@ -58,8 +58,11 @@ class WorkspacesTree(ModelTree):
         switcher.current = tree.id
 
     def _switch_to_todos(self) -> None:
-        if not self.node.id:
-            return
+        try:
+            if not self.node.id:
+                return
 
-        tree = TodosTree(self.node.model)
-        self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
+            tree = TodosTree(self.node.model)
+            self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
+        except ValueError:
+            self.notify("No workspace selected")

@@ -25,9 +25,13 @@ class BaseRenderer(Option):
     def make_renderable(self) -> RenderableType:
         raise NotImplementedError
 
-    def start_edit(self, param: str):
+    def start_edit(self, param: str) -> bool:
+        if not hasattr(self, param):
+            return False
+
         getattr(self, param).start_edit()
         self.editing = param
+        return True
 
     def stop_edit(self):
         getattr(self, self.editing).stop_edit()

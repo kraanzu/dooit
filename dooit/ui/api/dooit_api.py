@@ -3,7 +3,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from textual.message import Message
 from dooit.ui.api.plug import PluginManager
-from dooit.ui.widgets.trees.base_tree import BaseTree
+from dooit.ui.widgets.trees.model_tree import ModelTree
 
 
 if TYPE_CHECKING:
@@ -41,9 +41,9 @@ class DooitAPI:
     # -----------------------------------------
 
     @property
-    def focused(self) -> BaseTree:
+    def focused(self) -> ModelTree:
         focused = self.app.focused
-        if isinstance(focused, BaseTree):
+        if isinstance(focused, ModelTree):
             return focused
 
         raise ValueError(f"Expected BaseTree, got {type(focused)}")
@@ -58,5 +58,14 @@ class DooitAPI:
     def move_up(self):
         self.focused.action_cursor_up()
 
+    def edit(self, property: str):
+        self.focused.start_edit(property)
+
     def edit_description(self):
-        pass
+        return self.edit("description")
+
+    def edit_due(self):
+        return self.edit("due")
+
+    def edit_recurrence(self):
+        return self.edit("recurrence")

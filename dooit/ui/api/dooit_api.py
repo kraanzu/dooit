@@ -40,4 +40,17 @@ class DooitAPI:
     # -----------------------------------------
 
     def switch_focus(self):
-        self.app.switch_focus()
+        self.app.action_focus_next()
+        self.app.action_focus_next()
+
+    def move_down(self):
+        from dooit.ui.widgets.trees.base_tree import BaseTree
+
+        if isinstance(self.app.focused, BaseTree):
+            self.app.focused.action_cursor_down()
+
+    def move_up(self):
+        from dooit.ui.widgets.trees.base_tree import BaseTree
+
+        if isinstance(self.app.focused, BaseTree):
+            self.app.focused.action_cursor_up()

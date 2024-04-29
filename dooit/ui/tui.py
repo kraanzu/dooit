@@ -42,13 +42,6 @@ class Dooit(App):
         self.push_screen("main")
         self.post_message(Startup())
 
-    def switch_focus(self):
-        if isinstance(self.focused, WorkspacesTree):
-            return self.focused._switch_to_todos()
-
-        if isinstance(self.focused, TodosTree):
-            self.focused._switch_to_workspace()
-
     async def poll(self):
         return
         if (

@@ -3,6 +3,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from textual.message import Message
 from dooit.ui.api.plug import PluginManager
+from dooit.ui.widgets.trees.base_tree import BaseTree
 
 
 if TYPE_CHECKING:
@@ -39,18 +40,23 @@ class DooitAPI:
 
     # -----------------------------------------
 
+    @property
+    def focused(self) -> BaseTree:
+        focused = self.app.focused
+        if isinstance(focused, BaseTree):
+            return focused
+
+        raise ValueError(f"Expected BaseTree, got {type(focused)}")
+
     def switch_focus(self):
         self.app.action_focus_next()
         self.app.action_focus_next()
 
     def move_down(self):
-        from dooit.ui.widgets.trees.base_tree import BaseTree
-
-        if isinstance(self.app.focused, BaseTree):
-            self.app.focused.action_cursor_down()
+        self.focused.action_cursor_down()
 
     def move_up(self):
-        from dooit.ui.widgets.trees.base_tree import BaseTree
+        self.focused.action_cursor_up()
 
-        if isinstance(self.app.focused, BaseTree):
-            self.app.focused.action_cursor_up()
+    def edit_description(self):
+        pass

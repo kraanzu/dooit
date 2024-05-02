@@ -39,6 +39,9 @@ class DooitAPI:
             obj(self)
 
     # -----------------------------------------
+    @property
+    def is_mode_normal(self) -> bool:
+        return True
 
     @property
     def focused(self) -> ModelTree:

@@ -41,3 +41,13 @@ class TodosTree(ModelTree):
             return
 
         self.screen.query_one(f"WorkspacesTree").focus()
+
+    def add_todo(self) -> str:
+        workspace = self.model.add_child("todo")
+        self.add_option(TodoRender(workspace))
+        return workspace.uuid
+
+    def create_node(self):
+        uuid = self.add_todo()
+        self.highlighted = self.get_option_index(uuid)
+        self.start_edit("description")

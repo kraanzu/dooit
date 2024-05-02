@@ -66,3 +66,13 @@ class WorkspacesTree(ModelTree):
             self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
         except ValueError:
             self.notify("No workspace selected")
+
+    def add_workspace(self) -> str:
+        workspace = self.model.add_child("workspace")
+        self.add_option(WorkspaceRender(workspace))
+        return workspace.uuid
+
+    def create_node(self):
+        uuid = self.add_workspace()
+        self.highlighted = self.get_option_index(uuid)
+        self.start_edit("description")

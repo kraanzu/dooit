@@ -51,3 +51,6 @@ class ModelTree(BaseTree):
 
     def stop_edit(self):
         self.node.stop_edit()
+
+    def create_node(self):
+        raise NotImplementedError

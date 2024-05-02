@@ -69,3 +69,6 @@ class DooitAPI:
 
     def edit_recurrence(self):
         return self.edit("recurrence")
+
+    def add_sibling(self):
+        self.focused.create_node()

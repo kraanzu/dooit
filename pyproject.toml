@@ -19,6 +19,7 @@ appdirs = "^1.4.4"
 textual = "^0.54.0"
 python-dateutil = "^2.8.2"
 msgpack = "^1.0.7"
+multidict = "^6.0.5"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.261"

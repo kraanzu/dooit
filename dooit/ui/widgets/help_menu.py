@@ -68,7 +68,9 @@ def generate_kb_table(
     table.add_column("colon", width=2)
     table.add_column("help", width=50)
 
-    table.add_row(Text.from_markup(f" [r green] {topic} [/r green]"), "", "", "")
+    table.add_row(
+        Text.from_markup(f" [r green] {topic} [/r green]"), "", "", ""
+    )
 
     for i in arr:
         table.add_row("", i[0], i[1], Text("->", style="d white"), i[2])
@@ -82,7 +84,9 @@ def generate_kb_table(
     )
 
 
-separator = Text.from_markup(f"{colored('─' * 60, 'b d black')}", justify="center")
+separator = Text.from_markup(
+    f"{colored('─' * 60, 'b d black')}", justify="center"
+)
 
 # ---------------- X -------------------------
 
@@ -101,7 +105,9 @@ NORMAL_KB = {
     "move to top": "Move to top of list",
     "move to bottom": "Move to bottom of list",
     "toggle expand": "Toggle-expand highlighted item",
-    "toggle expand recursive": "Toggle-expand highlighted item and all it's children",
+    "toggle expand recursive": (
+        "Toggle-expand highlighted item and all it's children"
+    ),
     "toggle expand parent": "Toggle-expand parent item",
     "remove item": "Remove highlighted node",
     "add sibling": "Add sibling todo/workspace",
@@ -117,7 +123,8 @@ NORMAL_KB = {
     "edit recurrence": "Edit recurrence for todo**",
     "increase urgency": "Increase urgency**",
     "decrease urgency": "Decrease urgency**",
-    "switch date style": "switch due from date or time remaining ",
+    "switch date style": "Switch due from date or time remaining ",
+    "quit": "Exit / Quit the applicaiton using Control key combo",
 }
 
 NORMAL_NB = [
@@ -173,16 +180,21 @@ Documentation below will walk you through the controls:
 
 THANKS = f"{colored('Thanks for using dooit :heart:', 'yellow')}"
 SPONSOR_URL = "https://github.com/sponsors/kraanzu"
-SPONSOR1 = f"{colored('You can also sponsor this project on github!', 'yellow')}"
+SPONSOR1 = (
+    f"{colored('You can also sponsor this project on github!', 'yellow')}"
+)
 SPONSOR2 = Text(
     "Github Sponsor",
     style=Style.from_meta({"@click": f"app.open_url('{SPONSOR_URL}')"}),
     justify="center",
 )
-AUTHOR = f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{separator.markup}{NL}"
+AUTHOR = (
+    f"{colored('--kraanzu', 'orchid')}{NL.plain * 2}{separator.markup}{NL}"
+)
 
 OUTRO = (
-    f"Press {colored('escape', 'green')} or {colored('?', 'green')} to exit help menu"
+    f"Press {colored('escape', 'green')} or "
+    "{colored('?', 'green')} to exit help menu"
 )
 
 # ---------------- X -------------------------

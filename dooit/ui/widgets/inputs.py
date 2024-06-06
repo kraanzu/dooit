@@ -131,7 +131,7 @@ class Due(SimpleInput):
 
                 now = datetime.now()
                 if not due.hour:
-                    due = due.replace(day=due.day + 1)
+                    due += timedelta(days=1)
 
                 value = self.timedelta_to_words(due - now)
 

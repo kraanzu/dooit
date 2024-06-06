@@ -106,7 +106,7 @@ NORMAL_KB = {
     "move to bottom": "Move to bottom of list",
     "toggle expand": "Toggle-expand highlighted item",
     "toggle expand recursive": (
-        "Toggle-expand highlighted item and all it's children"
+        "Toggle-expand highlighted item and all its children"
     ),
     "toggle expand parent": "Toggle-expand parent item",
     "remove item": "Remove highlighted node",
@@ -123,8 +123,8 @@ NORMAL_KB = {
     "edit recurrence": "Edit recurrence for todo**",
     "increase urgency": "Increase urgency**",
     "decrease urgency": "Decrease urgency**",
-    "switch date style": "Switch due from date or time remaining ",
-    "quit": "Exit / Quit the applicaiton using Control key combo",
+    "switch date style": "Switch due from date or time remaining",
+    "quit": "Exit / Quit the application using Control key combo",
 }
 
 NORMAL_NB = [

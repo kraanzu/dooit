@@ -1,12 +1,13 @@
 from collections import defaultdict
 from pathlib import Path
 from typing import Callable
-from appdirs import user_config_dir, user_data_dir
+from appdirs import user_config_dir
 from .loader import load_dir
 
+MAIN_FOLDER = "dooit_v3"
 
-CONFIG_FOLDER = Path(user_config_dir("dooit"))
-PLUGINS_FOLDER = Path(user_data_dir("dooit")) / "plugins"
+CONFIG_FOLDER = Path(user_config_dir(MAIN_FOLDER))
+PLUGINS_FOLDER = CONFIG_FOLDER / "plugins"
 
 
 class PluginManager:

@@ -19,7 +19,7 @@ class DooitAPI:
         self.app = app
         self.plugin_manager = PluginManager()
         self.plugin_manager.scan()
-        self.keybinds = defaultdict(lambda: lambda: None)
+        self.keybinds = defaultdict(lambda: defaultdict(lambda: lambda: None))
 
     def no_op(self):
         pass
@@ -27,11 +27,14 @@ class DooitAPI:
     def notify(self, message: str) -> None:
         self.app.notify(message)
 
-    def set_key(self, key: str, callback: Callable) -> None:
-        self.keybinds[key] = callback
+    def __set_key(self, mode: str, key: str, callback: Callable) -> None:
+        self.keybinds[mode][key] = callback
+
+    def set_key_normal(self, key: str, callback: Callable) -> None:
+        self.__set_key("NORMAL", key, callback)
 
     def handle_key(self, key: str) -> None:
-        self.keybinds[key]()
+        self.keybinds[self.bar_mode][key]()
 
     def trigger_event(self, event: Message):
         event_name = camel_to_snake(event.__class__.__name__)
@@ -40,8 +43,8 @@ class DooitAPI:
 
     # -----------------------------------------
     @property
-    def is_mode_normal(self) -> bool:
-        return True
+    def bar_mode(self) -> str:
+        return self.app.bar.status
 
     @property
     def focused(self) -> ModelTree:

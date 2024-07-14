@@ -11,7 +11,7 @@ from ..renderers.workspace_renderer import WorkspaceRender
 class WorkspacesTree(ModelTree):
     @property
     def is_editing(self) -> bool:
-        return bool(self.node.editing)
+        return self.highlighted is not None and self.node.editing != ""
 
     @property
     def node(self) -> WorkspaceRender:

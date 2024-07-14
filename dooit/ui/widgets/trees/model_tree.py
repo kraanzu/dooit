@@ -1,3 +1,4 @@
+from textual.app import events
 from dooit.api.model import Model
 from collections import defaultdict
 
@@ -29,7 +30,7 @@ class ModelTree(BaseTree):
 
     @property
     def is_editing(self) -> bool:
-        raise NotImplementedError
+        return bool(self.node.editing)
 
     @property
     def model(self) -> Model:
@@ -47,10 +48,25 @@ class ModelTree(BaseTree):
     def start_edit(self, property: str) -> bool:
         res = self.node.start_edit(property)
         self.refresh_options()
+        if res:
+            self.app.query_one("StatusBar").set_status("INSERT")
         return res
 
     def stop_edit(self):
         self.node.stop_edit()
+        self.app.query_one("StatusBar").set_status("NORMAL")
 
     def create_node(self):
         raise NotImplementedError
+
+    async def handle_key(self, event: events.Key) -> bool:
+        key = event.key
+        if self.is_editing:
+            if key == "escape":
+                self.stop_edit()
+            else:
+                self.node.handle_key(event)
+            self.refresh_options()
+            return True
+        else:
+            return await super().handle_key(event)

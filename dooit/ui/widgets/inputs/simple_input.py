@@ -148,11 +148,9 @@ class Input:
         self._cursor_position = len(self.value)
 
     def keypress(self, key: str) -> None:
-        if key == "enter":
-            self.stop_edit()
 
         # Moving backward
-        elif key == "left":
+        if key == "left":
             self._move_cursor_backward()
 
         elif key == "ctrl+left":

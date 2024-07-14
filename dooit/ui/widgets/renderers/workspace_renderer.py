@@ -1,4 +1,5 @@
 from rich.console import RenderableType
+from textual.app import events
 from .base_renderer import BaseRenderer, Workspace
 from dooit.ui.widgets.inputs.inputs import WorkspaceDescription
 
@@ -16,3 +17,8 @@ class WorkspaceRender(BaseRenderer):
     @property
     def prompt(self) -> RenderableType:
         return self.description.render()
+
+    # TODO: Change this
+    def handle_key(self, event: events.Key) -> bool:
+        self.description.keypress(event.key)
+        return True

@@ -36,3 +36,6 @@ class BaseRenderer(Option):
     def stop_edit(self):
         getattr(self, self.editing).stop_edit()
         self.editing = ""
+
+    def handle_key(self, event) -> bool:
+        return True

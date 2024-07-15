@@ -53,7 +53,7 @@ class Parser:
         self.config_file = XDG_CONFIG / "config.py"
         self.todo_data_yaml = XDG_DATA / "todo.yaml"
 
-        if Path.is_file(self.todo_data_yaml):
+        if Path.is_file(self.todo_data_yaml) and not Path.is_file(TODO_DATA):
             self.migrate_to_msgpack()
         elif not Path.is_file(TODO_DATA):
             self.save(dict())
@@ -66,4 +66,5 @@ class Parser:
         with open(self.todo_data_yaml, "r") as stream:
             self.save(yaml.safe_load(stream))
 
-        os.remove(self.todo_data_yaml)
+        # don't remove just yet for testing
+        # os.unlink(self.todo_data_yaml)

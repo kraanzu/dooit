@@ -1,4 +1,4 @@
-from typing import Iterable, Optional, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 from textual.widgets import OptionList
 from textual.widgets.option_list import Option
 from dooit.api.todo import Todo
@@ -7,9 +7,19 @@ from collections import defaultdict
 
 ModelType = Union[Todo, Workspace]
 
+if TYPE_CHECKING:
+    from ....ui.tui import Dooit
+
 
 class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
     expanded_nodes = defaultdict(bool)
+
+    @property
+    def tui(self) -> "Dooit":
+        if isinstance(self.app, "Dooit"):
+            return self.app
+
+        raise ValueError("App is not a Dooit instance")
 
     @property
     def node(self) -> Option:

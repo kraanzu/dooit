@@ -1,6 +1,16 @@
-from typing import Dict, List, Text
+from typing import Dict, List
+from rich.text import TextType
 from rich.console import RenderableType
 from rich.table import Table
+
+from dooit.ui.widgets.inputs.inputs import (
+    Due,
+    Effort,
+    Recurrence,
+    Status,
+    TodoDescription,
+    Urgency,
+)
 from .base_renderer import BaseRenderer, Todo
 
 
@@ -11,23 +21,31 @@ class TodoRender(BaseRenderer):
             raise ValueError(f"Expected Todo, got {type(self._model)}")
         return self._model
 
-    def _draw_status(self, todo: Todo) -> Text:
-        return todo.status
+    def post_init(self):
+        self.description = TodoDescription(self.model)
+        self.due = Due(self.model)
+        self.status = Status(self.model)
+        self.urgency = Urgency(self.model)
+        self.effort = Effort(self.model)
+        self.recurrence = Recurrence(self.model)
 
-    def _draw_description(self, todo: Todo) -> Text:
-        return todo.description
+    def _draw_status(self, todo: Todo) -> TextType:
+        return self.description.render()
 
-    def _draw_due(self, todo: Todo) -> Text:
-        return todo.due
+    def _draw_description(self, todo: Todo) -> TextType:
+        return self.description.render()
 
-    def _draw_urgency(self, todo: Todo) -> Text:
-        return todo.urgency
+    def _draw_due(self, todo: Todo) -> TextType:
+        return self.due.render()
 
-    def _draw_effort(self, todo: Todo) -> Text:
-        return todo.effort
+    def _draw_urgency(self, todo: Todo) -> TextType:
+        return self.urgency.render()
 
-    def _draw_recurrence(self, todo: Todo) -> Text:
-        return todo.recurrence
+    def _draw_effort(self, todo: Todo) -> TextType:
+        return self.effort.render()
+
+    def _draw_recurrence(self, todo: Todo) -> TextType:
+        return self.recurrence.render()
 
     def _draw_table(self, config: Dict[str, List]) -> Table:
         table = Table.grid(expand=True)

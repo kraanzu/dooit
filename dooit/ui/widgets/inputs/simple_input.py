@@ -148,7 +148,6 @@ class Input:
         self._cursor_position = len(self.value)
 
     def keypress(self, key: str) -> None:
-
         # Moving backward
         if key == "left":
             self._move_cursor_backward()
@@ -202,13 +201,16 @@ class SimpleInput(Input):
 
     _cursor_position: int = 0
     _cursor: str = "|"
-    _property = __name__.lower()
 
     def __init__(self, model: ModelType) -> None:
         self.model = model
         self.value = getattr(model, self._property)
         self._cursor_position = len(self.value)
         super().__init__()
+
+    @property
+    def _property(self) -> str:
+        return self.__class__.__name__.lower()
 
     @property
     def empty_result(self) -> Result:

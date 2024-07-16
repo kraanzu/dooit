@@ -30,7 +30,7 @@ class ModelTree(BaseTree):
 
     @property
     def is_editing(self) -> bool:
-        return bool(self.node.editing)
+        return self.highlighted is not None and self.node.editing != ""
 
     @property
     def model(self) -> Model:

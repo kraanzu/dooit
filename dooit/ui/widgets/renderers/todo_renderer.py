@@ -29,22 +29,22 @@ class TodoRender(BaseRenderer):
         self.effort = Effort(self.model)
         self.recurrence = Recurrence(self.model)
 
-    def _draw_status(self, todo: Todo) -> TextType:
+    def _draw_status(self) -> TextType:
+        return self.status.render()
+
+    def _draw_description(self) -> TextType:
         return self.description.render()
 
-    def _draw_description(self, todo: Todo) -> TextType:
-        return self.description.render()
-
-    def _draw_due(self, todo: Todo) -> TextType:
+    def _draw_due(self) -> TextType:
         return self.due.render()
 
-    def _draw_urgency(self, todo: Todo) -> TextType:
+    def _draw_urgency(self) -> TextType:
         return self.urgency.render()
 
-    def _draw_effort(self, todo: Todo) -> TextType:
+    def _draw_effort(self) -> TextType:
         return self.effort.render()
 
-    def _draw_recurrence(self, todo: Todo) -> TextType:
+    def _draw_recurrence(self) -> TextType:
         return self.recurrence.render()
 
     def _draw_table(self, config: Dict[str, List]) -> Table:
@@ -54,8 +54,14 @@ class TodoRender(BaseRenderer):
         table.add_column("due")
         table.add_column("urgency")
 
-        t = self.model
-        table.add_row(*[t.status, t.description, t.due, t.urgency])
+        table.add_row(
+            *[
+                self._draw_status(),
+                self._draw_description(),
+                self._draw_due(),
+                self._draw_urgency(),
+            ]
+        )
         return table
 
     def get_table_config(self) -> Dict[str, List]:

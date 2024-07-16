@@ -46,8 +46,7 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
             self._contents = self._contents[:index] + content + self._contents[index:]
             self._options = self._options[:index] + options + self._options[index:]
 
-            self._refresh_content_tracking(force=True)
-            self.refresh()
+            self.refresh_options()
 
     def add_nodes(self, *items: Option, index: Optional[int] = None) -> None:
         if index is None:

@@ -1,5 +1,6 @@
 from typing import Union
 from rich.console import RenderableType
+from textual.app import events
 from textual.widgets.option_list import Option
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
@@ -37,5 +38,6 @@ class BaseRenderer(Option):
         getattr(self, self.editing).stop_edit()
         self.editing = ""
 
-    def handle_key(self, event) -> bool:
+    def handle_key(self, event: events.Key) -> bool:
+        getattr(self, self.editing).keypress(event.key)
         return True

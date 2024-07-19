@@ -26,6 +26,7 @@ ruff = "^0.0.261"
 black = "^23.3.0"
 pre-commit = "^3.2.2"
 textual-dev = "^1.1.0"
+mkdocs = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

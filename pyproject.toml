@@ -22,10 +22,10 @@ msgpack = "^1.0.7"
 multidict = "^6.0.5"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.0.261"
-black = "^23.3.0"
+ruff = "^0.5.3"
+black = "^24.4.2"
 pre-commit = "^3.2.2"
-textual-dev = "^1.1.0"
+textual-dev = "^1.5.1"
 mkdocs = "^1.6.0"
 
 [build-system]

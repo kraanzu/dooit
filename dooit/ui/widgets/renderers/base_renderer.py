@@ -41,3 +41,6 @@ class BaseRenderer(Option):
     def handle_key(self, event: events.Key) -> bool:
         getattr(self, self.editing).keypress(event.key)
         return True
+
+    def refresh_prompt(self) -> None:
+        self.set_prompt(self.make_renderable())

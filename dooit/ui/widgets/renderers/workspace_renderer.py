@@ -13,9 +13,9 @@ class WorkspaceRender(BaseRenderer):
 
     def post_init(self):
         self.description = WorkspaceDescription(self.model)
+        self.refresh_prompt()
 
-    @property
-    def prompt(self) -> RenderableType:
+    def make_renderable(self) -> RenderableType:
         return self.description.render()
 
     # TODO: Change this

@@ -28,6 +28,7 @@ class TodoRender(BaseRenderer):
         self.urgency = Urgency(self.model)
         self.effort = Effort(self.model)
         self.recurrence = Recurrence(self.model)
+        self.refresh_prompt()
 
     def _draw_status(self) -> TextType:
         return self.status.render()
@@ -67,8 +68,7 @@ class TodoRender(BaseRenderer):
     def get_table_config(self) -> Dict[str, List]:
         return {}
 
-    @property
-    def prompt(self) -> RenderableType:
+    def make_renderable(self) -> RenderableType:
         config = self.get_table_config()
         return self._draw_table(config)
 

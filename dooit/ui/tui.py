@@ -47,6 +47,10 @@ class Dooit(App):
     def bar(self) -> StatusBar:
         return self.query_one(StatusBar)
 
+    @property
+    def workspace_tree(self) -> WorkspacesTree:
+        return self.query_one(WorkspacesTree)
+
     async def poll(self):
         return
         if (

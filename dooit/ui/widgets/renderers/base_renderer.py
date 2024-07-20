@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 from rich.console import RenderableType
 from textual.app import events
 from textual.widgets.option_list import Option
@@ -10,6 +10,7 @@ ModelType = Union[Todo, Workspace]
 
 class BaseRenderer(Option):
     editing: str = ""
+    _layout: List = []
 
     def __init__(self, model: ModelType):
         self._model = model
@@ -18,6 +19,12 @@ class BaseRenderer(Option):
 
     def post_init(self):
         pass
+
+    def set_layout(self, layout: List) -> None:
+        self._layout = layout
+
+    def get_layout(self) -> List:
+        return self._layout
 
     @property
     def model(self) -> ModelType:

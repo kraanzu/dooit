@@ -50,6 +50,8 @@ class ModelTree(BaseTree):
         self.refresh_options()
         if res:
             self.tui.bar.set_status("INSERT")
+            self.node.refresh_prompt()
+            self.refresh_options()
         return res
 
     def stop_edit(self):
@@ -66,6 +68,8 @@ class ModelTree(BaseTree):
                 self.stop_edit()
             else:
                 self.node.handle_key(event)
+
+            self.node.refresh_prompt()
             self.refresh_options()
             return True
         else:

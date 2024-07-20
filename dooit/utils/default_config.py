@@ -1,3 +1,17 @@
+from dooit.ui.api import events, DooitAPI
+
+
+@events.startup
+def key_setup(api: DooitAPI):
+    api.set_key_normal("tab", api.switch_focus)
+    api.set_key_normal("j", api.move_down)
+    api.set_key_normal("k", api.move_up)
+    api.set_key_normal("i", api.edit_description)
+    api.set_key_normal("a", api.add_sibling)
+
+
+# -------------------------------------------
+
 from rich.text import Text
 from datetime import datetime
 import os

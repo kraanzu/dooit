@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Callable, Dict, List, Optional, Union
 from rich.console import RenderableType
 from textual.app import events
 from textual.widgets.option_list import Option
@@ -11,6 +11,7 @@ ModelType = Union[Todo, Workspace]
 class BaseRenderer(Option):
     editing: str = ""
     _layout: List = []
+    _formatters: Dict[str, Callable] = {}
 
     def __init__(self, model: ModelType):
         self._model = model
@@ -51,3 +52,9 @@ class BaseRenderer(Option):
 
     def refresh_prompt(self) -> None:
         self.set_prompt(self.make_renderable())
+
+    def set_formatter(self, property: str, formatter: Callable) -> None:
+        self._formatters[property] = formatter
+
+    def get_formatter(self, property: str) -> Optional[Callable]:
+        return self._formatters.get(property)

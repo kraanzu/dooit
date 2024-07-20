@@ -20,6 +20,16 @@ def register(api: "PluginManager", path: Path) -> None:
             pass
 
 
+def load_file(api: "PluginManager", path: Path) -> bool:
+    if not path.exists():
+        return False
+
+    if path.suffix == ".py":
+        register(api, path)
+
+    return True
+
+
 def load_dir(api: "PluginManager", path: Path) -> bool:
     if not path.exists():
         return False
@@ -28,7 +38,6 @@ def load_dir(api: "PluginManager", path: Path) -> bool:
         if file.is_dir():
             return load_dir(api, file)
 
-        if file.suffix == ".py":
-            register(api, file)
+        load_file(api, file)
 
     return True

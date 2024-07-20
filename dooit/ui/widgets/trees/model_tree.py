@@ -1,3 +1,4 @@
+from typing import Callable
 from textual.app import events
 from dooit.api.model import Model
 from collections import defaultdict
@@ -74,3 +75,6 @@ class ModelTree(BaseTree):
             return True
         else:
             return await super().handle_key(event)
+
+    def set_formatter(self, property: str, formatter: Callable):
+        raise NotImplementedError

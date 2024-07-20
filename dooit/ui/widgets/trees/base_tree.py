@@ -105,5 +105,5 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
         self._toggle_expand_parent(self.node.id)
 
     def refresh_options(self):
-        self._refresh_content_tracking(force=True)
+        self._refresh_lines()
         self.refresh()

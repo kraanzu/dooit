@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List, Tuple, Callable
 
 
 class WorkspaceComponent(Enum):
@@ -12,3 +13,6 @@ class TodoComponent(Enum):
     recurrence = "recurrence"
     status = "status"
     effort = "effort"
+
+
+WorkspaceLayout = List[Tuple[WorkspaceComponent, Callable]]

@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 from rich.console import RenderableType
 from textual.app import events
 from textual.widgets.option_list import Option
@@ -10,7 +10,6 @@ ModelType = Union[Todo, Workspace]
 
 class BaseRenderer(Option):
     editing: str = ""
-    _layout: List = []
     _formatters: Dict[str, Callable] = {}
 
     def __init__(self, model: ModelType):
@@ -21,11 +20,9 @@ class BaseRenderer(Option):
     def post_init(self):
         pass
 
-    def set_layout(self, layout: List) -> None:
-        self._layout = layout
-
-    def get_layout(self) -> List:
-        return self._layout
+    @property
+    def table_layout(self) -> Any:
+        raise NotImplementedError
 
     @property
     def model(self) -> ModelType:

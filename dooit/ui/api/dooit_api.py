@@ -3,7 +3,9 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from textual.message import Message
 from dooit.ui.api.plug import PluginManager
+from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
+from dooit.ui.api.components import WorkspaceLayout
 
 
 if TYPE_CHECKING:
@@ -81,3 +83,6 @@ class DooitAPI:
 
     def set_formatter_workspace_description(self, formatter: Callable):
         self.app.workspace_tree.set_formatter("description", formatter)
+
+    def set_workspace_layout(self, layout: WorkspaceLayout):
+        registry.set_workspace_layout(layout)

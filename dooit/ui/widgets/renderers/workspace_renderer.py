@@ -1,11 +1,18 @@
 from rich.console import RenderableType
 from rich.table import Table
 from textual.app import events
+from dooit.ui.registry import registry
 from .base_renderer import BaseRenderer, Workspace
 from dooit.ui.widgets.inputs.inputs import WorkspaceDescription
+from dooit.ui.api.components import WorkspaceLayout
 
 
 class WorkspaceRender(BaseRenderer):
+
+    @property
+    def table_layout(self) -> WorkspaceLayout:
+        return registry.get_workspace_layout()
+
     @property
     def model(self) -> Workspace:
         if not isinstance(self._model, Workspace):

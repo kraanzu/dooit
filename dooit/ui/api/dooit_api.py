@@ -5,7 +5,7 @@ from textual.message import Message
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
-from dooit.ui.api.components import WorkspaceLayout
+from dooit.ui.api.components import TodoLayout, WorkspaceLayout
 
 
 if TYPE_CHECKING:
@@ -86,3 +86,6 @@ class DooitAPI:
 
     def set_workspace_layout(self, layout: WorkspaceLayout):
         registry.set_workspace_layout(layout)
+
+    def set_todo_layout(self, layout: TodoLayout):
+        registry.set_todo_layout(layout)

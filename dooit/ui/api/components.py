@@ -16,3 +16,4 @@ class TodoComponent(Enum):
 
 
 WorkspaceLayout = List[Tuple[WorkspaceComponent, Callable]]
+TodoLayout = List[Tuple[TodoComponent, Callable]]

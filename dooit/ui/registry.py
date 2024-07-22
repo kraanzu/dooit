@@ -16,6 +16,7 @@ class Registry:
 
     def __init__(self) -> None:
         self.workspace_layout = []
+        self.todo_layout = []
 
     def __get_max_column_width(self, items: List, property: str, formatter: Callable):
         # TODO: OPTIMIZE THIS !!!

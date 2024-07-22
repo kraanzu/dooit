@@ -29,8 +29,6 @@ class WorkspaceRender(BaseRenderer):
 
     def _draw_table(self) -> Table:
         table = registry.get_workspace_table(self.model.parent)
-
-
         table.add_row(self._draw_description())
         return table
 

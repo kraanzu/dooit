@@ -40,7 +40,7 @@ class TodosTree(ModelTree):
         if not self.node.id:
             return
 
-        self.screen.query_one(f"WorkspacesTree").focus()
+        self.screen.query_one("WorkspacesTree").focus()
 
     def add_todo(self) -> str:
         workspace = self.model.add_child("todo")

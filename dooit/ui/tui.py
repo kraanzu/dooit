@@ -5,7 +5,6 @@ from textual.message import Message
 from dooit.api.manager import manager
 from dooit.ui.events.events import DooitEvent, Startup
 from dooit.ui.widgets.bar.status_bar import StatusBar
-from dooit.ui.widgets.trees.todos_tree import TodosTree
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.utils.watcher import Watcher
 from dooit.ui.css.main import screen_CSS

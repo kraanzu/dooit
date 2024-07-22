@@ -161,11 +161,11 @@ class Todo(Model):
         if len(data) > 1:
             for i in data[1]:
                 # Skips todos with no description and no children
-                if len(i) == 1 and not i[0]['description']:
+                if len(i) == 1 and not i[0]["description"]:
                     continue
                 # Don't skip the todo as the children might have data that would be lost otherwise
-                elif len(i) > 1 and not i[0]['description']:
-                    i[0]['description'] = '<Empty>'
+                elif len(i) > 1 and not i[0]["description"]:
+                    i[0]["description"] = "<Empty>"
 
                 child_todo = self.add_child(kind="todo", index=len(self.todos))
                 child_todo.from_data(i, overwrite_uuid)

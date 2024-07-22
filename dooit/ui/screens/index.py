@@ -1,7 +1,6 @@
 from textual import events, on, work
 from textual.containers import Container
 from dooit.api.manager import manager
-from dooit.ui.events.events import DateModeSwitch
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.widgets.bar import Searcher
 from dooit.ui.events import (
@@ -10,7 +9,6 @@ from dooit.ui.events import (
     ChangeStatus,
     SpawnHelp,
     CommitData,
-    ApplySort,
 )
 from dooit.ui.widgets import StatusBar
 from dooit.ui.widgets.switcher import FlexibleSwitcher

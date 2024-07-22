@@ -3,6 +3,7 @@ from rich.table import Table
 from textual.app import events
 from .base_renderer import BaseRenderer, Workspace
 from dooit.ui.widgets.inputs.inputs import WorkspaceDescription
+from dooit.ui.registry import registry
 
 
 class WorkspaceRender(BaseRenderer):
@@ -27,8 +28,9 @@ class WorkspaceRender(BaseRenderer):
         return str(description)
 
     def _draw_table(self) -> Table:
-        table = Table.grid(expand=True)
-        table.add_column("description", ratio=1)
+        table = registry.get_workspace_table(self.model.parent)
+
+
         table.add_row(self._draw_description())
         return table
 

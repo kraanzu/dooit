@@ -16,7 +16,7 @@ def register(api: "PluginManager", path: Path) -> None:
             for name, obj in vars(foo).items():
                 if hasattr(obj, "__dooit_event"):
                     api.register(name, obj)
-        except:
+        except Exception:
             pass
 
 

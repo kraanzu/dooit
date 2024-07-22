@@ -1,4 +1,3 @@
-from typing import Dict, List
 from rich.text import TextType
 from rich.console import RenderableType
 from rich.table import Table

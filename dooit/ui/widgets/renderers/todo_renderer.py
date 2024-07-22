@@ -2,7 +2,6 @@ from typing import Dict, List
 from rich.text import TextType
 from rich.console import RenderableType
 from rich.table import Table
-
 from dooit.ui.widgets.inputs.inputs import (
     Due,
     Effort,
@@ -12,6 +11,7 @@ from dooit.ui.widgets.inputs.inputs import (
     Urgency,
 )
 from .base_renderer import BaseRenderer, Todo
+from dooit.ui.registry import registry
 
 
 class TodoRender(BaseRenderer):
@@ -48,29 +48,20 @@ class TodoRender(BaseRenderer):
     def _draw_recurrence(self) -> TextType:
         return self.recurrence.render()
 
-    def _draw_table(self, config: Dict[str, List]) -> Table:
-        table = Table.grid(expand=True)
-        table.add_column("status")
-        table.add_column("description", ratio=1)
-        table.add_column("due")
-        table.add_column("urgency")
+    def _draw_table(self) -> Table:
+        table = registry.get_todo_table(self.model.parent)
+        layout = registry.get_todo_layout()
 
-        table.add_row(
-            *[
-                self._draw_status(),
-                self._draw_description(),
-                self._draw_due(),
-                self._draw_urgency(),
-            ]
-        )
+        row = []
+        for column, formatter in layout:
+            row.append(getattr(self, f"_draw_{column.value}")())
+
+        table.add_row(*row)
+
         return table
 
-    def get_table_config(self) -> Dict[str, List]:
-        return {}
-
     def make_renderable(self) -> RenderableType:
-        config = self.get_table_config()
-        return self._draw_table(config)
+        return self._draw_table()
 
     def edit(self, param: str):
         pass

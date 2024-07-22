@@ -28,8 +28,15 @@ class WorkspaceRender(BaseRenderer):
         return str(description)
 
     def _draw_table(self) -> Table:
-        table = registry.get_workspace_table(self.model.parent)
-        table.add_row(self._draw_description())
+        table = registry.get_todo_table(self.model.parent)
+        layout = registry.get_todo_layout()
+
+        row = []
+        for column, formatter in layout:
+            row.append(getattr(self, f"_draw_{column.value}")())
+
+        table.add_row(*row)
+
         return table
 
     def make_renderable(self) -> RenderableType:

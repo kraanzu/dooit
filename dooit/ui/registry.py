@@ -2,12 +2,11 @@ from typing import TYPE_CHECKING, Callable, List
 
 from rich.table import Table
 from dooit.api.model import Model
-
 from dooit.api.workspace import Workspace
 
 
 if TYPE_CHECKING:
-    from dooit.ui.api.components import WorkspaceLayout
+    from dooit.ui.api.components import WorkspaceLayout, TodoLayout
 
 
 class Registry:
@@ -52,10 +51,10 @@ class Registry:
     def get_workspace_layout(self) -> "WorkspaceLayout":
         return self.workspace_layout
 
-    def set_todo_layout(self, layout: "WorkspaceLayout"):
+    def set_todo_layout(self, layout: "TodoLayout"):
         self.todo_layout = layout
 
-    def get_todo_layout(self) -> "WorkspaceLayout":
+    def get_todo_layout(self) -> "TodoLayout":
         return self.todo_layout
 
     def get_todo_table(self, model: Model) -> Table:

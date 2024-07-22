@@ -35,12 +35,14 @@ class Dooit(App):
         super().__init__()
         self.api = DooitAPI(self)
 
+    async def on_load(self):
+        self.post_message(Startup())
+
     async def on_mount(self):
         self.auto_refresh = 0.1
         self.watcher = Watcher()
         self.set_interval(1, self.poll)
         self.push_screen("main")
-        self.post_message(Startup())
 
     @property
     def bar(self) -> StatusBar:

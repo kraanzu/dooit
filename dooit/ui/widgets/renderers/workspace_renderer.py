@@ -28,8 +28,8 @@ class WorkspaceRender(BaseRenderer):
         return str(description)
 
     def _draw_table(self) -> Table:
-        table = registry.get_todo_table(self.model.parent)
-        layout = registry.get_todo_layout()
+        table = registry.get_workspace_table(self.model.parent)
+        layout = registry.get_workspace_layout()
 
         row = []
         for column, formatter in layout:

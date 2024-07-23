@@ -1,8 +1,5 @@
 import os
-import appdirs
 from dooit.utils.parser import TODO_DATA
-
-DIR = appdirs.user_data_dir("dooit")
 
 
 class Watcher:

@@ -86,6 +86,7 @@ class DooitAPI:
 
     def set_workspace_layout(self, layout: WorkspaceLayout):
         registry.set_workspace_layout(layout)
+        self.app.workspace_tree.refresh_options()
 
     def set_todo_layout(self, layout: TodoLayout):
         registry.set_todo_layout(layout)

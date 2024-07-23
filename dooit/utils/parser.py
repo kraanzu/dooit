@@ -8,6 +8,9 @@ from os import makedirs
 
 XDG_CONFIG = Path(appdirs.user_config_dir("dooit"))
 XDG_DATA = Path(appdirs.user_data_dir("dooit"))
+
+# TODO: Remove this
+XDG_DATA = Path(__file__).parent.parent.parent
 TODO_DATA = XDG_DATA / "todo.dat"
 
 

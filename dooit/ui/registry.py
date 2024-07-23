@@ -24,8 +24,7 @@ class Registry:
         values = [getattr(item, property) for item in items]
 
         return max(
-            [len(formatter(value)) for value in values]
-            + [len(value) for value in values]
+            [len(formatter(item)) for item in items] + [len(value) for value in values]
         )
 
     def __create_table_from_layout(self, layout, items):

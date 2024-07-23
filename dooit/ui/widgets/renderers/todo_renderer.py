@@ -53,7 +53,11 @@ class TodoRender(BaseRenderer):
 
         row = []
         for column, formatter in layout:
-            row.append(getattr(self, f"_draw_{column.value}")())
+            value = getattr(self, f"_draw_{column.value}")()
+            if self.editing != column.value:
+                value = formatter(self._model)
+
+            row.append(value)
 
         table.add_row(*row)
 

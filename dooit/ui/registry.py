@@ -46,12 +46,26 @@ class Registry:
         return table
 
     def set_workspace_layout(self, layout: "WorkspaceLayout"):
+        layout = [
+            item if isinstance(item, tuple) else (item, lambda x: x) for item in layout
+        ]
         self.workspace_layout = layout
 
     def get_workspace_layout(self) -> "WorkspaceLayout":
         return self.workspace_layout
 
     def set_todo_layout(self, layout: "TodoLayout"):
+        layout = [
+            (
+                item
+                if isinstance(item, tuple)
+                else (
+                    item,
+                    lambda x: str(x),
+                )
+            )
+            for item in layout
+        ]
         self.todo_layout = layout
 
     def get_todo_layout(self) -> "TodoLayout":

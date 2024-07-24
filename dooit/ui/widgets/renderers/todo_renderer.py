@@ -55,7 +55,7 @@ class TodoRender(BaseRenderer):
         for column, formatter in layout:
             value = getattr(self, f"_draw_{column.value}")()
             if self.editing != column.value:
-                value = formatter(self._model)
+                value = formatter(value, self._model)
 
             row.append(value)
 

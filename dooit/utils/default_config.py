@@ -3,8 +3,7 @@ from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.components import TodoComponent, WorkspaceComponent
 
 
-def due_formatter(todo):
-    due = todo.due
+def due_formatter(due, todo):
     if due == "none":
         due = None
 

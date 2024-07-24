@@ -24,7 +24,8 @@ class Registry:
         values = [getattr(item, property) for item in items]
 
         return max(
-            [len(formatter(item)) for item in items] + [len(value) for value in values]
+            [len(formatter(getattr(item, property), item)) for item in items]
+            + [len(value) for value in values]
         )
 
     def __create_table_from_layout(self, layout, items):
@@ -47,7 +48,8 @@ class Registry:
 
     def set_workspace_layout(self, layout: "WorkspaceLayout"):
         layout = [
-            item if isinstance(item, tuple) else (item, lambda x: x) for item in layout
+            item if isinstance(item, tuple) else (item, lambda value, _: value)
+            for item in layout
         ]
         self.workspace_layout = layout
 
@@ -61,7 +63,7 @@ class Registry:
                 if isinstance(item, tuple)
                 else (
                     item,
-                    lambda x: str(x),
+                    lambda value, _: value,
                 )
             )
             for item in layout

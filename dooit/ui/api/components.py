@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Callable, Union
 
 
 class WorkspaceComponent(Enum):
@@ -15,5 +15,5 @@ class TodoComponent(Enum):
     effort = "effort"
 
 
-WorkspaceLayout = List[Tuple[WorkspaceComponent, Callable]]
-TodoLayout = List[Tuple[TodoComponent, Callable]]
+WorkspaceLayout = List[Union[Tuple[WorkspaceComponent, Callable], WorkspaceComponent]]
+TodoLayout = List[Union[Tuple[TodoComponent, Callable], TodoComponent]]

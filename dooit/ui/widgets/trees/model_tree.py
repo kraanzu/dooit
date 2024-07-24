@@ -50,14 +50,14 @@ class ModelTree(BaseTree):
         res = self.node.start_edit(property)
         self.refresh_options()
         if res:
-            self.tui.bar.set_status("INSERT")
+            # self.tui.bar.set_status("INSERT")
             self.node.refresh_prompt()
             self.refresh_options()
         return res
 
     def stop_edit(self):
         self.node.stop_edit()
-        self.tui.bar.set_status("NORMAL")
+        # self.tui.bar.set_status("NORMAL")
 
     def create_node(self):
         raise NotImplementedError

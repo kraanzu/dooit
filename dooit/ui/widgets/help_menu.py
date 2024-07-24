@@ -4,13 +4,11 @@ from rich.console import Group, RenderableType
 from rich.style import Style, StyleType
 from rich.table import Table
 from rich.text import Text
-from dooit.utils.keybinder import KeyBinder
 
 
 # UTILS
 # ---------------------------------------------------
 NL = Text("\n")
-kb = KeyBinder()
 
 
 def colored(text: str, color: StyleType) -> str:
@@ -19,35 +17,34 @@ def colored(text: str, color: StyleType) -> str:
 
 def convert_to_row(bindings: Dict):
     arr = []
-    methods = kb.raw
 
-    for i, j in bindings.items():
-        if i in methods:
-            key = methods[i]
-            if isinstance(key, list):
-                key = "/".join(key)
-
-            arr.append(
-                [
-                    Text.from_markup(
-                        colored(
-                            " or ",
-                            "i cyan",
-                        ).join(methods[i]),
-                        style="b green",
-                    ),
-                    Text(i, style="magenta"),
-                    Text.from_markup(j, style="b blue"),
-                ]
-            )
-        else:
-            arr.append(
-                [
-                    Text(i, style="b green"),
-                    Text("N/A", style="d white", justify="center"),
-                    Text.from_markup(j, style="b blue"),
-                ]
-            )
+    # for i, j in bindings.items():
+    #     if i in methods:
+    #         key = methods[i]
+    #         if isinstance(key, list):
+    #             key = "/".join(key)
+    #
+    #         arr.append(
+    #             [
+    #                 Text.from_markup(
+    #                     colored(
+    #                         " or ",
+    #                         "i cyan",
+    #                     ).join(methods[i]),
+    #                     style="b green",
+    #                 ),
+    #                 Text(i, style="magenta"),
+    #                 Text.from_markup(j, style="b blue"),
+    #             ]
+    #         )
+    #     else:
+    #         arr.append(
+    #             [
+    #                 Text(i, style="b green"),
+    #                 Text("N/A", style="d white", justify="center"),
+    #                 Text.from_markup(j, style="b blue"),
+    #             ]
+    #         )
 
     return arr
 

@@ -2,7 +2,6 @@ from textual import events, on, work
 from textual.containers import Container
 from dooit.api.manager import manager
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
-from dooit.ui.widgets.bar import Searcher
 from dooit.ui.events import (
     TopicSelect,
     SwitchTab,
@@ -10,7 +9,6 @@ from dooit.ui.events import (
     SpawnHelp,
     CommitData,
 )
-from dooit.ui.widgets import StatusBar
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
 from .base import BaseScreen
@@ -47,18 +45,8 @@ class MainScreen(BaseScreen):
             with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
                 yield from TODO_EMPTY_WIDGETS
 
-        yield StatusBar()
-
-    def set_message(self, message: str):
-        self.query_one(StatusBar).set_message(message)
-
-    @property
-    def bar(self):
-        return self.query_one(StatusBar)
-
     async def send_keypress(self, key: str):
-        if self.bar.status == "SEARCH":
-            return await self.query_one(Searcher).keypress(key)
+        pass
 
         # visible_focused = [i for i in self.query(".focus") if i.display][0]
         # await visible_focused.keypress(key)
@@ -108,10 +96,6 @@ class MainScreen(BaseScreen):
             visible_todo.toggle_class("focus")
         except Exception:
             pass
-
-    @on(ChangeStatus)
-    async def change_status(self, event: ChangeStatus) -> None:
-        self.query_one(StatusBar).set_status(event.status)
 
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp) -> None:

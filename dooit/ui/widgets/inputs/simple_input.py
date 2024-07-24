@@ -26,21 +26,8 @@ class Input:
 
         return text
 
-    def render(self) -> Text:
-        def make_links(text: Text):
-            """
-            Apply link opens to urls
-            """
-
-            pattern = r"https?://\S+|ftp://\S+"
-            for i in re.findall(pattern, text.plain):
-                style = Style.from_meta({"@click": f"app.open_url('{i}')"})
-                text.highlight_words([i], style)
-
-        value = Text.from_markup(self.draw().strip())
-        make_links(value)
-
-        return value
+    def render(self) -> str:
+        return self.draw().strip()
 
     def _render_text_with_cursor(self) -> str:
         """

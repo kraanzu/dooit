@@ -16,9 +16,9 @@ class PluginManager:
         self.events = defaultdict(list)
 
     def scan(self):
+        load_file(self, DEFAULT_CONFIG)
         load_dir(self, CONFIG_FOLDER)
         load_dir(self, PLUGINS_FOLDER)
-        load_file(self, DEFAULT_CONFIG)
 
     def _register_event(self, event: str, obj: Callable):
         self.events[event].append(obj)

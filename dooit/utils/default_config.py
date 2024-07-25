@@ -3,12 +3,12 @@ from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.components import TodoComponent, WorkspaceComponent
 
 
-def due_formatter(due, todo):
+def due_formatter(due, _):
     if due == "none":
         due = None
 
     due = due or datetime.now()
-    return due.strftime("Now: %H:%M")
+    return due.strftime("%H:%M")
 
 
 @events.startup

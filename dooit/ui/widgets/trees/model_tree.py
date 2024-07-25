@@ -75,6 +75,3 @@ class ModelTree(BaseTree):
             return True
         else:
             return await super().handle_key(event)
-
-    def set_formatter(self, property: str, formatter: Callable):
-        raise NotImplementedError

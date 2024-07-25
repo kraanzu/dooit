@@ -20,11 +20,6 @@ class WorkspaceRender(BaseRenderer):
     def _draw_description(self) -> RenderableType:
 
         description = self.description.render()
-        if self.editing != "description" and (
-            formatter := self._formatters.get("description")
-        ):
-            return formatter(self._model)
-
         return str(description)
 
     def _draw_table(self) -> Table:

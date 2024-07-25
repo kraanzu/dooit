@@ -72,12 +72,3 @@ class WorkspacesTree(ModelTree):
         uuid = self.add_workspace()
         self.highlighted = self.get_option_index(uuid)
         self.start_edit("description")
-
-    def set_formatter(self, property: str, formatter: Callable):
-        for i in self._options:
-            if not isinstance(i, WorkspaceRender):
-                raise ValueError(f"Expected WorkspaceRender, got {type(i)}")
-
-            i.set_formatter(property, formatter)
-
-        self.refresh_options()

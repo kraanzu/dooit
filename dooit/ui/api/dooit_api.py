@@ -81,9 +81,6 @@ class DooitAPI:
     def add_sibling(self):
         self.focused.create_node()
 
-    def set_formatter_workspace_description(self, formatter: Callable):
-        self.app.workspace_tree.set_formatter("description", formatter)
-
     def set_workspace_layout(self, layout: WorkspaceLayout):
         registry.set_workspace_layout(layout)
         self.app.workspace_tree.refresh_options()

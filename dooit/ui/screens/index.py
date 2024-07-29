@@ -11,6 +11,7 @@ from dooit.ui.events import (
 )
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
+from dooit.ui.widgets import Bar
 from .base import BaseScreen
 
 
@@ -44,6 +45,8 @@ class MainScreen(BaseScreen):
 
             with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
                 yield from TODO_EMPTY_WIDGETS
+
+        yield Bar()
 
     async def send_keypress(self, key: str):
         pass

@@ -52,6 +52,10 @@ class Dooit(App):
     def bar(self) -> Bar:
         return self.query_one(Bar)
 
+    @property
+    def mode(self) -> str:
+        return "NORMAL"
+
     async def poll(self):
         return
         # if (

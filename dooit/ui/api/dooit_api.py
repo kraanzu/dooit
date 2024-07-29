@@ -48,7 +48,7 @@ class DooitAPI:
     # -----------------------------------------
     @property
     def bar_mode(self) -> str:
-        return "NORMAL"
+        return self.app.mode
 
     @property
     def focused(self) -> ModelTree:

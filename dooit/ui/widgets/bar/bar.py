@@ -35,7 +35,8 @@ class Bar(Widget):
         self.refresh()
 
     def render(self) -> RenderableType:
-        table = Table.grid(expand=True)
+        expand = any(widget.width == 0 for widget in self.bar_widgets)
+        table = Table.grid(expand=expand, padding=0)
 
         for widget in self.bar_widgets:
             value = widget.get_value()

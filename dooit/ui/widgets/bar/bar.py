@@ -21,13 +21,20 @@ class BarWidget:
 
 
 class Bar(Widget):
-    def __init__(self, widgets: List[BarWidget]) -> None:
-        self.widgets = widgets
+    DEFAULT_CSS = """
+    Bar {
+        height: 1;
+    }
+    """
+    bar_widgets = []
+
+    def set_widgets(self, widgets: List[BarWidget]) -> None:
+        self.bar_widgets = widgets
 
     def render(self) -> RenderableType:
         table = Table.grid(expand=True)
 
-        for widget in self.widgets:
+        for widget in self.bar_widgets:
             if widget.width is None:
                 table.add_column("", ratio=1)
             elif width := widget.width:

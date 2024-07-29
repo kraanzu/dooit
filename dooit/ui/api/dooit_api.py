@@ -1,10 +1,12 @@
 from collections import defaultdict
 from collections.abc import Callable
 from typing import TYPE_CHECKING
+from typing_extensions import List
 from textual.message import Message
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
+from dooit.ui.widgets import BarWidget
 from dooit.ui.api.components import TodoLayout, WorkspaceLayout
 
 
@@ -87,3 +89,6 @@ class DooitAPI:
 
     def set_todo_layout(self, layout: TodoLayout):
         registry.set_todo_layout(layout)
+
+    def set_bar(self, widgets: List[BarWidget]):
+        self.app.bar.set_widgets(widgets)

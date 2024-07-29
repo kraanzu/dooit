@@ -4,6 +4,7 @@ from textual.app import App
 from textual.message import Message
 from dooit.api.manager import manager
 from dooit.ui.events.events import DooitEvent, Startup
+from dooit.ui.widgets import Bar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.utils.watcher import Watcher
 from dooit.ui.css.main import screen_CSS
@@ -46,6 +47,10 @@ class Dooit(App):
     @property
     def workspace_tree(self) -> WorkspacesTree:
         return self.query_one(WorkspacesTree)
+
+    @property
+    def bar(self) -> Bar:
+        return self.query_one(Bar)
 
     async def poll(self):
         return

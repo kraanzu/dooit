@@ -1,6 +1,19 @@
 from datetime import datetime
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.components import TodoComponent, WorkspaceComponent
+from dooit.ui.widgets import BarWidget
+from rich.text import Text
+
+
+@events.mode_changed
+def get_mode():
+    mode = " NORMAL "
+    return Text(f" {mode} ", style="black on white")
+
+
+bar_widgets = [
+    BarWidget(get_mode),
+]
 
 
 def due_formatter(due, _):
@@ -27,3 +40,5 @@ def key_setup(api: DooitAPI):
             (TodoComponent.due, due_formatter),
         ]
     )
+
+    api.set_bar(bar_widgets)

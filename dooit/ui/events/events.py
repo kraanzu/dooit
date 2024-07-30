@@ -13,6 +13,7 @@ class DooitEvent(Message, bubble=True):
     """
     Base class for all events
     """
+    kwargs = {}
 
     @property
     def snake_case(self):
@@ -45,7 +46,7 @@ class SpawnHelp(DooitEvent):
     """
 
 
-class ChangeStatus(DooitEvent):
+class ModeChanged(DooitEvent):
     """
     Emitted when there is a change in the `status`
     """

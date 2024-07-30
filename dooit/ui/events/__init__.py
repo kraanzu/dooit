@@ -1,6 +1,6 @@
 from .events import (
     ApplySort,
-    ChangeStatus,
+    ModeChanged,
     Notify,
     ModeType,
     SortMethodType,
@@ -15,7 +15,7 @@ from .events import (
 __all__ = [
     "ApplySort",
     "SpawnHelp",
-    "ChangeStatus",
+    "ModeChanged",
     "Notify",
     "ModeType",
     "SortMethodType",

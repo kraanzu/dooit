@@ -3,7 +3,7 @@ from textual import on
 from textual.app import App
 from textual.message import Message
 from dooit.api.manager import manager
-from dooit.ui.events.events import ChangeStatus, DooitEvent, ModeType, Startup
+from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import Bar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.utils.watcher import Watcher
@@ -65,8 +65,8 @@ class Dooit(App):
         self.api.trigger_event(event)
         self.bar.trigger_event(event)
 
-    @on(ChangeStatus)
-    def change_status(self, event: ChangeStatus):
+    @on(ModeChanged)
+    def change_status(self, event: ModeChanged):
         self._mode = event.status
 
     async def action_quit(self) -> None:

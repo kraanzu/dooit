@@ -5,7 +5,7 @@ from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
     TopicSelect,
     SwitchTab,
-    ChangeStatus,
+    ModeChanged,
     SpawnHelp,
     CommitData,
 )

@@ -59,18 +59,6 @@ class Dooit(App):
 
     async def poll(self):
         return
-        # if (
-        #     not manager.is_locked()
-        #     and self.watcher.has_modified()
-        #     and manager.refresh_data()
-        # ):
-        #     await self.query_one(WorkspaceTree).force_refresh(manager)
-        #     for i in self.query(TodoTree):
-        #         index = manager._get_child_index("workspace", uuid=i.model.uuid)
-        #         if index == -1:
-        #             i.remove()
-        #         else:
-        #             await i.force_refresh(manager._get_children("workspace")[index])
 
     @on(DooitEvent)
     def global_message(self, event: Message):

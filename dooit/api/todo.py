@@ -147,11 +147,11 @@ class Todo(Model):
         self._recurrence.setup(get("recurrence"))
         self._effort.setup(get("effort"))
 
-    def commit(self) -> List[Any]:
+    def _get_commit_data(self) -> List[Any]:
         if self.todos:
             return [
                 self.to_data(),
-                [child.commit() for child in self.todos],
+                [child._get_commit_data() for child in self.todos],
             ]
         else:
             return [self.to_data()]

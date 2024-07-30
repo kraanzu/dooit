@@ -168,6 +168,7 @@ class Model:
 
         if not self.parent:
             return
+
         arr = self.parent._get_children(self.kind)
         arr[idx], arr[idx - 1] = arr[idx - 1], arr[idx]
 
@@ -273,20 +274,19 @@ class Model:
             children = self.parent._get_children(self.kind)
             children.sort(key=lambda x: getattr(x, f"_{attr}").get_sortable())
 
-    def commit(self) -> Dict[str, Any]:
+    def commit(self) -> bool:
         """
         Get a object summary that can be stored
         """
+        raise NotImplementedError
 
-        return {
-            getattr(
-                child,
-                "description",
-            ): child.commit()
-            for child in self.workspaces
-        }
+    def _get_commit_data(self) -> Any:
+        """
+        Get data to commit
+        """
+        raise NotImplementedError
 
-    def from_data(self, data: Dict[str, Any]) -> None:
+    def from_data(self, data: Any) -> None:
         raise NotImplementedError
 
     def get_all_workspaces(self) -> List:

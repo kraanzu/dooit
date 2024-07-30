@@ -26,12 +26,14 @@ class Workspace(Model):
     def add_todo(self, index: int = 0) -> Todo:
         return super().add_child(TODO, index)
 
-    def commit(self) -> Dict[str, Any]:
+    def _get_commit_data(self) -> Dict[str, Any]:
         child_workspaces = [
-            workspace.commit() for workspace in self.workspaces if workspace.description
+            workspace._get_commit_data()
+            for workspace in self.workspaces
+            if workspace.description
         ]
 
-        todos = [todo.commit() for todo in self.todos if todo.description]
+        todos = [todo._get_commit_data() for todo in self.todos if todo.description]
 
         return {
             "uuid": self.uuid,

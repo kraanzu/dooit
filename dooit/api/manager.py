@@ -33,17 +33,19 @@ class Manager(Model):
     def add_workspace(self) -> Workspace:
         return self.add_child("workspace")
 
-    def _get_commit_data(self):
-        return [child.commit() for child in self.workspaces]
+    def _get_commit_data(self) -> Any:
+        return [child._get_commit_data() for child in self.workspaces]
 
-    def commit(self) -> None:
+    def commit(self) -> bool:
+
         if self.is_locked():
-            return
+            return False
 
         self.lock()
         self.last_modified = time()
         parser.save(self._get_commit_data())
         self.unlock()
+        return True
 
     def setup(self, data: Optional[Dict] = None) -> None:
         if self.is_locked():

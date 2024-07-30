@@ -14,6 +14,12 @@ class DooitEvent(Message, bubble=True):
     Base class for all events
     """
 
+    @property
+    def snake_case(self):
+        name = self.__class__.__name__
+        joined = "".join(["_" + i.lower() if i.isupper() else i for i in name])
+        return joined.lstrip("_")
+
 
 class Startup(DooitEvent):
     """

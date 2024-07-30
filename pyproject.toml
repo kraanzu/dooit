@@ -11,12 +11,12 @@ repository = "https://github.com/kraanzu/dooit"
 exclude = ["imgs"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
 tzlocal = "2.1"
 appdirs = "^1.4.4"
-textual = "^0.73.0"
+textual = "^0.74.0"
 python-dateutil = "^2.8.2"
 msgpack = "^1.0.7"
 multidict = "^6.0.5"

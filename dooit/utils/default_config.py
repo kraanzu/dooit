@@ -10,8 +10,12 @@ def get_mode():
     mode = " NORMAL "
     return Text(f" {mode} ", style="black on white")
 
+def spacer():
+    return Text(" ")
+
 
 bar_widgets = [
+    BarWidget(spacer),
     BarWidget(get_mode),
 ]
 

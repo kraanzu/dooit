@@ -61,8 +61,9 @@ class Dooit(App):
         return
 
     @on(DooitEvent)
-    def global_message(self, event: Message):
+    def global_message(self, event: DooitEvent):
         self.api.trigger_event(event)
+        self.bar.trigger_event(event)
 
     @on(ChangeStatus)
     def change_status(self, event: ChangeStatus):

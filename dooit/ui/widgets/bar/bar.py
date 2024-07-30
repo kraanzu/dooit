@@ -5,6 +5,8 @@ from rich.text import TextType
 from rich.table import Table
 from textual.widget import Widget
 
+from dooit.ui.events.events import DooitEvent
+
 
 class BarWidget:
     def __init__(
@@ -33,6 +35,9 @@ class Bar(Widget):
     def set_widgets(self, widgets: List[BarWidget]) -> None:
         self.bar_widgets = widgets
         self.refresh()
+
+    def trigger_event(self, event: DooitEvent):
+        pass
 
     def render(self) -> RenderableType:
         expand = any(widget.width == 0 for widget in self.bar_widgets)

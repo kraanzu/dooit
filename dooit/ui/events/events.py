@@ -4,7 +4,7 @@ from textual.message import Message
 from dooit.api.model import Result, SortMethodType
 from dooit.api.workspace import Workspace
 
-StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
+ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
 
@@ -44,9 +44,9 @@ class ChangeStatus(DooitEvent):
     Emitted when there is a change in the `status`
     """
 
-    def __init__(self, status: StatusType) -> None:
+    def __init__(self, status: ModeType) -> None:
         super().__init__()
-        self.status: StatusType = status
+        self.status: ModeType = status
 
 
 class Notify(DooitEvent):

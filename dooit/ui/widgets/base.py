@@ -1,5 +1,5 @@
 from textual.widget import Widget
-from dooit.ui.events.events import ChangeStatus, StatusType
+from dooit.ui.events.events import ChangeStatus, ModeType
 
 
 class HelperWidget(Widget):
@@ -15,7 +15,7 @@ class HelperWidget(Widget):
     }
     """
 
-    _status: StatusType
+    _status: ModeType
 
     async def hide(self) -> None:
         self.styles.layer = "L1"

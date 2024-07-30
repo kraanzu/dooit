@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from typing_extensions import List
 from textual.message import Message
 from dooit.ui.api.plug import PluginManager
+from dooit.ui.events.events import DooitEvent
 from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
 from dooit.ui.widgets import BarWidget
@@ -12,10 +13,6 @@ from dooit.ui.api.components import TodoLayout, WorkspaceLayout
 
 if TYPE_CHECKING:
     from ..tui import Dooit
-
-
-def camel_to_snake(name: str) -> str:
-    return "".join(["_" + i.lower() if i.isupper() else i for i in name]).lstrip("_")
 
 
 class DooitAPI:
@@ -40,8 +37,8 @@ class DooitAPI:
     def handle_key(self, key: str) -> None:
         self.keybinds[self.bar_mode][key]()
 
-    def trigger_event(self, event: Message):
-        event_name = camel_to_snake(event.__class__.__name__)
+    def trigger_event(self, event: DooitEvent):
+        event_name = event.snake_case
         for obj in self.plugin_manager.events[event_name]:
             obj(self)
 

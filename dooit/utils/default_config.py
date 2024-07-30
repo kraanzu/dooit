@@ -5,10 +5,10 @@ from dooit.ui.widgets import BarWidget
 from rich.text import Text
 
 
-@events.mode_changed
 def get_mode():
     mode = " NORMAL "
     return Text(f" {mode} ", style="black on white")
+
 
 def spacer():
     return Text(" ")

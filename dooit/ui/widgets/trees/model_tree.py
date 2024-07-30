@@ -1,8 +1,7 @@
-from typing import Callable
 from textual.app import events
 from dooit.api.model import Model
 from collections import defaultdict
-
+from dooit.ui.events.events import ChangeStatus
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 
@@ -50,14 +49,14 @@ class ModelTree(BaseTree):
         res = self.node.start_edit(property)
         self.refresh_options()
         if res:
-            # self.tui.bar.set_status("INSERT")
+            self.app.post_message(ChangeStatus("INSERT"))
             self.node.refresh_prompt()
             self.refresh_options()
         return res
 
     def stop_edit(self):
         self.node.stop_edit()
-        # self.tui.bar.set_status("NORMAL")
+        self.app.post_message(ChangeStatus("NORMAL"))
 
     def create_node(self):
         raise NotImplementedError

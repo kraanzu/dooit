@@ -13,6 +13,7 @@ class DooitEvent(Message, bubble=True):
     """
     Base class for all events
     """
+
     kwargs = {}
 
     @property

@@ -42,20 +42,7 @@ class Workspace(Model):
             "workspaces": child_workspaces,
         }
 
-    # WARNING: This will be deprecated in future versions
-    def extract_data_old(self, data: Dict):
-        for i, j in data.items():
-            if i == "common":
-                for k in j:
-                    todo = self.add_todo(index=len(self.todos))
-                    todo.from_data(k)
-                continue
-
-            workspace = self.add_child("workspace", index=len(self.workspaces))
-            workspace.edit("description", i)
-            workspace.from_data(j)
-
-    def extract_data_new(self, data: Dict, overwrite_uuid: bool):
+    def __extract_data(self, data: Dict, overwrite_uuid: bool):
         if overwrite_uuid:
             self._uuid = data["uuid"]
 
@@ -71,10 +58,7 @@ class Workspace(Model):
 
     def from_data(self, data: Any, overwrite_uuid: bool = True) -> None:
         if isinstance(data, dict):
-            if "uuid" not in data:
-                self.extract_data_old(data)
-            else:
-                self.extract_data_new(data, overwrite_uuid)
+            self.__extract_data(data, overwrite_uuid)
 
         elif isinstance(data, list):
             todo = self.add_todo(index=len(self.todos))

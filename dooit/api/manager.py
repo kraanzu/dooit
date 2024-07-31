@@ -60,23 +60,13 @@ class Manager(Model):
         self.last_modified = parser.last_modified
         self.from_data(data)
 
-    # WARNING: This will be deprecated in future versions
-    def extract_data_old(self, data: Dict):
-        for i, j in data.items():
-            child = self.add_child(WORKSPACE, len(self.workspaces))
-            child.edit("description", i)
-            child.from_data(j)
-
-    def extract_data_new(self, data: List):
+    def __extract_data(self, data: List):
         for i in data:
             child = self.add_child(WORKSPACE, len(self.workspaces))
             child.from_data(i)
 
     def from_data(self, data: Any) -> None:
-        if isinstance(data, Dict):
-            self.extract_data_old(data)
-        else:
-            self.extract_data_new(data)
+        self.__extract_data(data)
 
     def refresh_data(self) -> bool:
         if abs(self.last_modified - parser.last_modified) <= 2:

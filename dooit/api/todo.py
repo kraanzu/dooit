@@ -116,24 +116,10 @@ class Todo(Model):
             "recurrence": self._recurrence.save(),
         }
 
-    def fill_from_data(
-        self, data: Union[Dict, str], overwrite_uuid: bool = True
-    ) -> None:
-        if isinstance(data, str):
-            self.extract_data_old(data)
-        else:
-            self.extract_data_new(data, overwrite_uuid)
+    def fill_from_data(self, data: Dict, overwrite_uuid: bool = True) -> None:
+        self.__extract_data(data, overwrite_uuid)
 
-    # WARNING: This will be deprecated in future versions
-    def extract_data_old(self, data: str):
-        self._status.from_txt(data)
-        self._urgency.from_txt(data)
-        self._due.from_txt(data)
-        self._description.from_txt(data)
-        self._recurrence.from_txt(data)
-        self._effort.from_txt(data)
-
-    def extract_data_new(self, data: Dict[str, str], overwrite_uuid: bool = True):
+    def __extract_data(self, data: Dict[str, str], overwrite_uuid: bool = True):
         def get(key: str) -> str:
             return data.get(key, "")
 

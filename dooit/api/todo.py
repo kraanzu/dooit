@@ -4,11 +4,6 @@ from .model import Model, Result
 
 
 TODO = "todo"
-OPTS = {
-    "PENDING": "x",
-    "COMPLETED": "X",
-    "OVERDUE": "O",
-}
 
 
 def reversed_dict(d):

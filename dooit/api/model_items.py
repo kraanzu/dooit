@@ -17,11 +17,6 @@ DURATION_LEGEND = {
     "d": "day",
     "w": "week",
 }
-OPTS = {
-    "PENDING": "x",
-    "COMPLETED": "X",
-    "OVERDUE": "O",
-}
 CASUAL_FORMAT = "%d %h @ %H:%M"
 
 

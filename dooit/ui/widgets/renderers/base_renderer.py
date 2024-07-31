@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Union
 from rich.console import RenderableType
 from textual.app import events
 from textual.widgets.option_list import Option

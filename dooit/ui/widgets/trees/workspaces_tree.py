@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional
+from typing import List, Optional
 from textual import on
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.switcher import FlexibleSwitcher

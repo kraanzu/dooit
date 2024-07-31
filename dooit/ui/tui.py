@@ -1,7 +1,6 @@
 import webbrowser
 from textual import on
 from textual.app import App
-from textual.message import Message
 from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import Bar

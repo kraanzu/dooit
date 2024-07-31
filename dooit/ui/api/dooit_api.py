@@ -2,7 +2,6 @@ from collections import defaultdict
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing_extensions import List
-from textual.message import Message
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.events.events import DooitEvent
 from dooit.ui.registry import registry

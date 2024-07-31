@@ -1,8 +1,5 @@
-import re
 import pyperclip
 from typing import Optional
-from rich.style import Style
-from rich.text import Text
 from dooit.api.model import Ok, Result, Warn
 from dooit.ui.widgets.renderers.base_renderer import ModelType
 

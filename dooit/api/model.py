@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Dict, List, Literal, Optional
+from typing import Any, ClassVar, List, Literal, Optional
 from typing_extensions import Self
 from uuid import uuid4
 from dataclasses import dataclass

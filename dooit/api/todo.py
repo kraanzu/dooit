@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, Optional, Union, Dict
+from typing import Any, List, Optional, Dict
 from .model import Model, Result
 
 

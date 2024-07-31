@@ -309,6 +309,3 @@ class Model:
 
     def __init_subclass__(cls) -> None:
         cls.class_kind = cls.__name__.lower()
-
-
-Model.__init_subclass__()

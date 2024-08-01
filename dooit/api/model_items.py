@@ -41,6 +41,13 @@ class Item:
     def get_value(self) -> str:
         return self._value
 
+    def validate_value(self) -> bool:
+        """
+        Validate the value before assignment
+        """
+
+        raise NotImplementedError
+
     def set_value(self, val: str) -> Result:
         """
         Set the value after validation

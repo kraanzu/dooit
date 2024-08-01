@@ -145,6 +145,13 @@ class Model:
 
         return self.parent._get_child_index(self.kind, uuid=self._uuid)
 
+    def validate(self, key: str, value: str) -> bool:
+        var = f"_{key}"
+        if hasattr(self, var):
+            return getattr(self, var).validate_value(value)
+        else:
+            return False
+
     def edit(self, key: str, value: str) -> Result:
         """
         Edit item's attrs

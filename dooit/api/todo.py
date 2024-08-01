@@ -46,15 +46,15 @@ class Todo(Model):
 
     @property
     def urgency(self):
-        return str(self._urgency.value)
+        return str(self._urgency.get_value())
 
     @property
     def description(self):
-        return self._description.value
+        return self._description.get_value()
 
     @property
     def recurrence(self):
-        return self._recurrence.value
+        return self._recurrence.get_value()
 
     @property
     def due(self):
@@ -88,7 +88,7 @@ class Todo(Model):
         return self._status.toggle_done()
 
     def set_urgency(self, value: int) -> None:
-        self._urgency.set(value)
+        self._urgency.set_value(value)
 
     def decrease_urgency(self) -> None:
         self._urgency.decrease()

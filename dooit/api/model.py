@@ -152,7 +152,7 @@ class Model:
 
         var = f"_{key}"
         if hasattr(self, var):
-            return getattr(self, var).set(value)
+            return getattr(self, var).set_value(value)
         else:
             return Err("Invalid Request!")
 
@@ -239,7 +239,7 @@ class Model:
             child = Todo(parent=self)
             if inherit and isinstance(self, Todo):
                 child.fill_from_data(self.to_data(), overwrite_uuid=False)
-                child._description.value = ""
+                child._description.set_value("")
                 child._effort._value = 0
                 child.edit("status", "PENDING")
 

@@ -18,7 +18,7 @@ class Workspace(Model):
 
     @property
     def description(self):
-        return self._description.value
+        return self._description.get_value()
 
     def add_workspace(self, index: int = 0) -> "Workspace":
         return super().add_child(WORKSPACE, index)
@@ -46,7 +46,7 @@ class Workspace(Model):
         if overwrite_uuid:
             self._uuid = data["uuid"]
 
-        self._description.set(data["description"])
+        self._description.set_value(data["description"])
 
         for todo in data["todos"]:
             child_todo = self.add_todo(index=len(self.todos))

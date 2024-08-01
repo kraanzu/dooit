@@ -32,13 +32,16 @@ class Item:
     A workspace/todo item/param
     """
 
-    value: Any
+    _value: Any = None
 
     def __init__(self, model: Any) -> None:
         self.model = model
         self.model_kind = model.__class__.__name__.lower()
 
-    def set(self, val: str) -> Result:
+    def get_value(self) -> str:
+        return self._value
+
+    def set_value(self, val: str) -> Result:
         """
         Set the value after validation
         """
@@ -51,10 +54,10 @@ class Item:
         raise NotImplementedError
 
     def save(self) -> str:
-        return self.value
+        return self._value
 
     def setup(self, value: str) -> None:
-        self.set(value)
+        self.set_value(value)
 
     def to_txt(self) -> str:
         """
@@ -122,7 +125,7 @@ class Status(Item):
         self.model.edit("due", new_time.strftime(DATE_FORMAT))
         self.pending = True
 
-    def set(self, val: Any) -> Result:
+    def set_value(self, val: Any) -> Result:
         self.pending = val != "COMPLETED"
         self.update_others()
         return Ok()
@@ -153,9 +156,9 @@ class Status(Item):
     def from_txt(self, txt: str) -> None:
         status = txt.split()[0]
         if status == "X":
-            self.set("COMPLETED")
+            self.set_value("COMPLETED")
         else:
-            self.set("PENDING")
+            self.set_value("PENDING")
 
     def get_sortable(self) -> Any:
         if self.value == "OVERDUE":
@@ -168,7 +171,7 @@ class Status(Item):
 
 class Description(Item):
     _default = ""
-    value = _default
+    _value = _default
 
     def clean(self, s: str):
         for i, j in enumerate(s):
@@ -177,16 +180,16 @@ class Description(Item):
 
         return s
 
-    def set(self, value: Any) -> Result:
-        value = self.clean(value)
-        if value and value != self._default:
-            self.value = value
+    def set_value(self, val: str) -> Result:
+        val = self.clean(val)
+        if val and val != self._default:
+            self._value = val
             return Ok()
 
         return Err("Can't leave description empty!")
 
     def to_txt(self) -> str:
-        return self.value
+        return self._value
 
     def from_txt(self, txt: str) -> None:
         value = ""
@@ -199,10 +202,10 @@ class Description(Item):
         for j in txt.split()[3 + index :]:
             value = value + j + " "
 
-        self.value = value.strip()
+        self._value = value.strip()
 
     def get_sortable(self) -> Any:
-        return self.value
+        return self._value
 
 
 class Due(Item):
@@ -219,7 +222,7 @@ class Due(Item):
         else:
             return self._value.strftime("%d %h %H:%M")
 
-    def set(self, val: str) -> Result:
+    def set_value(self, val: str) -> Result:
         val = val.strip()
 
         if not val or val == "none":
@@ -279,74 +282,74 @@ class Due(Item):
 
 
 class Urgency(Item):
-    value = 1
+    _value = 1
 
     def increase(self) -> Result:
-        return self.set(self.value + 1)
+        return self.set_value(self._value + 1)
 
     def decrease(self) -> Result:
-        return self.set(self.value - 1)
+        return self.set_value(self._value - 1)
 
-    def set(self, val: Any) -> Result:
+    def set_value(self, val: Any) -> Result:
         val = int(val)
         if val < 1:
             return Warn("Urgency cannot be decreased further!")
         if val > 4:
             return Warn("Urgency cannot be increased further!")
 
-        self.value = val
+        self._value = val
         return Ok()
 
     def to_txt(self) -> str:
-        return f"({self.value})"
+        return f"({self._value})"
 
     def from_txt(self, txt: str) -> None:
-        self.set(txt.split()[1][1])
+        self.set_value(txt.split()[1][1])
 
     def get_sortable(self) -> Any:
-        return -self.value
+        return -self._value
 
 
 class Recurrence(Item):
-    value = ""
+    _value = ""
 
-    def set(self, val: str) -> Result:
+    def set_value(self, val: str) -> Result:
         if not val:
-            self.value = ""
+            self._value = ""
             return Ok("Recurrence removed")
 
         res = split_duration(val.strip())
         if not res:
             return Warn("Cannot parse! Please use format: [b]<number><m/h/d/w>[/b]")
 
-        self.value = val
+        self._value = val
         if self.model.due == "none":
             if val[-1] in "dw":
                 self.model.edit("due", "today")
             else:
                 self.model.edit("due", "now")
 
-            return Ok(f"Recurrence set for {self.value} [i]starting today[/i]")
+            return Ok(f"Recurrence set for {self._value} [i]starting today[/i]")
 
-        return Ok(f"Recurrence set for {self.value}")
+        return Ok(f"Recurrence set for {self._value}")
 
     def to_txt(self) -> str:
-        if self.value:
-            return f"%{self.value}"
+        if self._value:
+            return f"%{self._value}"
 
         return ""
 
     def from_txt(self, txt: str) -> None:
         for i in txt.split():
             if i[0] == "%":
-                self.value = i[1:]
+                self._value = i[1:]
                 break
 
     def get_sortable(self) -> Any:
-        if not self.value:
+        if not self._value:
             return timedelta.max
         else:
-            frequency, value = split_duration(self.value)
+            frequency, value = split_duration(self._value)
             return timedelta(**{DURATION_LEGEND[frequency] + "s": int(value)})
 
 
@@ -360,7 +363,7 @@ class Effort(Item):
 
         return ""
 
-    def set(self, val: str) -> Result:
+    def set_value(self, val: str) -> Result:
         if not val:
             self._value = ""
             return Ok("Effort removed for the todo")
@@ -392,4 +395,4 @@ class Effort(Item):
     def from_txt(self, txt: str) -> None:
         for i in txt.split()[3:]:
             if i[0] == "+":
-                self.set(i[1:])
+                self.set_value(i[1:])

@@ -1591,13 +1591,13 @@ sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
 name = "textual"
-version = "0.74.0"
+version = "0.75.1"
 description = "Modern Text User Interface framework"
 optional = false
 python-versions = "<4.0.0,>=3.8.1"
 files = [
-    {file = "textual-0.74.0-py3-none-any.whl", hash = "sha256:69b18904d11400e586274deb1270f5db7b4254a2ac00fe805f23b16c324345e4"},
-    {file = "textual-0.74.0.tar.gz", hash = "sha256:808c4e8727283ef84a123620449b217b6033ffde49f3ed195b3d0f98bb042969"},
+    {file = "textual-0.75.1-py3-none-any.whl", hash = "sha256:7edb1196753feae79890daa2287bc3180ebba2cbf63f59f2a160991325b020f2"},
+    {file = "textual-0.75.1.tar.gz", hash = "sha256:3f0b53fe6119aa64853c7e60ced4d4e16fb23c83dee1e0fd19eddb3f2639c02e"},
 ]
 
 [package.dependencies]
@@ -1878,4 +1878,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "02ea79096fa15239739e75f871383e79ca3175302010a0108106e26627fdf63f"
+content-hash = "f3aaa78e4e352208b6d1ef165ebc2164c68b6213cfa4386c9fec3ed633f6cb27"

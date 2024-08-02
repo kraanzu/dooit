@@ -1,21 +1,27 @@
-from dooit.api.model import Err, Result
 from .simple_input import SimpleInput
 
 
 class TodoDescription(SimpleInput):
-    _property = "description"
 
     @property
-    def empty_result(self) -> Result:
-        return Err("Description cannot be empty!")
+    def _property(self) -> str:
+        return "description"
+
+    # TODO: move to validation
+    # @property
+    # def empty_result(self) -> Result:
+    #     return Err("Description cannot be empty!")
 
 
 class WorkspaceDescription(SimpleInput):
-    _property = "description"
-
     @property
-    def empty_result(self) -> Result:
-        return Err("Description cannot be empty!")
+    def _property(self) -> str:
+        return "description"
+
+    # TODO: move to validation
+    # @property
+    # def empty_result(self) -> Result:
+    #     return Err("Description cannot be empty!")
 
 
 class Due(SimpleInput):
@@ -23,6 +29,8 @@ class Due(SimpleInput):
         self.value = ""
         return super().start_edit()
 
+    # TODO: move to validation
+    #
     # def timedelta_to_words(self, delta: timedelta):
     #     is_negative = delta.total_seconds() <= 0
     #     if not is_negative:

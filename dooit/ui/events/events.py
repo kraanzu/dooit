@@ -1,7 +1,7 @@
 from typing import Literal, Optional, Union
 from rich.text import TextType, Text
 from textual.message import Message
-from dooit.api.model import Result, SortMethodType
+from dooit.api.model import SortMethodType
 from dooit.api.workspace import Workspace
 
 ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
@@ -55,23 +55,6 @@ class ModeChanged(DooitEvent):
     def __init__(self, status: ModeType) -> None:
         super().__init__()
         self.status: ModeType = status
-
-
-class Notify(DooitEvent):
-    """
-    Emitted when A notification message on status bar is to be shown
-    """
-
-    def __init__(self, message: Union[TextType, Result]) -> None:
-        super().__init__()
-
-        if isinstance(message, Text):
-            message = message.markup
-
-        if isinstance(message, Result):
-            message = message.text()
-
-        self.message = message
 
 
 class TopicSelect(DooitEvent):

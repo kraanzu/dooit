@@ -1,54 +1,8 @@
 from typing import Any, ClassVar, List, Literal, Optional
 from typing_extensions import Self
 from uuid import uuid4
-from dataclasses import dataclass
-from rich.text import Text
 
 SortMethodType = Literal["description", "status", "due", "urgency", "effort"]
-
-
-@dataclass
-class Result:
-    """
-    Response class to return result of an operation
-    """
-
-    ok: bool
-    cancel_op: bool
-    message: Optional[str] = None
-    color: str = "white"
-
-    @classmethod
-    def Ok(cls, message: Optional[str] = None):
-        return cls(True, False, message, "green")
-
-    @classmethod
-    def Warn(cls, message: Optional[str] = None):
-        return cls(False, False, message, "yellow")
-
-    @classmethod
-    def Err(cls, message: str):
-        return cls(False, True, message, "red")
-
-    def is_ok(self) -> bool:
-        return self.ok
-
-    def is_err(self) -> bool:
-        return not self.ok
-
-    def text(self):
-        def colored(a, b):
-            return f"[{b}]{a}[/{b}]"
-
-        if self.message:
-            return colored(self.message, self.color)
-
-        return Text()
-
-
-Ok = Result.Ok
-Err = Result.Err
-Warn = Result.Warn
 
 
 class Model:
@@ -152,7 +106,7 @@ class Model:
         else:
             return False
 
-    def edit(self, key: str, value: str) -> Result:
+    def edit(self, key: str, value: str) -> None:
         """
         Edit item's attrs
         """
@@ -160,8 +114,6 @@ class Model:
         var = f"_{key}"
         if hasattr(self, var):
             return getattr(self, var).set_value(value)
-        else:
-            return Err("Invalid Request!")
 
     def shift_up(self) -> None:
         """

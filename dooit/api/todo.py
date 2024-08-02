@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Any, List, Optional, Dict
-from .model import Model, Result
+from .model import Model
 
 
 TODO = "todo"
@@ -79,10 +79,9 @@ class Todo(Model):
     def add_todo(self, index: int = 0, inherit: bool = False):
         return self.add_child(TODO, index, inherit)
 
-    def edit(self, key: str, value: str) -> Result:
-        res = super().edit(key, value)
+    def edit(self, key: str, value: str) -> None:
+        super().edit(key, value)
         self._status.update_others()
-        return res
 
     def toggle_complete(self) -> bool:
         return self._status.toggle_done()

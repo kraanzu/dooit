@@ -1,6 +1,5 @@
 import pyperclip
 from typing import Optional
-from dooit.api.model import Ok, Result, Warn
 from dooit.ui.widgets.renderers.base_renderer import ModelType
 
 
@@ -40,7 +39,7 @@ class Input:
     def start_edit(self) -> None:
         self.is_editing = True
 
-    def stop_edit(self) -> Optional[Result]:
+    def stop_edit(self) -> None:
         self.is_editing = False
 
     def clear(self) -> None:
@@ -196,30 +195,31 @@ class SimpleInput(Input):
     def _property(self) -> str:
         return self.__class__.__name__.lower()
 
-    @property
-    def empty_result(self) -> Result:
-        return Warn(f"{self.__class__.__name__} cannot be empty!")
+    # TODO: move to validation
+    #
+    # @property
+    # def empty_result(self) -> Result:
+    #     return Warn(f"{self.__class__.__name__} cannot be empty!")
 
     def refresh_value(self) -> str:
         self.value = getattr(self.model, self._property)
         return self.value
 
-    def stop_edit(self, cancel: bool = False) -> Optional[Result]:
+    def stop_edit(self, cancel: bool = False) -> None:
         super().stop_edit()
 
         if not cancel:
             res = self.model.edit(self._property, self.value)
         else:
             value = self.refresh_value()
-            if value:
-                res = Ok()
-            else:
-                res = Ok() if self.refresh_value() else self.empty_result
+            # if value:
+            #     res = Ok()
+            # else:
+            #     res = Ok() if self.refresh_value() else self.empty_result
 
         self.refresh_value()
-        return res
 
-    def cancel_edit(self) -> Optional[Result]:
+    def cancel_edit(self) -> None:
         return self.stop_edit(cancel=True)
 
     def keypress(self, key: str) -> None:

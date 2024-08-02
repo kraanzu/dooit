@@ -4,7 +4,6 @@ from typing import Any, Tuple
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from dooit.utils.date_parser import parse
-from .model import Result, Ok, Warn, Err
 
 DATE_ORDER = environ.get("DOOIT_DATE_ORDER", "DMY")
 DATE_FORMAT = (
@@ -48,7 +47,7 @@ class Item:
 
         raise NotImplementedError
 
-    def set_value(self, val: str) -> Result:
+    def set_value(self, val: str):
         """
         Set the value after validation
         """
@@ -132,10 +131,9 @@ class Status(Item):
         self.model.edit("due", new_time.strftime(DATE_FORMAT))
         self.pending = True
 
-    def set_value(self, val: Any) -> Result:
+    def set_value(self, val: Any) -> None:
         self.pending = val != "COMPLETED"
         self.update_others()
-        return Ok()
 
     def update_others(self):
         # Update ancestors
@@ -187,13 +185,10 @@ class Description(Item):
 
         return s
 
-    def set_value(self, val: str) -> Result:
+    def set_value(self, val: str) -> None:
         val = self.clean(val)
         if val and val != self._default:
             self._value = val
-            return Ok()
-
-        return Err("Can't leave description empty!")
 
     def to_txt(self) -> str:
         return self._value
@@ -229,28 +224,20 @@ class Due(Item):
         else:
             return self._value.strftime("%d %h %H:%M")
 
-    def set_value(self, val: str) -> Result:
+    def set_value(self, val: str) -> None:
         val = val.strip()
 
         if not val or val == "none":
             self._value = None
-            return Ok("Due removed for the todo")
 
-        try:
-            res, ok = parse(val)
-            current_year = str(datetime.now().year)
+        res, ok = parse(val)
+        current_year = str(datetime.now().year)
 
-            if ok and res:
-                if res < datetime.today() and current_year not in val:
-                    res = res + relativedelta(years=1)
+        if ok and res:
+            if res < datetime.today() and current_year not in val:
+                res = res + relativedelta(years=1)
 
-                self._value = res
-                return Ok(f"Due date changed to [b cyan]{self.value}[/b cyan]")
-            else:
-                return Warn("Cannot parse the string!")
-
-        except Exception:
-            return Warn("Cannot parse the string!")
+            self._value = res
 
     def save(self) -> str:
         if not self._value:
@@ -291,21 +278,21 @@ class Due(Item):
 class Urgency(Item):
     _value = 1
 
-    def increase(self) -> Result:
+    def increase(self) -> None:
         return self.set_value(self._value + 1)
 
-    def decrease(self) -> Result:
+    def decrease(self) -> None:
         return self.set_value(self._value - 1)
 
-    def set_value(self, val: Any) -> Result:
+    def set_value(self, val: Any) -> None:
         val = int(val)
-        if val < 1:
-            return Warn("Urgency cannot be decreased further!")
-        if val > 4:
-            return Warn("Urgency cannot be increased further!")
+        # TODO: move this to validation
+        # if val < 1:
+        #     return Warn("Urgency cannot be decreased further!")
+        # if val > 4:
+        #     return Warn("Urgency cannot be increased further!")
 
         self._value = val
-        return Ok()
 
     def to_txt(self) -> str:
         return f"({self._value})"
@@ -320,25 +307,23 @@ class Urgency(Item):
 class Recurrence(Item):
     _value = ""
 
-    def set_value(self, val: str) -> Result:
+    def set_value(self, val: str) -> None:
         if not val:
             self._value = ""
-            return Ok("Recurrence removed")
 
-        res = split_duration(val.strip())
-        if not res:
-            return Warn("Cannot parse! Please use format: [b]<number><m/h/d/w>[/b]")
+        split_duration(val.strip())
+
+        # TODO: move this to validation
+        # if not res:
+        #     return Warn("Cannot parse! Please use format: [b]<number><m/h/d/w>[/b]")
 
         self._value = val
-        if self.model.due == "none":
+
+        if self.model.due == "none" and val:
             if val[-1] in "dw":
                 self.model.edit("due", "today")
             else:
                 self.model.edit("due", "now")
-
-            return Ok(f"Recurrence set for {self._value} [i]starting today[/i]")
-
-        return Ok(f"Recurrence set for {self._value}")
 
     def to_txt(self) -> str:
         if self._value:
@@ -370,20 +355,18 @@ class Effort(Item):
 
         return ""
 
-    def set_value(self, val: str) -> Result:
+    def set_value(self, val: str) -> None:
         if not val:
             self._value = ""
-            return Ok("Effort removed for the todo")
 
         if not val.isnumeric():
-            return Warn("Only numeric values allowed")
+            return
 
         val_int = int(val)
         if val_int >= 0:
             self._value = val_int
-            return Ok()
 
-        return Warn("Cannot decrease effort below zero")
+        # TODO: move this to validation
 
     def get_sortable(self) -> Any:
         if self._value:

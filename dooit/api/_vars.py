@@ -1,6 +1,7 @@
 from pathlib import Path
 from sqlalchemy import create_engine
 from appdirs import user_data_dir
+from sqlalchemy.orm import Session
 
 
 ROOT_FOLDER = Path(user_data_dir("dooit"))
@@ -10,3 +11,4 @@ DATABASE_FILE = ROOT_FOLDER / "dooit.db"
 DATABASE_CONN_STRING = f"sqlite:////{DATABASE_FILE}"
 
 engine = create_engine(DATABASE_CONN_STRING, echo=False)
+session = Session(engine)

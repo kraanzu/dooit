@@ -1,7 +1,6 @@
 import webbrowser
 from textual import on
 from textual.app import App
-from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import Bar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
@@ -67,10 +66,6 @@ class Dooit(App):
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):
         self._mode = event.status
-
-    async def action_quit(self) -> None:
-        manager.commit()
-        return await super().action_quit()
 
     async def action_open_url(self, url: str) -> None:
         webbrowser.open(url, new=2)

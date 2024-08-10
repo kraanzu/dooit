@@ -31,6 +31,9 @@ class Model(BaseModel, BaseModelMixin):
 
     __abstract__ = True
 
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    order_index: Mapped[int] = mapped_column(default=-1)
+
     @property
     def parent(self) -> Any:
         return None

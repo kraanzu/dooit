@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, List, Literal, Optional
+from typing import Any, List, Literal, Optional
 from typing_extensions import Self
 from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -17,11 +17,6 @@ class BaseModelMixin:
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
-
-
-if TYPE_CHECKING:
-    from dooit.api.workspace import Workspace
-    from dooit.api.todo import Todo
 
 
 class Model(BaseModel, BaseModelMixin):
@@ -70,22 +65,6 @@ class Model(BaseModel, BaseModelMixin):
     def has_same_parent_kind(self) -> bool:
         return isinstance(self.parent, self.__class__)
 
-    def validate(self, key: str, value: str) -> bool:
-        var = f"_{key}"
-        if hasattr(self, var):
-            return getattr(self, var).validate_value(value)
-        else:
-            return False
-
-    def edit(self, key: str, value: str) -> None:
-        """
-        Edit item's attrs
-        """
-
-        var = f"_{key}"
-        if hasattr(self, var):
-            return getattr(self, var).set_value(value)
-
     def shift_up(self) -> None:
         """
         Shift the item one place up among its siblings
@@ -125,31 +104,6 @@ class Model(BaseModel, BaseModelMixin):
             return self.parent.add_child(self.kind, self._get_index() + 1, inherit)
         else:
             raise TypeError("Cannot add sibling")
-
-    def add_child(self, kind: str, index: int = 0, inherit: bool = False) -> Any:
-        """
-        Adds a child to specified index (Defaults to first position)
-        """
-
-        raise NotImplementedError
-
-        from ..api.workspace import Workspace
-        from ..api.todo import Todo
-
-        if kind == "workspace":
-            child = Workspace(parent=self)
-        else:
-            child = Todo(parent=self)
-            if inherit and isinstance(self, Todo):
-                child.fill_from_data(self.to_data(), overwrite_uuid=False)
-                child._description.set_value("")
-                child._effort._value = 0
-                child.edit("status", "PENDING")
-
-        children = self._get_children(kind)
-        children.insert(index, child)
-
-        return child
 
     def drop(self) -> None:
         session.delete(self)

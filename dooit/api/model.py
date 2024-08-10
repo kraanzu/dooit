@@ -36,7 +36,7 @@ class Model(BaseModel, BaseModelMixin):
 
     @property
     def parent(self) -> Any:
-        return None
+        raise NotImplementedError
 
     @property
     def nest_level(self):

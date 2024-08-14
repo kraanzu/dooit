@@ -1,35 +1,9 @@
-import unittest
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import Session
-from dooit.api import BaseModel as Base
-from dooit.api.workspace import Workspace
+from sqlalchemy import select
+from tests.test_core._base import CoreTestBase
+from dooit.api import Workspace
 
 
-class TestWorkspace(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.engine = create_engine("sqlite:///:memory:")
-        cls.session = Session(bind=cls.engine)
-        Base.metadata.create_all(bind=cls.engine)
-
-    def setUp(self):
-        self.engine = create_engine("sqlite:///:memory:")
-        self.session = Session(bind=self.engine)
-        Base.metadata.create_all(bind=self.engine)
-
-    def tearDown(self) -> None:
-        self.session.rollback()
-        self.session.close()
-
-    # --------------------------------------------------------------
-
-    def test_workspace_session(self):
-        w = Workspace()
-        w.save(session=self.session)
-
-        self.assertIn(w, self.session)
-
+class WorkspaceTest(CoreTestBase):
     def test_workspace_creation(self):
         for _ in range(5):
             w = Workspace()
@@ -37,7 +11,6 @@ class TestWorkspace(unittest.TestCase):
 
         query = select(Workspace)
         result = self.session.execute(query).scalars().all()
-
         self.assertEqual(len(result), 5)
 
     def test_workspace_siblings_by_creation(self):

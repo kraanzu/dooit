@@ -14,3 +14,11 @@ repos:
         language: system
         types: [python]
         require_serial: true
+
+    - id: pytest-check
+      name: pytest-check
+      entry: pytest
+      language: system
+      pass_filenames: false
+      always_run: true
+

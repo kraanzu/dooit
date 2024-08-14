@@ -1,6 +1,7 @@
 from typing import List, Optional, Self
-from sqlalchemy import ForeignKey, select
-from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy import Connection, ForeignKey, select
+from sqlalchemy import event
+from sqlalchemy.orm import Mapped, Mapper, Session, mapped_column, relationship
 from ..api.todo import Todo
 from .model import Model
 from ._vars import default_session
@@ -64,3 +65,11 @@ class Workspace(Model):
         todo = Todo(parent=self)
         todo.save(session)
         return todo
+
+
+@event.listens_for(Workspace, "after_insert")
+def before_insert(mapper: Mapper, connection: Connection, target):
+    if target.order_index == -1:
+        with Session(connection) as session:
+            siblings = target.get_siblings(session)
+            target.order_index = len(siblings)

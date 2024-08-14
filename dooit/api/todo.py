@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING, Optional, Self, Union
 from datetime import datetime
 from typing import List
+from sqlalchemy import Connection, event
 from sqlalchemy import ForeignKey, select
-from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy.orm import Mapped, Mapper, Session, mapped_column, relationship
 from .model import Model, default_session
 
 
@@ -107,3 +108,11 @@ class Todo(Model):
             return False
 
         return self.pending and self.due < datetime.now()
+
+
+@event.listens_for(Todo, "after_insert")
+def before_insert(mapper: Mapper, connection: Connection, target: Todo):
+    if target.order_index == -1:
+        with Session(connection) as session:
+            siblings = target.get_siblings(session)
+            target.order_index = len(siblings)

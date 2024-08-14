@@ -1,6 +1,5 @@
 from typing import Any, List, Literal, Optional
 from typing_extensions import Self
-from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 from ._vars import default_session

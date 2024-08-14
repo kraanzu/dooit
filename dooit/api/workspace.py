@@ -1,8 +1,9 @@
 from typing import List, Optional
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from ..api.todo import Todo
 from .model import Model
+from ._vars import default_session
 
 
 class Workspace(Model):
@@ -35,14 +36,22 @@ class Workspace(Model):
 
     @property
     def parent(self) -> Optional["Workspace"]:
-        raise ValueError("Parent not found")
+        return self.parent_workspace
 
-    def add_workspace(self, index: int = 0) -> "Workspace":
+    def add_workspace(
+        self,
+        index: int = 0,
+        session: Session = default_session,
+    ) -> "Workspace":
         workspace = Workspace(parent=self)
-        workspace.save()
+        workspace.save(session)
         return workspace
 
-    def add_todo(self, index: int = 0) -> Todo:
+    def add_todo(
+        self,
+        index: int = 0,
+        session: Session = default_session,
+    ) -> Todo:
         todo = Todo(parent=self)
-        todo.save()
+        todo.save(session)
         return todo

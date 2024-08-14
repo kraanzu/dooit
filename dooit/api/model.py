@@ -1,7 +1,7 @@
 from typing import Any, List, Literal, Optional
 from typing_extensions import Self
 from sqlalchemy import select
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 from ._vars import default_session
 
@@ -44,22 +44,21 @@ class Model(BaseModel, BaseModelMixin):
 
         return level
 
-    @property
-    def siblings(self) -> List[Self]:
+    def get_siblings(self, session: Session = default_session) -> List[Self]:
         query = (
             select(self.__class__)
             .where(self.__class__.parent == self.parent)
             .order_by(self.__class__.order_index)
         )
-        return list(default_session.execute(query).scalars().all())
+        return list(session.execute(query).scalars().all())
 
     @property
-    def is_last_sibling(self) -> bool:
-        return self.siblings[-1] == self
+    def is_last_sibling(self, session: Session = default_session) -> bool:
+        return self.get_siblings(session)[-1] == self
 
     @property
-    def is_first_sibling(self) -> bool:
-        return self.siblings[0] == self
+    def is_first_sibling(self, session: Session = default_session) -> bool:
+        return self.get_siblings(session)[0] == self
 
     @property
     def has_same_parent_kind(self) -> bool:
@@ -105,8 +104,8 @@ class Model(BaseModel, BaseModelMixin):
         else:
             raise TypeError("Cannot add sibling")
 
-    def drop(self) -> None:
-        default_session.delete(self)
+    def drop(self, session: Session = default_session) -> None:
+        session.delete(self)
 
-    def save(self) -> None:
-        default_session.add_all([self])
+    def save(self, session: Session = default_session -> None:
+        session.add_all([self])

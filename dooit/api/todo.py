@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from .model import Model
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from .model import Model, default_session
 
 
 if TYPE_CHECKING:
@@ -59,9 +59,14 @@ class Todo(Model):
     def tags(self) -> List[str]:
         return [i for i in self.description.split() if i[0] == "@"]
 
-    def add_todo(self, index: int = 0, inherit: bool = False) -> "Todo":
+    def add_todo(
+        self,
+        index: int = 0,
+        inherit: bool = False,
+        session: Session = default_session,
+    ) -> "Todo":
         todo = Todo()
-        todo.save()
+        todo.save(session)
         return todo
 
     # ----------- HELPER FUNCTIONS --------------

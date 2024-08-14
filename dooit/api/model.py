@@ -56,35 +56,37 @@ class Model(BaseModel, BaseModelMixin):
     def has_same_parent_kind(self) -> bool:
         raise NotImplementedError
 
-    def shift_up(self) -> None:
+    def shift_up(self, session: Session = default_session) -> None:
         """
         Shift the item one place up among its siblings
         """
 
         raise NotImplementedError
 
-    def shift_down(self) -> bool:
+    def shift_down(self, session: Session = default_session) -> bool:
         """
         Shift the item one place down among its siblings
         """
 
         raise NotImplementedError
 
-    def prev_sibling(self) -> Optional[Self]:
+    def prev_sibling(self, session: Session = default_session) -> Optional[Self]:
         """
         Returns previous sibling item, if any, else None
         """
 
         raise NotImplementedError
 
-    def next_sibling(self) -> Optional[Self]:
+    def next_sibling(self, session: Session = default_session) -> Optional[Self]:
         """
         Returns next sibling item, if any, else None
         """
 
         raise NotImplementedError
 
-    def add_sibling(self, inherit: bool = False) -> Self:
+    def add_sibling(
+        self, inherit: bool = False, session: Session = default_session
+    ) -> Self:
         """
         Add item sibling
         """

@@ -13,6 +13,9 @@ class WorkspaceTest(CoreTestBase):
         result = self.session.execute(query).scalars().all()
         self.assertEqual(len(result), 5)
 
+        index_ids = sorted([w.order_index for w in result])
+        self.assertEqual(index_ids, [1, 2, 3, 4, 5])
+
     def test_workspace_siblings_by_creation(self):
         for _ in range(5):
             w = Workspace()

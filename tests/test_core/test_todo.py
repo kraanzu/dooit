@@ -13,6 +13,9 @@ class TestTodo(CoreTestBase):
         result = self.session.execute(query).scalars().all()
         self.assertEqual(len(result), 5)
 
+        index_ids = sorted([t.order_index for t in result])
+        self.assertEqual(index_ids, [1, 2, 3, 4, 5])
+
     def test_todo_siblings_by_creation(self):
         workspace = Workspace()
         workspace.save(session=self.session)

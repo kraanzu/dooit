@@ -106,6 +106,8 @@ class Model(BaseModel, BaseModelMixin):
 
     def drop(self, session: Session = default_session) -> None:
         session.delete(self)
+        session.commit()
 
-    def save(self, session: Session = default_session -> None:
+    def save(self, session: Session = default_session) -> None:
         session.add_all([self])
+        session.commit()

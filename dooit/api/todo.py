@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING, Optional, Self, Union
 from datetime import datetime
 from typing import List
-from sqlalchemy import Connection, event
 from sqlalchemy import ForeignKey, select
-from sqlalchemy.orm import Mapped, Mapper, Session, mapped_column, relationship
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from .model import Model, default_session
 
 

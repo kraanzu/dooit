@@ -1,7 +1,6 @@
 from typing import List, Optional, Self
-from sqlalchemy import Connection, ForeignKey, select
-from sqlalchemy import event
-from sqlalchemy.orm import Mapped, Mapper, Session, mapped_column, relationship
+from sqlalchemy import ForeignKey, select
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from ..api.todo import Todo
 from .model import Model
 from ._vars import default_session

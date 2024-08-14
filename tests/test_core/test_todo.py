@@ -5,8 +5,10 @@ from dooit.api import Todo, Workspace
 
 class TestTodo(CoreTestBase):
     def test_todo_creation(self):
+        workspace = Workspace()
+
         for _ in range(5):
-            t = Todo()
+            t = Todo(parent_workspace=workspace)
             t.save(session=self.session)
 
         query = select(Todo)
@@ -17,8 +19,10 @@ class TestTodo(CoreTestBase):
         self.assertEqual(index_ids, [1, 2, 3, 4, 5])
 
     def test_sibling_methods(self):
+        workspace = Workspace()
+
         for _ in range(5):
-            todo = Todo()
+            todo = Todo(parent_workspace=workspace)
             todo.save(self.session)
 
         query = select(Todo)

@@ -38,6 +38,10 @@ class Workspace(Model):
     def parent(self) -> Optional["Workspace"]:
         return self.parent_workspace
 
+    @property
+    def has_same_parent_kind(self) -> bool:
+        return self.parent is not None
+
     def get_siblings(self, session: Session = default_session) -> List[Self]:
         cls = self.__class__
         query = (

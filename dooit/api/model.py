@@ -54,7 +54,7 @@ class Model(BaseModel, BaseModelMixin):
 
     @property
     def has_same_parent_kind(self) -> bool:
-        return isinstance(self.parent, self.__class__)
+        raise NotImplementedError
 
     def shift_up(self) -> None:
         """

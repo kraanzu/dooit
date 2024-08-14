@@ -56,6 +56,10 @@ class Todo(Model):
         raise ValueError("Parent not found")
 
     @property
+    def has_same_parent_kind(self) -> bool:
+        return self.parent_todo is not None
+
+    @property
     def tags(self) -> List[str]:
         return [i for i in self.description.split() if i[0] == "@"]
 

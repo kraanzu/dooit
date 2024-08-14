@@ -16,6 +16,22 @@ class TestTodo(CoreTestBase):
         index_ids = sorted([t.order_index for t in result])
         self.assertEqual(index_ids, [1, 2, 3, 4, 5])
 
+    def test_sibling_methods(self):
+        for _ in range(5):
+            todo = Todo()
+            todo.save(self.session)
+
+        query = select(Todo)
+        todo = self.session.execute(query).scalars().first()
+
+        assert todo is not None
+
+        siblings = todo.get_siblings(session=self.session)
+        index_ids = [w.order_index for w in siblings]
+        self.assertEqual(index_ids, [1, 2, 3, 4, 5])
+        self.assertTrue(siblings[0].is_first_sibling(session=self.session))
+        self.assertTrue(siblings[-1].is_last_sibling(session=self.session))
+
     def test_todo_siblings_by_creation(self):
         workspace = Workspace()
         workspace.save(session=self.session)

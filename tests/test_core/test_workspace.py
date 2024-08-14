@@ -13,7 +13,18 @@ class WorkspaceTest(CoreTestBase):
         result = self.session.execute(query).scalars().all()
         self.assertEqual(len(result), 5)
 
-        index_ids = sorted([w.order_index for w in result])
+    def test_sibling_methods(self):
+        for _ in range(5):
+            w = Workspace()
+            w.save(self.session)
+
+        query = select(Workspace)
+        workspace = self.session.execute(query).scalars().first()
+
+        assert workspace is not None
+
+        siblings = workspace.get_siblings(session=self.session)
+        index_ids = [w.order_index for w in siblings]
         self.assertEqual(index_ids, [1, 2, 3, 4, 5])
 
     def test_workspace_siblings_by_creation(self):

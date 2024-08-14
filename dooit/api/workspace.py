@@ -67,9 +67,11 @@ class Workspace(Model):
         return todo
 
 
-@event.listens_for(Workspace, "after_insert")
-def before_insert(mapper: Mapper, connection: Connection, target):
-    if target.order_index == -1:
-        with Session(connection) as session:
-            siblings = target.get_siblings(session)
-            target.order_index = len(siblings)
+@event.listens_for(Session, "before_commit")
+def fix_order_id(session: Session):
+
+    query = select(Workspace).where(Workspace.order_index == -1)
+    objs = session.execute(query).scalars().all()
+
+    for obj in objs:
+        obj.order_index = len(obj.get_siblings(session))

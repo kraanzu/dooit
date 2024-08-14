@@ -39,3 +39,12 @@ class WorkspaceTest(CoreTestBase):
 
         assert workspace is not None
         self.assertEqual(len(workspace.get_siblings(session=self.session)), 5)
+
+    def test_parent_kind(self):
+        workspace1 = Workspace()
+        workspace1.save(self.session)
+
+        workspace2 = Workspace(parent_workspace=workspace1)
+        workspace2.save(self.session)
+
+        self.assertTrue(workspace2.has_same_parent_kind)

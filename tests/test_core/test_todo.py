@@ -29,3 +29,17 @@ class TestTodo(CoreTestBase):
 
         assert workspace is not None
         self.assertEqual(len(workspace.get_siblings(session=self.session)), 5)
+
+    def test_parent_kind(self):
+        workspace = Workspace()
+        workspace.save(self.session)
+
+        todo = Todo(parent_workspace=workspace)
+        todo.save(self.session)
+
+        self.assertFalse(todo.has_same_parent_kind)
+
+        todo2 = Todo(parent_todo=todo)
+        todo2.save(self.session)
+
+        self.assertTrue(todo2.has_same_parent_kind)

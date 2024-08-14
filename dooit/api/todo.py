@@ -61,21 +61,14 @@ class Todo(Model):
 
     def get_siblings(self, session: Session = default_session) -> List[Self]:
         cls = self.__class__
+        query = select(cls)
 
         if self.parent_workspace:
-            query = (
-                select(cls)
-                .where(cls.parent_workspace == self.parent_workspace)
-                .order_by(cls.order_index)
-            )
-
+            query = query.where(cls.parent_workspace == self.parent_workspace)
         else:
-            query = (
-                select(cls)
-                .where(cls.parent_todo == self.parent_todo)
-                .order_by(cls.order_index)
-            )
+            query = query.where(cls.parent_todo == self.parent_todo)
 
+        query = query.order_by(cls.order_index)
         return list(session.execute(query).scalars().all())
 
     def add_todo(

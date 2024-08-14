@@ -65,13 +65,3 @@ class Workspace(Model):
         todo = Todo(parent=self)
         todo.save(session)
         return todo
-
-
-@event.listens_for(Session, "before_commit")
-def fix_order_id(session: Session):
-
-    query = select(Workspace).where(Workspace.order_index == -1)
-    objs = session.execute(query).scalars().all()
-
-    for obj in objs:
-        obj.order_index = len(obj.get_siblings(session))

@@ -26,6 +26,8 @@ class WorkspaceTest(CoreTestBase):
         siblings = workspace.get_siblings(session=self.session)
         index_ids = [w.order_index for w in siblings]
         self.assertEqual(index_ids, [1, 2, 3, 4, 5])
+        self.assertTrue(siblings[0].is_first_sibling(session=self.session))
+        self.assertTrue(siblings[-1].is_last_sibling(session=self.session))
 
     def test_workspace_siblings_by_creation(self):
         for _ in range(5):

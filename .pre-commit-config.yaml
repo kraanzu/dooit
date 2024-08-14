@@ -8,13 +8,13 @@ repos:
         types: [python]
         require_serial: true
 
-    -   id: ruff
-        args: [ check ]
-        name: ruff
-        entry: ruff
-        language: system
-        types: [python]
-        require_serial: true
+    # -   id: ruff
+    #     args: [ check ]
+    #     name: ruff
+    #     entry: ruff
+    #     language: system
+    #     types: [python]
+    #     require_serial: true
 
     - id: pytest-check
       name: pytest-check

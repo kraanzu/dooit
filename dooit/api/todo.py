@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional, Self, Union
 from datetime import datetime
 from typing import List
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from .model import Model, default_session
 
@@ -58,6 +58,25 @@ class Todo(Model):
     @property
     def tags(self) -> List[str]:
         return [i for i in self.description.split() if i[0] == "@"]
+
+    def get_siblings(self, session: Session = default_session) -> List[Self]:
+        cls = self.__class__
+
+        if self.parent_workspace:
+            query = (
+                select(cls)
+                .where(cls.parent_workspace == self.parent_workspace)
+                .order_by(cls.order_index)
+            )
+
+        else:
+            query = (
+                select(cls)
+                .where(cls.parent_todo == self.parent_todo)
+                .order_by(cls.order_index)
+            )
+
+        return list(session.execute(query).scalars().all())
 
     def add_todo(
         self,

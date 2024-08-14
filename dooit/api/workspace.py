@@ -1,5 +1,5 @@
-from typing import List, Optional
-from sqlalchemy import ForeignKey
+from typing import List, Optional, Self
+from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from ..api.todo import Todo
 from .model import Model
@@ -37,6 +37,15 @@ class Workspace(Model):
     @property
     def parent(self) -> Optional["Workspace"]:
         return self.parent_workspace
+
+    def get_siblings(self, session: Session = default_session) -> List[Self]:
+        cls = self.__class__
+        query = (
+            select(cls)
+            .where(cls.parent_workspace == self.parent_workspace)
+            .order_by(cls.order_index)
+        )
+        return list(session.execute(query).scalars().all())
 
     def add_workspace(
         self,

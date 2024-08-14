@@ -45,12 +45,7 @@ class Model(BaseModel, BaseModelMixin):
         return level
 
     def get_siblings(self, session: Session = default_session) -> List[Self]:
-        query = (
-            select(self.__class__)
-            .where(self.__class__.parent == self.parent)
-            .order_by(self.__class__.order_index)
-        )
-        return list(session.execute(query).scalars().all())
+        raise NotImplementedError
 
     @property
     def is_last_sibling(self, session: Session = default_session) -> bool:

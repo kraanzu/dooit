@@ -46,11 +46,9 @@ class Model(BaseModel, BaseModelMixin):
     def get_siblings(self, session: Session = default_session) -> List[Self]:
         raise NotImplementedError
 
-    @property
     def is_last_sibling(self, session: Session = default_session) -> bool:
         return self.get_siblings(session)[-1] == self
 
-    @property
     def is_first_sibling(self, session: Session = default_session) -> bool:
         return self.get_siblings(session)[0] == self
 

@@ -3,7 +3,7 @@ from typing_extensions import Self
 from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
-from ._vars import session
+from ._vars import default_session
 
 SortMethodType = Literal["description", "status", "due", "urgency", "effort"]
 
@@ -51,7 +51,7 @@ class Model(BaseModel, BaseModelMixin):
             .where(self.__class__.parent == self.parent)
             .order_by(self.__class__.order_index)
         )
-        return list(session.execute(query).scalars().all())
+        return list(default_session.execute(query).scalars().all())
 
     @property
     def is_last_sibling(self) -> bool:
@@ -106,7 +106,7 @@ class Model(BaseModel, BaseModelMixin):
             raise TypeError("Cannot add sibling")
 
     def drop(self) -> None:
-        session.delete(self)
+        default_session.delete(self)
 
     def save(self) -> None:
-        session.add_all([self])
+        default_session.add_all([self])

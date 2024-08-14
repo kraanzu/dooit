@@ -10,5 +10,5 @@ ROOT_FOLDER = Path(__file__).parent.parent.parent.absolute() # TODO: remove this
 DATABASE_FILE = ROOT_FOLDER / "dooit.db"
 DATABASE_CONN_STRING = f"sqlite:////{DATABASE_FILE}"
 
-engine = create_engine(DATABASE_CONN_STRING, echo=False)
-session = Session(engine)
+default_engine = create_engine(DATABASE_CONN_STRING, echo=False)
+default_session = Session(default_engine)

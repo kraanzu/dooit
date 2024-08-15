@@ -63,3 +63,9 @@ class TestTodo(CoreTestBase):
         todo2.save()
 
         self.assertTrue(todo2.has_same_parent_kind)
+
+    def test_without_parent(self):
+        todo = Todo()
+
+        with self.assertRaises(ValueError):
+            todo.save()

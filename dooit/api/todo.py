@@ -66,7 +66,15 @@ class Todo(Model):
 
     @property
     def siblings(self) -> List["Todo"]:
-        return sorted(self.parent.todos, key=lambda x: x.order_index or -1)
+
+        if self.parent_workspace:
+            return sorted(
+                self.parent_workspace.todos, key=lambda x: x.order_index or -1
+            )
+        if self.parent_todo:
+            return sorted(self.parent_todo.todos, key=lambda x: x.order_index or -1)
+
+        return []
 
     def add_todo(
         self,

@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, Optional, Self, Union
+from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
-from .model import Model, default_session
+from .model import Model
+from .manager import manager
 
 
 if TYPE_CHECKING:
@@ -63,26 +64,17 @@ class Todo(Model):
     def tags(self) -> List[str]:
         return [i for i in self.description.split() if i[0] == "@"]
 
-    def get_siblings(self, session: Session = default_session) -> List[Self]:
-        cls = self.__class__
-        query = select(cls)
-
-        if self.parent_workspace:
-            query = query.where(cls.parent_workspace == self.parent_workspace)
-        else:
-            query = query.where(cls.parent_todo == self.parent_todo)
-
-        query = query.order_by(cls.order_index)
-        return list(session.execute(query).scalars().all())
+    @property
+    def siblings(self) -> List["Todo"]:
+        return sorted(self.parent.todos, key=lambda x: x.order_index or -1)
 
     def add_todo(
         self,
         index: int = 0,
         inherit: bool = False,
-        session: Session = default_session,
     ) -> "Todo":
         todo = Todo()
-        todo.save(session)
+        todo.save()
         return todo
 
     # ----------- HELPER FUNCTIONS --------------
@@ -111,3 +103,8 @@ class Todo(Model):
             return False
 
         return self.pending and self.due < datetime.now()
+
+    @classmethod
+    def all(cls) -> List["Todo"]:
+        query = select(Todo)
+        return list(manager.session.execute(query).scalars().all())

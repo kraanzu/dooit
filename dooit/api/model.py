@@ -1,8 +1,8 @@
-from typing import Any, List, Literal, Optional
+from typing import Any, List, Literal
 from typing_extensions import Self
-from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
-from ._vars import default_session
+from .manager import manager
 
 SortMethodType = Literal["description", "status", "due", "urgency", "effort"]
 
@@ -43,58 +43,57 @@ class Model(BaseModel, BaseModelMixin):
 
         return level
 
-    def get_siblings(self, session: Session = default_session) -> List[Self]:
+    @property
+    def siblings(self) -> List[Any]:
         raise NotImplementedError
 
-    def is_last_sibling(self, session: Session = default_session) -> bool:
-        return self.get_siblings(session)[-1] == self
+    def is_last_sibling(self) -> bool:
+        return self.siblings[-1].id == self.id
 
-    def is_first_sibling(self, session: Session = default_session) -> bool:
-        return self.get_siblings(session)[0] == self
+    def is_first_sibling(self) -> bool:
+        return self.siblings[0].id == self.id
 
     @property
     def has_same_parent_kind(self) -> bool:
         raise NotImplementedError
 
-    def shift_up(self, session: Session = default_session) -> bool:
+    def shift_up(self) -> bool:
         """
         Shift the item one place up among its siblings
         """
 
-        if self.is_first_sibling(session):
+        if self.is_first_sibling():
             return False
 
-        siblings = self.get_siblings(session)
+        siblings = self.siblings
         index = siblings.index(self)
-        siblings[index - 1].order_index = index
-        siblings[index].order_index = index - 1
+        siblings[index - 1].order_index += 1
+        siblings[index].order_index -= 1
 
         siblings[index].save()
         siblings[index - 1].save()
 
         return True
 
-    def shift_down(self, session: Session = default_session) -> bool:
+    def shift_down(self) -> bool:
         """
         Shift the item one place down among its siblings
         """
 
-        if self.is_last_sibling(session):
+        if self.is_last_sibling():
             return False
 
-        siblings = self.get_siblings(session)
+        siblings = self.siblings
         index = siblings.index(self)
-        siblings[index + 1].order_index = index
-        siblings[index].order_index = index + 1
+        siblings[index + 1].order_index -= 1
+        siblings[index].order_index += 1
 
-        siblings[index].save(session)
-        siblings[index + 1].save(session)
+        siblings[index].save()
+        siblings[index + 1].save()
 
         return True
 
-    def add_sibling(
-        self, inherit: bool = False, session: Session = default_session
-    ) -> Self:
+    def add_sibling(self, inherit: bool = False) -> Self:
         """
         Add item sibling
         """
@@ -106,10 +105,8 @@ class Model(BaseModel, BaseModelMixin):
         else:
             raise TypeError("Cannot add sibling")
 
-    def drop(self, session: Session = default_session) -> None:
-        session.delete(self)
-        session.commit()
+    def drop(self) -> None:
+        manager.delete(self)
 
-    def save(self, session: Session = default_session) -> None:
-        session.add_all([self])
-        session.commit()
+    def save(self) -> None:
+        manager.save(self)

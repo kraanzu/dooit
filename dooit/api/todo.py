@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey, select
-from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .model import Model
 from .manager import manager
 

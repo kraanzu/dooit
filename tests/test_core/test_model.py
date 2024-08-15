@@ -1,6 +1,5 @@
-from sqlalchemy import select
 from dooit.api.workspace import Workspace
-from tests.test_core._base import CoreTestBase, manager
+from tests.test_core._base import CoreTestBase
 
 
 class TestModel(CoreTestBase):
@@ -16,12 +15,7 @@ class TestModel(CoreTestBase):
             w = Workspace()
             w.save()
 
-        query = (
-            select(Workspace)
-            .where(Workspace.is_root == False)
-            .order_by(Workspace.order_index)
-        )
-        workspace = self.session.execute(query).scalars().all()[0]
+        workspace = Workspace.all()[0]
 
         assert workspace is not None
 

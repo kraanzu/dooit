@@ -1,5 +1,4 @@
-from typing import Literal, Optional, Union
-from rich.text import TextType, Text
+from typing import Literal, Optional
 from textual.message import Message
 from dooit.api.model import SortMethodType
 from dooit.api.workspace import Workspace

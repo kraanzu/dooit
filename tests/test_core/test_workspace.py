@@ -1,4 +1,3 @@
-from sqlalchemy import select
 from tests.test_core._base import CoreTestBase
 from dooit.api import Workspace
 
@@ -33,8 +32,7 @@ class WorkspaceTest(CoreTestBase):
             w = Workspace()
             w.save()
 
-        query = select(Workspace).where(Workspace.is_root == False)
-        workspace = self.session.execute(query).scalars().first()
+        workspace = Workspace.all()[0]
 
         assert workspace is not None
         self.assertEqual(len(workspace.siblings), 5)

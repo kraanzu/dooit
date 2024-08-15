@@ -7,44 +7,43 @@ class WorkspaceTest(CoreTestBase):
     def test_workspace_creation(self):
         for _ in range(5):
             w = Workspace()
-            w.save(self.session)
+            w.save()
 
-        query = select(Workspace)
-        result = self.session.execute(query).scalars().all()
+        result = Workspace.all()
         self.assertEqual(len(result), 5)
 
     def test_sibling_methods(self):
         for _ in range(5):
             w = Workspace()
-            w.save(self.session)
+            w.save()
 
-        query = select(Workspace)
-        workspace = self.session.execute(query).scalars().first()
+        workspace = Workspace.all()[0]
 
         assert workspace is not None
 
-        siblings = workspace.get_siblings(session=self.session)
+        siblings = workspace.siblings
         index_ids = [w.order_index for w in siblings]
+
+        self.assertTrue(siblings[0].is_first_sibling())
+        self.assertTrue(siblings[-1].is_last_sibling())
         self.assertEqual(index_ids, [1, 2, 3, 4, 5])
-        self.assertTrue(siblings[0].is_first_sibling(session=self.session))
-        self.assertTrue(siblings[-1].is_last_sibling(session=self.session))
 
     def test_workspace_siblings_by_creation(self):
         for _ in range(5):
             w = Workspace()
-            w.save(self.session)
+            w.save()
 
-        query = select(Workspace)
+        query = select(Workspace).where(Workspace.is_root == False)
         workspace = self.session.execute(query).scalars().first()
 
         assert workspace is not None
-        self.assertEqual(len(workspace.get_siblings(session=self.session)), 5)
+        self.assertEqual(len(workspace.siblings), 5)
 
     def test_parent_kind(self):
         workspace1 = Workspace()
-        workspace1.save(self.session)
+        workspace1.save()
 
         workspace2 = Workspace(parent_workspace=workspace1)
-        workspace2.save(self.session)
+        workspace2.save()
 
         self.assertTrue(workspace2.has_same_parent_kind)

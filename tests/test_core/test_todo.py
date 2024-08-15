@@ -8,8 +8,8 @@ class TestTodo(CoreTestBase):
         workspace = Workspace()
 
         for _ in range(5):
-            t = Todo(parent_workspace=workspace)
-            t.save()
+            todo = Todo(parent_workspace=workspace)
+            todo.save()
 
         result = Todo.all()
         self.assertEqual(len(result), 5)

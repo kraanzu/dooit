@@ -5,11 +5,6 @@ from tests.test_core._base import CoreTestBase
 class TestModel(CoreTestBase):
     # Using Workspace as an example because Model is an abstract class
 
-    def test_model_session(self):
-        w = Workspace()
-        w.save()
-        # self.assertIn(w, manager.session)
-
     def test_shifts(self):
         for _ in range(5):
             w = Workspace()

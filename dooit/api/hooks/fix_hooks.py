@@ -1,6 +1,6 @@
 from sqlalchemy import Connection, Table, event
-from .workspace import Workspace
-from .todo import Todo
+from ..workspace import Workspace
+from ..todo import Todo
 
 
 @event.listens_for(Workspace, "before_update")

@@ -2,7 +2,7 @@ from .model import Model, BaseModel
 from .todo import Todo
 from .workspace import Workspace
 from .manager import manager
-from . import hooks
+from .hooks import fix_hooks
 
 __all__ = [
     "BaseModel",
@@ -10,5 +10,5 @@ __all__ = [
     "Todo",
     "Workspace",
     "manager",
-    "hooks",
+    "fix_hooks",
 ]

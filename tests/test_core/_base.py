@@ -1,22 +1,24 @@
 from unittest import TestCase
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from dooit.api import BaseModel as Base
+from dooit.api import manager
+
+TEMP_ENGINE = create_engine("sqlite:///:memory:")
 
 
 class CoreTestBase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.engine = create_engine("sqlite:///:memory:")
-        cls.session = Session(bind=cls.engine)
-        Base.metadata.create_all(bind=cls.engine)
+        manager.register_engine(TEMP_ENGINE)
 
     def setUp(self):
-        self.engine = create_engine("sqlite:///:memory:")
-        self.session = Session(bind=self.engine)
-        Base.metadata.create_all(bind=self.engine)
+        manager.register_engine(TEMP_ENGINE)
 
     def tearDown(self) -> None:
-        self.session.rollback()
-        self.session.close()
+        manager.session.rollback()
+        manager.session.close()
+
+    @property
+    def session(self) -> Session:
+        return manager.session

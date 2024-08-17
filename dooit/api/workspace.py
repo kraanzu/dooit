@@ -83,43 +83,36 @@ class Workspace(Model):
         obj.order_index = index
         obj.save()
 
-    def add_workspace(
-        self,
-        obj: Optional["Workspace"] = None,
-        index: Optional[int] = None,
-    ) -> "Workspace":
+    def set_order_index(self, index: int) -> None:
+        if index > len(self.siblings) or index < 0:
+            index = len(self.siblings)
 
-        if index is None or index > len(self.workspaces):
-            index = len(self.workspaces)
+        siblings = [
+            i for i in self.siblings if i.id != self.id and i.order_index >= index
+        ]
+        for i in siblings[::-1]:
+            i.order_index += 1
+            i.save()
 
-        if obj is None:
-            obj = Workspace(parent_workspace=self)
+        self.order_index = index
+        self.save()
 
-        self._insert(self.workspaces, obj, index)
-        return obj
+    def add_workspace(self) -> "Workspace":
+        workspace = Workspace(parent_workspace=self)
+        workspace.save()
+        return workspace
 
-    def add_todo(
-        self,
-        obj: Optional["Todo"] = None,
-        index: Optional[int] = None,
-    ) -> Todo:
-        if index is None or index > len(self.todos):
-            index = len(self.todos)
+    def add_todo(self) -> "Todo":
+        todo = Todo(parent_workspace=self)
+        todo.save()
+        return todo
 
-        if obj is None:
-            obj = Todo(parent_workspace=self)
-
-        self._insert(self.todos, obj, index)
-        return obj
-
-    def add_sibling(self, obj: Optional["Workspace"] = None) -> "Workspace":
-        if obj is None:
-            obj = Workspace(parent_workspace=self.parent_workspace)
-
+    def add_sibling(self) -> "Workspace":
         assert self.parent_workspace is not None
 
-        self.parent_workspace.add_workspace(obj, self.order_index + 1)
-        return obj
+        workspace = self.parent_workspace.add_workspace()
+        workspace.set_order_index(self.order_index + 1)
+        return workspace
 
     def save(self) -> None:
         if not self.parent_workspace and not self.is_root:

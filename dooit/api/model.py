@@ -29,6 +29,10 @@ class Model(BaseModel, BaseModelMixin):
     order_index: Mapped[int] = mapped_column(default=-1)
 
     @property
+    def uuid(self) -> str:
+        return str(self.id)
+
+    @property
     def parent(self) -> Any:
         raise NotImplementedError
 

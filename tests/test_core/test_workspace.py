@@ -45,3 +45,24 @@ class WorkspaceTest(CoreTestBase):
         workspace2.save()
 
         self.assertTrue(workspace2.has_same_parent_kind)
+
+    def test_sibling_add(self):
+        w1 = Workspace()
+        w1.save()
+
+        w2 = w1.add_sibling()
+        w2.save()
+
+        w = w1.add_sibling()
+        self.assertEqual(len(w.siblings), 3)
+        self.assertEqual(w.order_index, 1)
+
+    def test_workspace_add(self):
+        super_w = Workspace()
+        super_w.save()
+
+        super_w.add_workspace()
+        w = super_w.add_workspace()
+
+        self.assertEqual(len(w.siblings), 2)
+        self.assertEqual(w.order_index, 1)

@@ -1,9 +1,12 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from ..api.todo import Todo
 from .model import Model
 from .manager import manager
+
+ModelType = Union["Workspace", "Todo"]
+ModelTypeList = Union[List["Workspace"], List["Todo"]]
 
 
 class Workspace(Model):
@@ -70,28 +73,53 @@ class Workspace(Model):
         return sorted(
             self.parent_workspace.workspaces, key=lambda x: x.order_index or -1
         )
-        # query = (
-        #     select(Workspace)
-        #     .where(Workspace.parent_workspace_id == self.parent_workspace_id)
-        #     .order_by(Workspace.order_index)
-        # )
-        # return list(manager.session.execute(query).scalars().all())
+
+    def _insert(self, items: ModelTypeList, obj: ModelType, index: int) -> None:
+        children = [i for i in items if i.order_index or -1 >= index]
+        for child in children[::-1]:
+            child.order_index += 1
+            child.save()
+
+        obj.order_index = index
+        obj.save()
 
     def add_workspace(
         self,
-        index: int = 0,
+        obj: Optional["Workspace"] = None,
+        index: Optional[int] = None,
     ) -> "Workspace":
-        workspace = Workspace(parent=self)
-        workspace.save()
-        return workspace
+
+        if index is None or index > len(self.workspaces):
+            index = len(self.workspaces)
+
+        if obj is None:
+            obj = Workspace(parent_workspace=self)
+
+        self._insert(self.workspaces, obj, index)
+        return obj
 
     def add_todo(
         self,
-        index: int = 0,
+        obj: Optional["Todo"] = None,
+        index: Optional[int] = None,
     ) -> Todo:
-        todo = Todo(parent=self)
-        todo.save()
-        return todo
+        if index is None or index > len(self.todos):
+            index = len(self.todos)
+
+        if obj is None:
+            obj = Todo(parent_workspace=self)
+
+        self._insert(self.todos, obj, index)
+        return obj
+
+    def add_sibling(self, obj: Optional["Workspace"] = None) -> "Workspace":
+        if obj is None:
+            obj = Workspace(parent_workspace=self.parent_workspace)
+
+        assert self.parent_workspace is not None
+
+        self.parent_workspace.add_workspace(obj, self.order_index + 1)
+        return obj
 
     def save(self) -> None:
         if not self.parent_workspace and not self.is_root:

@@ -1,10 +1,10 @@
-from typing import Any, List, Literal
-from typing_extensions import Self
+from typing import Any, List, Literal, Optional, TypeVar
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 from .manager import manager
 
 SortMethodType = Literal["description", "status", "due", "urgency", "effort"]
+T = TypeVar("T")
 
 
 class BaseModel(DeclarativeBase):
@@ -93,17 +93,8 @@ class Model(BaseModel, BaseModelMixin):
 
         return True
 
-    def add_sibling(self, inherit: bool = False) -> Self:
-        """
-        Add item sibling
-        """
-
+    def add_sibling(self, obj: Optional[T] = None) -> T:
         raise NotImplementedError
-
-        if self.parent:
-            return self.parent.add_child(self.kind, self._get_index() + 1, inherit)
-        else:
-            raise TypeError("Cannot add sibling")
 
     def drop(self) -> None:
         manager.delete(self)

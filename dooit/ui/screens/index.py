@@ -1,6 +1,7 @@
 from textual import events, on, work
 from textual.containers import Container
 from dooit.api.manager import manager
+from dooit.api.workspace import Workspace
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
     TopicSelect,
@@ -31,14 +32,9 @@ class MainScreen(BaseScreen):
 
     def compose(self):
         with DualSplit():
-            workspaces_tree = WorkspacesTree(manager)
-            initial = (
-                workspaces_tree.id
-                if manager.workspaces
-                else WORKSPACE_EMPTY_WIDGETS[0].id
-            )
+            workspaces_tree = WorkspacesTree(Workspace._get_or_create_root())
 
-            with FlexibleSwitcher(initial=initial, id="workspace_switcher"):
+            with FlexibleSwitcher(id="workspace_switcher"):
                 yield from WORKSPACE_EMPTY_WIDGETS
                 yield workspaces_tree
 

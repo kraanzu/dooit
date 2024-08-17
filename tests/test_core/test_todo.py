@@ -69,3 +69,16 @@ class TestTodo(CoreTestBase):
 
         with self.assertRaises(ValueError):
             todo.save()
+
+    def test_sibling_add(self):
+        w = Workspace()
+        w.save()
+
+        t = w.add_todo()
+        w.add_todo()
+
+        t2 = t.add_sibling()
+
+        self.assertEqual(len(t.siblings), 3)
+        self.assertEqual(len(t2.siblings), 3)
+        self.assertEqual(t2.order_index, 1)

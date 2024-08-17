@@ -1,5 +1,5 @@
 from sqlalchemy import event
-from ..workspace import Workspace
+from ..exceptions import NoParentError, MultipleParentError
 from ..todo import Todo
 
 
@@ -8,7 +8,7 @@ from ..todo import Todo
 def validate_parent_todo(mapper, connection, target: Todo):
 
     if target.parent_workspace is None and target.parent_todo is None:
-        raise ValueError("Todo must have a parent workspace or todo")
+        raise NoParentError("Todo must have a parent workspace or todo")
 
     if target.parent_workspace is not None and target.parent_todo is not None:
-        raise ValueError("Todo cannot have both a parent workspace and todo")
+        raise MultipleParentError("Todo cannot have both a parent workspace and todo")

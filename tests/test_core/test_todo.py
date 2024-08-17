@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from dooit.api.exceptions import NoParentError, MultipleParentError
 from tests.test_core._base import CoreTestBase
 from dooit.api import Todo, Workspace
 
@@ -67,13 +68,17 @@ class TestTodo(CoreTestBase):
     def test_without_parent(self):
         todo = Todo()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(NoParentError):
             todo.save()
 
     def test_with_both_parents(self):
-        todo = Todo(parent_workspace=Workspace(), parent_todo=Todo())
+        w = Workspace()
+        w.save()
+        t = w.add_todo()
 
-        with self.assertRaises(ValueError):
+        todo = Todo(parent_workspace=w, parent_todo=t)
+
+        with self.assertRaises(MultipleParentError):
             todo.save()
 
     def test_sibling_add(self):

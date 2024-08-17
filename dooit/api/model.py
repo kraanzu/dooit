@@ -93,9 +93,6 @@ class Model(BaseModel, BaseModelMixin):
 
         return True
 
-    def add_sibling(self, obj: Optional[T] = None) -> T:
-        raise NotImplementedError
-
     def drop(self) -> None:
         manager.delete(self)
 

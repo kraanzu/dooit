@@ -20,3 +20,14 @@ class TestModel(CoreTestBase):
         workspace.shift_down()
         siblings = workspace.siblings
         self.assertEqual(siblings[1].id, workspace.id)
+
+    def test_sibling_addition(self):
+        for _ in range(5):
+            w = Workspace()
+            w.save()
+
+        workspace = Workspace.all()[0]
+        workspace2 = Workspace()
+        workspace2.save()
+
+        self.assertEqual(workspace2.order_index, 5)

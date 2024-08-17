@@ -43,16 +43,14 @@ class Workspace(Model):
     @classmethod
     def _get_or_create_root(cls) -> "Workspace":
 
-        with Session(manager.engine) as session:
-            query = select(Workspace).where(Workspace.is_root == True)
-            root = session.execute(query).scalars().first()
+        query = select(Workspace).where(Workspace.is_root == True)
+        root = manager.session.execute(query).scalars().first()
 
-            if root is None:
-                root = Workspace(is_root=True)
-                session.add(root)
-                session.commit()
+        if root is None:
+            root = Workspace(is_root=True)
+            root.save()
 
-            return root
+        return root
 
     @property
     def parent(self) -> Optional["Workspace"]:

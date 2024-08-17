@@ -83,20 +83,6 @@ class Workspace(Model):
         obj.order_index = index
         obj.save()
 
-    def set_order_index(self, index: int) -> None:
-        if index > len(self.siblings) or index < 0:
-            index = len(self.siblings)
-
-        siblings = [
-            i for i in self.siblings if i.id != self.id and i.order_index >= index
-        ]
-        for i in siblings[::-1]:
-            i.order_index += 1
-            i.save()
-
-        self.order_index = index
-        self.save()
-
     def add_workspace(self) -> "Workspace":
         workspace = Workspace(parent_workspace=self)
         workspace.save()

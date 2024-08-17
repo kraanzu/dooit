@@ -35,7 +35,7 @@ class WorkspaceTest(CoreTestBase):
 
         self.assertTrue(siblings[0].is_first_sibling())
         self.assertTrue(siblings[-1].is_last_sibling())
-        self.assertEqual(index_ids, [1, 2, 3, 4, 5])
+        self.assertEqual(index_ids, [0, 1, 2, 3, 4])
 
     def test_parent_kind(self):
         workspace1 = Workspace()

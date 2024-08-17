@@ -16,7 +16,7 @@ class TestTodo(CoreTestBase):
 
         indexs = sorted([t.order_index for t in result])
 
-        self.assertEqual(indexs, [1, 2, 3, 4, 5])
+        self.assertEqual(indexs, [0, 1, 2, 3, 4])
 
     def test_sibling_methods(self):
         workspace = Workspace()
@@ -32,7 +32,7 @@ class TestTodo(CoreTestBase):
 
         siblings = todo.siblings
         index_ids = [w.order_index for w in siblings]
-        self.assertEqual(index_ids, [1, 2, 3, 4, 5])
+        self.assertEqual(index_ids, [0, 1, 2, 3, 4])
         self.assertTrue(siblings[0].is_first_sibling())
         self.assertTrue(siblings[-1].is_last_sibling())
 

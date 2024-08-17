@@ -1,11 +1,11 @@
 import webbrowser
 from textual import on
 from textual.app import App
+from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import Bar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.utils.watcher import Watcher
-from dooit.ui.css.main import screen_CSS
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
 from .api import DooitAPI
@@ -18,7 +18,6 @@ PRINTABLE = (
 
 
 class Dooit(App):
-    CSS = screen_CSS
     SCREENS = {
         "main": MainScreen(name="main"),
         "help": HelpScreen(name="help"),
@@ -33,6 +32,7 @@ class Dooit(App):
         super().__init__()
         self.api = DooitAPI(self)
         self._mode: ModeType = "NORMAL"
+        manager.register_engine()
 
     async def on_load(self):
         self.post_message(Startup())

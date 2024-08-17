@@ -70,6 +70,12 @@ class TestTodo(CoreTestBase):
         with self.assertRaises(ValueError):
             todo.save()
 
+    def test_with_both_parents(self):
+        todo = Todo(parent_workspace=Workspace(), parent_todo=Todo())
+
+        with self.assertRaises(ValueError):
+            todo.save()
+
     def test_sibling_add(self):
         w = Workspace()
         w.save()

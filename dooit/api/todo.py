@@ -76,40 +76,19 @@ class Todo(Model):
 
         return []
 
-    def add_todo(
-        self,
-        obj: Optional["Todo"] = None,
-        index: Optional[int] = None,
-    ) -> "Todo":
-        if index is None or index > len(self.todos):
-            index = len(self.todos)
+    def add_todo(self) -> "Todo":
+        todo = Todo(parent_todo=self)
+        todo.save()
+        return todo
 
-        if obj is None:
-            obj = Todo(parent_todo=self)
-
-        children = [i for i in self.todos if i.order_index >= index]
-        for child in children[::-1]:
-            child.order_index += 1
-            child.save()
-
-        obj.order_index = index
-        obj.save()
-        return obj
-
-    def add_sibling(self, obj: Optional["Todo"] = None) -> "Todo":
-        if obj is None:
-            obj = Todo(
-                parent_todo=self.parent_todo,
-                parent_workspace=self.parent_workspace,
-            )
-
-        if self.parent_todo:
-            return self.parent_todo.add_todo(obj)
-
-        if self.parent_workspace:
-            return self.parent_workspace.add_todo(obj)
-
-        raise ValueError("Parent not found")
+    def add_sibling(self) -> "Todo":
+        todo = Todo(
+            parent_todo=self.parent_todo,
+            parent_workspace=self.parent_workspace,
+        )
+        todo.save()
+        todo.set_order_index(self.order_index + 1)
+        return todo
 
     # ----------- HELPER FUNCTIONS --------------
 

@@ -66,3 +66,13 @@ class WorkspaceTest(CoreTestBase):
 
         self.assertEqual(len(w.siblings), 2)
         self.assertEqual(w.order_index, 1)
+
+    def test_todo_add(self):
+        super_w = Workspace()
+        super_w.save()
+
+        super_w.add_todo()
+        todo = super_w.add_todo()
+
+        self.assertEqual(len(todo.siblings), 2)
+        self.assertEqual(todo.order_index, 1)

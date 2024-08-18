@@ -1,3 +1,4 @@
+from typing import Generic, TypeVar
 from textual.app import events
 from dooit.api.model import DooitModel
 from collections import defaultdict
@@ -5,8 +6,10 @@ from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 
+ModelType = TypeVar("ModelType", bound=DooitModel)
 
-class ModelTree(BaseTree):
+
+class ModelTree(BaseTree, Generic[ModelType]):
     DEFAULT_CSS = """
     ModelTree {
         height: 1fr;
@@ -15,7 +18,7 @@ class ModelTree(BaseTree):
     }
     """
 
-    def __init__(self, model: DooitModel) -> None:
+    def __init__(self, model: ModelType) -> None:
         tree = self.__class__.__name__
         super().__init__(id=f"{tree}_{model.uuid}")
         self._model = model
@@ -34,7 +37,7 @@ class ModelTree(BaseTree):
         return self.highlighted is not None and self.node.editing != ""
 
     @property
-    def model(self) -> DooitModel:
+    def model(self) -> ModelType:
         return self._model
 
     def force_refresh(self) -> None:

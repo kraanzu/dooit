@@ -1,11 +1,12 @@
-from typing import Iterable, Optional
-
-from dooit.api.todo import Todo
+from typing import Iterable, Optional, Union
+from dooit.api import Todo, Workspace
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 
+Model = Union[Todo, Workspace]
 
-class TodosTree(ModelTree):
+
+class TodosTree(ModelTree[Model, TodoRender]):
     @property
     def node(self) -> TodoRender:
         option = super().node
@@ -43,9 +44,9 @@ class TodosTree(ModelTree):
         self.screen.query_one("WorkspacesTree").focus()
 
     def add_todo(self) -> str:
-        workspace = self.model.add_child("todo")
-        self.add_option(TodoRender(workspace))
-        return workspace.uuid
+        todo = self.model.add_todo()
+        self.add_option(TodoRender(todo))
+        return todo.uuid
 
     def create_node(self):
         uuid = self.add_todo()

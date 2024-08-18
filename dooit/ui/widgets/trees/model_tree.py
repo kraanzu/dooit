@@ -7,9 +7,10 @@ from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 
 ModelType = TypeVar("ModelType", bound=DooitModel)
+RenderType = TypeVar("RenderType", bound=BaseRenderer)
 
 
-class ModelTree(BaseTree, Generic[ModelType]):
+class ModelTree(BaseTree, Generic[ModelType, RenderType]):
     DEFAULT_CSS = """
     ModelTree {
         height: 1fr;

@@ -7,7 +7,7 @@ from .model_tree import ModelTree
 from ..renderers.workspace_renderer import WorkspaceRender
 
 
-class WorkspacesTree(ModelTree[Workspace]):
+class WorkspacesTree(ModelTree[Workspace, WorkspaceRender]):
     @property
     def node(self) -> WorkspaceRender:
         option = super().node

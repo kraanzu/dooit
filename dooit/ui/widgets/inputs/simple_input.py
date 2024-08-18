@@ -209,13 +209,10 @@ class SimpleInput(Input):
         super().stop_edit()
 
         if not cancel:
-            res = self.model.edit(self._property, self.value)
+            setattr(self.model, self._property, self.value)
+            self.model.save()
         else:
             value = self.refresh_value()
-            # if value:
-            #     res = Ok()
-            # else:
-            #     res = Ok() if self.refresh_value() else self.empty_result
 
         self.refresh_value()
 

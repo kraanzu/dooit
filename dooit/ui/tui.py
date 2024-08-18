@@ -5,7 +5,6 @@ from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import Bar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
-from dooit.utils.watcher import Watcher
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
 from .api import DooitAPI
@@ -38,7 +37,6 @@ class Dooit(App):
         self.post_message(Startup())
 
     async def on_mount(self):
-        self.watcher = Watcher()
         self.set_interval(1, self.poll)
         self.push_screen("main")
 

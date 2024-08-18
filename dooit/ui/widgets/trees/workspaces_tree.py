@@ -48,7 +48,7 @@ class WorkspacesTree(ModelTree[Workspace]):
         tree = TodosTree(todo_obj)
 
         if not self.screen.query(f"#{tree.id}"):
-            switcher.add_content(tree, set_current=True)
+            await switcher.add_content(tree, set_current=True)
 
         switcher.current = tree.id
 

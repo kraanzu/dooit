@@ -1,19 +1,13 @@
 from typing import List, Optional
 from textual import on
+from textual.widgets import ContentSwitcher
 from dooit.api.workspace import Workspace
-from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from .model_tree import ModelTree
 from ..renderers.workspace_renderer import WorkspaceRender
 
 
 class WorkspacesTree(ModelTree[Workspace]):
-    DEFAULT_CSS = """
-    WorkspacesTree {
-        height: 10;
-    }
-    """
-
     @property
     def node(self) -> WorkspaceRender:
         option = super().node
@@ -49,12 +43,12 @@ class WorkspacesTree(ModelTree[Workspace]):
         if not event.option_id:
             return
 
-        switcher = self.screen.query_one("#todo_switcher", expect_type=FlexibleSwitcher)
+        switcher = self.screen.query_one("#todo_switcher", expect_type=ContentSwitcher)
         todo_obj = self.get_option(event.option_id).model
         tree = TodosTree(todo_obj)
 
         if not self.screen.query(f"#{tree.id}"):
-            await switcher.add_widget(tree)
+            switcher.add_content(tree)
 
         switcher.current = tree.id
 

@@ -1,5 +1,6 @@
 from textual import events, on, work
 from textual.containers import Container
+from textual.widgets import ContentSwitcher
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
@@ -7,7 +8,6 @@ from dooit.ui.events import (
     SwitchTab,
     SpawnHelp,
 )
-from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
 from dooit.ui.widgets import Bar
 from .base import BaseScreen
@@ -38,12 +38,11 @@ class MainScreen(BaseScreen):
         workspaces_tree = WorkspacesTree(Workspace._get_or_create_root())
 
         with DualSplit():
-
-            with FlexibleSwitcher(id="workspace_switcher", initial="empty-workspace"):
+            with ContentSwitcher(id="workspace_switcher", initial="empty-workspace"):
                 yield from WORKSPACE_EMPTY_WIDGETS
                 yield workspaces_tree
 
-            with FlexibleSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
+            with ContentSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
                 yield from TODO_EMPTY_WIDGETS
 
         yield Bar()

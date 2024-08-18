@@ -26,7 +26,6 @@ class DualSplitRight(Container):
 
 
 class MainScreen(BaseScreen):
-    date_style = "classic"
 
     def compose(self):
         with DualSplit():

@@ -26,12 +26,20 @@ class DualSplitRight(Container):
 
 
 class MainScreen(BaseScreen):
+    DEFAULT_CSS = """
+    MainScreen {
+        layout: grid;
+        grid-size: 1 2;
+        grid-rows: 1fr 1;
+    }
+    """
 
     def compose(self):
-        with DualSplit():
-            workspaces_tree = WorkspacesTree(Workspace._get_or_create_root())
+        workspaces_tree = WorkspacesTree(Workspace._get_or_create_root())
 
-            with FlexibleSwitcher(id="workspace_switcher"):
+        with DualSplit():
+
+            with FlexibleSwitcher(id="workspace_switcher", initial="empty-workspace"):
                 yield from WORKSPACE_EMPTY_WIDGETS
                 yield workspaces_tree
 

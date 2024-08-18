@@ -1,4 +1,5 @@
 from typing import List, Optional
+from rich.console import RenderableType
 from textual import on
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.switcher import FlexibleSwitcher
@@ -7,7 +8,7 @@ from .model_tree import ModelTree
 from ..renderers.workspace_renderer import WorkspaceRender
 
 
-class WorkspacesTree(ModelTree):
+class WorkspacesTree(ModelTree[Workspace]):
     DEFAULT_CSS = """
     WorkspacesTree {
         height: 10;
@@ -45,7 +46,7 @@ class WorkspacesTree(ModelTree):
             self.add_option(WorkspaceRender(workspace))
 
     @on(ModelTree.OptionHighlighted)
-    def update_todo_tree(self, event: ModelTree.OptionHighlighted):
+    async def update_todo_tree(self, event: ModelTree.OptionHighlighted):
         if not event.option_id:
             return
 
@@ -54,7 +55,7 @@ class WorkspacesTree(ModelTree):
         tree = TodosTree(todo_obj)
 
         if not self.screen.query(f"#{tree.id}"):
-            switcher.add_widget(tree)
+            await switcher.add_widget(tree)
 
         switcher.current = tree.id
 
@@ -69,7 +70,7 @@ class WorkspacesTree(ModelTree):
             self.notify("No workspace selected")
 
     def add_workspace(self) -> str:
-        workspace = self.model.add_child("workspace")
+        workspace = self.model.add_workspace()
         self.add_option(WorkspaceRender(workspace))
         return workspace.uuid
 

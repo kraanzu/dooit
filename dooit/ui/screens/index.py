@@ -1,13 +1,11 @@
 from textual import events, on, work
 from textual.containers import Container
-from dooit.api.manager import manager
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
     TopicSelect,
     SwitchTab,
     SpawnHelp,
-    CommitData,
 )
 from dooit.ui.widgets.switcher import FlexibleSwitcher
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree

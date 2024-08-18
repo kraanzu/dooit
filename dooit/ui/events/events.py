@@ -76,19 +76,3 @@ class ApplySort(DooitEvent):
         self.query = query
         self.widget_id = widget_id
         self.method = method
-
-
-class CommitData(DooitEvent):
-    """
-    Emitted when the local data needs to be updated
-    """
-
-
-class DateModeSwitch(DooitEvent):
-    """
-    Emitted when the user switches how the dates should render
-
-    ```
-    <day> month -> X days left
-    ```
-    """

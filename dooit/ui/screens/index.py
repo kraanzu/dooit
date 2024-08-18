@@ -38,7 +38,7 @@ class MainScreen(BaseScreen):
         workspaces_tree = WorkspacesTree(Workspace._get_or_create_root())
 
         with DualSplit():
-            with ContentSwitcher(id="workspace_switcher", initial="empty-workspace"):
+            with ContentSwitcher(id="workspace_switcher", initial=workspaces_tree.id):
                 yield from WORKSPACE_EMPTY_WIDGETS
                 yield workspaces_tree
 

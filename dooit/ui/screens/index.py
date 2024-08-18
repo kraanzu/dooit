@@ -98,7 +98,3 @@ class MainScreen(BaseScreen):
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp) -> None:
         self.app.push_screen("help")
-
-    @on(CommitData)
-    async def commit_data(self, _: CommitData) -> None:
-        manager.commit()

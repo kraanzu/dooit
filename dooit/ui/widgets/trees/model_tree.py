@@ -14,7 +14,6 @@ class ModelTree(BaseTree, Generic[ModelType]):
     ModelTree {
         height: 1fr;
         width: 1fr;
-        background: magenta;
     }
     """
 

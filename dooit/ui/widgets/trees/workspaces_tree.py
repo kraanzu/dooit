@@ -1,5 +1,4 @@
 from typing import List, Optional
-from rich.console import RenderableType
 from textual import on
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.switcher import FlexibleSwitcher

@@ -8,6 +8,11 @@ from ..renderers.workspace_renderer import WorkspaceRender
 
 
 class WorkspacesTree(ModelTree):
+    DEFAULT_CSS = """
+    WorkspacesTree {
+        height: 10;
+    }
+    """
 
     @property
     def node(self) -> WorkspaceRender:

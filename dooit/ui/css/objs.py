@@ -12,6 +12,7 @@ OBJS = f"""
 
 MainScreen {{
     layout: vertical;
+    background: red;
 }}
 
 HelpScreen {{
@@ -21,8 +22,9 @@ HelpScreen {{
 
 DualSplit {{
     layout: grid;
-    grid-size: 2;
+    grid-size: 2 1;
     grid-columns: 2fr 8fr;
+    background: blue;
 }}
 
 Tree {{

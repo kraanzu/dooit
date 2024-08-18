@@ -9,8 +9,9 @@ from .base_tree import BaseTree
 class ModelTree(BaseTree):
     DEFAULT_CSS = """
     ModelTree {
-        height: 100%;
-        width: 100%;
+        height: 1fr;
+        width: 1fr;
+        background: magenta;
     }
     """
 

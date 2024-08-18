@@ -8,10 +8,10 @@ class FlexibleSwitcher(ContentSwitcher):
 
     DEFAULT_CSS = """
     FlexibleSwitcher {
-        height: 100%;
-        width: 100%;
+        height: 1fr;
+        width: 1fr;
     }
     """
 
-    def add_widget(self, widget):
-        self.mount(widget)
+    async def add_widget(self, widget):
+        await self.mount(widget)

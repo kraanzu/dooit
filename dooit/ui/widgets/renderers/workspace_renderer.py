@@ -23,6 +23,9 @@ class WorkspaceRender(BaseRenderer):
         return str(description)
 
     def _draw_table(self) -> Table:
+
+        assert self.model.parent is not None
+
         table = registry.get_workspace_table(self.model.parent)
         layout = registry.get_workspace_layout()
 

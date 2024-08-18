@@ -1,14 +1,14 @@
 from typing import Optional
 from rich.console import RenderableType
 from rich.text import Span, Text
-from dooit.api.model import Model
+from dooit.api.model import DooitModel
 from dooit.ui.widgets.base import HelperWidget
 
 
 class SearchMenu(HelperWidget):
     _status = "SEARCH"
 
-    def __init__(self, model: Model, children_type):
+    def __init__(self, model: DooitModel, children_type):
         super().__init__(id=f"SearchMenu-{model.uuid}")
         self.current = 0
         self.filter = []

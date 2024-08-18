@@ -2,14 +2,14 @@ from typing import List, Optional, Union
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from ..api.todo import Todo
-from .model import Model
+from .model import DooitModel
 from .manager import manager
 
 ModelType = Union["Workspace", "Todo"]
 ModelTypeList = Union[List["Workspace"], List["Todo"]]
 
 
-class Workspace(Model):
+class Workspace(DooitModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     order_index: Mapped[int] = mapped_column(default=-1)

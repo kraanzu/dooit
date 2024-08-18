@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from .model import Model
+from .model import DooitModel
 from .manager import manager
 
 
@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from dooit.api.workspace import Workspace
 
 
-class Todo(Model):
+class Todo(DooitModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     order_index: Mapped[int] = mapped_column(default=-1)

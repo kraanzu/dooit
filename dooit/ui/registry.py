@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Callable, List
 
 from rich.table import Table
-from dooit.api.model import Model
+from dooit.api.model import DooitModel
 from dooit.api.workspace import Workspace
 
 
@@ -73,7 +73,7 @@ class Registry:
     def get_todo_layout(self) -> "TodoLayout":
         return self.todo_layout
 
-    def get_todo_table(self, model: Model) -> Table:
+    def get_todo_table(self, model: DooitModel) -> Table:
         layout = self.get_todo_layout()
         items = model.todos
 

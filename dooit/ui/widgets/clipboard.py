@@ -1,4 +1,4 @@
-from dooit.api.model import Model
+from dooit.api.model import DooitModel
 from dooit.ui.widgets.todo import TodoWidget
 
 
@@ -10,7 +10,7 @@ class Clipboard:
     data = None
 
     def copy(self, widget: TodoWidget):
-        model: Model = widget.model
+        model: DooitModel = widget.model
         self.data = model.commit()
 
     @property

@@ -1,5 +1,5 @@
 from textual.app import events
-from dooit.api.model import Model
+from dooit.api.model import DooitModel
 from collections import defaultdict
 from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
@@ -14,7 +14,7 @@ class ModelTree(BaseTree):
     }
     """
 
-    def __init__(self, model: Model) -> None:
+    def __init__(self, model: DooitModel) -> None:
         tree = self.__class__.__name__
         super().__init__(id=f"{tree}_{model.uuid}")
         self._model = model
@@ -33,7 +33,7 @@ class ModelTree(BaseTree):
         return self.highlighted is not None and self.node.editing != ""
 
     @property
-    def model(self) -> Model:
+    def model(self) -> DooitModel:
         return self._model
 
     def force_refresh(self) -> None:

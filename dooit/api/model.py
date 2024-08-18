@@ -18,7 +18,7 @@ class BaseModelMixin:
         return cls.__name__.lower()
 
 
-class Model(BaseModel, BaseModelMixin):
+class DooitModel(BaseModel, BaseModelMixin):
     """
     Model class to for the base tree structure
     """

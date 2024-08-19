@@ -20,6 +20,9 @@ class RenderDict(Dict, Generic[T]):
     def from_id(self, _id: str) -> T:
         raise NotImplementedError
 
+    def __getitem__(self, __key: str) -> T:
+        return super().__getitem__(__key)
+
     def __missing__(self, key: str) -> T:
         self[key] = self.from_id(key)
         return self[key]

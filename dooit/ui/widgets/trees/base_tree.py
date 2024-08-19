@@ -103,10 +103,3 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
             return
 
         self._toggle_expand_parent(self.node.id)
-
-    def refresh_options(self) -> None:
-        for i in self._options:
-            i.refresh_prompt()
-
-        self._refresh_lines()
-        self.refresh()

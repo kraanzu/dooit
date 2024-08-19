@@ -18,6 +18,7 @@ class Todo(DooitModel):
     description: Mapped[str] = mapped_column(default="")
     due: Mapped[Optional[datetime]] = mapped_column(default=None)
     effort: Mapped[int] = mapped_column(default=0)
+    recurrence: Mapped[str] = mapped_column(default="")
     urgency: Mapped[int] = mapped_column(default=0)
     pending: Mapped[bool] = mapped_column(default=True)
 

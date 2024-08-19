@@ -15,7 +15,6 @@ class WorkspaceRender(BaseRenderer):
 
     def post_init(self):
         self.description = WorkspaceDescription(self.model)
-        self.refresh_prompt()
 
     def _draw_description(self) -> RenderableType:
 

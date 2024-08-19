@@ -27,7 +27,6 @@ class TodoRender(BaseRenderer):
         self.urgency = Urgency(self.model)
         self.effort = Effort(self.model)
         self.recurrence = Recurrence(self.model)
-        self.refresh_prompt()
 
     def _draw_status(self) -> TextType:
         return self.status.render()

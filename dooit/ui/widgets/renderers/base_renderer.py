@@ -26,8 +26,8 @@ class BaseRenderer:
         raise NotImplementedError
 
     @property
-    def prompt(self) -> str:
-        raise NotImplementedError
+    def prompt(self) -> RenderableType:
+        return self.make_renderable()
 
     @property
     def model(self) -> ModelType:

@@ -1,4 +1,5 @@
-from typing import Any, List, Literal, Optional, TypeVar
+from typing import Self
+from typing import Any, List, Literal, TypeVar
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 from .manager import manager
@@ -30,7 +31,7 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     @property
     def uuid(self) -> str:
-        return str(self.id)
+        return f"{self.__class__.__name__}_{self.id}"
 
     @property
     def parent(self) -> Any:
@@ -49,6 +50,10 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     @property
     def siblings(self) -> List[Any]:
+        raise NotImplementedError
+
+    @classmethod
+    def from_id(cls, _id: str) -> Self:
         raise NotImplementedError
 
     def is_last_sibling(self) -> bool:

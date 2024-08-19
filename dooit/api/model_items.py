@@ -35,7 +35,6 @@ class Item:
 
     def __init__(self, model: Any) -> None:
         self.model = model
-        self.model_kind = model.__class__.__name__.lower()
 
     def get_value(self) -> str:
         return self._value
@@ -53,29 +52,8 @@ class Item:
         """
         raise NotImplementedError
 
-    def get_sortable(self) -> Any:
-        """
-        Returns a value for item for sorting
-        """
-        raise NotImplementedError
-
-    def save(self) -> str:
-        return self._value
-
     def setup(self, value: str) -> None:
         self.set_value(value)
-
-    def to_txt(self) -> str:
-        """
-        Convert to storable format
-        """
-        raise NotImplementedError
-
-    def from_txt(self, txt: str) -> None:
-        """
-        Parse from stored todo string
-        """
-        raise NotImplementedError
 
 
 class Status(Item):
@@ -155,24 +133,6 @@ class Status(Item):
 
         update_children()
 
-    def to_txt(self) -> str:
-        return "X" if self.value == "COMPLETED" else "O"
-
-    def from_txt(self, txt: str) -> None:
-        status = txt.split()[0]
-        if status == "X":
-            self.set_value("COMPLETED")
-        else:
-            self.set_value("PENDING")
-
-    def get_sortable(self) -> Any:
-        if self.value == "OVERDUE":
-            return 1
-        elif self.value == "PENDING":
-            return 2
-        else:
-            return 3
-
 
 class Description(Item):
     _default = ""
@@ -189,22 +149,6 @@ class Description(Item):
         val = self.clean(val)
         if val and val != self._default:
             self._value = val
-
-    def to_txt(self) -> str:
-        return self._value
-
-    def from_txt(self, txt: str) -> None:
-        value = ""
-
-        index = 0
-        for index, i in enumerate(txt.split()[3:]):
-            if i[0] not in "+@%":
-                break
-
-        for j in txt.split()[3 + index :]:
-            value = value + j + " "
-
-        self._value = value.strip()
 
     def get_sortable(self) -> Any:
         return self._value
@@ -239,41 +183,6 @@ class Due(Item):
 
             self._value = res
 
-    def save(self) -> str:
-        if not self._value:
-            return super().save()
-
-        return str(self._value.timestamp())
-
-    def setup(self, value: str) -> None:
-        if value:
-            try:
-                self._value = datetime.fromtimestamp(float(value))
-            except ValueError:
-                super().setup(value)
-
-    def to_txt(self) -> str:
-        if self._value:
-            t = self._value.time()
-            if t.hour == t.minute == 0:
-                save = self._value.strftime(DATE_FORMAT)
-            else:
-                save = self._value.strftime(DATE_FORMAT + TIME_FORMAT)
-        else:
-            save = "none"
-        return f"due:{save}"
-
-    def from_txt(self, txt: str) -> None:
-        value = txt.split()[2].lstrip("due:").lower()
-        if value != "none":
-            if "@" in value:
-                self._value = datetime.strptime(value, DATE_FORMAT + TIME_FORMAT)
-            else:
-                self._value = datetime.strptime(value, DATE_FORMAT)
-
-    def get_sortable(self) -> Any:
-        return self._value or datetime.max
-
 
 class Urgency(Item):
     _value = 1
@@ -286,22 +195,7 @@ class Urgency(Item):
 
     def set_value(self, val: Any) -> None:
         val = int(val)
-        # TODO: move this to validation
-        # if val < 1:
-        #     return Warn("Urgency cannot be decreased further!")
-        # if val > 4:
-        #     return Warn("Urgency cannot be increased further!")
-
         self._value = val
-
-    def to_txt(self) -> str:
-        return f"({self._value})"
-
-    def from_txt(self, txt: str) -> None:
-        self.set_value(txt.split()[1][1])
-
-    def get_sortable(self) -> Any:
-        return -self._value
 
 
 class Recurrence(Item):
@@ -325,25 +219,6 @@ class Recurrence(Item):
             else:
                 self.model.edit("due", "now")
 
-    def to_txt(self) -> str:
-        if self._value:
-            return f"%{self._value}"
-
-        return ""
-
-    def from_txt(self, txt: str) -> None:
-        for i in txt.split():
-            if i[0] == "%":
-                self._value = i[1:]
-                break
-
-    def get_sortable(self) -> Any:
-        if not self._value:
-            return timedelta.max
-        else:
-            frequency, value = split_duration(self._value)
-            return timedelta(**{DURATION_LEGEND[frequency] + "s": int(value)})
-
 
 class Effort(Item):
     _value = 0
@@ -365,24 +240,3 @@ class Effort(Item):
         val_int = int(val)
         if val_int >= 0:
             self._value = val_int
-
-        # TODO: move this to validation
-
-    def get_sortable(self) -> Any:
-        if self._value:
-            return self._value
-        else:
-            # NOTE: If someone opens an issue for this...
-            # my ans: if its above 100 then probably the other tasks require low effort
-            return 10**2
-
-    def to_txt(self) -> str:
-        if self.value:
-            return f"+{self.value}"
-        else:
-            return ""
-
-    def from_txt(self, txt: str) -> None:
-        for i in txt.split()[3:]:
-            if i[0] == "+":
-                self.set_value(i[1:])

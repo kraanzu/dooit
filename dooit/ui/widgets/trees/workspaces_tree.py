@@ -1,42 +1,37 @@
 from typing import List, Optional
 from textual import on
 from textual.widgets import ContentSwitcher
+from textual.widgets.option_list import Option
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from .model_tree import ModelTree
-from ..renderers.workspace_renderer import WorkspaceRender
+from ._render_dict import WorkspaceRenderDict, TodoRenderDict
 
 
-class WorkspacesTree(ModelTree[Workspace, WorkspaceRender]):
-    @property
-    def node(self) -> WorkspaceRender:
-        option = super().node
-        if not isinstance(option, WorkspaceRender):
-            raise ValueError(f"Expected WorkspaceRender, got {type(option)}")
+class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
-        return option
+    def __init__(
+        self,
+        model: Workspace,
+        render_dict: WorkspaceRenderDict = WorkspaceRenderDict(),
+    ) -> None:
+        super().__init__(model, render_dict)
 
-    def get_option(self, option_id: str) -> WorkspaceRender:
-        option = super().get_option(option_id)
-        if not isinstance(option, WorkspaceRender):
-            raise ValueError(f"Expected WorkspaceRender, got {type(option)}")
+    def _get_parent(self, id: str) -> Optional[Workspace]:
+        model = self._renderers[id].model
+        return model
 
-        return option
+    def _get_children(self, id: str) -> List[Workspace]:
 
-    def _get_parent(self, id: str) -> Optional[WorkspaceRender]:
-        todo_model = self.get_option(id).model
-        if isinstance(todo_model.parent, Workspace):
-            return WorkspaceRender(todo_model.parent)
-
-    def _get_children(self, id: str) -> List[WorkspaceRender]:
-        workspace_model = self.get_option(id).model
-        return [WorkspaceRender(workspace) for workspace in workspace_model.workspaces]
+        model = self._renderers[id].model
+        return model.workspaces
 
     def force_refresh(self) -> None:
         self.clear_options()
 
         for workspace in self.model.workspaces:
-            self.add_option(WorkspaceRender(workspace))
+            renderer = self._renderers[workspace.uuid]
+            self.add_option(Option(renderer.prompt, id=renderer.id))
 
     @on(ModelTree.OptionHighlighted)
     async def update_todo_tree(self, event: ModelTree.OptionHighlighted):
@@ -44,8 +39,8 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRender]):
             return
 
         switcher = self.screen.query_one("#todo_switcher", expect_type=ContentSwitcher)
-        todo_obj = self.get_option(event.option_id).model
-        tree = TodosTree(todo_obj)
+        todo_obj = self._renderers[event.option_id].model
+        tree = TodosTree(todo_obj, TodoRenderDict())
 
         if not self.screen.query(f"#{tree.id}"):
             await switcher.add_content(tree, set_current=True)
@@ -57,14 +52,15 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRender]):
             if not self.node.id:
                 return
 
-            tree = TodosTree(self.node.model)
+            tree = TodosTree(self.current.model, TodoRenderDict())
             self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
         except ValueError:
             self.notify("No workspace selected")
 
     def add_workspace(self) -> str:
         workspace = self.model.add_workspace()
-        self.add_option(WorkspaceRender(workspace))
+        renderer = self._renderers[workspace.uuid]
+        self.add_option(Option(renderer.prompt, id=renderer.id))
         return workspace.uuid
 
     def create_node(self):

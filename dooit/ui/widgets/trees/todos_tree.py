@@ -1,41 +1,36 @@
 from typing import Iterable, Optional, Union
+
+from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
+from ._render_dict import TodoRenderDict
 
 Model = Union[Todo, Workspace]
 
 
-class TodosTree(ModelTree[Model, TodoRender]):
-    @property
-    def node(self) -> TodoRender:
-        option = super().node
-        if not isinstance(option, TodoRender):
-            raise ValueError(f"Expected WorkspaceRender, got {type(option)}")
+class TodosTree(ModelTree[Model, TodoRenderDict]):
 
-        return option
+    def __init__(
+        self,
+        model: Model,
+        render_dict: TodoRenderDict = TodoRenderDict(),
+    ) -> None:
+        super().__init__(model, render_dict)
 
-    def get_option(self, option_id: str) -> TodoRender:
-        option = super().get_option(option_id)
-        if not isinstance(option, TodoRender):
-            raise ValueError(f"Expected TodoRender, got {type(option)}")
+    def _get_parent(self, id: str) -> Optional[Todo]:
+        model = self._renderers[id].model
+        return model
 
-        return option
-
-    def _get_parent(self, id: str) -> Optional[TodoRender]:
-        todo_model = self.get_option(id).model
-        if isinstance(todo_model.parent, Todo):
-            return TodoRender(todo_model.parent)
-
-    def _get_children(self, id: str) -> Iterable[TodoRender]:
-        todo_model = self.get_option(id).model
-        return [TodoRender(todo) for todo in todo_model.todos]
+    def _get_children(self, id: str) -> Iterable[Todo]:
+        model = self._renderers[id].model
+        return model.todos
 
     def force_refresh(self) -> None:
         self.clear_options()
 
         for todo in self.model.todos:
-            self.add_option(TodoRender(todo))
+            self.add_option(Option(self._renderers[todo.uuid].prompt, id=todo.uuid))
 
     def _switch_to_workspace(self) -> None:
         if not self.node.id:
@@ -45,7 +40,8 @@ class TodosTree(ModelTree[Model, TodoRender]):
 
     def add_todo(self) -> str:
         todo = self.model.add_todo()
-        self.add_option(TodoRender(todo))
+        render = TodoRender(todo)
+        self.add_option(Option(render.prompt, id=render.id))
         return todo.uuid
 
     def create_node(self):

@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Self
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from ..api.todo import Todo
@@ -51,6 +51,14 @@ class Workspace(DooitModel):
             root.save()
 
         return root
+
+    @classmethod
+    def from_id(cls, _id: str) -> "Workspace":
+        _id = _id.lstrip("Workspace_")
+        query = select(Workspace).where(Workspace.id == _id)
+        res = manager.session.execute(query).scalars().first()
+        assert res is not None
+        return res
 
     @property
     def parent(self) -> Optional["Workspace"]:

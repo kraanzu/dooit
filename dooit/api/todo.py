@@ -46,6 +46,14 @@ class Todo(DooitModel):
         cascade="all, delete-orphan",
     )
 
+    @classmethod
+    def from_id(cls, _id: str) -> "Todo":
+        _id = _id.lstrip("Todo_")
+        query = select(Todo).where(Workspace.id == _id)
+        res = manager.session.execute(query).scalars().first()
+        assert res is not None
+        return res
+
     @property
     def parent(self) -> Union["Workspace", "Todo"]:
         if self.parent_workspace:

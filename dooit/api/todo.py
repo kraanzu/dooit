@@ -74,6 +74,16 @@ class Todo(DooitModel):
         return [i for i in self.description.split() if i[0] == "@"]
 
     @property
+    def status(self) -> str:
+        if self.is_completed():
+            return "completed"
+
+        if self.is_overdue():
+            return "overdue"
+
+        return "pending"
+
+    @property
     def siblings(self) -> List["Todo"]:
 
         if self.parent_workspace:

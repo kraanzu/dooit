@@ -5,7 +5,7 @@ from textual.widgets.option_list import Option
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from .model_tree import ModelTree
-from ._render_dict import WorkspaceRenderDict, TodoRenderDict
+from ._render_dict import WorkspaceRenderDict
 
 
 class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
@@ -49,7 +49,7 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
             if not self.node.id:
                 return
 
-            tree = TodosTree(self.current.model, TodoRenderDict())
+            tree = TodosTree(self.current.model)
             self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
         except ValueError:
             self.notify("No workspace selected")

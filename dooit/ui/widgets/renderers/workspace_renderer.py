@@ -16,11 +16,6 @@ class WorkspaceRender(BaseRenderer):
     def post_init(self):
         self.description = WorkspaceDescription(self.model)
 
-    def _draw_description(self) -> RenderableType:
-
-        description = self.description.render()
-        return str(description)
-
     def apply_formatters(self):
         layout = registry.get_workspace_layout()
         for item in layout:
@@ -40,10 +35,9 @@ class WorkspaceRender(BaseRenderer):
         row = []
         for item in layout:
             if isinstance(item, tuple):
-                column, _ = item
-                row.append(self._get_component(column.value).render())
-            else:
-                row.append(self._get_component(item.value).render())
+                item = item[0]
+
+            row.append(self._get_component(item.value).render())
 
         table.add_row(*row)
 

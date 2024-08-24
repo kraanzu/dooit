@@ -21,16 +21,29 @@ class WorkspaceRender(BaseRenderer):
         description = self.description.render()
         return str(description)
 
+    def apply_formatters(self):
+        layout = registry.get_workspace_layout()
+        for item in layout:
+            if isinstance(item, tuple):
+                column, formatter = item
+                component = self._get_component(column.value)
+                component.add_formatter(formatter)
+
     def _draw_table(self) -> Table:
 
         assert self.model.parent is not None
 
+        self.apply_formatters()
         table = registry.get_workspace_table(self.model.parent)
         layout = registry.get_workspace_layout()
 
         row = []
-        for column, formatter in layout:
-            row.append(getattr(self, f"_draw_{column.value}")())
+        for item in layout:
+            if isinstance(item, tuple):
+                column, _ = item
+                row.append(self._get_component(column.value).render())
+            else:
+                row.append(self._get_component(item.value).render())
 
         table.add_row(*row)
 

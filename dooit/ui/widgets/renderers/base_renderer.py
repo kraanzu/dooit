@@ -3,6 +3,7 @@ from rich.console import RenderableType
 from textual.app import events
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
+from dooit.ui.widgets.inputs.simple_input import SimpleInput
 
 ModelType = Union[Todo, Workspace]
 
@@ -16,6 +17,9 @@ class BaseRenderer:
 
     def post_init(self):
         pass
+
+    def _get_component(self, component: str) -> SimpleInput:
+        return getattr(self, component)
 
     @property
     def id(self) -> str:

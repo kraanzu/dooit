@@ -21,10 +21,10 @@ class Registry:
     def __get_max_column_width(self, items: List, property: str, formatter: Callable):
         # TODO: OPTIMIZE THIS !!!
 
-        values = [getattr(item, property) for item in items]
+        values = [getattr(item, property) or "" for item in items]
 
         return max(
-            [len(formatter(getattr(item, property), item)) for item in items]
+            [len(formatter(getattr(item, property) or "", item)) for item in items]
             + [len(value) for value in values]
         )
 

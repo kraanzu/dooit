@@ -19,9 +19,8 @@ class SimpleInput(Input, Generic[ModelType]):
         super().__init__()
 
         self.model = model
-        self.value = getattr(model, self._property)
-        self._cursor_pos = len(self.value)
         self.formatters = set()
+        self.reset()
 
     def add_formatter(self, formatter: Callable[[str], TextType]):
         self.formatters.add(formatter)
@@ -30,8 +29,12 @@ class SimpleInput(Input, Generic[ModelType]):
     def _property(self) -> str:
         return self.__class__.__name__.lower()
 
+    @property
+    def model_value(self) -> str:
+        return getattr(self.model, self._property) or ""
+
     def reset(self) -> str:
-        self.value = getattr(self.model, self._property)
+        self.value = self.model_value
         self._cursor_pos = len(self.value)
         return self.value
 

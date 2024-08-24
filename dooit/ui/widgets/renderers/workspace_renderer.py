@@ -19,13 +19,6 @@ class WorkspaceRender(BaseRenderer):
     def post_init(self):
         self.description = WorkspaceDescription(self.model)
 
-    def apply_formatters(self):
-        layout = registry.get_workspace_layout()
-        for item in layout:
-            if isinstance(item, tuple):
-                column, formatter = item
-                component = self._get_component(column.value)
-                component.add_formatter(formatter)
 
     # TODO: Change this
     def handle_key(self, event: events.Key) -> bool:

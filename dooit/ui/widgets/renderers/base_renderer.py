@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Dict, List, Union
 from rich.console import RenderableType
 from rich.table import Table
 from textual.app import events
@@ -39,13 +39,35 @@ class BaseRenderer:
     def model(self) -> ModelType:
         raise NotImplementedError
 
+    def refresh_formatters(self):
+        layout = self.table_layout
+        for item in layout:
+            if isinstance(item, tuple):
+                column, formatter = item
+                component = self._get_component(column.value)
+                component.add_formatter(formatter)
+
+    def _get_attr_width(self, attr: str) -> int:
+        simple_input = self._get_component(attr)
+        return max(
+            len(simple_input.value),
+            len(simple_input.render()),
+        )
+
     def _get_max_width(self, attr: str) -> int:
-        return 10
+        renderers: Dict = self.tree._renderers
+        siblings = self.model.siblings
+
+        return max(
+            renderers[sibling.uuid]._get_attr_width(attr) for sibling in siblings
+        )
 
     def make_renderable(self) -> RenderableType:
+        self.refresh_formatters()
+
         layout = self.table_layout
 
-        table = Table.grid()
+        table = Table.grid(expand=True)
         row = []
 
         for item in layout:

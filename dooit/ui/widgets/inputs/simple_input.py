@@ -34,7 +34,7 @@ class SimpleInput(Input, Generic[ModelType]):
         return getattr(self.model, self._property) or ""
 
     def reset(self) -> str:
-        self.value = self.model_value
+        self.value = str(self.model_value)
         self._cursor_pos = len(self.value)
         return self.value
 

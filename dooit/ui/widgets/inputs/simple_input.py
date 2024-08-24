@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from typing import Generic, TypeVar
 from dooit.api.model import DooitModel
-from dooit.ui.widgets.renderers.base_renderer import ModelType
+from rich.text import TextType
 from ._input import Input
 
 ModelType = TypeVar("ModelType", bound=DooitModel)
@@ -20,6 +21,10 @@ class SimpleInput(Input, Generic[ModelType]):
         self.model = model
         self.value = getattr(model, self._property)
         self._cursor_pos = len(self.value)
+        self.formatters = set()
+
+    def add_formatter(self, formatter: Callable[[str], TextType]):
+        self.formatters.add(formatter)
 
     @property
     def _property(self) -> str:
@@ -47,3 +52,13 @@ class SimpleInput(Input, Generic[ModelType]):
 
         if key == "escape":
             self.stop_edit()
+
+    def render(self) -> str:
+        raw = super().render()
+        if not self.is_editing:
+            return raw
+
+        for formatter in self.formatters:
+            raw = formatter(raw)
+
+        return raw

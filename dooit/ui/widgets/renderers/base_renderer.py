@@ -1,9 +1,12 @@
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 from rich.console import RenderableType
 from textual.app import events
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from dooit.ui.widgets.inputs.simple_input import SimpleInput
+
+if TYPE_CHECKING:
+    from ..trees import ModelTree
 
 ModelType = Union[Todo, Workspace]
 
@@ -11,8 +14,9 @@ ModelType = Union[Todo, Workspace]
 class BaseRenderer:
     editing: str = ""
 
-    def __init__(self, model: ModelType):
+    def __init__(self, model: ModelType, tree: "ModelTree"):
         self._model = model
+        self.tree = tree
         self.post_init()
 
     def post_init(self):

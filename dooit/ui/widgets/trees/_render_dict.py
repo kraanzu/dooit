@@ -39,7 +39,7 @@ class WorkspaceRenderDict(RenderDict[WorkspaceRender]):
 
     def from_id(self, _id: str) -> WorkspaceRender:
         w = Workspace.from_id(_id)
-        return WorkspaceRender(w)
+        return WorkspaceRender(w, self.tree)
 
 
 class TodoRenderDict(RenderDict[TodoRender]):
@@ -49,4 +49,4 @@ class TodoRenderDict(RenderDict[TodoRender]):
 
     def from_id(self, _id: str) -> TodoRender:
         t = Todo.from_id(_id)
-        return TodoRender(t)
+        return TodoRender(t, self.tree)

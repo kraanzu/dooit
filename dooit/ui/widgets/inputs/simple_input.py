@@ -59,6 +59,6 @@ class SimpleInput(Input, Generic[ModelType]):
             return raw
 
         for formatter in self.formatters:
-            raw = formatter(raw)
+            raw = formatter(raw, self.model)
 
         return raw

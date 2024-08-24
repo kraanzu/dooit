@@ -2,7 +2,7 @@ from rich.console import RenderableType
 from rich.table import Table
 from textual.app import events
 from .base_renderer import BaseRenderer, Workspace
-from dooit.ui.widgets.inputs.inputs import WorkspaceDescription
+from dooit.ui.widgets.inputs.model_inputs import WorkspaceDescription
 from dooit.ui.registry import registry
 
 

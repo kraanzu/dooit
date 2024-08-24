@@ -1,7 +1,7 @@
 from rich.text import TextType
 from rich.console import RenderableType
 from rich.table import Table
-from dooit.ui.widgets.inputs.inputs import (
+from dooit.ui.widgets.inputs.model_inputs import (
     Due,
     Effort,
     Recurrence,

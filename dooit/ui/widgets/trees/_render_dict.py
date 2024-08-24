@@ -1,4 +1,4 @@
-from typing import Dict, Generic, TypeVar
+from typing import TYPE_CHECKING, Dict, Generic, TypeVar
 from dooit.api import Workspace, Todo
 from dooit.ui.widgets.renderers import (
     BaseRenderer,
@@ -8,14 +8,18 @@ from dooit.ui.widgets.renderers import (
 
 T = TypeVar("T", bound=BaseRenderer)
 
+if TYPE_CHECKING:
+    from .model_tree import ModelTree
+
 
 class RenderDict(Dict, Generic[T]):
     """
     Default Dict implementation for Todo/Workspace Renderers
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, tree: "ModelTree"):
+        super().__init__()
+        self.tree = tree
 
     def from_id(self, _id: str) -> T:
         raise NotImplementedError

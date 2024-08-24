@@ -10,11 +10,8 @@ from ._render_dict import WorkspaceRenderDict, TodoRenderDict
 
 class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
-    def __init__(
-        self,
-        model: Workspace,
-        render_dict: WorkspaceRenderDict = WorkspaceRenderDict(),
-    ) -> None:
+    def __init__(self, model: Workspace) -> None:
+        render_dict = WorkspaceRenderDict(self)
         super().__init__(model, render_dict)
 
     def _get_parent(self, id: str) -> Optional[Workspace]:
@@ -40,7 +37,7 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
         switcher = self.screen.query_one("#todo_switcher", expect_type=ContentSwitcher)
         todo_obj = self._renderers[event.option_id].model
-        tree = TodosTree(todo_obj, TodoRenderDict())
+        tree = TodosTree(todo_obj)
 
         if not self.screen.query(f"#{tree.id}"):
             await switcher.add_content(tree, set_current=True)

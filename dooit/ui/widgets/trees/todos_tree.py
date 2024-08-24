@@ -11,12 +11,8 @@ Model = Union[Todo, Workspace]
 
 class TodosTree(ModelTree[Model, TodoRenderDict]):
 
-    def __init__(
-        self,
-        model: Model,
-        render_dict: TodoRenderDict = TodoRenderDict(),
-    ) -> None:
-        super().__init__(model, render_dict)
+    def __init__(self, model: Model) -> None:
+        super().__init__(model, TodoRenderDict(self))
 
     def _get_parent(self, id: str) -> Optional[Todo]:
         model = self._renderers[id].model

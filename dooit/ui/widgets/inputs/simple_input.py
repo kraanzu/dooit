@@ -1,27 +1,33 @@
+from typing import Generic, TypeVar
+from dooit.api.model import DooitModel
 from dooit.ui.widgets.renderers.base_renderer import ModelType
 from ._input import Input
 
+ModelType = TypeVar("ModelType", bound=DooitModel)
 
-class SimpleInput(Input):
+
+class SimpleInput(Input, Generic[ModelType]):
     """
     A simple single line Text Input widget
     """
 
-    _cursor_position: int = 0
+    _cursor_pos: int = 0
     _cursor: str = "|"
 
     def __init__(self, model: ModelType) -> None:
+        super().__init__()
+
         self.model = model
         self.value = getattr(model, self._property)
-        self._cursor_position = len(self.value)
-        super().__init__()
+        self._cursor_pos = len(self.value)
 
     @property
     def _property(self) -> str:
         return self.__class__.__name__.lower()
 
-    def refresh_value(self) -> str:
+    def reset(self) -> str:
         self.value = getattr(self.model, self._property)
+        self._cursor_pos = len(self.value)
         return self.value
 
     def stop_edit(self, cancel: bool = False) -> None:
@@ -31,9 +37,7 @@ class SimpleInput(Input):
             setattr(self.model, self._property, self.value)
             self.model.save()
         else:
-            value = self.refresh_value()
-
-        self.refresh_value()
+            self.reset()
 
     def cancel_edit(self) -> None:
         return self.stop_edit(cancel=True)
@@ -42,7 +46,4 @@ class SimpleInput(Input):
         super().keypress(key)
 
         if key == "escape":
-            if True:
-                self.stop_edit()
-            else:
-                self.cancel_edit()
+            self.stop_edit()

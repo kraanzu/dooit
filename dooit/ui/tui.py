@@ -20,8 +20,8 @@ PRINTABLE = (
 class Dooit(App):
     CSS = screen_CSS
     SCREENS = {
-        "main": MainScreen(name="main"),
-        "help": HelpScreen(name="help"),
+        "main": MainScreen,
+        "help": HelpScreen,
     }
 
     BINDINGS = [

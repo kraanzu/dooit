@@ -15,10 +15,9 @@ repos:
         types: [python]
         args: [--check]
 
-    - id: pytest-check
-      name: pytest-check
-      entry: pytest
-      language: system
-      pass_filenames: false
-      always_run: true
-
+    -   id: pytest-check
+        name: pytest-check
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true

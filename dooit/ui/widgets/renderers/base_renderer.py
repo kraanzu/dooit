@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Dict, List, Union
+from typing import Dict, List, Union
 from rich.console import RenderableType
 from rich.table import Table
 from textual.app import events

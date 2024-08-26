@@ -3,63 +3,63 @@ CSS File for python classes
 """
 
 
-OBJS = f"""
-* {{
+OBJS = """
+* {
     link-style: italic;
     link-style-hover: underline italic bold;
     link-background-hover: #fff 0%;
-}}
+}
 
-MainScreen {{
+MainScreen {
     layout: vertical;
-}}
+}
 
-HelpScreen {{
+HelpScreen {
     layout: vertical;
     scrollbar-size: 1 1;
-}}
+}
 
-DualSplit {{
+DualSplit {
     layout: grid;
     grid-size: 2 1;
     grid-columns: 2fr 8fr;
-}}
+}
 
-Tree {{
+Tree {
      layers: L1 L2 L3 L4;
-}}
+}
 
-WorkspaceTree, TodoTree, EmptyWidget {{
+WorkspaceTree, TodoTree, EmptyWidget {
     padding: 1;
     width: 100%;
     height: 100%;
     layer: L2;
-}}
+}
 
-SortOptions {{
+SortOptions {
     content-align: center middle;
-}}
+}
 
-SimpleInput, Pointer{{
+SimpleInput, Pointer{
     height: auto;
     width: auto;
-}}
+}
 
-Horizontal {{
+Horizontal {
     height: auto;
     width: 100%;
-}}
+}
 
-WorkspaceWidget, TodoWidget {{
+WorkspaceWidget, TodoWidget {
     height: auto;
-}}
+}
 
-Vertical {{
+Vertical {
     height: 100%;
     width: 100%;
     column-span: 2;
     row-span: 2;
     scrollbar-size: 1 1;
-}}
+}
 
 """

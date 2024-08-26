@@ -11,4 +11,5 @@ __all__ = [
     "Workspace",
     "manager",
     "fix_hooks",
+    "validation_hooks",
 ]

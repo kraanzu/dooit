@@ -4,36 +4,36 @@ CSS file for property `class`
 
 
 
-classes = f"""
-.highlight {{
+classes = """
+.highlight {
     background: #fff 10%;
-}}
+}
 
-.no-border {{
+.no-border {
     border: none;
-}}
+}
 
-.sort-hide, .search-hide {{
+.sort-hide, .search-hide {
     display: none;
-}}
+}
 
-.hide {{
+.hide {
     display: none;
-}}
+}
 
-.padding {{
+.padding {
     padding-right: 1;
-}}
+}
 
-.dock-left {{
+.dock-left {
     dock: left;
-}}
+}
 
-.dock-right {{
+.dock-right {
     dock: right;
-}}
+}
 
-.current {{
+.current {
     layer: L3;
-}}
+}
 """

@@ -1,6 +1,8 @@
+from typing import Any
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from .simple_input import SimpleInput
+from dooit.utils.date_parser import parse
 
 
 class TodoDescription(SimpleInput[Todo]):
@@ -18,17 +20,55 @@ class WorkspaceDescription(SimpleInput[Workspace]):
 
 class Due(SimpleInput[Todo]):
     def start_edit(self) -> None:
-        self.value = ""
+        self._value = None
         return super().start_edit()
 
+    def _typecast_value(self, value: str) -> Any:
+        if not value:
+            return None
 
-class Urgency(SimpleInput): ...
-
-
-class Effort(SimpleInput): ...
-
-
-class Status(SimpleInput): ...
+        return parse(value)
 
 
-class Recurrence(SimpleInput): ...
+class Urgency(SimpleInput[Todo]):
+    @property
+    def value(self) -> str:
+        res = self.model.urgency
+
+        if res == 0:
+            return ""
+
+        return str(self.model.urgency)
+
+    def _typecast_value(self, value: str) -> Any:
+        if not value or value == "0":
+            return None
+
+        return int(value)
+
+
+class Effort(SimpleInput[Todo]):
+    def _typecast_value(self, value: str) -> Any:
+        if not value or value == "0":
+            return None
+
+        return int(value)
+
+
+class Status(SimpleInput[Todo]):
+    def _typecast_value(self, value: str) -> Any:
+        if value == "COMPLETED":
+            return False
+
+        return True
+
+
+class Recurrence(SimpleInput[Todo]):
+    @property
+    def value(self) -> str:
+        res = self.model.recurrence
+
+        if res is None:
+            return ""
+
+        return str(res)

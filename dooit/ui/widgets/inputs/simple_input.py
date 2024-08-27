@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar
 from dooit.api.model import DooitModel
 from rich.text import TextType
 from ._input import Input
@@ -30,11 +30,17 @@ class SimpleInput(Input, Generic[ModelType]):
         return self.__class__.__name__.lower()
 
     @property
-    def model_value(self) -> str:
-        return getattr(self.model, self._property) or ""
+    def model_value(self) -> Any:
+        return getattr(self.model, self._property)
+
+    @model_value.setter
+    def model_value(self, value: str) -> None:
+        return setattr(self.model, self._property, value)
+
+    def _typecast_value(self, value: str) -> Any:
+        return value
 
     def reset(self) -> str:
-        self.value = str(self.model_value)
         self._cursor_pos = len(self.value)
         return self.value
 
@@ -42,7 +48,7 @@ class SimpleInput(Input, Generic[ModelType]):
         super().stop_edit()
 
         if not cancel:
-            setattr(self.model, self._property, self.value)
+            self.model_value = self._typecast_value(self.value)
             self.model.save()
         else:
             self.reset()
@@ -57,11 +63,11 @@ class SimpleInput(Input, Generic[ModelType]):
             self.stop_edit()
 
     def render(self) -> str:
-        raw = super().render()
         if self.is_editing:
-            return raw
+            return self.value
 
+        raw = self.model_value
         for formatter in self.formatters:
             raw = formatter(raw, self.model)
 
-        return raw
+        return str(raw)

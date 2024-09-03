@@ -36,7 +36,7 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
     def add_todo(self) -> str:
         todo = self.model.add_todo()
-        render = TodoRender(todo)
+        render = TodoRender(todo, tree = self)
         self.add_option(Option(render.prompt, id=render.id))
         return todo.uuid
 

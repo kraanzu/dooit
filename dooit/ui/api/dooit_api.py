@@ -1,6 +1,5 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING, List, Callable
-from textual.widget import Widget
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.registry import registry

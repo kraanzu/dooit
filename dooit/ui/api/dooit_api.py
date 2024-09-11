@@ -55,8 +55,7 @@ class DooitAPI:
         raise ValueError(f"Expected BaseTree, got {type(focused)}")
 
     def switch_focus(self):
-        self.app.action_focus_next()
-        self.app.action_focus_next()
+        self.app.focused.screen.switch_tab()
 
     def move_down(self):
         self.focused.action_cursor_down()

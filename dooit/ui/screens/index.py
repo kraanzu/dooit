@@ -86,7 +86,7 @@ class MainScreen(BaseScreen):
     async def topic_select(self, event: TopicSelect) -> None:
         event.stop()
         if model := event.model:
-            self.mount_todos(model)
+            await self.mount_todos(model)
         else:
             await self.mount_dashboard()
 

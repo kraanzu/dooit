@@ -41,13 +41,6 @@ class Input:
     def stop_edit(self) -> None:
         self.is_editing = False
 
-    def clear(self) -> None:
-        """
-        Clears the Input Box
-        """
-        self.value = ""
-        self._cursor_position = 0
-
     def _insert_text(self, text: Optional[str] = None) -> None:
         """
         Inserts text where the cursor is

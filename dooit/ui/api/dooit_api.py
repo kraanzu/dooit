@@ -1,9 +1,8 @@
 from collections import defaultdict
-from collections.abc import Callable
-from typing import TYPE_CHECKING
-from typing_extensions import List
+from typing import TYPE_CHECKING, List, Callable
+from textual.widget import Widget
 from dooit.ui.api.plug import PluginManager
-from dooit.ui.events.events import DooitEvent
+from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
 from dooit.ui.widgets import BarWidget
@@ -55,7 +54,8 @@ class DooitAPI:
         raise ValueError(f"Expected BaseTree, got {type(focused)}")
 
     def switch_focus(self):
-        self.app.focused.screen.switch_tab()
+        if w := self.app.focused:
+            w.post_message(SwitchTab())
 
     def move_down(self):
         self.focused.action_cursor_down()

@@ -91,7 +91,9 @@ class MainScreen(BaseScreen):
             await self.mount_dashboard()
 
     @on(SwitchTab)
-    def switch_tab(self, *_: SwitchTab) -> None:
+    def switch_tab(self, event: SwitchTab) -> None:
+        event.stop()
+
         self.query_one(WorkspacesTree).toggle_class("focus")
         try:
             visible_todo = self.query_one("TodoTree.current")

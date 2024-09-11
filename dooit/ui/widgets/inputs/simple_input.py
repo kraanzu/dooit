@@ -64,7 +64,7 @@ class SimpleInput(Input, Generic[ModelType]):
 
     def render(self) -> str:
         if self.is_editing:
-            return self.value
+            return super().render()
 
         raw = self.model_value
         for formatter in self.formatters:

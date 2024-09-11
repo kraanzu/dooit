@@ -2,8 +2,6 @@
 CSS file for property `class`
 """
 
-
-
 classes = """
 .highlight {
     background: #fff 10%;

@@ -2,7 +2,6 @@
 CSS File for python classes
 """
 
-
 OBJS = """
 * {
     link-style: italic;

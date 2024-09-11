@@ -19,7 +19,6 @@ class WorkspaceRender(BaseRenderer):
     def post_init(self):
         self.description = WorkspaceDescription(self.model)
 
-
     # TODO: Change this
     def handle_key(self, event: events.Key) -> bool:
         self.description.keypress(event.key)

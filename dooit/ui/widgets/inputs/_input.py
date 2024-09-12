@@ -163,6 +163,9 @@ class Input:
         elif key == "tab":
             self._insert_text("\t")
 
+        elif key == "space":
+            self._insert_text(" ")
+
         elif key.startswith("events.Paste:"):
             self._insert_text(key[13:])
 

@@ -161,10 +161,13 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def _toggle_expand_parent(self, _id: str) -> None:
         parent = self._get_parent(_id)
+
         if not parent:
             return
 
-        self._toggle_expand_node(parent.uuid)
+        parent_id = parent.uuid
+        self.highlighted = self.get_option_index(parent_id)
+        self._toggle_expand_node(parent_id)
 
     def toggle_expand_parent(self) -> None:
         if self.highlighted is None:

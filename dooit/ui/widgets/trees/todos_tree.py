@@ -16,7 +16,7 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
     def _get_parent(self, id: str) -> Optional[Todo]:
         model = self._renderers[id].model
-        return model
+        return model.parent_todo
 
     def _get_children(self, id: str) -> Iterable[Todo]:
         model = self._renderers[id].model

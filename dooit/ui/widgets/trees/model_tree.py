@@ -102,16 +102,16 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         raise NotImplementedError
 
     def _insert_nodes(self, index: int, items: Iterable[Option]) -> None:
-        if items:
-            content = [self._make_content(item) for item in items]
-            options = [item for item in content if isinstance(item, Option)]
+        if not items:
+            return
 
-            self._duplicate_id_check(content)
+        highlighted = self.highlighted
+        opts = self._options
+        opts = opts[:index] + list(items) + opts[index:]
 
-            self._contents = self._contents[:index] + content + self._contents[index:]
-            self._options = self._options[:index] + options + self._options[index:]
-
-            self.refresh_options()
+        self.clear_options()
+        self.add_options(opts)
+        self.highlighted = highlighted
 
     def add_nodes(self, *items: Option, index: Optional[int] = None) -> None:
         if index is None:

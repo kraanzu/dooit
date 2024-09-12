@@ -15,18 +15,10 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         super().__init__(model, TodoRenderDict(self))
 
     def _get_parent(self, id: str) -> Optional[Todo]:
-        model = self._renderers[id].model
-        return model.parent_todo
+        return Todo.from_id(id).parent_todo
 
     def _get_children(self, id: str) -> Iterable[Todo]:
-        model = self._renderers[id].model
-        return model.todos
-
-    def force_refresh(self) -> None:
-        self.clear_options()
-
-        for todo in self.model.todos:
-            self.add_option(Option(self._renderers[todo.uuid].prompt, id=todo.uuid))
+        return Todo.from_id(id).todos
 
     def _switch_to_workspace(self) -> None:
         if not self.node.id:
@@ -44,3 +36,25 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         uuid = self.add_todo()
         self.highlighted = self.get_option_index(uuid)
         self.start_edit("description")
+
+    def _create_child_node(self) -> Todo:
+        return self.current_model.add_todo()
+
+    def force_refresh(self) -> None:
+        highlighted = self.highlighted
+        self.clear_options()
+
+        options = []
+
+        def add_children_recurse(model: Model):
+            for child in model.todos:
+                render = self._renderers[child.uuid]
+                options.append(Option(render.prompt, id=render.id))
+
+                if self.expanded_nodes[child.uuid]:
+                    add_children_recurse(child)
+
+        add_children_recurse(self.model)
+        self.add_options(options)
+
+        self.highlighted = highlighted

@@ -15,20 +15,10 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
         super().__init__(model, render_dict)
 
     def _get_parent(self, id: str) -> Optional[Workspace]:
-        model = self._renderers[id].model
-        return model
+        return Workspace.from_id(id).parent_workspace
 
     def _get_children(self, id: str) -> List[Workspace]:
-
-        model = self._renderers[id].model
-        return model.workspaces
-
-    def force_refresh(self) -> None:
-        self.clear_options()
-
-        for workspace in self.model.workspaces:
-            renderer = self._renderers[workspace.uuid]
-            self.add_option(Option(renderer.prompt, id=renderer.id))
+        return Workspace.from_id(id).workspaces
 
     @on(ModelTree.OptionHighlighted)
     async def update_todo_tree(self, event: ModelTree.OptionHighlighted):
@@ -64,3 +54,24 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
         uuid = self.add_workspace()
         self.highlighted = self.get_option_index(uuid)
         self.start_edit("description")
+
+    def _create_child_node(self) -> Workspace:
+        return self.current_model.add_workspace()
+
+    def force_refresh(self) -> None:
+        highlighted = self.highlighted
+        self.clear_options()
+
+        options = []
+
+        def add_children_recurse(model: Workspace):
+            for child in model.workspaces:
+                render = self._renderers[child.uuid]
+                options.append(Option(render.prompt, id=render.id))
+
+                if self.expanded_nodes[child.uuid]:
+                    add_children_recurse(child)
+
+        add_children_recurse(self.model)
+        self.add_options(options)
+        self.highlighted = highlighted

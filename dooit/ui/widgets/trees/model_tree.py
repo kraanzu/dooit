@@ -27,15 +27,16 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
 
-    def create_render(self, _: ModelType) -> RenderDictType:
-        raise NotImplementedError
-
     @property
     def current(self) -> BaseRenderer:
         _id = self.node.id
         assert _id is not None
 
         return self._renderers[_id]
+
+    @property
+    def current_model(self) -> ModelType:
+        return self.current.model
 
     def update_current_prompt(self):
         self.node.set_prompt(self.current.prompt)
@@ -121,15 +122,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def _expand_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = True
-        options = self._get_children(_id)
-        formatted_options = []
-
-        for option in options:
-            render = self._renderers[option.uuid]
-            formatted_options.append(Option(render.prompt, id=render.id))
-
-        index = self.get_option_index(_id)
-        self._insert_nodes(index + 1, formatted_options)
+        self.force_refresh()
 
     def expand_node(self) -> None:
         if self.highlighted is not None and self.node.id:
@@ -177,3 +170,16 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             return
 
         self._toggle_expand_parent(self.node.id)
+
+    def _create_child_node(self) -> ModelType:
+        raise NotImplementedError
+
+    def add_child_node(self):
+
+        node = self._create_child_node()
+        node.description = "New Node"
+        node.save()
+
+        self.expand_node()
+        self.highlighted = self.get_option_index(node.uuid)
+        self.start_edit("description")

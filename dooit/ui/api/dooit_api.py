@@ -62,6 +62,12 @@ class DooitAPI:
     def move_up(self):
         self.focused.action_cursor_up()
 
+    def go_to_top(self):
+        self.focused.action_first()
+
+    def go_to_bottom(self):
+        self.focused.action_last()
+
     def edit(self, property: str):
         self.focused.start_edit(property)
 

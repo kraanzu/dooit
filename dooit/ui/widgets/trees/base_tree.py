@@ -29,3 +29,15 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
             raise ValueError("No node is currently highlighted")
 
         return self.get_option_at_index(self.highlighted)
+
+    def action_cursor_down(self) -> None:
+        if self.highlighted == len(self._options) - 1:
+            return
+
+        return super().action_cursor_down()
+
+    def action_cursor_up(self) -> None:
+        if self.highlighted == 0:
+            return
+
+        return super().action_cursor_up()

@@ -80,6 +80,9 @@ class DooitAPI:
     def toggle_expand(self):
         self.focused.toggle_expand()
 
+    def toggle_expand_parent(self):
+        self.focused.toggle_expand_parent()
+
     def set_workspace_layout(self, layout: WorkspaceLayout):
         registry.set_workspace_layout(layout)
         self.app.workspace_tree.refresh_options()

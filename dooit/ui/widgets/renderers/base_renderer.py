@@ -70,6 +70,11 @@ class BaseRenderer:
         table = Table.grid(expand=True)
         row = []
 
+        # nested nodes as children
+        if nest := self.model.nest_level:
+            table.add_column("padding", width=2 * nest)
+            row.append("")
+
         for item in layout:
             if isinstance(item, tuple):
                 item = item[0]

@@ -98,5 +98,5 @@ class BaseRenderer:
         self.editing = ""
 
     def handle_key(self, event: events.Key) -> bool:
-        getattr(self, self.editing).keypress(event.key)
+        getattr(self, self.editing).keypress(event.character)
         return True

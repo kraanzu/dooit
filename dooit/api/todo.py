@@ -45,6 +45,7 @@ class Todo(DooitModel):
         "Todo",
         back_populates="parent_todo",
         cascade="all, delete-orphan",
+        order_by=order_index,
     )
 
     @classmethod

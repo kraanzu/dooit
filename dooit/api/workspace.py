@@ -33,11 +33,13 @@ class Workspace(DooitModel):
         "Workspace",
         back_populates="parent_workspace",
         cascade="all",
+        order_by="Workspace.order_index",
     )
     todos: Mapped[List["Todo"]] = relationship(
         "Todo",
         back_populates="parent_workspace",
         cascade="all, delete-orphan",
+        order_by="Todo.order_index",
     )
 
     @classmethod

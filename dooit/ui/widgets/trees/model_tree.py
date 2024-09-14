@@ -71,9 +71,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.current.stop_edit()
         self.app.post_message(ModeChanged("NORMAL"))
 
-    def create_node(self):
-        raise NotImplementedError
-
     async def handle_key(self, event: events.Key) -> bool:
         key = event.key
         if self.is_editing:

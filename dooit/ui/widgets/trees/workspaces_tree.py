@@ -50,11 +50,6 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
         self.add_option(Option(renderer.prompt, id=renderer.id))
         return workspace.uuid
 
-    def create_node(self):
-        uuid = self.add_workspace()
-        self.highlighted = self.get_option_index(uuid)
-        self.start_edit("description")
-
     def _create_child_node(self) -> Workspace:
         return self.current_model.add_workspace()
 

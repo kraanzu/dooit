@@ -32,11 +32,6 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         self.add_option(Option(render.prompt, id=render.id))
         return todo.uuid
 
-    def create_node(self):
-        uuid = self.add_todo()
-        self.highlighted = self.get_option_index(uuid)
-        self.start_edit("description")
-
     def _create_child_node(self) -> Todo:
         return self.current_model.add_todo()
 

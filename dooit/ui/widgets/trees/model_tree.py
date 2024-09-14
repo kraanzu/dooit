@@ -7,6 +7,7 @@ from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
+from ._decoratos import fix_highlight
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
@@ -193,10 +194,12 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.highlighted = self.get_option_index(node.uuid)
         self.start_edit("description")
 
-    def shift_up(self):
+    @fix_highlight
+    def shift_up(self) -> None:
         self.current_model.shift_up()
         self.force_refresh()
 
+    @fix_highlight
     def shift_down(self):
         self.current_model.shift_down()
         self.force_refresh()

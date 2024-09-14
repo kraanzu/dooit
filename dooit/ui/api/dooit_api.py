@@ -81,7 +81,7 @@ class DooitAPI:
         return self.edit("recurrence")
 
     def add_sibling(self):
-        self.focused.create_node()
+        self.focused.add_sibling()
 
     def toggle_expand(self):
         self.focused.toggle_expand()

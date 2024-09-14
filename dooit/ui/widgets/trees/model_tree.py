@@ -1,14 +1,14 @@
-from typing import Generic, Iterable, Optional, TypeVar
+from typing import Generic, Iterable, Optional, TypeVar, Union
 from textual.app import events
 from textual.widgets.option_list import Option
 from collections import defaultdict
-from dooit.api.model import DooitModel
+from dooit.api import Todo, Workspace
 from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
 
-ModelType = TypeVar("ModelType", bound=DooitModel)
+ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
 
 
@@ -181,5 +181,17 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         node.save()
 
         self.expand_node()
+        self.highlighted = self.get_option_index(node.uuid)
+        self.start_edit("description")
+
+    def _create_sibling_node(self) -> ModelType:
+        return self.current_model.add_sibling()
+
+    def add_sibling(self):
+        node = self._create_sibling_node()
+        node.description = "New Node"
+        node.save()
+
+        self.force_refresh()
         self.highlighted = self.get_option_index(node.uuid)
         self.start_edit("description")

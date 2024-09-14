@@ -40,6 +40,8 @@ def key_setup(api: DooitAPI):
     api.set_key_normal("g", api.go_to_top)
     api.set_key_normal("G", api.go_to_bottom)
     api.set_key_normal("A", api.add_child_node)
+    api.set_key_normal("J", api.shift_down)
+    api.set_key_normal("K", api.shift_up)
 
     api.set_workspace_layout([WorkspaceComponent.description])
 

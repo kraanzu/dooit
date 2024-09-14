@@ -192,3 +192,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.force_refresh()
         self.highlighted = self.get_option_index(node.uuid)
         self.start_edit("description")
+
+    def shift_up(self):
+        self.current_model.shift_up()
+        self.force_refresh()
+
+    def shift_down(self):
+        self.current_model.shift_down()
+        self.force_refresh()

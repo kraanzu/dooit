@@ -62,6 +62,12 @@ class DooitAPI:
     def move_up(self):
         self.focused.action_cursor_up()
 
+    def shift_up(self):
+        self.focused.shift_up()
+
+    def shift_down(self):
+        self.focused.shift_down()
+
     def go_to_top(self):
         self.focused.action_first()
 

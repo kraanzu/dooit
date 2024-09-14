@@ -78,9 +78,7 @@ class Workspace(DooitModel):
 
         assert not self.is_root
 
-        return sorted(
-            self.parent_workspace.workspaces, key=lambda x: x.order_index or -1
-        )
+        return self.parent_workspace.workspaces
 
     def _insert(self, items: ModelTypeList, obj: ModelType, index: int) -> None:
         children = [i for i in items if i.order_index or -1 >= index]

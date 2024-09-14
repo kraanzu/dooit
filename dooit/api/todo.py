@@ -88,11 +88,10 @@ class Todo(DooitModel):
     def siblings(self) -> List["Todo"]:
 
         if self.parent_workspace:
-            return sorted(
-                self.parent_workspace.todos, key=lambda x: x.order_index or -1
-            )
+            return self.parent_workspace.todos
+
         if self.parent_todo:
-            return sorted(self.parent_todo.todos, key=lambda x: x.order_index or -1)
+            return self.parent_todo.todos
 
         return []
 

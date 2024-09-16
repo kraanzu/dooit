@@ -154,7 +154,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             return
 
         parent_id = parent.uuid
-        self.highlighted = self.get_option_index(parent_id)
+        self.highlight_id(parent_id)
         self._toggle_expand_node(parent_id)
 
     def toggle_expand_parent(self) -> None:
@@ -176,19 +176,25 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         node.save()
 
         self.expand_node()
-        self.highlighted = self.get_option_index(node.uuid)
+        self.highlight_id(node.uuid)
         self.start_edit("description")
 
     def _create_sibling_node(self) -> ModelType:
         return self.current_model.add_sibling()
 
-    def add_sibling(self):
+    def highlight_id(self, _id: str):
+        self.highlighted = self.get_option_index(_id)
+
+    @refresh_tree
+    def _add_sibling_node(self) -> ModelType:
         node = self._create_sibling_node()
         node.description = "New Node"
         node.save()
+        return node
 
-        self.force_refresh()
-        self.highlighted = self.get_option_index(node.uuid)
+    def add_sibling(self):
+        node = self._add_sibling_node()
+        self.highlight_id(node.uuid)
         self.start_edit("description")
 
     @refresh_tree

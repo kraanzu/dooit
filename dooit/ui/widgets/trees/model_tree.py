@@ -7,7 +7,7 @@ from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
-from ._decorators import fix_highlight
+from ._decorators import fix_highlight, refresh_tree
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
@@ -120,16 +120,16 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def _expand_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = True
-        self.force_refresh()
 
+    @refresh_tree
     def expand_node(self) -> None:
         if self.highlighted is not None and self.node.id:
             self._expand_node(self.node.id)
 
     def _collapse_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = False
-        self.force_refresh()
 
+    @refresh_tree
     def collapse_node(self) -> None:
         if self.node.id:
             self._collapse_node(self.node.id)
@@ -191,19 +191,19 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.highlighted = self.get_option_index(node.uuid)
         self.start_edit("description")
 
+    @refresh_tree
     def remove_node(self):
         if self.highlighted is None:
             return
 
         self.current_model.drop()
-        self.force_refresh()
 
+    @refresh_tree
     @fix_highlight
     def shift_up(self) -> None:
         self.current_model.shift_up()
-        self.force_refresh()
 
+    @refresh_tree
     @fix_highlight
     def shift_down(self):
         self.current_model.shift_down()
-        self.force_refresh()

@@ -49,10 +49,7 @@ class BaseRenderer:
 
     def _get_attr_width(self, attr: str) -> int:
         simple_input = self._get_component(attr)
-        return max(
-            len(simple_input.value),
-            len(simple_input.render()),
-        )
+        return simple_input.get_max_width()
 
     def _get_max_width(self, attr: str) -> int:
         renderers: Dict = self.tree._renderers

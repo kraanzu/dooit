@@ -3,8 +3,27 @@ from typing import Any, Generic, TypeVar
 from dooit.api.model import DooitModel
 from rich.text import TextType
 from ._input import Input
+from ._cacher import input_cache
 
 ModelType = TypeVar("ModelType", bound=DooitModel)
+
+
+def max_width_cache(func):
+
+    def wrapper(obj: "SimpleInput"):
+        key = [obj.model.uuid, obj._property, obj.model_value]
+        cache = input_cache.get(*key)
+
+        if cache:
+            return cache
+
+        res = func(obj)
+        key += [res]
+        input_cache.set(*key)
+
+        return res
+
+    return wrapper
 
 
 class SimpleInput(Input, Generic[ModelType]):
@@ -36,6 +55,13 @@ class SimpleInput(Input, Generic[ModelType]):
     @model_value.setter
     def model_value(self, value: str) -> None:
         return setattr(self.model, self._property, value)
+
+    @max_width_cache
+    def get_max_width(self) -> int:
+        return max(
+            len(self.value),
+            len(self.render()),
+        )
 
     def _typecast_value(self, value: str) -> Any:
         return value

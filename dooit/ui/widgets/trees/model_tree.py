@@ -128,10 +128,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def _collapse_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = False
-        children = self._get_children(_id)
-        for child in children:
-            if child_id := child.uuid:
-                self.remove_option(child_id)
+        self.force_refresh()
 
     def collapse_node(self) -> None:
         if self.node.id:

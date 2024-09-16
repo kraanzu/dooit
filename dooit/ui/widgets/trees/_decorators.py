@@ -1,24 +1,24 @@
-from typing import Callable, TYPE_CHECKING
+from typing import Any, Callable, TYPE_CHECKING
 from textual.widgets.option_list import OptionDoesNotExist
 
 if TYPE_CHECKING:
     from .model_tree import ModelTree
 
-    ModelTreeFunc = Callable[..., None]
+    ModelTreeFunc = Callable[..., Any]
 
 
 def fix_highlight(func: "ModelTreeFunc") -> "ModelTreeFunc":
 
-    def wrapper(self: "ModelTree") -> None:
+    def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         highlighted_id = self.node.id
         highlighted_index = self.highlighted
 
         assert highlighted_id is not None
-        func(self)
+        func(self, *args, **kwargs)
 
         try:
             if self.get_option(highlighted_id):
-                self.highlighted = self.get_option_index(highlighted_id)
+                self.highlight_id(highlighted_id)
         except OptionDoesNotExist:
             self.highlighted = min(highlighted_index or -1, len(self._options) - 1)
 
@@ -27,7 +27,7 @@ def fix_highlight(func: "ModelTreeFunc") -> "ModelTreeFunc":
 
 def refresh_tree(func: "ModelTreeFunc") -> "ModelTreeFunc":
 
-    def wrapper(self: "ModelTree", *args, **kwargs) -> None:
+    def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         func(self, *args, **kwargs)
         self.force_refresh()
 

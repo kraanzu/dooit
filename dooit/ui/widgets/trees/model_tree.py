@@ -205,11 +205,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.current_model.drop()
 
     @refresh_tree
-    @fix_highlight
     def shift_up(self) -> None:
         self.current_model.shift_up()
 
     @refresh_tree
-    @fix_highlight
     def shift_down(self):
         self.current_model.shift_down()

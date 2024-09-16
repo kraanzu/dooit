@@ -8,17 +8,22 @@ if TYPE_CHECKING:
 def fix_highlight(func: Callable) -> Callable:
 
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
-        highlighted_id = self.node.id
+        highlighted_id = self.node.id if self.highlighted else None
         highlighted_index = self.highlighted
 
-        assert highlighted_id is not None
         func(self, *args, **kwargs)
 
         try:
-            if self.get_option(highlighted_id):
+            if highlighted_id and self.get_option(highlighted_id):
                 self.highlight_id(highlighted_id)
+            else:
+                self.highlighted = None
+
         except OptionDoesNotExist:
-            self.highlighted = min(highlighted_index or -1, len(self._options) - 1)
+            self.highlighted = min(
+                highlighted_index or -1,
+                len(self._options) - 1,
+            )
 
     return wrapper
 

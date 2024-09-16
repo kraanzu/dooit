@@ -7,7 +7,7 @@ from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
-from ._decoratos import fix_highlight
+from ._decorators import fix_highlight
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)

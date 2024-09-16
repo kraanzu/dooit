@@ -2,6 +2,7 @@ from typing import Iterable, Optional, Union
 
 from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
+from dooit.ui.widgets.trees._decorators import fix_highlight
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
@@ -35,6 +36,7 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
     def _create_child_node(self) -> Todo:
         return self.current_model.add_todo()
 
+    @fix_highlight
     def force_refresh(self) -> None:
         highlighted = self.highlighted
         self.clear_options()

@@ -3,7 +3,6 @@ from textual import on
 from textual.widgets import ContentSwitcher
 from textual.widgets.option_list import Option
 from dooit.api.workspace import Workspace
-from dooit.ui.widgets.trees._decorators import fix_highlight
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from .model_tree import ModelTree
 from ._render_dict import WorkspaceRenderDict
@@ -54,8 +53,7 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
     def _create_child_node(self) -> Workspace:
         return self.current_model.add_workspace()
 
-    @fix_highlight
-    def force_refresh(self) -> None:
+    def _force_refresh(self) -> None:
         highlighted = self.highlighted
         self.clear_options()
 

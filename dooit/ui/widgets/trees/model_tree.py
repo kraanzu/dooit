@@ -7,7 +7,7 @@ from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
-from ._decorators import refresh_tree
+from ._decorators import fix_highlight, refresh_tree
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
@@ -50,7 +50,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def model(self) -> ModelType:
         return self._model
 
+    @fix_highlight
     def force_refresh(self) -> None:
+        self._force_refresh()
+
+    def _force_refresh(self) -> None:
         raise NotImplementedError
 
     def on_mount(self):

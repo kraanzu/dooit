@@ -4,10 +4,8 @@ from textual.widgets.option_list import OptionDoesNotExist
 if TYPE_CHECKING:
     from .model_tree import ModelTree
 
-    ModelTreeFunc = Callable[..., Any]
 
-
-def fix_highlight(func: "ModelTreeFunc") -> "ModelTreeFunc":
+def fix_highlight(func: Callable) -> Callable:
 
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         highlighted_id = self.node.id
@@ -25,7 +23,7 @@ def fix_highlight(func: "ModelTreeFunc") -> "ModelTreeFunc":
     return wrapper
 
 
-def refresh_tree(func: "ModelTreeFunc") -> "ModelTreeFunc":
+def refresh_tree(func: Callable) -> Callable:
 
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         func(self, *args, **kwargs)

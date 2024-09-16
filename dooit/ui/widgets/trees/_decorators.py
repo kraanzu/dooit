@@ -14,12 +14,13 @@ def fix_highlight(func: Callable) -> Callable:
         func(self, *args, **kwargs)
 
         try:
-            if highlighted_id and self.get_option(highlighted_id):
-                self.highlight_id(highlighted_id)
-            else:
+            if highlighted_id is None:
                 self.highlighted = None
+            else:
+                self.highlight_id(highlighted_id)
 
         except OptionDoesNotExist:
+            self.notify(f"Option {highlighted_id} no longer exists")
             self.highlighted = min(
                 highlighted_index or -1,
                 len(self._options) - 1,

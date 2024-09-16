@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 def fix_highlight(func: Callable) -> Callable:
 
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
-        highlighted_id = self.node.id if self.highlighted else None
+        highlighted_id = self.node.id if self.highlighted is not None else None
         highlighted_index = self.highlighted
 
         func(self, *args, **kwargs)
@@ -20,7 +20,6 @@ def fix_highlight(func: Callable) -> Callable:
                 self.highlight_id(highlighted_id)
 
         except OptionDoesNotExist:
-            self.notify(f"Option {highlighted_id} no longer exists")
             self.highlighted = min(
                 highlighted_index or -1,
                 len(self._options) - 1,

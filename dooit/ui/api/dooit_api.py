@@ -98,6 +98,9 @@ class DooitAPI:
     def add_child_node(self):
         self.focused.add_child_node()
 
+    def remove_node(self):
+        self.focused.remove_node()
+
     def set_workspace_layout(self, layout: WorkspaceLayout):
         registry.set_workspace_layout(layout)
         self.app.workspace_tree.refresh_options()

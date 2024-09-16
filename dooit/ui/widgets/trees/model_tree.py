@@ -191,6 +191,13 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.highlighted = self.get_option_index(node.uuid)
         self.start_edit("description")
 
+    def remove_node(self):
+        if self.highlighted is None:
+            return
+
+        self.current_model.drop()
+        self.force_refresh()
+
     @fix_highlight
     def shift_up(self) -> None:
         self.current_model.shift_up()

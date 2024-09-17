@@ -45,7 +45,7 @@ class DooitModel(BaseModel, BaseModelMixin):
         while (
             parent
             and isinstance(self, parent.__class__)
-            and not getattr(parent, "is_root")
+            and not getattr(parent, "is_root", False)
         ):
             level += 1
             parent = parent.parent

@@ -47,5 +47,10 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+
 [tool.ruff.lint]
 ignore=["E712"]

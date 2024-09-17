@@ -1,3 +1,4 @@
+from typing import Optional
 import webbrowser
 from textual import on
 from textual.app import App
@@ -29,11 +30,11 @@ class Dooit(App):
         Binding("ctrl+q", "quit", "Quit", show=False, priority=True),
     ]
 
-    def __init__(self):
+    def __init__(self, connection_string: Optional[str] = None):
         super().__init__()
         self.api = DooitAPI(self)
         self._mode: ModeType = "NORMAL"
-        manager.register_engine()
+        manager.register_engine(connection_string)
 
     async def on_load(self):
         self.post_message(Startup())

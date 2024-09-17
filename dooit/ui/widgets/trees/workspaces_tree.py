@@ -9,7 +9,6 @@ from ._render_dict import WorkspaceRenderDict
 
 
 class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
-
     def __init__(self, model: Workspace) -> None:
         render_dict = WorkspaceRenderDict(self)
         super().__init__(model, render_dict)

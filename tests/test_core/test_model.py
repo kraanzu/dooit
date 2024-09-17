@@ -6,7 +6,6 @@ class TestModel(CoreTestBase):
     # Using Workspace as an example because Model is an abstract class
 
     def test_creation_and_deletion(self):
-
         w = Workspace()
         w.save()
         self.assertEqual(len(Workspace.all()), 1)

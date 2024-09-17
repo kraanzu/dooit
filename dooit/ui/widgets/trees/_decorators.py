@@ -6,7 +6,6 @@ if TYPE_CHECKING:
 
 
 def fix_highlight(func: Callable) -> Callable:
-
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         highlighted_id = self.node.id if self.highlighted is not None else None
         highlighted_index = self.highlighted
@@ -29,7 +28,6 @@ def fix_highlight(func: Callable) -> Callable:
 
 
 def refresh_tree(func: Callable) -> Callable:
-
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         func(self, *args, **kwargs)
         self.force_refresh()

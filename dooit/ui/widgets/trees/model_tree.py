@@ -174,7 +174,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         raise NotImplementedError
 
     def add_child_node(self):
-
         node = self._create_child_node()
         node.description = "New Node"
         node.save()

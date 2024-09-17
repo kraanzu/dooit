@@ -6,7 +6,6 @@ TEMP_CONN = "sqlite:///:memory:"
 
 
 class CoreTestBase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         manager.register_engine(TEMP_CONN)

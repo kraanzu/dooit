@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 
 class Todo(DooitModel):
-
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     order_index: Mapped[int] = mapped_column(default=-1)
     description: Mapped[str] = mapped_column(default="")
@@ -86,7 +85,6 @@ class Todo(DooitModel):
 
     @property
     def siblings(self) -> List["Todo"]:
-
         if self.parent_workspace:
             return self.parent_workspace.todos
 

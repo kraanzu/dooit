@@ -10,7 +10,6 @@ ModelTypeList = Union[List["Workspace"], List["Todo"]]
 
 
 class Workspace(DooitModel):
-
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     order_index: Mapped[int] = mapped_column(default=-1)
     description: Mapped[str] = mapped_column(default="")
@@ -44,7 +43,6 @@ class Workspace(DooitModel):
 
     @classmethod
     def _get_or_create_root(cls) -> "Workspace":
-
         query = select(Workspace).where(Workspace.is_root == True)
         root = manager.session.execute(query).scalars().first()
 
@@ -72,7 +70,6 @@ class Workspace(DooitModel):
 
     @property
     def siblings(self) -> List["Workspace"]:
-
         if not self.parent_workspace:
             return []
 

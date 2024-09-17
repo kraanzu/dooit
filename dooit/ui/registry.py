@@ -80,7 +80,6 @@ class Registry:
         return self.__create_table_from_layout(layout, items)
 
     def get_workspace_table(self, workspace: Workspace) -> Table:
-
         layout = self.get_workspace_layout()
         items = workspace.workspaces
 

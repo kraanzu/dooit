@@ -9,7 +9,6 @@ ModelType = TypeVar("ModelType", bound=DooitModel)
 
 
 def max_width_cache(func):
-
     def wrapper(obj: "SimpleInput"):
         key = [obj.model.uuid, obj._property, obj.model_value]
         cache = input_cache.get(*key)

@@ -6,7 +6,6 @@ from dooit.utils.date_parser import parse
 
 
 class TodoDescription(SimpleInput[Todo]):
-
     @property
     def _property(self) -> str:
         return "description"

@@ -27,6 +27,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._model = model
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
+        self._filter = ""
 
     @property
     def current(self) -> BaseRenderer:
@@ -68,7 +69,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
                 render = self._renderers[child.uuid]
                 options.append(Option(render.prompt, id=render.id))
 
-                if self.expanded_nodes[child.uuid]:
+                if self.expanded_nodes[child.uuid] or self._filter:
                     add_children_recurse(child)
 
         add_children_recurse(self.model)

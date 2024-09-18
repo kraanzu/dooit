@@ -15,11 +15,11 @@ python = "^3.8.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
 tzlocal = "2.1"
-appdirs = "^1.4.4"
 textual = "^0.79.1"
 python-dateutil = "^2.8.2"
 sqlalchemy = "^2.0.31"
 
+platformdirs = "^4.3.6"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.5.3"
 pre-commit = "^3.2.2"

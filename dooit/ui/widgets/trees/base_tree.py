@@ -4,6 +4,7 @@ from textual.widgets.option_list import Option
 from dooit.api.todo import Todo
 from dooit.api.workspace import Workspace
 from collections import defaultdict
+from dooit.ui.widgets.trees._decorators import require_highlighted_node
 
 ModelType = Union[Todo, Workspace]
 
@@ -24,20 +25,21 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
         raise ValueError("App is not a Dooit instance")
 
     @property
+    @require_highlighted_node
     def node(self) -> Option:
-        if self.highlighted is None:
-            raise ValueError("No node is currently highlighted")
-
+        assert self.highlighted is not None
         return self.get_option_at_index(self.highlighted)
 
-    def action_cursor_down(self) -> None:
-        if self.highlighted == len(self._options) - 1:
-            return
-
-        return super().action_cursor_down()
-
-    def action_cursor_up(self) -> None:
-        if self.highlighted == 0:
-            return
-
-        return super().action_cursor_up()
+    # TODO: Uncomment this:
+    #
+    # def action_cursor_down(self) -> None:
+    #     if self.highlighted == len(self._options) - 1:
+    #         return
+    #
+    #     return super().action_cursor_down()
+    #
+    # def action_cursor_up(self) -> None:
+    #     if self.highlighted == 0:
+    #         return
+    #
+    #     return super().action_cursor_up()

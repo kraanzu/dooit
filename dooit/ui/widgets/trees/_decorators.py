@@ -33,3 +33,13 @@ def refresh_tree(func: Callable) -> Callable:
         self.force_refresh()
 
     return wrapper
+
+
+def require_highlighted_node(func: Callable) -> Callable:
+    def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
+        if self.highlighted is None:
+            raise ValueError("No node is currently highlighted")
+
+        return func(self, *args, **kwargs)
+
+    return wrapper

@@ -7,7 +7,7 @@ from dooit.ui.events.events import ModeChanged
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
-from ._decorators import fix_highlight, refresh_tree
+from ._decorators import fix_highlight, refresh_tree, require_highlighted_node
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
@@ -145,10 +145,8 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         else:
             self._expand_node(_id)
 
+    @require_highlighted_node
     def toggle_expand(self) -> None:
-        if self.highlighted is None or not self.node.id:
-            return
-
         self._toggle_expand_node(self.node.id)
 
     def _toggle_expand_parent(self, _id: str) -> None:
@@ -161,13 +159,8 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.highlight_id(parent_id)
         self._toggle_expand_node(parent_id)
 
+    @require_highlighted_node
     def toggle_expand_parent(self) -> None:
-        if self.highlighted is None:
-            return
-
-        if not self.node.id:
-            return
-
         self._toggle_expand_parent(self.node.id)
 
     def _create_child_node(self) -> ModelType:
@@ -201,10 +194,8 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.start_edit("description")
 
     @refresh_tree
+    @require_highlighted_node
     def remove_node(self):
-        if self.highlighted is None:
-            return
-
         self.current_model.drop()
 
     @refresh_tree

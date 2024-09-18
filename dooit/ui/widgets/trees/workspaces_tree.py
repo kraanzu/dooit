@@ -51,21 +51,3 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _create_child_node(self) -> Workspace:
         return self.current_model.add_workspace()
-
-    def _force_refresh(self) -> None:
-        highlighted = self.highlighted
-        self.clear_options()
-
-        options = []
-
-        def add_children_recurse(model: Workspace):
-            for child in model.workspaces:
-                render = self._renderers[child.uuid]
-                options.append(Option(render.prompt, id=render.id))
-
-                if self.expanded_nodes[child.uuid]:
-                    add_children_recurse(child)
-
-        add_children_recurse(self.model)
-        self.add_options(options)
-        self.highlighted = highlighted

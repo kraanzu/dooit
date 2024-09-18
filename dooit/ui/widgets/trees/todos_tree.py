@@ -33,22 +33,3 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
     def _create_child_node(self) -> Todo:
         return self.current_model.add_todo()
-
-    def _force_refresh(self) -> None:
-        highlighted = self.highlighted
-        self.clear_options()
-
-        options = []
-
-        def add_children_recurse(model: Model):
-            for child in model.todos:
-                render = self._renderers[child.uuid]
-                options.append(Option(render.prompt, id=render.id))
-
-                if self.expanded_nodes[child.uuid]:
-                    add_children_recurse(child)
-
-        add_children_recurse(self.model)
-        self.add_options(options)
-
-        self.highlighted = highlighted

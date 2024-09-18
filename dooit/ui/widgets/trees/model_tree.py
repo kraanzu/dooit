@@ -55,7 +55,25 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._force_refresh()
 
     def _force_refresh(self) -> None:
-        raise NotImplementedError
+        highlighted = self.highlighted
+        self.clear_options()
+
+        options = []
+
+        def add_children_recurse(model: ModelType):
+            for child in getattr(
+                model,
+                self.__class__.__name__.replace("Tree", "").lower(),
+            ):
+                render = self._renderers[child.uuid]
+                options.append(Option(render.prompt, id=render.id))
+
+                if self.expanded_nodes[child.uuid]:
+                    add_children_recurse(child)
+
+        add_children_recurse(self.model)
+        self.add_options(options)
+        self.highlighted = highlighted
 
     def on_mount(self):
         self.force_refresh()

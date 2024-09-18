@@ -1,5 +1,5 @@
 from pathlib import Path
-from appdirs import user_data_dir
+from platformdirs import user_data_dir
 
 # ROOT_FOLDER = Path(__file__).parent.parent.parent.absolute()  # local db file for testing
 

@@ -2,7 +2,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Callable
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 from .loader import load_dir, load_file
 
 MAIN_FOLDER = "dooit_v3"

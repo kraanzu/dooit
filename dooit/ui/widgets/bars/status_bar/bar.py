@@ -4,7 +4,7 @@ from rich.console import RenderableType
 from rich.text import TextType
 from rich.table import Table
 from dooit.ui.events.events import DooitEvent
-from ._base import BarBase
+from .._base import BarBase
 
 
 class BarWidget:

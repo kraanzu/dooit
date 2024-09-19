@@ -3,9 +3,8 @@ from typing import List, Optional
 from rich.console import RenderableType
 from rich.text import TextType
 from rich.table import Table
-from textual.widget import Widget
-
 from dooit.ui.events.events import DooitEvent
+from ._base import BarBase
 
 
 class BarWidget:
@@ -24,12 +23,7 @@ class BarWidget:
         return self.value
 
 
-class Bar(Widget):
-    DEFAULT_CSS = """
-    Bar {
-        height: 1;
-    }
-    """
+class Bar(BarBase):
     bar_widgets = []
 
     def set_widgets(self, widgets: List[BarWidget]) -> None:

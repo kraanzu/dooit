@@ -53,6 +53,10 @@ class Dooit(App):
         return self.query_one(BarSwitcher).status_bar
 
     @property
+    def bar_switcher(self) -> BarSwitcher:
+        return self.query_one(BarSwitcher)
+
+    @property
     def mode(self) -> ModeType:
         return self._mode
 

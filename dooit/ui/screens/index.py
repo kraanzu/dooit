@@ -2,6 +2,7 @@ from textual import events, on, work
 from textual.containers import Container
 from textual.widgets import ContentSwitcher
 from dooit.api.workspace import Workspace
+from dooit.ui.events.events import ModeChanged, StartSearch
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
     TopicSelect,
@@ -104,3 +105,8 @@ class MainScreen(BaseScreen):
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp) -> None:
         self.app.push_screen("help")
+
+    @on(StartSearch)
+    def start_search(self, event: StartSearch):
+        self.app.bar_switcher.switch_to_search(event.callback)
+        self.post_message(ModeChanged("SEARCH"))

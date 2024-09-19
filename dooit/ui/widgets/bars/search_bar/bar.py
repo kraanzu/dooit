@@ -38,8 +38,14 @@ class SearchBar(BarBase):
         if event.key == "enter":
             self.app.post_message(ModeChanged("NORMAL"))
             self.dismiss()
+
+        elif event.key == "escape":
+            self.dismiss(cancel=True)
+
         else:
             self._search.keypress(event.key)
+            filter = self._search.value[1:]
+            self.callback(filter)
 
         self.refresh()
         return True

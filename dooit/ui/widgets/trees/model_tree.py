@@ -27,7 +27,19 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._model = model
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
-        self._filter = ""
+        self._filter_refresh = False
+
+    @property
+    def filter_refresh(self):
+        return self._filter_refresh
+
+    @filter_refresh.setter
+    def filter_refresh(self, value: bool):
+        refresh = self._filter_refresh != value
+        self._filter_refresh = value
+
+        if refresh:
+            self.force_refresh()
 
     @property
     def current(self) -> BaseRenderer:
@@ -44,8 +56,15 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.node.set_prompt(self.current.prompt)
 
     def set_filter(self, filter: str) -> None:
-        self._filter = filter
-        self.notify(self._filter)
+        self.filter_refresh = bool(filter)
+
+        for option in self._options:
+            assert option.id
+            matches = self._renderers[option.id].matches_filter(filter)
+            if matches:
+                self.enable_option(option.id)
+            else:
+                self.disable_option(option.id)
 
     @property
     def is_editing(self) -> bool:
@@ -73,7 +92,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
                 render = self._renderers[child.uuid]
                 options.append(Option(render.prompt, id=render.id))
 
-                if self.expanded_nodes[child.uuid] or self._filter:
+                if self.expanded_nodes[child.uuid] or self.filter_refresh:
                     add_children_recurse(child)
 
         add_children_recurse(self.model)

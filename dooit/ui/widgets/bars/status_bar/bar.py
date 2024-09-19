@@ -3,13 +3,13 @@ from rich.console import RenderableType
 from rich.table import Table
 from dooit.ui.events.events import DooitEvent
 from .._base import BarBase
-from .bar_widget import BarWidget
+from .bar_widget import StatusBarWidget
 
 
-class Bar(BarBase):
+class StatusBar(BarBase):
     bar_widgets = []
 
-    def set_widgets(self, widgets: List[BarWidget]) -> None:
+    def set_widgets(self, widgets: List[StatusBarWidget]) -> None:
         self.bar_widgets = widgets
         self.refresh()
 

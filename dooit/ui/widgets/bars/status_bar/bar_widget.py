@@ -3,7 +3,7 @@ from rich.text import TextType
 from typing import Optional
 
 
-class BarWidget:
+class StatusBarWidget:
     def __init__(
         self, func: Callable[..., TextType], width: Optional[int] = None
     ) -> None:

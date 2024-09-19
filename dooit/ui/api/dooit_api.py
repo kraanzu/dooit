@@ -4,7 +4,7 @@ from dooit.ui.api.plug import PluginManager
 from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
-from dooit.ui.widgets import BarWidget
+from dooit.ui.widgets import StatusBarWidget
 from dooit.ui.api.components import TodoLayout, WorkspaceLayout
 
 
@@ -108,5 +108,5 @@ class DooitAPI:
     def set_todo_layout(self, layout: TodoLayout):
         registry.set_todo_layout(layout)
 
-    def set_bar(self, widgets: List[BarWidget]):
+    def set_bar(self, widgets: List[StatusBarWidget]):
         self.app.bar.set_widgets(widgets)

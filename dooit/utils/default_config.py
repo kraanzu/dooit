@@ -1,7 +1,7 @@
 from datetime import datetime
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.components import TodoComponent, WorkspaceComponent
-from dooit.ui.widgets import BarWidget
+from dooit.ui.widgets import StatusBarWidget
 from rich.text import Text
 
 
@@ -15,8 +15,8 @@ def spacer():
 
 
 bar_widgets = [
-    BarWidget(spacer),
-    BarWidget(get_mode),
+    StatusBarWidget(spacer),
+    StatusBarWidget(get_mode),
 ]
 
 

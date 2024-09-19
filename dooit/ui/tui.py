@@ -4,7 +4,7 @@ from textual import on
 from textual.app import App
 from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
-from dooit.ui.widgets import Bar
+from dooit.ui.widgets import StatusBar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
@@ -48,8 +48,8 @@ class Dooit(App):
         return self.query_one(WorkspacesTree)
 
     @property
-    def bar(self) -> Bar:
-        return self.query_one(Bar)
+    def bar(self) -> StatusBar:
+        return self.query_one(StatusBar)
 
     @property
     def mode(self) -> ModeType:

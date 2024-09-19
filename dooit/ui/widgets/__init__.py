@@ -1,11 +1,11 @@
 from .sort_options import SortOptions
 from .help_menu import HelpMenu
-from .bars import Bar, BarWidget
+from .bars import StatusBar, StatusBarWidget
 
 
 __all__ = [
     "SortOptions",
     "HelpMenu",
-    "Bar",
-    "BarWidget",
+    "StatusBar",
+    "StatusBarWidget",
 ]

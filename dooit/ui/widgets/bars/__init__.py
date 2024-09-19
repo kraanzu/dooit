@@ -1,3 +1,3 @@
-from .status_bar import Bar, BarWidget
+from .status_bar import StatusBar, StatusBarWidget
 
-__all__ = ["Bar", "BarWidget"]
+__all__ = ["StatusBar", "StatusBarWidget"]

@@ -3,7 +3,7 @@ from textual.app import events
 from textual.widgets.option_list import Option
 from collections import defaultdict
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import ModeChanged
+from dooit.ui.events.events import ModeChanged, StartSearch
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
@@ -43,6 +43,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def update_current_prompt(self):
         self.node.set_prompt(self.current.prompt)
 
+    def set_filter(self, filter: str) -> None:
+        self._filter = filter
+        self.notify(self._filter)
+
     @property
     def is_editing(self) -> bool:
         return self.highlighted is not None and self.current.editing != ""
@@ -81,6 +85,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def key_question_mark(self):
         self.app.push_screen("help")
+
+    def start_search(self):
+        self.post_message(StartSearch(self.set_filter))
 
     def start_edit(self, property: str) -> bool:
         res = self.current.start_edit(property)

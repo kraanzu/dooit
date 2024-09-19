@@ -11,7 +11,7 @@ class Input:
     highlight_pattern = ""
     is_editing = False
 
-    def __init__(self, value = "") -> None:
+    def __init__(self, value="") -> None:
         self._value = value
         self._cursor_position = len(self._value)
 

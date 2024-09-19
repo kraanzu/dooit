@@ -55,6 +55,7 @@ class ModeChanged(DooitEvent):
         super().__init__()
         self.status: ModeType = status
 
+
 class StartSearch(DooitEvent):
     """
     Emitted when user wants to search
@@ -63,7 +64,6 @@ class StartSearch(DooitEvent):
     def __init__(self, callback: Callable) -> None:
         super().__init__()
         self.callback = callback
-
 
 
 class TopicSelect(DooitEvent):

@@ -3,8 +3,4 @@ from .help_menu import HelpMenu
 from .bars import BarSwitcher
 
 
-__all__ = [
-    "SortOptions",
-    "HelpMenu",
-    "BarSwitcher"
-]
+__all__ = ["SortOptions", "HelpMenu", "BarSwitcher"]

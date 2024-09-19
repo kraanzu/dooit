@@ -7,17 +7,23 @@ class Input:
     A simple single line Text Input
     """
 
-    _cursor_position: int = 0
     _cursor: str = "|"
     highlight_pattern = ""
-    value = ""
     is_editing = False
+
+    def __init__(self, value = "") -> None:
+        self._value = value
+        self._cursor_position = len(self._value)
+
+    @property
+    def value(self) -> str:
+        return self._value
 
     def draw(self) -> str:
         if self.is_editing:
             text = self._render_text_with_cursor()
         else:
-            text = self.value
+            text = self._value
 
         return text
 
@@ -30,9 +36,9 @@ class Input:
         """
 
         return (
-            self.value[: self._cursor_position]
+            self._value[: self._cursor_position]
             + self._cursor
-            + self.value[self._cursor_position :]
+            + self._value[self._cursor_position :]
         )
 
     def start_edit(self) -> None:
@@ -52,10 +58,10 @@ class Input:
         if text is None:
             text = str(pyperclip.paste())
 
-        self.value = (
-            self.value[: self._cursor_position]
+        self._value = (
+            self._value[: self._cursor_position]
             + text
-            + self.value[self._cursor_position :]
+            + self._value[self._cursor_position :]
         )
 
         self._cursor_position += len(text)
@@ -73,9 +79,9 @@ class Input:
             self._cursor_position = max(self._cursor_position - 1, 0)
         else:
             while self._cursor_position:
-                if self.value[self._cursor_position - 1] != " " and (
+                if self._value[self._cursor_position - 1] != " " and (
                     self._cursor_position == 1
-                    or self.value[self._cursor_position - 2] == " "
+                    or self._value[self._cursor_position - 2] == " "
                 ):
                     self._cursor_position -= 1
                     break
@@ -83,7 +89,7 @@ class Input:
                 self._cursor_position -= 1
 
         if delete:
-            self.value = self.value[: self._cursor_position] + self.value[prev:]
+            self._value = self._value[: self._cursor_position] + self._value[prev:]
 
     def _move_cursor_forward(self, word=False, delete=False) -> None:
         """
@@ -95,15 +101,15 @@ class Input:
         prev = self._cursor_position
 
         if not word:
-            self._cursor_position = min(self._cursor_position + 1, len(self.value))
+            self._cursor_position = min(self._cursor_position + 1, len(self._value))
         else:
-            while self._cursor_position < len(self.value):
+            while self._cursor_position < len(self._value):
                 if (
                     self._cursor_position != prev
-                    and self.value[self._cursor_position - 1] == " "
+                    and self._value[self._cursor_position - 1] == " "
                     and (
-                        self._cursor_position == len(self.value) - 1
-                        or self.value[self._cursor_position] != " "
+                        self._cursor_position == len(self._value) - 1
+                        or self._value[self._cursor_position] != " "
                     )
                 ):
                     break
@@ -111,16 +117,16 @@ class Input:
                 self._cursor_position += 1
 
         if delete:
-            self.value = self.value[:prev] + self.value[self._cursor_position :]
+            self._value = self._value[:prev] + self._value[self._cursor_position :]
             self._cursor_position = prev  # Because the cursor never actually moved :)
 
     def clear_input(self) -> None:
         self.move_cursor_to_end()
-        while self.value:
+        while self._value:
             self.keypress("backspace")
 
     def move_cursor_to_end(self) -> None:
-        self._cursor_position = len(self.value)
+        self._cursor_position = len(self._value)
 
     def keypress(self, key: str) -> None:
         # Moving backward

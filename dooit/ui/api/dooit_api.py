@@ -101,6 +101,9 @@ class DooitAPI:
     def remove_node(self):
         self.focused.remove_node()
 
+    def start_search(self):
+        self.focused.start_search()
+
     def set_workspace_layout(self, layout: WorkspaceLayout):
         registry.set_workspace_layout(layout)
         self.app.workspace_tree.refresh_options()

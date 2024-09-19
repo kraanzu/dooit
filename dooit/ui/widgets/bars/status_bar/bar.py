@@ -1,26 +1,9 @@
-from collections.abc import Callable
-from typing import List, Optional
+from typing import List
 from rich.console import RenderableType
-from rich.text import TextType
 from rich.table import Table
 from dooit.ui.events.events import DooitEvent
 from .._base import BarBase
-
-
-class BarWidget:
-    def __init__(
-        self, func: Callable[..., TextType], width: Optional[int] = None
-    ) -> None:
-        self.func = func
-        self.width = width
-        self.value = self.calculate()
-
-    def calculate(self) -> TextType:
-        self.value = self.func()
-        return self.value
-
-    def get_value(self):
-        return self.value
+from .bar_widget import BarWidget
 
 
 class Bar(BarBase):

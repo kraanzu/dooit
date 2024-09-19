@@ -9,7 +9,7 @@ from dooit.ui.events import (
     SpawnHelp,
 )
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
-from dooit.ui.widgets import StatusBar
+from dooit.ui.widgets import BarSwitcher
 from .base import BaseScreen
 
 
@@ -45,7 +45,7 @@ class MainScreen(BaseScreen):
             with ContentSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
                 yield from TODO_EMPTY_WIDGETS
 
-        yield StatusBar()
+        yield BarSwitcher()
 
     async def send_keypress(self, key: str):
         pass

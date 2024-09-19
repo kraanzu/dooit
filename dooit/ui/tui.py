@@ -4,7 +4,8 @@ from textual import on
 from textual.app import App
 from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
-from dooit.ui.widgets import StatusBar
+from dooit.ui.widgets import BarSwitcher
+from dooit.ui.widgets.bars import StatusBar, SearchBar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
@@ -49,7 +50,7 @@ class Dooit(App):
 
     @property
     def bar(self) -> StatusBar:
-        return self.query_one(StatusBar)
+        return self.query_one(BarSwitcher).status_bar
 
     @property
     def mode(self) -> ModeType:

@@ -4,7 +4,7 @@ from dooit.ui.api.plug import PluginManager
 from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
-from dooit.ui.widgets import StatusBarWidget
+from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.ui.api.components import TodoLayout, WorkspaceLayout
 
 

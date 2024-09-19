@@ -1,7 +1,7 @@
 from datetime import datetime
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.components import TodoComponent, WorkspaceComponent
-from dooit.ui.widgets import StatusBarWidget
+from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 
 

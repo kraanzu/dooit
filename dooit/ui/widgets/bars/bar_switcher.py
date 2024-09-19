@@ -1,3 +1,4 @@
+from textual import events
 from typing import Callable
 from textual.widgets import ContentSwitcher
 from .status_bar import StatusBar
@@ -14,6 +15,10 @@ class BarSwitcher(ContentSwitcher):
 
     status_bar = StatusBar()
 
+    @property
+    def search_bar(self):
+        return self.query_one(SearchBar)
+
     async def on_mount(self):
         self.add_content(
             widget=self.status_bar,
@@ -28,3 +33,9 @@ class BarSwitcher(ContentSwitcher):
             id="search_bar",
             set_current=True,
         )
+
+    async def handle_key(self, event: events.Key) -> bool:
+        if self.current == "search_bar":
+            return await self.search_bar.handle_key(event)
+
+        return True

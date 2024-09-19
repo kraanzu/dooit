@@ -48,6 +48,12 @@ class MainScreen(BaseScreen):
 
         yield BarSwitcher()
 
+    async def handle_key(self, event: events.Key) -> bool:
+        if self.app.mode == "SEARCH":
+            return await self.app.bar_switcher.handle_key(event)
+
+        return await super().handle_key(event)
+
     async def send_keypress(self, key: str):
         pass
 

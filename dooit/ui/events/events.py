@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Callable, Literal, Optional
 from textual.message import Message
 from dooit.api.model import SortMethodType
 from dooit.api.workspace import Workspace
@@ -54,6 +54,16 @@ class ModeChanged(DooitEvent):
     def __init__(self, status: ModeType) -> None:
         super().__init__()
         self.status: ModeType = status
+
+class StartSearch(DooitEvent):
+    """
+    Emitted when user wants to search
+    """
+
+    def __init__(self, callback: Callable) -> None:
+        super().__init__()
+        self.callback = callback
+
 
 
 class TopicSelect(DooitEvent):

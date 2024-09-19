@@ -40,6 +40,7 @@ class BaseScreen(Screen):
 
         return event.key
 
-    def on_key(self, event: events.Key) -> None:
+    async def handle_key(self, event: events.Key) -> bool:
         key = self.resolve_key(event)
         self.api.handle_key(key)
+        return True

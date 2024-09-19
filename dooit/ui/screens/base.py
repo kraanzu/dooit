@@ -4,6 +4,7 @@ from textual.screen import Screen
 
 if TYPE_CHECKING:
     from ..api import DooitAPI
+    from ..tui import Dooit
 
 
 class BaseScreen(Screen):
@@ -15,6 +16,16 @@ class BaseScreen(Screen):
         "\u0020\u00a0\u1680\u202f\u205f\u3000"
         "\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b"
     )
+
+    @property
+    def app(self) -> "Dooit":
+        from ..tui import Dooit
+
+        app = super().app
+        if not isinstance(app, Dooit):
+            raise ValueError(f"Expected Dooit, got {type(app)}")
+
+        return app
 
     @property
     def api(self) -> "DooitAPI":

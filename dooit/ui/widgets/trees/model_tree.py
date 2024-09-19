@@ -121,6 +121,12 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.current.stop_edit()
         self.app.post_message(ModeChanged("NORMAL"))
 
+    def reset_state(self):
+        """
+        Reset tree of any modified status for e.g. search
+        """
+        self.set_filter("")
+
     async def handle_key(self, event: events.Key) -> bool:
         key = event.key
         if self.is_editing:
@@ -133,6 +139,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             self.refresh_options()
             return True
         else:
+            if key == "escape":
+                self.reset_state()
+
             return await super().handle_key(event)
 
     def refresh_options(self) -> None:

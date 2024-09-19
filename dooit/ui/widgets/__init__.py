@@ -1,6 +1,6 @@
 from .sort_options import SortOptions
 from .help_menu import HelpMenu
-from .bar import Bar, BarWidget
+from .bars import Bar, BarWidget
 
 
 __all__ = [

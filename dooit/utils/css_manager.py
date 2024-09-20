@@ -9,7 +9,7 @@ def generate_random_id():
     return uuid4().hex
 
 class CssManager:
-    css_file: Path = dooit_cache_path / "dooit.css"
+    css_file: Path = dooit_cache_path / "dooit.tcss"
     stylesheets: Path = dooit_cache_path / "stylesheets"
 
     def refresh_css(self):
@@ -22,7 +22,7 @@ class CssManager:
         self.write(css)
 
     def set_theme(self, theme: DooitThemeBase):
-        theme_file = self.stylesheets / "theme.css"
+        theme_file = self.stylesheets / "theme.tcss"
 
         with open(theme_file, "w") as f:
             f.write(theme.to_css())
@@ -31,7 +31,7 @@ class CssManager:
 
     def inject_css(self, css: str) -> str:
         uuid = generate_random_id()
-        css_file = self.stylesheets / f"{uuid}.css"
+        css_file = self.stylesheets / f"{uuid}.tcss"
 
         with open(css_file, "w") as f:
             f.write(css)
@@ -39,7 +39,7 @@ class CssManager:
         return uuid
 
     def uninject_css(self, _id: str) -> bool:
-        css_file = self.stylesheets / f"{_id}.css"
+        css_file = self.stylesheets / f"{_id}.tcss"
 
         if not css_file.exists():
             return False

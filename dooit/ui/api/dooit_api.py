@@ -6,6 +6,7 @@ from dooit.ui.registry import registry
 from dooit.ui.widgets.trees.model_tree import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.ui.api.components import TodoLayout, WorkspaceLayout
+from dooit.utils.css_manager import CssManager
 
 
 if TYPE_CHECKING:
@@ -18,6 +19,9 @@ class DooitAPI:
         self.plugin_manager = PluginManager()
         self.plugin_manager.scan()
         self.keybinds = defaultdict(lambda: defaultdict(lambda: lambda: None))
+        self.css_manager = CssManager()
+
+        self.css_manager.refresh_css()
 
     def no_op(self):
         pass

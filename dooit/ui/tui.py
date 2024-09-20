@@ -5,10 +5,11 @@ from textual.app import App
 from dooit.api.manager import manager
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import BarSwitcher
-from dooit.ui.widgets.bars import StatusBar, SearchBar
+from dooit.ui.widgets.bars import StatusBar
 from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
+from dooit.utils.css_manager import CssManager
 from .api import DooitAPI
 
 PRINTABLE = (
@@ -19,6 +20,8 @@ PRINTABLE = (
 
 
 class Dooit(App):
+    CSS_PATH = CssManager.css_file
+
     SCREENS = {
         "main": MainScreen,
         "help": HelpScreen,

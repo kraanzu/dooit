@@ -10,7 +10,6 @@ from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.ui.screens import MainScreen, HelpScreen
 from textual.binding import Binding
 from .api import DooitAPI
-from .css.main import screen_CSS
 
 PRINTABLE = (
     "0123456789"
@@ -20,7 +19,6 @@ PRINTABLE = (
 
 
 class Dooit(App):
-    CSS = screen_CSS
     SCREENS = {
         "main": MainScreen,
         "help": HelpScreen,

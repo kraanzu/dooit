@@ -15,7 +15,13 @@ from .base import BaseScreen
 
 
 class DualSplit(Container):
-    pass
+    DEFAULT_CSS = """
+    DualSplit {
+        layout: grid;
+        grid-size: 2 1;
+        grid-columns: 2fr 8fr;
+    }
+    """
 
 
 class DualSplitLeft(Container):

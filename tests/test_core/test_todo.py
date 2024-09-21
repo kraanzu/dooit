@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from dooit.api.exceptions import NoParentError, MultipleParentError
-from tests.test_core._base import CoreTestBase
+from tests.test_core.core_base import CoreTestBase
 from dooit.api import Todo, Workspace
 
 

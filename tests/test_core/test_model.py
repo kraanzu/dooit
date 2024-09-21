@@ -1,5 +1,5 @@
 from dooit.api.workspace import Workspace
-from tests.test_core._base import CoreTestBase
+from tests.test_core.core_base import CoreTestBase
 
 
 class TestModel(CoreTestBase):

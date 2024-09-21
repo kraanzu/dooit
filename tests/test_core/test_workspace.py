@@ -1,4 +1,4 @@
-from tests.test_core._base import CoreTestBase
+from tests.test_core.core_base import CoreTestBase
 from dooit.api import Workspace
 
 

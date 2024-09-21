@@ -1,4 +1,4 @@
-from tests.test_ui._base import run_pilot
+from tests.test_ui.ui_base import run_pilot
 
 
 async def test_startup():

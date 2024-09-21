@@ -29,8 +29,9 @@ def fix_highlight(func: Callable) -> Callable:
 
 def refresh_tree(func: Callable) -> Callable:
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
-        func(self, *args, **kwargs)
+        res = func(self, *args, **kwargs)
         self.force_refresh()
+        return res
 
     return wrapper
 

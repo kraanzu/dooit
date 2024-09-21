@@ -1,5 +1,4 @@
-from typing import Self
-from typing import Any, List, Literal, TypeVar
+from typing import Any, List, Literal, TypeVar, Self
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 from .manager import manager

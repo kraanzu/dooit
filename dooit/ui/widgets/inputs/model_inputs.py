@@ -1,8 +1,8 @@
 from typing import Any
-from dooit.api.todo import Todo
-from dooit.api.workspace import Workspace
+
 from .simple_input import SimpleInput
-from dooit.utils.date_parser import parse
+from dooit.api import Todo, Workspace
+from dooit.utils import parse
 
 
 class TodoDescription(SimpleInput[Todo]):

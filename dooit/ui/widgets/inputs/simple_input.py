@@ -1,7 +1,7 @@
-from collections.abc import Callable
-from typing import Any, Generic, TypeVar
-from dooit.api.model import DooitModel
+from typing import Any, Generic, TypeVar, Callable
 from rich.text import TextType
+
+from dooit.api import DooitModel
 from ._input import Input
 from ._cacher import input_cache
 

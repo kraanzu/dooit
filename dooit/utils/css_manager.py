@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 from platformdirs import user_cache_dir
 from dooit.api.theme import DooitThemeBase
@@ -5,13 +6,17 @@ from uuid import uuid4
 
 dooit_cache_path = Path(user_cache_dir("dooit"))
 
+if getattr(sys, "frozen", False):
+    BASE_PATH = Path(sys._MEIPASS) / "dooit"
+else:
+    BASE_PATH = Path(__file__).parent.parent
 
 def generate_random_id():
     return uuid4().hex
 
 
 class CssManager:
-    base_css: Path = Path(__file__).parent.parent / "ui" / "styles.tcss"
+    base_css: Path = BASE_PATH / "ui" / "styles.tcss"
     stylesheets: Path = dooit_cache_path / "stylesheets"
     css_file: Path = dooit_cache_path / "dooit.tcss"
 

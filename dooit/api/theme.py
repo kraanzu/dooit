@@ -24,26 +24,26 @@ class DooitThemeBase:
     secondary: str = "#81A1C1"
 
     def to_css(self) -> str:
-        css = f"""
-        $background_1: {self.background_1};
-        $background_2: {self.background_2};
-        $background_3: {self.background_3};
+        css = f"""\
+$background_1: {self.background_1};
+$background_2: {self.background_2};
+$background_3: {self.background_3};
 
-        $foreground_1: {self.foreground_1};
-        $foreground_2: {self.foreground_2};
-        $foreground_3: {self.foreground_3};
+$foreground_1: {self.foreground_1};
+$foreground_2: {self.foreground_2};
+$foreground_3: {self.foreground_3};
 
-        $red: {self.red};
-        $orange: {self.orange};
-        $yellow: {self.yellow};
-        $green: {self.green};
-        $blue: {self.blue};
-        $purple: {self.purple};
-        $pink: {self.pink};
-        $gray: {self.gray};
+$red: {self.red};
+$orange: {self.orange};
+$yellow: {self.yellow};
+$green: {self.green};
+$blue: {self.blue};
+$purple: {self.purple};
+$pink: {self.pink};
+$gray: {self.gray};
 
-        $primary: {self.primary};
-        $secondary: {self.secondary};
-        """
+$primary: {self.primary};
+$secondary: {self.secondary};
+"""
 
         return css

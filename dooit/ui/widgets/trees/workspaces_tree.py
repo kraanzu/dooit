@@ -2,9 +2,10 @@ from typing import List, Optional
 from textual import on
 from textual.widgets import ContentSwitcher
 from textual.widgets.option_list import Option
-from dooit.api.workspace import Workspace
-from dooit.ui.widgets.trees.todos_tree import TodosTree
+
+from dooit.api import Workspace
 from .model_tree import ModelTree
+from .todos_tree import TodosTree
 from ._render_dict import WorkspaceRenderDict
 
 

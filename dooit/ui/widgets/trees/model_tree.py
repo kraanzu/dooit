@@ -1,10 +1,11 @@
+from collections import defaultdict
 from typing import Generic, Iterable, Optional, TypeVar, Union
 from textual.app import events
 from textual.widgets.option_list import Option
-from collections import defaultdict
+
 from dooit.api import Todo, Workspace
 from dooit.ui.events.events import ModeChanged, StartSearch
-from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
+from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
 from ._decorators import fix_highlight, refresh_tree, require_highlighted_node

@@ -1,6 +1,6 @@
 from typing import Iterable, Optional, Union
-
 from textual.widgets.option_list import Option
+
 from dooit.api import Todo, Workspace
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender

@@ -1,5 +1,6 @@
 # dooit stuf
 playground/
+.playground/
 test.py
 todos
 sample_todo.yaml

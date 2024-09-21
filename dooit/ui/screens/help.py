@@ -1,6 +1,5 @@
-from textual.app import ComposeResult
+from textual.app import ComposeResult, events
 from textual.widgets import Static
-from textual import events
 from dooit.ui.widgets.help_menu import HelpMenu
 from .base import BaseScreen
 

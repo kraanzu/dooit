@@ -159,24 +159,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def _get_children(self, id: str) -> Iterable[ModelType]:
         raise NotImplementedError
 
-    def _insert_nodes(self, index: int, items: Iterable[Option]) -> None:
-        if not items:
-            return
-
-        highlighted = self.highlighted
-        opts = self._options
-        opts = opts[:index] + list(items) + opts[index:]
-
-        self.clear_options()
-        self.add_options(opts)
-        self.highlighted = highlighted
-
-    def add_nodes(self, *items: Option, index: Optional[int] = None) -> None:
-        if index is None:
-            index = self.option_count
-
-        self._insert_nodes(index, items)
-
     @refresh_tree
     def _expand_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = True

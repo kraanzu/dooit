@@ -11,6 +11,7 @@ if getattr(sys, "frozen", False):
 else:
     BASE_PATH = Path(__file__).parent.parent
 
+
 def generate_random_id():
     return uuid4().hex
 

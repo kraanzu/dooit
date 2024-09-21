@@ -1,12 +1,14 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING, List, Callable
+
 from dooit.ui.api.plug import PluginManager
+from dooit.ui.api.components import TodoLayout, WorkspaceLayout
+
 from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.registry import registry
-from dooit.ui.widgets.trees.model_tree import ModelTree
+from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
-from dooit.ui.api.components import TodoLayout, WorkspaceLayout
-from dooit.utils.css_manager import CssManager
+from dooit.utils import CssManager
 
 
 if TYPE_CHECKING:

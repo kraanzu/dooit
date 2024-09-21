@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from typing import Callable
 
 
 class EventDecorator:
@@ -12,5 +12,4 @@ class EventDecorator:
 
 startup = EventDecorator("startup")
 shutdown = EventDecorator("shutdown")
-
 mode_changed = EventDecorator("mode_changed")

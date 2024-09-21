@@ -1,7 +1,8 @@
 from typing import Callable, Literal, Optional
 from textual.message import Message
+
 from dooit.api.model import SortMethodType
-from dooit.api.workspace import Workspace
+from dooit.api import Workspace
 
 ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]

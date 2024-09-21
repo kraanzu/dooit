@@ -30,16 +30,14 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
         assert self.highlighted is not None
         return self.get_option_at_index(self.highlighted)
 
-    # TODO: Uncomment this:
-    #
-    # def action_cursor_down(self) -> None:
-    #     if self.highlighted == len(self._options) - 1:
-    #         return
-    #
-    #     return super().action_cursor_down()
-    #
-    # def action_cursor_up(self) -> None:
-    #     if self.highlighted == 0:
-    #         return
-    #
-    #     return super().action_cursor_up()
+    def action_cursor_down(self) -> None:
+        if self.highlighted == len(self._options) - 1:
+            return
+
+        return super().action_cursor_down()
+
+    def action_cursor_up(self) -> None:
+        if self.highlighted == 0:
+            return
+
+        return super().action_cursor_up()

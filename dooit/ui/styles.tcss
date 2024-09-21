@@ -1,0 +1,38 @@
+Screen, BarBase {
+    background: $background_1;
+}
+
+ModelTree {
+    background: $background_1;
+    color: $foreground_3;
+    border: tall $background_3;
+
+    &:focus {
+        border: tall $primary;
+    }
+
+    .option-list--option-disabled {
+        color: $foreground_1;
+    }
+
+    .option-list--option-highlighted, .option-list--option-hover-highlighted {
+        background: $background_3;
+    }
+
+    .option-list--option-hover {
+        background: $background_1;
+        color: $foreground_3;
+    }
+}
+
+# Miscellaneous
+
+* {
+    scrollbar-size: 0 1;
+    scrollbar-background: $background_3;
+    scrollbar-background-hover: $background_2;
+    scrollbar-background-active: $background_2;
+    scrollbar-color: $primary;
+    scrollbar-color-active: $secondary;
+    scrollbar-color-hover: $secondary;
+}

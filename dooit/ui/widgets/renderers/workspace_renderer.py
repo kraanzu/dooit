@@ -1,7 +1,7 @@
 from typing import List
 from .base_renderer import BaseRenderer, Workspace
-from dooit.ui.widgets.inputs.model_inputs import WorkspaceDescription
-from dooit.ui.registry import registry
+from ..inputs.model_inputs import WorkspaceDescription
+from ...registry import registry
 
 
 class WorkspaceRender(BaseRenderer):

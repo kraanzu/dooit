@@ -1,5 +1,6 @@
 from typing import List
-from dooit.ui.widgets.inputs.model_inputs import (
+
+from ..inputs.model_inputs import (
     Due,
     Effort,
     Recurrence,
@@ -8,7 +9,7 @@ from dooit.ui.widgets.inputs.model_inputs import (
     Urgency,
 )
 from .base_renderer import BaseRenderer, Todo
-from dooit.ui.registry import registry
+from ...registry import registry
 
 
 class TodoRender(BaseRenderer):

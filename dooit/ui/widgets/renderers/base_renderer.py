@@ -2,9 +2,9 @@ from typing import Dict, List, Union
 from rich.console import RenderableType
 from rich.table import Table
 from textual.app import events
-from dooit.api.todo import Todo
-from dooit.api.workspace import Workspace
-from dooit.ui.widgets.inputs.simple_input import SimpleInput
+
+from dooit.api import Todo, Workspace
+from ..inputs.simple_input import SimpleInput
 
 ModelType = Union[Todo, Workspace]
 

@@ -1,3 +1,10 @@
+# Extra vars
+
+$border_type: heavy;
+
+
+# CSS
+
 Screen, BarBase {
     background: $background_1;
 }
@@ -5,10 +12,10 @@ Screen, BarBase {
 ModelTree {
     background: $background_1;
     color: $foreground_3;
-    border: tall $background_3;
+    border: $border_type $background_3;
 
     &:focus {
-        border: tall $primary;
+        border: $border_type $primary;
     }
 
     .option-list--option-disabled {

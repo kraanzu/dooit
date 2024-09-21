@@ -1,6 +1,12 @@
 from .sort_options import SortOptions
 from .help_menu import HelpMenu
 from .bars import BarSwitcher
+from .trees.model_tree import ModelTree
 
 
-__all__ = ["SortOptions", "HelpMenu", "BarSwitcher"]
+__all__ = [
+    "SortOptions",
+    "HelpMenu",
+    "BarSwitcher",
+    "ModelTree",
+]

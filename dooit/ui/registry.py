@@ -1,8 +1,6 @@
 from typing import TYPE_CHECKING, Callable, List
-
 from rich.table import Table
-from dooit.api.model import DooitModel
-from dooit.api.workspace import Workspace
+from dooit.api import DooitModel, Workspace
 
 
 if TYPE_CHECKING:

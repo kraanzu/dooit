@@ -1,6 +1,7 @@
 from typing import List
 from rich.console import RenderableType
 from rich.table import Table
+
 from dooit.ui.events.events import DooitEvent
 from .._base import BarBase
 from .bar_widget import StatusBarWidget

@@ -1,7 +1,8 @@
-from rich.console import RenderableType
-from dooit.ui.events import ModeChanged
-from textual import events
 from typing import TYPE_CHECKING, Callable
+from rich.console import RenderableType
+from textual import events
+
+from dooit.ui.events import ModeChanged
 from .._base import BarBase
 from ...inputs._input import Input
 

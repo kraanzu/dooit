@@ -10,6 +10,8 @@ from ._render_dict import WorkspaceRenderDict
 
 
 class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
+    BORDER_TITLE = "Workspaces"
+
     def __init__(self, model: Workspace) -> None:
         render_dict = WorkspaceRenderDict(self)
         super().__init__(model, render_dict)

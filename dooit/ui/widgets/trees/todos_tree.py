@@ -10,6 +10,8 @@ Model = Union[Todo, Workspace]
 
 
 class TodosTree(ModelTree[Model, TodoRenderDict]):
+    BORDER_TITLE = "Todos"
+
     def __init__(self, model: Model) -> None:
         super().__init__(model, TodoRenderDict(self))
 

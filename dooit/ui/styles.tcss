@@ -13,10 +13,18 @@ ModelTree {
     background: $background_1;
     color: $foreground_3;
     border: $border_type $background_3;
+    padding-top: 1;
+
+    border-title-color: $foreground_1;
+    border-title-background: $background_3;
 
     &:focus {
         border: $border_type $primary;
+        border-title-color: $foreground_3;
+        border-title-background: $secondary;
     }
+
+    # --------- Options ------------------
 
     .option-list--option-disabled {
         color: $foreground_1;

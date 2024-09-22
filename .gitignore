@@ -7,6 +7,9 @@ sample_todo.yaml
 snappy.py
 dooit.db
 
+# Nix
+result
+
 # VSCODE
 .vscode/
 

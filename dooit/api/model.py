@@ -58,6 +58,10 @@ class DooitModel(BaseModel, BaseModelMixin):
     def from_id(cls, _id: str) -> Self:
         raise NotImplementedError
 
+    @property
+    def session(self):
+        return manager.session
+
     def is_last_sibling(self) -> bool:
         return self.siblings[-1].id == self.id
 
@@ -81,8 +85,9 @@ class DooitModel(BaseModel, BaseModelMixin):
         siblings[index - 1].order_index += 1
         siblings[index].order_index -= 1
 
-        siblings[index].save()
-        siblings[index - 1].save()
+        self.session.add(siblings[index])
+        self.session.add(siblings[index - 1])
+        self.session.commit()
 
         return True
 
@@ -118,8 +123,9 @@ class DooitModel(BaseModel, BaseModelMixin):
         siblings[index + 1].order_index -= 1
         siblings[index].order_index += 1
 
-        siblings[index].save()
-        siblings[index + 1].save()
+        self.session.add(siblings[index])
+        self.session.add(siblings[index + 1])
+        self.session.commit()
 
         return True
 

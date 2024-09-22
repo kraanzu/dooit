@@ -225,8 +225,19 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         node.save()
         return node
 
+    @refresh_tree
+    def add_first_item(self) -> ModelType:
+        return self._add_first_item()
+
+    def _add_first_item(self) -> ModelType:
+        raise NotImplementedError
+
     def add_sibling(self):
-        node = self._add_sibling_node()
+        if not self._options:
+            node = self.add_first_item()
+        else:
+            node = self._add_sibling_node()
+
         self.highlight_id(node.uuid)
         self.start_edit("description")
 

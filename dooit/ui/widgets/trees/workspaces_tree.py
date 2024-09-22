@@ -52,3 +52,6 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _create_child_node(self) -> Workspace:
         return self.current_model.add_workspace()
+
+    def _add_first_item(self) -> Workspace:
+        return self.model.add_workspace()

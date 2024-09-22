@@ -31,5 +31,8 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         self.add_option(Option(render.prompt, id=render.id))
         return todo.uuid
 
+    def _add_first_item(self) -> Todo:
+        return self.model.add_todo()
+
     def _create_child_node(self) -> Todo:
         return self.current_model.add_todo()

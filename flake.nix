@@ -46,7 +46,7 @@
 
           buildInputs = mainPkgs;
 
-          # requires creating stuff on user dirs
+          # TODO: enable this
           doCheck = false; 
         };
 

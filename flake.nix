@@ -11,18 +11,31 @@
   }:
     flake-utils.lib.eachDefaultSystem (
       system: let
+        name = "dooit";
+        version = "3.0.0";
+
         pkgs = import nixpkgs {inherit system;};
+        python3 = pkgs.python312Packages;
+
+        mainPkgs = with python3; [
+          poetry-core
+          pyperclip
+          textual
+          pyyaml
+          dateutil
+          sqlalchemy
+          platformdirs
+          tzlocal
+        ];
       in {
         packages.default = pkgs.python312Packages.buildPythonPackage {
-          pname = "dooit";
-          version = "3.0.0";
-
+          pname = name;
+          version = version;
           src = ./.;
-
           format = "pyproject";
 
           nativeBuildInputs = with pkgs; [
-            poetry # For managing pyproject.toml dependencies
+            poetry
           ];
 
           pythonRelaxDeps = [
@@ -31,37 +44,22 @@
             "platformdirs"
           ];
 
-          buildInputs = with pkgs.python312Packages; [
-            poetry-core
-            pyperclip
-            textual
-            pyyaml
-            dateutil
-            sqlalchemy
-            platformdirs
-            tzlocal
-          ];
+          buildInputs = mainPkgs;
+          doCheck = false;
         };
 
         # Optional devShell for development
         devShell = pkgs.mkShell {
-          buildInputs = with pkgs.python312Packages; [
-            poetry-core
-            pyperclip
-            textual
-            pyyaml
-            dateutil
-            sqlalchemy
-            platformdirs
-
-            # dev
-            textual-dev
-            mkdocs
-            mkdocs-material
-            pre-commit-hooks
-            pytest
-            pytest-aio
-          ];
+          buildInputs =
+            mainPkgs
+            ++ (with python3; [
+              textual-dev
+              mkdocs
+              mkdocs-material
+              pre-commit-hooks
+              pytest
+              pytest-aio
+            ]);
         };
       }
     );

@@ -96,11 +96,10 @@ class Workspace(DooitModel):
         todo.save()
         return todo
 
-    def add_sibling(self) -> "Workspace":
-        assert self.parent_workspace is not None
-
-        workspace = self.parent_workspace.add_workspace()
-        workspace.set_order_index(self.order_index + 1)
+    def _add_sibling(self) -> "Workspace":
+        workspace = Workspace(
+            parent_workspace=self.parent_workspace,
+        )
         return workspace
 
     def save(self) -> None:

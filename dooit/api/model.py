@@ -86,6 +86,25 @@ class DooitModel(BaseModel, BaseModelMixin):
 
         return True
 
+    def _add_sibling(self) -> Self:
+        raise NotImplementedError
+
+    def add_sibling(self):
+        sibling = self._add_sibling()
+        index = self.order_index
+
+        cls = self.__class__
+        manager.session.query(cls).filter(cls.order_index > index).update(
+            {cls.order_index: cls.order_index + 1},
+            synchronize_session=False,
+        )
+
+        sibling.order_index = index + 1
+        manager.session.add(sibling)
+        manager.session.commit()
+
+        return sibling
+
     def shift_down(self) -> bool:
         """
         Shift the item one place down among its siblings
@@ -107,6 +126,12 @@ class DooitModel(BaseModel, BaseModelMixin):
     def set_order_index(self, index: int) -> None:
         if index > len(self.siblings) or index < 0:
             index = len(self.siblings)
+
+        cls = self.__class__
+        manager.session.query(cls).filter(cls.order_index >= index).update(
+            {cls.order_index: cls.order_index + 1},
+            synchronize_session=False,
+        )
 
         siblings = [
             i for i in self.siblings if i.id != self.id and i.order_index >= index

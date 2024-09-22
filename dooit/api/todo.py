@@ -98,13 +98,11 @@ class Todo(DooitModel):
         todo.save()
         return todo
 
-    def add_sibling(self) -> "Todo":
+    def _add_sibling(self) -> "Todo":
         todo = Todo(
             parent_todo=self.parent_todo,
             parent_workspace=self.parent_workspace,
         )
-        todo.save()
-        todo.set_order_index(self.order_index + 1)
         return todo
 
     # ----------- HELPER FUNCTIONS --------------

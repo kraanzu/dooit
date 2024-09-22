@@ -45,7 +45,9 @@
           ];
 
           buildInputs = mainPkgs;
-          doCheck = false;
+
+          # requires creating stuff on user dirs
+          doCheck = false; 
         };
 
         # Optional devShell for development

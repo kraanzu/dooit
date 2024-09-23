@@ -62,6 +62,7 @@
               pre-commit-hooks
               pytest
               pytest-aio
+              faker
             ]);
         };
       }

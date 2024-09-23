@@ -48,8 +48,8 @@ ModelTree {
 # Bars
 
 ConfirmBar {
-    background: $background_3;
-    color: $red;
+    background: $red;
+    color: $background_1;
     text-style: bold;
 
     &.cancelled {
@@ -58,7 +58,7 @@ ConfirmBar {
     }
 
     &.not-cancelled {
-        background: $red;
+        background: $green;
         color: $background_1;
     }
 }

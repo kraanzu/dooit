@@ -33,7 +33,7 @@ class ConfirmBar(BarBase):
             self.message = "The items were deleted!"
             self.add_class("not-cancelled")
         else:
-            self.message = "The operation was cancelled!"
+            self.message = "The items were retained!"
             self.add_class("cancelled")
 
         self.refresh()

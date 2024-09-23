@@ -58,7 +58,9 @@ class MainScreen(BaseScreen):
         if self.app.bar_switcher.is_focused:
             return await self.app.bar_switcher.handle_key(event)
 
-        return await super().handle_key(event)
+        key = self.resolve_key(event)
+        self.api.handle_key(key)
+        return True
 
     async def clear_right(self) -> None:
         try:

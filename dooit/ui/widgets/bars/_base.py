@@ -32,12 +32,12 @@ class BarBase(Static):
     def perform_action(self, cancel: bool):
         raise NotImplementedError
 
-    def dismiss(self, cancel: bool):
+    def close(self):
+        self.switcher.current = "status_bar"
+        self.remove()
 
+    def dismiss(self, cancel: bool, close: bool = True):
         self.perform_action(cancel)
         self.app.post_message(ModeChanged("NORMAL"))
-
-        _id = "status_bar"
-        if self.id != _id:
-            self.switcher.current = _id
-            self.remove()
+        if close:
+            self.close()

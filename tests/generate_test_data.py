@@ -6,9 +6,10 @@ manager.register_engine()
 
 f = faker.Faker()
 
+
 def gen_todo(parent):
     words = randint(4, 9)
-    description = ' '.join(f.words(nb=words))
+    description = " ".join(f.words(nb=words))
     due = f.date_time()
 
     todo = Todo(description=description, due=due)
@@ -28,7 +29,7 @@ def gen_todos(parent, count):
 
 def gen_workspace(parent=None):
     words = randint(1, 2)
-    description = ' '.join(f.words(nb=words))
+    description = " ".join(f.words(nb=words))
 
     workspace = Workspace(description=description, parent_workspace=parent)
     workspace.save()

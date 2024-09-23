@@ -38,7 +38,7 @@ class ConfirmBar(BarBase):
             self.add_class("cancelled")
 
         self.refresh()
-        self.set_interval(0.8, self.close)
+        self.set_interval(1.2, self.close)
 
     async def handle_key(self, event: events.Key) -> bool:
         cancel = event.key.lower() != "y"

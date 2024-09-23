@@ -28,7 +28,7 @@
           tzlocal
         ];
       in {
-        packages.default = pkgs.python312Packages.buildPythonPackage {
+        packages.default = python3.buildPythonPackage {
           pname = name;
           version = version;
           src = ./.;
@@ -50,7 +50,7 @@
           doCheck = false; 
         };
 
-        # Optional devShell for development
+        # Deps: Devshell
         devShell = pkgs.mkShell {
           buildInputs =
             mainPkgs

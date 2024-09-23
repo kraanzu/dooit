@@ -55,6 +55,11 @@ class MainScreen(BaseScreen):
         yield BarSwitcher()
 
     async def handle_key(self, event: events.Key) -> bool:
+
+        # NOTE: Investigate why keys are sent to this screen
+        if self.app.screen != self:
+            return True
+
         if self.app.bar_switcher.is_focused:
             return await self.app.bar_switcher.handle_key(event)
 

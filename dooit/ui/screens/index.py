@@ -2,7 +2,7 @@ from textual import events, on, work
 from textual.containers import Container
 from textual.widgets import ContentSwitcher
 from dooit.api.workspace import Workspace
-from dooit.ui.events.events import ModeChanged, StartSearch
+from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch
 from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
     TopicSelect,
@@ -118,3 +118,8 @@ class MainScreen(BaseScreen):
     def start_search(self, event: StartSearch):
         self.app.bar_switcher.switch_to_search(event.callback)
         self.post_message(ModeChanged("SEARCH"))
+
+    @on(ShowConfirm)
+    def show_confirm(self, event: ShowConfirm):
+        self.app.bar_switcher.switch_to_confirm(event.callback)
+        self.post_message(ModeChanged("CONFIRM"))

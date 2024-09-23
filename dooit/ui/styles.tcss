@@ -32,7 +32,7 @@ ModelTree {
     # --------- Options ------------------
 
     .option-list--option-disabled {
-        color: $foreground_1;
+        color: $foreground_1 50%;
     }
 
     .option-list--option-highlighted, .option-list--option-hover-highlighted {

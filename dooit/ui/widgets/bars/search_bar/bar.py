@@ -1,40 +1,16 @@
-from typing import TYPE_CHECKING, Callable
+from typing import Callable
 from rich.console import RenderableType
 from textual import events
 
-from dooit.ui.events import ModeChanged
 from .._base import BarBase
 from ...inputs._input import Input
 
 
-if TYPE_CHECKING:
-    from ..bar_switcher import BarSwitcher
-
-
 class SearchBar(BarBase):
     def __init__(self, callback: Callable, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(callback, *args, **kwargs)
         self._search = Input(value="/")
         self._search.is_editing = True
-        self.callback = callback
-
-    @property
-    def switcher(self) -> "BarSwitcher":
-        from ..bar_switcher import BarSwitcher
-
-        parent = self.parent
-        if not isinstance(parent, BarSwitcher):
-            raise ValueError("Parent is not BarSwitcher")
-
-        return parent
-
-    def dismiss(self, cancel: bool = False):
-        if cancel:
-            self.callback("")
-
-        self.switcher.current = "status_bar"
-        self.app.post_message(ModeChanged("NORMAL"))
-        self.remove()
 
     async def handle_key(self, event: events.Key) -> bool:
         if event.key == "enter":

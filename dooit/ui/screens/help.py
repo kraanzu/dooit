@@ -17,7 +17,6 @@ class HelpScreen(BaseScreen):
 
     BINDINGS = [
         ("escape", "app.pop_screen", "Pop screen"),
-        ("question_mark", "app.pop_screen", "Pop screen"),
     ]
 
     def compose(self) -> ComposeResult:

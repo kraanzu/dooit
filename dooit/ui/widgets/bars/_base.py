@@ -15,6 +15,8 @@ class BarBase(Static):
     }
     """
 
+    focused: bool = True
+
     def __init__(self, callback: Callable = lambda: None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.callback = callback

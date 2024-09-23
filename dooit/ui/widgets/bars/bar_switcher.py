@@ -1,6 +1,7 @@
 from textual import events
 from typing import Callable
 from textual.widgets import ContentSwitcher
+from dooit.ui.widgets.bars._base import BarBase
 from .status_bar import StatusBar
 from .search_bar import SearchBar
 from .confirm_bar import ConfirmBar
@@ -21,8 +22,19 @@ class BarSwitcher(ContentSwitcher):
         return self.query_one(SearchBar)
 
     @property
+    def visible_content(self) -> BarBase:
+        content = super().visible_content
+
+        assert isinstance(content, BarBase)
+        return content
+
+    @property
     def is_focused(self):
-        return self.current != "status_bar"
+        return (
+            self.current != "status_bar"
+            and self.visible_content
+            and self.visible_content.focused
+        )
 
     async def on_mount(self):
         self.add_content(
@@ -48,7 +60,7 @@ class BarSwitcher(ContentSwitcher):
         )
 
     async def handle_key(self, event: events.Key) -> bool:
-        if (bar := self.visible_content) and self.current != "status_bar":
-            return await bar.handle_key(event)
+        if self.current != "status_bar":
+            return await self.visible_content.handle_key(event)
 
         return True

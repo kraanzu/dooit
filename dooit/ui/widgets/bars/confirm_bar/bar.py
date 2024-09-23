@@ -29,6 +29,7 @@ class ConfirmBar(BarBase):
             self.callback()
 
     def flash_confirm(self, cancelled: bool):
+        self.focused = False
         if not cancelled:
             self.message = "The items were deleted!"
             self.add_class("not-cancelled")

@@ -12,9 +12,13 @@ class SearchBar(BarBase):
         self._search = Input(value="/")
         self._search.is_editing = True
 
+    def perform_action(self, cancel: bool):
+        if cancel:
+            self.callback("")
+
     async def handle_key(self, event: events.Key) -> bool:
         if event.key == "enter":
-            self.dismiss()
+            self.dismiss(cancel=False)
 
         elif event.key == "escape":
             self.dismiss(cancel=True)

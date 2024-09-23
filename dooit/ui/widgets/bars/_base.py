@@ -29,13 +29,15 @@ class BarBase(Static):
 
         return parent
 
-    def dismiss(self, cancel: bool = False):
-        if cancel:
-            self.callback("")
+    def perform_action(self, cancel: bool):
+        raise NotImplementedError
 
+    def dismiss(self, cancel: bool):
+
+        self.perform_action(cancel)
         self.app.post_message(ModeChanged("NORMAL"))
 
         _id = "status_bar"
         if self.id != _id:
-            self.switcher.current = "status_bar"
+            self.switcher.current = _id
             self.remove()

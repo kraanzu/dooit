@@ -35,6 +35,7 @@ class Manager:
         current_last_modified = self._get_db_last_modified()
         if current_last_modified and self._db_last_modified != current_last_modified:
             self._db_last_modified = current_last_modified
+            manager.session.expire_all()
             return True
         return False
 

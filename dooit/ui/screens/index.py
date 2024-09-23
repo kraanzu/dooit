@@ -55,7 +55,9 @@ class MainScreen(BaseScreen):
         yield BarSwitcher()
 
     async def handle_key(self, event: events.Key) -> bool:
-        if self.app.mode == "SEARCH":
+
+        # TODO: implement this better
+        if self.app.mode not in ["NORMAL", "INSERT"]:
             return await self.app.bar_switcher.handle_key(event)
 
         return await super().handle_key(event)

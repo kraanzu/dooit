@@ -56,8 +56,7 @@ class MainScreen(BaseScreen):
 
     async def handle_key(self, event: events.Key) -> bool:
 
-        # TODO: implement this better
-        if self.app.mode not in ["NORMAL", "INSERT"]:
+        if self.app.bar_switcher.is_focused:
             return await self.app.bar_switcher.handle_key(event)
 
         return await super().handle_key(event)

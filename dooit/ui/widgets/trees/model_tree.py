@@ -4,7 +4,7 @@ from textual.app import events
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import ModeChanged, StartSearch
+from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch
 from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
@@ -243,8 +243,13 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     @refresh_tree
     @require_highlighted_node
-    def remove_node(self):
+    def _remove_node(self):
         self.current_model.drop()
+
+    def remove_node(self):
+        self.post_message(
+            ShowConfirm(self._remove_node),
+        )
 
     @refresh_tree
     def shift_up(self) -> None:

@@ -33,7 +33,7 @@ class SearchBar(BarBase):
             self.callback("")
 
         self.switcher.current = "status_bar"
-        self.post_message(ModeChanged("NORMAL"))
+        self.app.post_message(ModeChanged("NORMAL"))
         self.remove()
 
     async def handle_key(self, event: events.Key) -> bool:

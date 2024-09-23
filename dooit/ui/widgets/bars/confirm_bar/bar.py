@@ -43,7 +43,7 @@ class ConfirmBar(BarBase):
     async def handle_key(self, event: events.Key) -> bool:
         cancel = event.key.lower() != "y"
         self.flash_confirm(cancel)
-        self.dismiss(cancel, close = False)
+        self.dismiss(cancel, close=False)
         return True
 
     def render(self) -> RenderableType:

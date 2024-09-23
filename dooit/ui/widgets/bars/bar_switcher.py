@@ -20,6 +20,10 @@ class BarSwitcher(ContentSwitcher):
     def search_bar(self):
         return self.query_one(SearchBar)
 
+    @property
+    def is_focused(self):
+        return self.current != "status_bar"
+
     async def on_mount(self):
         self.add_content(
             widget=self.status_bar,

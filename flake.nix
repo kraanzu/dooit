@@ -52,6 +52,7 @@
 
         # Deps: Devshell
         devShell = pkgs.mkShell {
+          name = "dooit";
           buildInputs =
             mainPkgs
             ++ (with python3; [

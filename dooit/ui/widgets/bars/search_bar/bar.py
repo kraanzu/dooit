@@ -34,6 +34,8 @@ class SearchBar(BarBase):
 
         self._search.is_editing = False
         self.switcher.current = "status_bar"
+        self.post_message(ModeChanged("NORMAL"))
+        self.remove()
 
     async def handle_key(self, event: events.Key) -> bool:
         if event.key == "enter":

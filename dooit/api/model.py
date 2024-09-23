@@ -87,7 +87,7 @@ class DooitModel(BaseModel, BaseModelMixin):
 
         self.session.add(siblings[index])
         self.session.add(siblings[index - 1])
-        self.session.commit()
+        manager.commit()
 
         return True
 
@@ -106,7 +106,7 @@ class DooitModel(BaseModel, BaseModelMixin):
 
         sibling.order_index = index + 1
         manager.session.add(sibling)
-        manager.session.commit()
+        manager.commit()
 
         return sibling
 
@@ -125,7 +125,7 @@ class DooitModel(BaseModel, BaseModelMixin):
 
         self.session.add(siblings[index])
         self.session.add(siblings[index + 1])
-        self.session.commit()
+        manager.commit()
 
         return True
 

@@ -22,10 +22,13 @@ class Manager:
 
     def delete(self, obj):
         self.session.delete(obj)
-        self.session.commit()
+        self.commit()
 
     def save(self, obj):
         self.session.add(obj)
+        self.commit()
+
+    def commit(self):
         self.session.commit()
 
 

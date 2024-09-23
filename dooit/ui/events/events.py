@@ -4,7 +4,7 @@ from textual.message import Message
 from dooit.api.model import SortMethodType
 from dooit.api import Workspace
 
-ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
+ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING", "CONFIRM"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
 
@@ -60,6 +60,16 @@ class ModeChanged(DooitEvent):
 class StartSearch(DooitEvent):
     """
     Emitted when user wants to search
+    """
+
+    def __init__(self, callback: Callable) -> None:
+        super().__init__()
+        self.callback = callback
+
+
+class ShowConfirm(DooitEvent):
+    """
+    Emitted when confirmation from user is required
     """
 
     def __init__(self, callback: Callable) -> None:

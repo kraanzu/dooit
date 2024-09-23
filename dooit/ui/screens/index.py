@@ -60,12 +60,6 @@ class MainScreen(BaseScreen):
 
         return await super().handle_key(event)
 
-    async def send_keypress(self, key: str):
-        pass
-
-        # visible_focused = [i for i in self.query(".focus") if i.display][0]
-        # await visible_focused.keypress(key)
-
     async def clear_right(self) -> None:
         try:
             self.query_one("TodoTree.current").remove_class("current")

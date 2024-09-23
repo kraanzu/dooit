@@ -32,7 +32,6 @@ class SearchBar(BarBase):
         if cancel:
             self.callback("")
 
-        self._search.is_editing = False
         self.switcher.current = "status_bar"
         self.post_message(ModeChanged("NORMAL"))
         self.remove()
@@ -48,8 +47,8 @@ class SearchBar(BarBase):
             self._search.keypress(event.key)
             filter = self._search.value[1:]
             self.callback(filter)
+            self.refresh()
 
-        self.refresh()
         return True
 
     def render(self) -> RenderableType:

@@ -9,6 +9,7 @@ from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
 from dooit.ui.widgets.trees import WorkspacesTree
 from dooit.ui.screens import MainScreen, HelpScreen
+from dooit.ui.widgets.trees.model_tree import ModelTree
 from dooit.utils import CssManager
 from .api import DooitAPI
 from ..api import manager
@@ -67,7 +68,14 @@ class Dooit(App):
         return self.api.css_manager.theme
 
     async def poll(self):
-        return
+        def refresh_all_trees():
+            trees = self.query(ModelTree)
+            self.notify(f"{len(trees)}")
+            for tree in trees:
+                tree.force_refresh()
+
+        if manager.has_changed():
+            refresh_all_trees()
 
     @on(DooitEvent)
     def global_message(self, event: DooitEvent):

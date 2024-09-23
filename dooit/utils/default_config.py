@@ -34,6 +34,7 @@ def key_setup(api: DooitAPI):
     api.set_key_normal("j", api.move_down)
     api.set_key_normal("k", api.move_up)
     api.set_key_normal("i", api.edit_description)
+    api.set_key_normal("d", api.edit_due)
     api.set_key_normal("a", api.add_sibling)
     api.set_key_normal("z", api.toggle_expand)
     api.set_key_normal("Z", api.toggle_expand_parent)

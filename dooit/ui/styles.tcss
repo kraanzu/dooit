@@ -45,6 +45,24 @@ ModelTree {
     }
 }
 
+# Bars
+
+ConfirmBar {
+    background: $background_3;
+    color: $red;
+    text-style: bold;
+
+    &.cancelled {
+        background: $yellow;
+        color: $background_1;
+    }
+
+    &.not-cancelled {
+        background: $red;
+        color: $background_1;
+    }
+}
+
 # Miscellaneous
 
 * {

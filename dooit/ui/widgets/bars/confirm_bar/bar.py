@@ -7,6 +7,13 @@ DEFFAULT_MSG = r"Are you sure? \[y/N]"
 
 
 class ConfirmBar(BarBase):
+    DEFAULT_CSS = """
+    ConfirmBar {
+        padding-left: 1;
+        padding-right: 1;
+    }
+    """
+
     def __init__(
         self,
         callback: Callable,
@@ -24,8 +31,10 @@ class ConfirmBar(BarBase):
     def flash_confirm(self, cancelled: bool):
         if not cancelled:
             self.message = "The items were deleted!"
+            self.add_class("not-cancelled")
         else:
             self.message = "The operation was cancelled!"
+            self.add_class("cancelled")
 
         self.refresh()
         self.set_interval(2, self.close)

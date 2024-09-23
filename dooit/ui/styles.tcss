@@ -13,7 +13,7 @@ ModelTree {
     background: $background_1;
     color: $foreground_3;
     border: $border_type $background_3;
-    padding-top: 1;
+    padding: 1;
 
     border-title-color: $foreground_1;
     border-title-background: $background_3;
@@ -22,6 +22,11 @@ ModelTree {
         border: $border_type $primary;
         border-title-color: $foreground_3;
         border-title-background: $secondary;
+
+        .option-list--option-highlighted, .option-list--option-hover-highlighted {
+            background: $secondary;
+            color: $foreground_3;
+        }
     }
 
     # --------- Options ------------------

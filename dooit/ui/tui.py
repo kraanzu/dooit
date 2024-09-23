@@ -3,6 +3,7 @@ from typing import Optional
 from textual.app import App, on
 from textual.binding import Binding
 
+from dooit.api.theme import DooitThemeBase
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
@@ -60,6 +61,10 @@ class Dooit(App):
     @property
     def mode(self) -> ModeType:
         return self._mode
+
+    @property
+    def current_theme(self) -> DooitThemeBase:
+        return self.api.css_manager.theme
 
     async def poll(self):
         return

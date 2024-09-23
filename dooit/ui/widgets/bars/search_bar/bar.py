@@ -39,7 +39,6 @@ class SearchBar(BarBase):
 
     async def handle_key(self, event: events.Key) -> bool:
         if event.key == "enter":
-            self.app.post_message(ModeChanged("NORMAL"))
             self.dismiss()
 
         elif event.key == "escape":

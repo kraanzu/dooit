@@ -3,6 +3,7 @@ from typing import Callable
 from textual.widgets import ContentSwitcher
 from .status_bar import StatusBar
 from .search_bar import SearchBar
+from .confirm_bar import ConfirmBar
 
 
 class BarSwitcher(ContentSwitcher):
@@ -34,8 +35,16 @@ class BarSwitcher(ContentSwitcher):
             set_current=True,
         )
 
+    def switch_to_confirm(self, callback: Callable):
+        confirm_bar = ConfirmBar(callback)
+        self.add_content(
+            widget=confirm_bar,
+            id="confirm_bar",
+            set_current=True,
+        )
+
     async def handle_key(self, event: events.Key) -> bool:
-        if self.current == "search_bar":
-            return await self.search_bar.handle_key(event)
+        if (bar := self.visible_content) and self.current != "status_bar":
+            return await bar.handle_key(event)
 
         return True

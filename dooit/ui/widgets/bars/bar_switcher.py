@@ -1,9 +1,11 @@
 from typing import Callable
 from textual.widgets import ContentSwitcher
+from dooit.api.model import DooitModel
 from dooit.ui.widgets.bars._base import BarBase
 from .status_bar import StatusBar
 from .search_bar import SearchBar
 from .confirm_bar import ConfirmBar
+from .sort_bar import SortBar
 
 
 class BarSwitcher(ContentSwitcher):
@@ -54,6 +56,14 @@ class BarSwitcher(ContentSwitcher):
         confirm_bar = ConfirmBar(callback)
         self.add_content(
             widget=confirm_bar,
+            id="confirm_bar",
+            set_current=True,
+        )
+
+    def switch_to_sort(self, model: DooitModel):
+        sort_bar = SortBar(model)
+        self.add_content(
+            widget=sort_bar,
             id="confirm_bar",
             set_current=True,
         )

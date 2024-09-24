@@ -19,10 +19,7 @@ def fix_highlight(func: Callable) -> Callable:
                 self.highlight_id(highlighted_id)
 
         except OptionDoesNotExist:
-            self.highlighted = min(
-                highlighted_index or -1,
-                len(self._options) - 1,
-            )
+            self.highlighted = highlighted_index
 
     return wrapper
 

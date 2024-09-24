@@ -47,6 +47,11 @@ ModelTree {
 
 # Bars
 
+
+BarBase {
+  color: $foreground_3;
+}
+
 ConfirmBar {
     background: $red;
     color: $background_1;
@@ -61,6 +66,12 @@ ConfirmBar {
         background: $green;
         color: $background_1;
     }
+}
+
+SortBar {
+  .option-highlighted {
+    background: $secondary;
+  }
 }
 
 # Miscellaneous

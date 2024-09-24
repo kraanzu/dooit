@@ -5,6 +5,10 @@ from dooit.api import DooitModel
 
 
 class SortBar(BarBase):
+    COMPONENT_CLASSES = {
+        "option-highlighted",
+    }
+
     def __init__(self, model: DooitModel, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model = model
@@ -46,8 +50,11 @@ class SortBar(BarBase):
             self.selected += 1
 
     def render(self) -> RenderableType:
+        highlighted_style = self.get_component_rich_style("option-highlighted")
+
         texts = [
-            Text(f" {i} ", style="black on green" if index == self.selected else "")
+            Text(f" {i} ", style=highlighted_style if index == self.selected else "")
             for index, i in enumerate(self.options)
         ]
+
         return Text.assemble(*texts)

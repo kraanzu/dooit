@@ -107,13 +107,7 @@ class MainScreen(BaseScreen):
     @on(SwitchTab)
     def switch_tab(self, event: SwitchTab) -> None:
         event.stop()
-
-        self.query_one(WorkspacesTree).toggle_class("focus")
-        try:
-            visible_todo = self.query_one("TodoTree.current")
-            visible_todo.toggle_class("focus")
-        except Exception:
-            pass
+        self.app.action_focus_next()
 
     @on(SpawnHelp)
     async def spawn_help(self, _: SpawnHelp) -> None:

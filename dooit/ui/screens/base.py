@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from ..tui import Dooit
 
 
-class BaseScreen(Screen):
+class BaseScreen(Screen, inherit_bindings=False):
     """
     Base screen with function to resolve `Key` event to str
     """

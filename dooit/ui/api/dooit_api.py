@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import TYPE_CHECKING, List, Callable
+from typing import TYPE_CHECKING, List, Callable, Optional
 
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.api.components import TodoLayout, WorkspaceLayout
@@ -14,13 +14,15 @@ from dooit.utils import CssManager
 if TYPE_CHECKING:
     from ..tui import Dooit
 
+KeyBindType = defaultdict[str, defaultdict[str, Optional[Callable]]]
+
 
 class DooitAPI:
     def __init__(self, app: "Dooit") -> None:
         self.app = app
         self.plugin_manager = PluginManager()
         self.plugin_manager.scan()
-        self.keybinds = defaultdict(lambda: defaultdict(lambda: lambda: None))
+        self.keybinds: KeyBindType = defaultdict(lambda: defaultdict(lambda: None))
         self.css_manager = CssManager()
 
         self.css_manager.refresh_css()
@@ -37,8 +39,12 @@ class DooitAPI:
     def set_key_normal(self, key: str, callback: Callable) -> None:
         self.__set_key("NORMAL", key, callback)
 
-    def handle_key(self, key: str) -> None:
-        self.keybinds[self.bar_mode][key]()
+    async def handle_key(self, key: str) -> None:
+        func = self.keybinds[self.bar_mode][key]
+        if func is not None:
+            func()
+        else:
+            await self.focused.handle_keypress(key)
 
     def trigger_event(self, event: DooitEvent):
         event_name = event.snake_case

@@ -1,5 +1,6 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING, Union
+from textual.app import events
 from textual.widgets import OptionList
 from textual.widgets.option_list import Option
 
@@ -41,3 +42,6 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
             return
 
         return super().action_cursor_up()
+
+    async def handle_keypress(self, key: str) -> bool:
+        return True

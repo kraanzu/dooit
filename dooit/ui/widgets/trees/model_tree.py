@@ -128,13 +128,12 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         """
         self.set_filter("")
 
-    async def handle_key(self, event: events.Key) -> bool:
-        key = event.key
+    async def handle_keypress(self, key: str) -> bool:
         if self.is_editing:
             if key == "escape":
                 self.stop_edit()
             else:
-                self.current.handle_key(event)
+                self.current.handle_keypress(key)
 
             self.update_current_prompt()
             self.refresh_options()
@@ -143,12 +142,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             if key == "escape":
                 self.reset_state()
 
-            return await super().handle_key(event)
+            return await super().handle_keypress(key)
 
     def refresh_options(self) -> None:
         for i in self._options:
             assert i.id is not None
-
             i.set_prompt(self._renderers[i.id].prompt)
 
         self._refresh_lines()

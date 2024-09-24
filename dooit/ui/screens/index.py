@@ -64,7 +64,7 @@ class MainScreen(BaseScreen):
             return True
 
         key = self.resolve_key(event)
-        self.api.handle_key(key)
+        await self.api.handle_key(key)
         return True
 
     async def clear_right(self) -> None:

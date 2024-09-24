@@ -65,6 +65,9 @@ class DooitAPI:
         raise ValueError(f"Expected BaseTree, got {type(focused)}")
 
     def switch_focus(self):
+        if self.app.bar_switcher.is_focused:
+            return
+
         if w := self.app.focused:
             w.post_message(SwitchTab())
 

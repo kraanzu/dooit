@@ -1,4 +1,6 @@
 from typing import Callable
+from textual.await_complete import AwaitComplete
+from textual.widget import Widget
 from textual.widgets import ContentSwitcher
 from dooit.api.model import DooitModel
 from dooit.ui.widgets.bars._base import BarBase
@@ -36,6 +38,17 @@ class BarSwitcher(ContentSwitcher):
             and self.visible_content
             and self.visible_content.focused
         )
+
+    def add_content(
+        self, widget: Widget, *, id: str | None = None, set_current: bool = False
+    ) -> AwaitComplete:
+        try:
+            widget = self.query_one(f"#{id}", expect_type=BarBase)
+            widget.close()
+        except Exception as _:
+            pass
+
+        return super().add_content(widget, id=id, set_current=set_current)
 
     async def on_mount(self):
         self.add_content(

@@ -119,7 +119,7 @@ class MainScreen(BaseScreen):
         self.post_message(ModeChanged("SEARCH"))
 
     @on(StartSort)
-    def start_search(self, event: StartSort):
+    def start_sort(self, event: StartSort):
         self.app.bar_switcher.switch_to_sort(event.model)
         self.post_message(ModeChanged("SORT"))
 

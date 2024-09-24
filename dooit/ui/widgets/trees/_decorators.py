@@ -14,7 +14,7 @@ def fix_highlight(func: Callable) -> Callable:
 
         try:
             if highlighted_id is None:
-                self.highlighted = None
+                self.highlighted = highlighted_index
             else:
                 self.highlight_id(highlighted_id)
 

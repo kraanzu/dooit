@@ -60,7 +60,8 @@ class MainScreen(BaseScreen):
             return True
 
         if self.app.bar_switcher.is_focused:
-            return await self.app.bar_switcher.handle_key(event)
+            await self.app.bar_switcher.handle_keypress(event.key)
+            return True
 
         key = self.resolve_key(event)
         self.api.handle_key(key)

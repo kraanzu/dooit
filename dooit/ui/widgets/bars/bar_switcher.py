@@ -1,4 +1,3 @@
-from textual import events
 from typing import Callable
 from textual.widgets import ContentSwitcher
 from dooit.ui.widgets.bars._base import BarBase
@@ -59,8 +58,6 @@ class BarSwitcher(ContentSwitcher):
             set_current=True,
         )
 
-    async def handle_key(self, event: events.Key) -> bool:
+    async def handle_keypress(self, key: str) -> None:
         if self.current != "status_bar":
-            return await self.visible_content.handle_key(event)
-
-        return True
+            await self.visible_content.handle_keypress(key)

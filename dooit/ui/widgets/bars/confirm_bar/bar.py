@@ -1,6 +1,5 @@
 from typing import Callable
 from rich.console import RenderableType
-from textual.widget import events
 from .._base import BarBase
 
 DEFFAULT_MSG = r"Are you sure? \[y/N]"
@@ -40,11 +39,10 @@ class ConfirmBar(BarBase):
         self.refresh()
         self.set_interval(1.2, self.close)
 
-    async def handle_key(self, event: events.Key) -> bool:
-        cancel = event.key.lower() != "y"
+    async def handle_keypress(self, key: str) -> None:
+        cancel = key.lower() != "y"
         self.flash_confirm(cancel)
         self.dismiss(cancel, close=False)
-        return True
 
     def render(self) -> RenderableType:
         return self.message

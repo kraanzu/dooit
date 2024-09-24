@@ -43,3 +43,6 @@ class BarBase(Static):
         self.app.post_message(ModeChanged("NORMAL"))
         if close:
             self.close()
+
+    async def handle_keypress(self, key: str) -> None:
+        return

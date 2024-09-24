@@ -1,6 +1,5 @@
 from typing import Callable
 from rich.console import RenderableType
-from textual import events
 
 from .._base import BarBase
 from ...inputs._input import Input
@@ -16,20 +15,18 @@ class SearchBar(BarBase):
         if cancel:
             self.callback("")
 
-    async def handle_key(self, event: events.Key) -> bool:
-        if event.key == "enter":
+    async def handle_keypress(self, key: str) -> None:
+        if key == "enter":
             self.dismiss(cancel=False)
 
-        elif event.key == "escape":
+        elif key == "escape":
             self.dismiss(cancel=True)
 
         else:
-            self._search.keypress(event.key)
+            self._search.keypress(key)
             filter = self._search.value[1:]
             self.callback(filter)
             self.refresh()
-
-        return True
 
     def render(self) -> RenderableType:
         return self._search.draw()

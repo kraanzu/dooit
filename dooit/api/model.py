@@ -92,6 +92,12 @@ class DooitModel(BaseModel, BaseModelMixin):
     def sort_siblings(self, field: str):
         raise NotImplementedError
 
+    def reverse_siblings(self):
+        for index, model in enumerate(reversed(self.siblings)):
+            model.order_index = index
+
+        self.session.commit()
+
     def shift_up(self) -> bool:
         """
         Shift the item one place up among its siblings

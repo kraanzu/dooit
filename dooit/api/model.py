@@ -1,8 +1,11 @@
 from typing import Any, List, Literal, TypeVar, Self
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy import Integer, Float, String, Date, DateTime, inspect
 from .manager import manager
 
+
+comparable_types = (Integer, Float, String, Date, DateTime)
 SortMethodType = Literal["description", "status", "due", "urgency", "effort"]
 T = TypeVar("T")
 
@@ -26,6 +29,20 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     order_index: Mapped[int] = mapped_column(default=-1)
+
+    @classmethod
+    def comparable_fields(cls):
+        to_ignore = ["id", "order_index"]
+
+        comparable_fields = [
+            column.name
+            for column in inspect(cls).columns
+            if isinstance(column.type, comparable_types)
+            and not column.name.endswith("_id")
+            and column.name not in to_ignore
+        ]
+
+        return comparable_fields
 
     @property
     def uuid(self) -> str:

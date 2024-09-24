@@ -1,10 +1,8 @@
 from collections import defaultdict
 from typing import Generic, Iterable, Optional, TypeVar, Union
-from textual.app import events
 from textual.widgets.option_list import Option
-
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch
+from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
 from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
@@ -106,6 +104,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def key_question_mark(self):
         self.app.push_screen("help")
 
+    @require_highlighted_node
+    def start_sort(self):
+        self.post_message(StartSort(self.current_model))
+
+    @require_highlighted_node
     def start_search(self):
         self.post_message(StartSearch(self.set_filter))
 

@@ -35,7 +35,6 @@ class BarSwitcher(ContentSwitcher):
     def is_focused(self):
         return (
             self.current != "status_bar"
-            and self.visible_content
             and self.visible_content.focused
         )
 

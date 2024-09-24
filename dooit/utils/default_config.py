@@ -45,6 +45,7 @@ def key_setup(api: DooitAPI):
     api.set_key_normal("K", api.shift_up)
     api.set_key_normal("x", api.remove_node)
     api.set_key_normal("/", api.start_search)
+    api.set_key_normal("ctrl+s", api.start_sort)
 
     api.set_workspace_layout([WorkspaceComponent.description])
 

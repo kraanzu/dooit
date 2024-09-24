@@ -70,7 +70,6 @@ class Dooit(App):
     async def poll(self):
         def refresh_all_trees():
             trees = self.query(ModelTree)
-            self.notify(f"{len(trees)}")
             for tree in trees:
                 tree.force_refresh()
 

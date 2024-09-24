@@ -89,6 +89,9 @@ class DooitModel(BaseModel, BaseModelMixin):
     def has_same_parent_kind(self) -> bool:
         raise NotImplementedError
 
+    def sort_siblings(self, field: str):
+        raise NotImplementedError
+
     def shift_up(self) -> bool:
         """
         Shift the item one place up among its siblings

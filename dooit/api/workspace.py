@@ -1,5 +1,5 @@
 from typing import List, Optional, Union
-from sqlalchemy import ForeignKey, select
+from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..api.todo import Todo
 from .model import DooitModel
@@ -76,6 +76,21 @@ class Workspace(DooitModel):
         assert not self.is_root
 
         return self.parent_workspace.workspaces
+
+    def sort_siblings(self, field: str):
+        items = (
+            self.session.query(Workspace)
+            .filter_by(
+                parent_workspace=self.parent_workspace,
+            )
+            .order_by(asc(getattr(Workspace, field)))
+            .all()
+        )
+
+        for index, workspace in enumerate(items):
+            workspace.order_index = index
+
+        self.session.commit()
 
     def _insert(self, items: ModelTypeList, obj: ModelType, index: int) -> None:
         children = [i for i in items if i.order_index or -1 >= index]

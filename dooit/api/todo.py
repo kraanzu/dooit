@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime
 from typing import List
-from sqlalchemy import ForeignKey, select
+from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .model import DooitModel
 from .manager import manager
@@ -92,6 +92,26 @@ class Todo(DooitModel):
             return self.parent_todo.todos
 
         return []
+
+    def sort_siblings(self, field: str):
+        items = (
+            self.session.query(Todo)
+            .filter_by(
+                parent_workspace=self.parent_workspace,
+                parent_todo=self.parent_todo,
+            )
+            .order_by(
+                asc(
+                    getattr(Todo, field)
+                )
+            )
+            .all()
+        )
+
+        for index, todo in enumerate(items):
+            todo.order_index = index
+
+        self.session.commit()
 
     def add_todo(self) -> "Todo":
         todo = Todo(parent_todo=self)

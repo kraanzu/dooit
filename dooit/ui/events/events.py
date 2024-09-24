@@ -1,7 +1,7 @@
 from typing import Callable, Literal, Optional
 from textual.message import Message
 
-from dooit.api.model import SortMethodType
+from dooit.api.model import DooitModel, SortMethodType
 from dooit.api import Workspace
 
 ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING", "CONFIRM"]
@@ -65,6 +65,16 @@ class StartSearch(DooitEvent):
     def __init__(self, callback: Callable) -> None:
         super().__init__()
         self.callback = callback
+
+
+class StartSort(DooitEvent):
+    """
+    Emitted when user wants to sort
+    """
+
+    def __init__(self, model: DooitModel) -> None:
+        super().__init__()
+        self.model = model
 
 
 class ShowConfirm(DooitEvent):

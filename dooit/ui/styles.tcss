@@ -5,7 +5,7 @@ $border_type: heavy;
 
 # CSS
 
-Screen, BarBase {
+Screen {
     background: $background_1;
 }
 
@@ -49,6 +49,7 @@ ModelTree {
 
 
 BarBase {
+  background: $background_2;
   color: $foreground_3;
 }
 

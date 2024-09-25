@@ -1,5 +1,6 @@
 from rich.console import RenderableType
 from rich.table import Table
+from rich.text import Text
 from textual.app import ComposeResult
 from textual.widgets import Static
 
@@ -40,6 +41,11 @@ class DooitKeyTable(Static):
         padding: 2;
     }
     """
+    COMPONENT_CLASSES = {
+        "keybind",
+        "arrow",
+        "description",
+    }
 
     def __init__(self, keybinds: KeyBindType):
         super().__init__()
@@ -53,10 +59,15 @@ class DooitKeyTable(Static):
         t.add_column("description")
 
         for mode, keybinds in self.keybinds.items():
-            for (key, func) in keybinds.items():
+            for keybind, func in keybinds.items():
+                keybind = Text(keybind, style=self.get_component_rich_style("keybind"))
+                arrow = Text("->", style=self.get_component_rich_style("arrow"))
+                description = Text(
+                    func.__doc__ or "Example function",
+                    style=self.get_component_rich_style("description"),
+                )
 
-                # TODO: remove default desc
-                t.add_row(key, " -> ", func.__doc__ or "Example function")
+                t.add_row(keybind, arrow, description)
 
         return t
 

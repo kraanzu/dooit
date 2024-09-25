@@ -46,9 +46,20 @@ ModelTree {
 }
 
 DooitKeyTable {
-  color: $foreground_3;
   background: $background_2;
   border: tall $primary;
+
+  .keybind {
+    color: $primary;
+  }
+
+  .arrow {
+    color: $foreground_1 60%;
+  }
+
+  .description {
+    color: $secondary;
+  }
 }
 
 # Bars

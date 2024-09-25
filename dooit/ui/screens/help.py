@@ -1,6 +1,9 @@
 from rich.console import RenderableType
+from rich.table import Table
 from textual.app import ComposeResult
 from textual.widgets import DataTable, Static
+
+from dooit.ui.api.dooit_api import KeyBindType
 from .base import BaseScreen
 
 
@@ -29,6 +32,32 @@ class Outro(Static):
         return "Thanks for using Dooit <3"
 
 
+class DooitKeyTable(Static):
+    DEFAULT_CSS = """
+    DooitKeyTable {
+        content-align: center middle;
+        width: 80%;
+    }
+    """
+
+    def __init__(self, keybinds: KeyBindType):
+        super().__init__()
+        self.keybinds = keybinds
+
+    def render(self) -> RenderableType:
+        t = Table(expand=True)
+
+        t.add_column("key", width=10)
+        t.add_column("description", ratio=1)
+
+        for mode, keybinds in self.keybinds.items():
+            for index, (key, func) in enumerate(keybinds.items()):
+                t.add_row(key, func.__doc__ or "Example function")
+
+
+        return t
+
+
 class HelpScreen(BaseScreen):
     """
     Help Screen to view Help Menu
@@ -37,11 +66,6 @@ class HelpScreen(BaseScreen):
     DEFAULT_CSS = """
     HelpScreen {
         align: center middle;
-    }
-
-    DataTable {
-        content-align: center middle;
-        width: 80%;
     }
     """
 
@@ -53,21 +77,18 @@ class HelpScreen(BaseScreen):
     def table(self) -> DataTable:
         return self.query_one(DataTable)
 
-    def on_mount(self):
-        self.table.add_column("key")
-        self.table.add_column("description")
-
-        self.fill_table()
-
-    def fill_table(self):
-        api = self.app.api
-        keybindings = api.keybinds["NORMAL"]
-
-        for key, func in keybindings.items():
-            row = [key, func.__doc__ or "Example Func"]
-            self.table.add_row(*row, height=None)
+    # def on_mount(self):
+    #     self.fill_table()
+    #
+    # def fill_table(self):
+    #     api = self.app.api
+    #     keybindings = api.keybinds["NORMAL"]
+    #
+    #     for key, func in keybindings.items():
+    #         row = [key, func.__doc__ or "Example Func"]
+    #         self.table.add_row(*row, height=None)
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield DataTable(cursor_type="row")
+        yield DooitKeyTable(self.api.keybinds)
         yield Outro()

@@ -45,7 +45,7 @@ class DooitKeyTable(Static):
         self.keybinds = keybinds
 
     def render(self) -> RenderableType:
-        t = Table(expand=True)
+        t = Table.grid(expand=True)
 
         t.add_column("key", width=10)
         t.add_column("description", ratio=1)
@@ -53,7 +53,6 @@ class DooitKeyTable(Static):
         for mode, keybinds in self.keybinds.items():
             for index, (key, func) in enumerate(keybinds.items()):
                 t.add_row(key, func.__doc__ or "Example function")
-
 
         return t
 

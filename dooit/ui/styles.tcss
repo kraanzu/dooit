@@ -45,6 +45,11 @@ ModelTree {
     }
 }
 
+DooitKeyTable {
+  color: $foreground_3;
+  background: $background_2;
+}
+
 # Bars
 
 

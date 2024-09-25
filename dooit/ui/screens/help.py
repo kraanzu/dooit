@@ -37,6 +37,7 @@ class DooitKeyTable(Static):
     DooitKeyTable {
         content-align: center middle;
         width: 80%;
+        padding: 2;
     }
     """
 
@@ -45,14 +46,17 @@ class DooitKeyTable(Static):
         self.keybinds = keybinds
 
     def render(self) -> RenderableType:
-        t = Table.grid(expand=True)
+        t = Table.grid(expand=True, padding=(0, 1))
 
         t.add_column("key", width=10)
-        t.add_column("description", ratio=1)
+        t.add_column("arrow", width=15)
+        t.add_column("description")
 
         for mode, keybinds in self.keybinds.items():
-            for index, (key, func) in enumerate(keybinds.items()):
-                t.add_row(key, func.__doc__ or "Example function")
+            for (key, func) in keybinds.items():
+
+                # TODO: remove default desc
+                t.add_row(key, " -> ", func.__doc__ or "Example function")
 
         return t
 

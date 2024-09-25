@@ -1,7 +1,7 @@
 from rich.console import RenderableType
 from rich.table import Table
 from textual.app import ComposeResult
-from textual.widgets import DataTable, Static
+from textual.widgets import Static
 
 from dooit.ui.api.dooit_api import KeyBindType
 from .base import BaseScreen
@@ -72,21 +72,6 @@ class HelpScreen(BaseScreen):
     BINDINGS = [
         ("escape", "app.pop_screen", "Pop screen"),
     ]
-
-    @property
-    def table(self) -> DataTable:
-        return self.query_one(DataTable)
-
-    # def on_mount(self):
-    #     self.fill_table()
-    #
-    # def fill_table(self):
-    #     api = self.app.api
-    #     keybindings = api.keybinds["NORMAL"]
-    #
-    #     for key, func in keybindings.items():
-    #         row = [key, func.__doc__ or "Example Func"]
-    #         self.table.add_row(*row, height=None)
 
     def compose(self) -> ComposeResult:
         yield Header()

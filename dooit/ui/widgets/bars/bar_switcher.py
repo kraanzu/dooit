@@ -33,10 +33,7 @@ class BarSwitcher(ContentSwitcher):
 
     @property
     def is_focused(self):
-        return (
-            self.current != "status_bar"
-            and self.visible_content.focused
-        )
+        return self.current != "status_bar" and self.visible_content.focused
 
     def add_content(
         self, widget: Widget, *, id: str | None = None, set_current: bool = False

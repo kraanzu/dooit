@@ -100,11 +100,7 @@ class Todo(DooitModel):
                 parent_workspace=self.parent_workspace,
                 parent_todo=self.parent_todo,
             )
-            .order_by(
-                asc(
-                    getattr(Todo, field)
-                )
-            )
+            .order_by(asc(getattr(Todo, field)))
             .all()
         )
 

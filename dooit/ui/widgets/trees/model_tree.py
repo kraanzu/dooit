@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Generic, Iterable, Optional, TypeVar, Union
+from typing import Any, Generic, Iterable, Optional, TypeVar, Union
 from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
 from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
@@ -27,6 +27,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
         self._filter_refresh = False
+
+    @property
+    def layout(self) -> Any:
+        raise NotImplementedError
 
     @property
     def filter_refresh(self):

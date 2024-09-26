@@ -47,8 +47,7 @@ def key_setup(api: DooitAPI):
     api.keys.set_normal("/", api.start_search)
     api.keys.set_normal("ctrl+s", api.start_sort)
 
-    api.set_workspace_layout([WorkspaceWidget.description])
-
-    api.set_todo_layout([TodoWidget.description, TodoWidget.due])
+    api.layouts.workspace_layout = [WorkspaceWidget.description]
+    api.layouts.todo_layout = [TodoWidget.description, TodoWidget.due]
 
     api.set_bar(bar_widgets)

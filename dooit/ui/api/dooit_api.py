@@ -1,15 +1,12 @@
 from typing import TYPE_CHECKING, List
 
 from dooit.ui.api.plug import PluginManager
-from dooit.ui.api.widgets import TodoLayout, WorkspaceLayout
-
 from dooit.ui.events.events import DooitEvent, SwitchTab
-from dooit.ui.registry import registry
 from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.utils import CssManager
 
-from .api_components import KeyManager
+from .api_components import KeyManager, LayoutManager
 
 if TYPE_CHECKING:
     from ..tui import Dooit
@@ -22,6 +19,7 @@ class DooitAPI:
         self.plugin_manager.scan()
         self.css_manager = CssManager()
         self.keys = KeyManager(self.app.get_mode)
+        self.layouts = LayoutManager(self.app)
 
         self.css_manager.refresh_css()
 
@@ -110,13 +108,6 @@ class DooitAPI:
 
     def start_sort(self):
         self.focused.start_sort()
-
-    def set_workspace_layout(self, layout: WorkspaceLayout):
-        registry.set_workspace_layout(layout)
-        self.app.workspace_tree.refresh_options()
-
-    def set_todo_layout(self, layout: TodoLayout):
-        registry.set_todo_layout(layout)
 
     def set_bar(self, widgets: List[StatusBarWidget]):
         self.app.bar.set_widgets(widgets)

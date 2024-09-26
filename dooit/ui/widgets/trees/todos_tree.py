@@ -27,6 +27,10 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
         self.screen.query_one("WorkspacesTree").focus()
 
+    @property
+    def layout(self):
+        return self.app.api.layouts.todo_layout
+
     def add_todo(self) -> str:
         todo = self.model.add_todo()
         render = TodoRender(todo, tree=self)

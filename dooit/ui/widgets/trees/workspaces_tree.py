@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 from textual import on
 from textual.widgets import ContentSwitcher
 from textual.widgets.option_list import Option
@@ -21,6 +21,10 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _get_children(self, id: str) -> List[Workspace]:
         return Workspace.from_id(id).workspaces
+
+    @property
+    def layout(self):
+        return self.app.api.layouts.workspace_layout
 
     @on(ModelTree.OptionHighlighted)
     async def update_todo_tree(self, event: ModelTree.OptionHighlighted):

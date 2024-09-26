@@ -9,7 +9,6 @@ from ..inputs.model_inputs import (
     Urgency,
 )
 from .base_renderer import BaseRenderer, Todo
-from ...registry import registry
 
 
 class TodoRender(BaseRenderer):
@@ -18,10 +17,6 @@ class TodoRender(BaseRenderer):
         if not isinstance(self._model, Todo):
             raise ValueError(f"Expected Todo, got {type(self._model)}")
         return self._model
-
-    @property
-    def table_layout(self) -> List:
-        return registry.get_todo_layout()
 
     def post_init(self):
         self.description = TodoDescription(self.model)

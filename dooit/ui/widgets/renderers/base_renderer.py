@@ -32,7 +32,7 @@ class BaseRenderer:
 
     @property
     def table_layout(self) -> List:
-        raise NotImplementedError
+        return self.tree.layout
 
     @property
     def prompt(self) -> RenderableType:

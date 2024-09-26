@@ -9,7 +9,7 @@ from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.utils import CssManager
 
-from .key_manager import KeyManager
+from .api_components import KeyManager
 
 if TYPE_CHECKING:
     from ..tui import Dooit

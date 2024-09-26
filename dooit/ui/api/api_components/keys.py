@@ -1,12 +1,13 @@
 from collections import defaultdict
 from typing import Callable, List, Optional
 
+from ._base import ApiComponent
 from dooit.ui.events.events import ModeType
 
 KeyBindType = defaultdict[str, defaultdict[str, Optional[Callable]]]
 
 
-class KeyManager:
+class KeyManager(ApiComponent):
     def __init__(self, get_mode: Callable) -> None:
         self.keybinds: KeyBindType = defaultdict(lambda: defaultdict(lambda: None))
         self._inputs: List[str] = []

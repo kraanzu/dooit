@@ -4,7 +4,7 @@ from rich.text import Text
 from textual.app import ComposeResult
 from textual.widgets import Static
 
-from dooit.ui.api.key_manager import KeyBindType
+from dooit.ui.api import KeyBindType
 from .base import BaseScreen
 
 

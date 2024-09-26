@@ -4,7 +4,7 @@ from dooit.api import DooitModel, Workspace
 
 
 if TYPE_CHECKING:
-    from dooit.ui.api.components import WorkspaceLayout, TodoLayout
+    from dooit.ui.api.widgets import WorkspaceLayout, TodoLayout
 
 
 class Registry:

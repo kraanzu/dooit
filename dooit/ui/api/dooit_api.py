@@ -1,5 +1,4 @@
-from collections import defaultdict
-from typing import TYPE_CHECKING, List, Callable, Optional
+from typing import TYPE_CHECKING, List
 
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.api.components import TodoLayout, WorkspaceLayout
@@ -10,11 +9,10 @@ from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.utils import CssManager
 
+from .key_manager import KeyManager
 
 if TYPE_CHECKING:
     from ..tui import Dooit
-
-KeyBindType = defaultdict[str, defaultdict[str, Optional[Callable]]]
 
 
 class DooitAPI:
@@ -22,8 +20,8 @@ class DooitAPI:
         self.app = app
         self.plugin_manager = PluginManager()
         self.plugin_manager.scan()
-        self.keybinds: KeyBindType = defaultdict(lambda: defaultdict(lambda: None))
         self.css_manager = CssManager()
+        self.keys = KeyManager(self.app.get_mode)
 
         self.css_manager.refresh_css()
 
@@ -33,14 +31,8 @@ class DooitAPI:
     def notify(self, message: str) -> None:
         self.app.notify(message)
 
-    def __set_key(self, mode: str, key: str, callback: Callable) -> None:
-        self.keybinds[mode][key] = callback
-
-    def set_key_normal(self, key: str, callback: Callable) -> None:
-        self.__set_key("NORMAL", key, callback)
-
     async def handle_key(self, key: str) -> None:
-        func = self.keybinds[self.bar_mode][key]
+        func = self.keys.register_key(key)
         if func is not None:
             func()
         else:
@@ -52,9 +44,6 @@ class DooitAPI:
             obj(self)
 
     # -----------------------------------------
-    @property
-    def bar_mode(self) -> str:
-        return self.app.mode
 
     @property
     def focused(self) -> ModelTree:

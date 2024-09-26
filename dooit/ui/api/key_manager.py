@@ -1,6 +1,8 @@
 from collections import defaultdict
 from typing import Callable, List, Optional
 
+from dooit.ui.events.events import ModeType
+
 KeyBindType = defaultdict[str, defaultdict[str, Optional[Callable]]]
 
 
@@ -10,10 +12,10 @@ class KeyManager:
         self._inputs: List[str] = []
         self.get_mode = get_mode
 
-    def __set_key(self, mode: str, key: str, callback: Callable) -> None:
+    def __set_key(self, mode: ModeType, key: str, callback: Callable) -> None:
         self.keybinds[mode][key] = callback
 
-    def set_key_normal(self, key: str, callback: Callable) -> None:
+    def set_normal(self, key: str, callback: Callable) -> None:
         self.__set_key("NORMAL", key, callback)
 
     @property

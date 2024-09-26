@@ -1,6 +1,6 @@
 from datetime import datetime
 from dooit.ui.api import events, DooitAPI
-from dooit.ui.api.components import TodoComponent, WorkspaceComponent
+from dooit.ui.api.components import TodoWidget, WorkspaceWidget
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 
@@ -47,13 +47,8 @@ def key_setup(api: DooitAPI):
     api.keys.set_normal("/", api.start_search)
     api.keys.set_normal("ctrl+s", api.start_sort)
 
-    api.set_workspace_layout([WorkspaceComponent.description])
+    api.set_workspace_layout([WorkspaceWidget.description])
 
-    api.set_todo_layout(
-        [
-            TodoComponent.description,
-            (TodoComponent.due, due_formatter),
-        ]
-    )
+    api.set_todo_layout([TodoWidget.description, TodoWidget.due])
 
     api.set_bar(bar_widgets)

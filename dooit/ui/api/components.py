@@ -1,12 +1,12 @@
 from enum import Enum
-from typing import List, Tuple, Callable, Union
+from typing import List
 
 
-class WorkspaceComponent(Enum):
+class WorkspaceWidget(Enum):
     description = "description"
 
 
-class TodoComponent(Enum):
+class TodoWidget(Enum):
     description = "description"
     due = "due"
     urgency = "urgency"
@@ -15,5 +15,5 @@ class TodoComponent(Enum):
     effort = "effort"
 
 
-WorkspaceLayout = List[Union[Tuple[WorkspaceComponent, Callable], WorkspaceComponent]]
-TodoLayout = List[Union[Tuple[TodoComponent, Callable], TodoComponent]]
+WorkspaceLayout = List[WorkspaceWidget]
+TodoLayout = List[TodoWidget]

@@ -1,3 +1,3 @@
-from .formatters import Formatter
+from .formatter import Formatter
 
 __all__ = ["Formatter"]

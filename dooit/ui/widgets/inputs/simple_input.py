@@ -1,28 +1,9 @@
-from typing import Any, Generic, TypeVar, Callable
-from rich.text import TextType
+from typing import Any, Generic, TypeVar
 
 from dooit.api import DooitModel
 from ._input import Input
-from ._cacher import input_cache
 
 ModelType = TypeVar("ModelType", bound=DooitModel)
-
-
-def max_width_cache(func):
-    def wrapper(obj: "SimpleInput"):
-        key = [obj.model.uuid, obj._property, obj.model_value]
-        cache = input_cache.get(*key)
-
-        if cache:
-            return cache
-
-        res = func(obj)
-        key += [res]
-        input_cache.set(*key)
-
-        return res
-
-    return wrapper
 
 
 class SimpleInput(Input, Generic[ModelType]):
@@ -34,14 +15,12 @@ class SimpleInput(Input, Generic[ModelType]):
     _cursor: str = "|"
 
     def __init__(self, model: ModelType) -> None:
-        super().__init__()
-
         self.model = model
-        self.formatters = set()
-        self.reset()
 
-    def add_formatter(self, formatter: Callable[[str], TextType]):
-        self.formatters.add(formatter)
+        default_value = str(self.model_value)
+        super().__init__(value=default_value)
+
+        self.reset()
 
     @property
     def _property(self) -> str:
@@ -54,13 +33,6 @@ class SimpleInput(Input, Generic[ModelType]):
     @model_value.setter
     def model_value(self, value: str) -> None:
         return setattr(self.model, self._property, value)
-
-    @max_width_cache
-    def get_max_width(self) -> int:
-        return max(
-            len(self.value),
-            len(self.render()),
-        )
 
     def _typecast_value(self, value: str) -> Any:
         return value
@@ -86,13 +58,3 @@ class SimpleInput(Input, Generic[ModelType]):
 
         if key == "escape":
             self.stop_edit()
-
-    def render(self) -> str:
-        if self.is_editing:
-            return super().render()
-
-        raw = self.model_value
-        for formatter in self.formatters:
-            raw = formatter(raw, self.model)
-
-        return str(raw)

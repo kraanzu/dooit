@@ -40,17 +40,9 @@ class BaseRenderer:
     def model(self) -> ModelType:
         raise NotImplementedError
 
-    def refresh_formatters(self):
-        layout = self.table_layout
-        for item in layout:
-            if isinstance(item, tuple):
-                column, formatter = item
-                component = self._get_component(column.value)
-                component.add_formatter(formatter)
-
     def _get_attr_width(self, attr: str) -> int:
         simple_input = self._get_component(attr)
-        return simple_input.get_max_width()
+        return len(simple_input.value)
 
     def _get_max_width(self, attr: str) -> int:
         renderers: Dict = self.tree._renderers
@@ -61,8 +53,6 @@ class BaseRenderer:
         )
 
     def make_renderable(self) -> RenderableType:
-        self.refresh_formatters()
-
         layout = self.table_layout
 
         table = Table.grid(expand=True)

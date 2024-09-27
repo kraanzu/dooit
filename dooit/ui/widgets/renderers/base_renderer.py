@@ -64,8 +64,6 @@ class BaseRenderer:
             row.append("")
 
         for item in layout:
-            if isinstance(item, tuple):
-                item = item[0]
 
             attr = item.value
             if attr == "description":

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, Generic, Iterable, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, Iterable, Optional, TypeVar, Union
 from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
 from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
@@ -7,6 +7,9 @@ from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
 from ._decorators import fix_highlight, refresh_tree, require_highlighted_node
+
+if TYPE_CHECKING:
+    from dooit.ui.api.api_components.formatters._model_formatter_base import ModelFormatterBase
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
@@ -27,6 +30,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
         self._filter_refresh = False
+
+    @property
+    def formatter(self) -> "ModelFormatterBase":
+        raise NotImplementedError
 
     @property
     def layout(self) -> Any:

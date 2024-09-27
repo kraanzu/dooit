@@ -9,6 +9,12 @@ from .todos_tree import TodosTree
 from ._render_dict import WorkspaceRenderDict
 
 
+if TYPE_CHECKING:
+    from dooit.ui.api.api_components.formatters.model_formatters import (
+        WorkspaceFormatter,
+    )
+
+
 class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
     BORDER_TITLE = "Workspaces"
 
@@ -21,6 +27,10 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _get_children(self, id: str) -> List[Workspace]:
         return Workspace.from_id(id).workspaces
+
+    @property
+    def formatter(self) -> "WorkspaceFormatter":
+        return self.app.api.formatters.workspaces
 
     @property
     def layout(self):

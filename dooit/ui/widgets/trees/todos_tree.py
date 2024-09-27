@@ -1,10 +1,15 @@
-from typing import Iterable, Optional, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
+
+if TYPE_CHECKING:
+    from dooit.ui.api.api_components.formatters.model_formatters import (
+        TodoFormatter,
+    )
 
 Model = Union[Todo, Workspace]
 
@@ -26,6 +31,10 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
             return
 
         self.screen.query_one("WorkspacesTree").focus()
+
+    @property
+    def formatter(self) -> "TodoFormatter":
+        return self.app.api.formatters.todos
 
     @property
     def layout(self):

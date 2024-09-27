@@ -20,7 +20,7 @@ class DooitAPI:
         self.css_manager = CssManager()
         self.keys = KeyManager(self.app.get_mode)
         self.layouts = LayoutManager(self.app)
-        self.formatter = Formatter()
+        self.formatter = Formatter(self.app)
 
         self.css_manager.refresh_css()
 

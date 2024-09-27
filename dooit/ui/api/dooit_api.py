@@ -6,7 +6,7 @@ from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.utils import CssManager
 
-from .api_components import KeyManager, LayoutManager
+from .api_components import KeyManager, LayoutManager, Formatter
 
 if TYPE_CHECKING:
     from ..tui import Dooit
@@ -20,6 +20,7 @@ class DooitAPI:
         self.css_manager = CssManager()
         self.keys = KeyManager(self.app.get_mode)
         self.layouts = LayoutManager(self.app)
+        self.formatter = Formatter()
 
         self.css_manager.refresh_css()
 

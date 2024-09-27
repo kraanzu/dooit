@@ -50,4 +50,6 @@ def key_setup(api: DooitAPI):
     api.layouts.workspace_layout = [WorkspaceWidget.description]
     api.layouts.todo_layout = [TodoWidget.description, TodoWidget.due]
 
+    api.formatter.todos.due.add(due_formatter)
+
     api.set_bar(bar_widgets)

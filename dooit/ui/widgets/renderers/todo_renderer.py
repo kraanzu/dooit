@@ -1,5 +1,3 @@
-from typing import List
-
 from ..inputs.model_inputs import (
     Due,
     Effort,

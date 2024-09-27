@@ -14,7 +14,7 @@ class TodoFormatter(ModelFormatterBase):
 
     def trigger(self) -> None:
         for widget in self.app.query(TodosTree):
-            widget.refresh_options()
+            widget.force_refresh()
 
 
 class WorkspaceFormatter(ModelFormatterBase):
@@ -23,4 +23,4 @@ class WorkspaceFormatter(ModelFormatterBase):
 
     def trigger(self) -> None:
         for widget in self.app.query(WorkspacesTree):
-            widget.refresh_options()
+            widget.force_refresh()

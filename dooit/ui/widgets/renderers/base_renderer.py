@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import TYPE_CHECKING, Dict, List, Union
 from rich.console import RenderableType
 from rich.table import Table
 from dooit.api import Todo, Workspace
@@ -6,11 +6,14 @@ from ..inputs.simple_input import SimpleInput
 
 ModelType = Union[Todo, Workspace]
 
+if TYPE_CHECKING:
+    from dooit.ui.widgets.trees.model_tree import ModelTree
+
 
 class BaseRenderer:
     editing: str = ""
 
-    def __init__(self, model: ModelType, tree):
+    def __init__(self, model: ModelType, tree: "ModelTree"):
         self._model = model
         self.tree = tree
         self.post_init()
@@ -64,14 +67,21 @@ class BaseRenderer:
             row.append("")
 
         for item in layout:
-
             attr = item.value
             if attr == "description":
                 table.add_column(attr, ratio=1)
             else:
                 table.add_column(attr, width=self._get_max_width(attr))
 
-            row.append(self._get_component(attr).render())
+            component = self._get_component(attr)
+
+            if component.is_editing:
+                item = component.render()
+            else:
+                formatter = self.tree.formatter
+                item = getattr(formatter, attr).format_value(component.model_value, component.model)
+
+            row.append(item)
 
         table.add_row(*row)
         return table

@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING, Optional, Union
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -17,7 +17,7 @@ class Todo(DooitModel):
     description: Mapped[str] = mapped_column(default="")
     due: Mapped[Optional[datetime]] = mapped_column(default=None)
     effort: Mapped[int] = mapped_column(default=0)
-    recurrence: Mapped[Optional[str]] = mapped_column(default=None)
+    recurrence: Mapped[Optional[timedelta]] = mapped_column(default=None)
     urgency: Mapped[int] = mapped_column(default=0)
     pending: Mapped[bool] = mapped_column(default=True)
 

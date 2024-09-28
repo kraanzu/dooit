@@ -47,13 +47,22 @@ class BaseRenderer:
         simple_input = self._get_component(attr)
         return len(simple_input.value)
 
+    # TODO: [Optimize] This is a bit of a hack, but it works for now
     def _get_max_width(self, attr: str) -> int:
         renderers: Dict = self.tree._renderers
         siblings = self.model.siblings
 
-        return max(
+        max_raw = max(
             renderers[sibling.uuid]._get_attr_width(attr) for sibling in siblings
         )
+
+        component = self._get_component(attr)
+        formatter = self.tree.formatter
+        rendered: str = getattr(formatter, attr).format_value(
+            component.model_value, component.model
+        )
+
+        return max(max_raw, len(rendered))
 
     def make_renderable(self) -> RenderableType:
         layout = self.table_layout
@@ -68,20 +77,22 @@ class BaseRenderer:
 
         for item in layout:
             attr = item.value
+            component = self._get_component(attr)
+
+            if component.is_editing:
+                rendered = component.render()
+            else:
+                formatter = self.tree.formatter
+                rendered = getattr(formatter, attr).format_value(
+                    component.model_value, component.model
+                )
+
             if attr == "description":
                 table.add_column(attr, ratio=1)
             else:
                 table.add_column(attr, width=self._get_max_width(attr))
 
-            component = self._get_component(attr)
-
-            if component.is_editing:
-                item = component.render()
-            else:
-                formatter = self.tree.formatter
-                item = getattr(formatter, attr).format_value(component.model_value, component.model)
-
-            row.append(item)
+            row.append(rendered)
 
         table.add_row(*row)
         return table

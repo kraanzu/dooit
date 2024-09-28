@@ -93,3 +93,8 @@ class TestTodo(CoreTestBase):
         self.assertEqual(len(t.siblings), 3)
         self.assertEqual(len(t2.siblings), 3)
         self.assertEqual(t2.order_index, 1)
+
+    def test_comparable_fields(self):
+        fields = Todo.comparable_fields()
+        expected_fields = ['description', 'due', 'effort', 'recurrence', 'urgency', 'pending']
+        self.assertEqual(fields, expected_fields)

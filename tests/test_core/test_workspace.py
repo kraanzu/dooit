@@ -76,3 +76,8 @@ class WorkspaceTest(CoreTestBase):
 
         self.assertEqual(len(todo.siblings), 2)
         self.assertEqual(todo.order_index, 1)
+
+    def test_comparable_fields(self):
+        fields = Workspace.comparable_fields()
+        expected_fields = ['description']
+        self.assertEqual(fields, expected_fields)

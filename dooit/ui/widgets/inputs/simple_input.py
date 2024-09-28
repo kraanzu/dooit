@@ -4,9 +4,10 @@ from dooit.api import DooitModel
 from ._input import Input
 
 ModelType = TypeVar("ModelType", bound=DooitModel)
+ModelValue = TypeVar("ModelValue", bound=Any)
 
 
-class SimpleInput(Input, Generic[ModelType]):
+class SimpleInput(Input, Generic[ModelType, ModelValue]):
     """
     A simple single line Text Input widget
     """
@@ -27,7 +28,7 @@ class SimpleInput(Input, Generic[ModelType]):
         return self.__class__.__name__.lower()
 
     @property
-    def model_value(self) -> Any:
+    def model_value(self) -> ModelValue:
         return getattr(self.model, self._property)
 
     @model_value.setter

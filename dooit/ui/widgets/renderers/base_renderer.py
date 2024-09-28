@@ -44,25 +44,22 @@ class BaseRenderer:
         raise NotImplementedError
 
     def _get_attr_width(self, attr: str) -> int:
-        simple_input = self._get_component(attr)
-        return len(simple_input.value)
-
-    # TODO: [Optimize] This is a bit of a hack, but it works for now
-    def _get_max_width(self, attr: str) -> int:
-        renderers: Dict = self.tree._renderers
-        siblings = self.model.siblings
-
-        max_raw = max(
-            renderers[sibling.uuid]._get_attr_width(attr) for sibling in siblings
-        )
-
         component = self._get_component(attr)
         formatter = self.tree.formatter
         rendered: str = getattr(formatter, attr).format_value(
             component.model_value, component.model
         )
 
-        return max(max_raw, len(rendered))
+        return max(len(component.value), len(rendered))
+
+    # TODO: [Optimize] This is a bit of a hack, but it works for now
+    def _get_max_width(self, attr: str) -> int:
+        renderers: Dict = self.tree._renderers
+        siblings = self.model.siblings
+
+        return max(
+            renderers[sibling.uuid]._get_attr_width(attr) for sibling in siblings
+        )
 
     def make_renderable(self) -> RenderableType:
         layout = self.table_layout

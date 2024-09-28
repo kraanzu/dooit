@@ -32,7 +32,7 @@ class BarBase(Static):
         return parent
 
     def perform_action(self, cancel: bool):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def close(self):
         self.switcher.current = "status_bar"

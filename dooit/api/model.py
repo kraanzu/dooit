@@ -50,7 +50,7 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     @property
     def parent(self) -> Any:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     @property
     def nest_level(self):
@@ -69,11 +69,11 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     @property
     def siblings(self) -> List[Any]:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     @classmethod
     def from_id(cls, _id: str) -> Self:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     @property
     def session(self):
@@ -87,10 +87,10 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     @property
     def has_same_parent_kind(self) -> bool:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def sort_siblings(self, field: str):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def reverse_siblings(self):
         for index, model in enumerate(reversed(self.siblings)):
@@ -118,7 +118,7 @@ class DooitModel(BaseModel, BaseModelMixin):
         return True
 
     def _add_sibling(self) -> Self:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def add_sibling(self):
         sibling = self._add_sibling()

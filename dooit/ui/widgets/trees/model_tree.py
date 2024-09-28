@@ -33,11 +33,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     @property
     def formatter(self) -> "ModelFormatterBase":
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     @property
     def layout(self) -> Any:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     @property
     def filter_refresh(self):
@@ -166,10 +166,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._refresh_lines()
 
     def _get_parent(self, id: str) -> Optional[ModelType]:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def _get_children(self, id: str) -> Iterable[ModelType]:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     @refresh_tree
     def _expand_node(self, _id: str) -> None:
@@ -213,7 +213,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._toggle_expand_parent(self.node.id)
 
     def _create_child_node(self) -> ModelType:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def add_child_node(self):
         node = self._create_child_node()
@@ -242,7 +242,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         return self._add_first_item()
 
     def _add_first_item(self) -> ModelType:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def add_sibling(self):
         if not self._options:

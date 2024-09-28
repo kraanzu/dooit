@@ -41,7 +41,7 @@ class BaseRenderer:
 
     @property
     def model(self) -> ModelType:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def _get_attr_width(self, attr: str) -> int:
         component = self._get_component(attr)

@@ -22,7 +22,7 @@ class RenderDict(Dict, Generic[T]):
         self.tree = tree
 
     def from_id(self, _id: str) -> T:
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def __getitem__(self, __key: str) -> T:
         return super().__getitem__(__key)

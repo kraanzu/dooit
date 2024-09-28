@@ -92,15 +92,6 @@ class Workspace(DooitModel):
 
         self.session.commit()
 
-    def _insert(self, items: ModelTypeList, obj: ModelType, index: int) -> None:
-        children = [i for i in items if i.order_index or -1 >= index]
-        for child in children[::-1]:
-            child.order_index += 1
-            child.save()
-
-        obj.order_index = index
-        obj.save()
-
     def add_workspace(self) -> "Workspace":
         workspace = Workspace(parent_workspace=self)
         workspace.save()

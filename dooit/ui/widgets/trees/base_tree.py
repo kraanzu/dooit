@@ -1,6 +1,5 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING, Union
-from textual.app import events
 from textual.widgets import OptionList
 from textual.widgets.option_list import Option
 
@@ -10,11 +9,15 @@ from ._decorators import require_highlighted_node
 ModelType = Union[Todo, Workspace]
 
 if TYPE_CHECKING:
-    from ....ui.tui import Dooit
+    from ....ui.tui import Dooit, DooitAPI
 
 
 class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
     expanded_nodes = defaultdict(bool)
+
+    @property
+    def api(self) -> "DooitAPI":
+        return self.tui.api
 
     @property
     def tui(self) -> "Dooit":
@@ -42,6 +45,3 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
             return
 
         return super().action_cursor_up()
-
-    async def handle_keypress(self, key: str) -> bool:
-        return True

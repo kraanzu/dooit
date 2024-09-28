@@ -34,11 +34,11 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
     @property
     def formatter(self) -> "TodoFormatter":
-        return self.app.api.formatter.todos
+        return self.api.formatter.todos
 
     @property
     def layout(self):
-        return self.app.api.layouts.todo_layout
+        return self.api.layouts.todo_layout
 
     def add_todo(self) -> str:
         todo = self.model.add_todo()

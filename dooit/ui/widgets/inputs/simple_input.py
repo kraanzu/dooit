@@ -18,10 +18,13 @@ class SimpleInput(Input, Generic[ModelType, ModelValue]):
     def __init__(self, model: ModelType) -> None:
         self.model = model
 
-        default_value = str(self.model_value)
+        default_value = self._get_default_value()
         super().__init__(value=default_value)
 
         self.reset()
+
+    def _get_default_value(self) -> str:
+        return str(self.model_value)
 
     @property
     def _property(self) -> str:

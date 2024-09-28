@@ -19,6 +19,12 @@ class WorkspaceDescription(SimpleInput[Workspace, str]):
 
 
 class Due(SimpleInput[Todo, datetime]):
+    def _get_default_value(self) -> str:
+        if self.model_value is None:
+            return ""
+
+        return self.model_value.strftime("%Y-%m-%d %H:%M")
+
     def start_edit(self) -> None:
         self._value = None
         return super().start_edit()

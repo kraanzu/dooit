@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from tests.test_core.core_base import CoreTestBase
 from dooit.api import Workspace
 
@@ -91,3 +92,9 @@ class WorkspaceTest(CoreTestBase):
 
         w = w.add_workspace()
         self.assertEqual(w.nest_level, 2)
+
+    def test_root(self):
+        query = select(Workspace)
+        workspaces = self.session.execute(query).scalars().all()
+
+        self.assertEqual(len(workspaces), 0)

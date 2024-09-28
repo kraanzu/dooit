@@ -19,7 +19,7 @@ def fix_order_id_todo(mapper, connection, target: Todo):
     if target.order_index is None or target.order_index == -1:
         target.order_index = len(target.siblings) - 1
 
-
-@event.listens_for(Workspace.__table__, "after_create")
-def create_root(target: Table, connection: Connection, **kw):
-    connection.execute(target.insert(), {"is_root": True})
+#
+# @event.listens_for(Workspace.__table__, "after_create")
+# def create_root(target: Table, connection: Connection, **kw):
+#     connection.execute(target.insert(), {"is_root": True})

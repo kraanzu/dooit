@@ -48,7 +48,6 @@ class Workspace(DooitModel):
 
         if root is None:
             root = Workspace(is_root=True)
-            root.save()
 
         return root
 

@@ -28,3 +28,8 @@ class TestModel(CoreTestBase):
         workspace.shift_down()
         siblings = workspace.siblings
         self.assertEqual(siblings[1].id, workspace.id)
+
+        workspace.shift_up()
+        siblings = workspace.siblings
+        self.assertEqual(siblings[0].id, workspace.id)
+        self.assertTrue(workspace.is_first_sibling())

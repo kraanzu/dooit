@@ -13,7 +13,7 @@ class TestModel(CoreTestBase):
         w.drop()
         self.assertEqual(len(Workspace.all()), 0)
 
-    def test_shifts(self):
+    def test_shifts_normal(self):
         for _ in range(5):
             w = Workspace()
             w.save()
@@ -34,6 +34,16 @@ class TestModel(CoreTestBase):
         self.assertEqual(siblings[0].id, workspace.id)
         self.assertTrue(workspace.is_first_sibling())
 
+    def test_shifts_edge(self):
+        for _ in range(5):
+            w = Workspace()
+            w.save()
+
+        workspaces = Workspace.all()
+
+        self.assertFalse(workspaces[0].shift_up())
+        self.assertFalse(workspaces[-1].shift_down())
+
     def test_sort_field(self):
         names = ["a", "b", "c", "d", "e"]
         workspaces = [Workspace(description=name) for name in names]
@@ -46,7 +56,6 @@ class TestModel(CoreTestBase):
         w.sort_siblings("description")
         self.assertEqual([i.description for i in w.siblings], names)
 
-
     def test_sort_reverse(self):
         names = ["a", "b", "c", "d", "e"]
         workspaces = [Workspace(description=name) for name in names]
@@ -58,5 +67,3 @@ class TestModel(CoreTestBase):
         self.assertEqual([i.description for i in w.siblings], names[::-1])
         w.reverse_siblings()
         self.assertEqual([i.description for i in w.siblings], names)
-
-

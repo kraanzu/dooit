@@ -81,3 +81,13 @@ class WorkspaceTest(CoreTestBase):
         fields = Workspace.comparable_fields()
         expected_fields = ['description']
         self.assertEqual(fields, expected_fields)
+
+    def test_nest_level(self):
+        w = Workspace()
+        self.assertEqual(w.nest_level, 0)
+
+        w = w.add_workspace()
+        self.assertEqual(w.nest_level, 1)
+
+        w = w.add_workspace()
+        self.assertEqual(w.nest_level, 2)

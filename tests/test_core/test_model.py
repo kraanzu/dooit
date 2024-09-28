@@ -34,7 +34,7 @@ class TestModel(CoreTestBase):
         self.assertEqual(siblings[0].id, workspace.id)
         self.assertTrue(workspace.is_first_sibling())
 
-    def test_sort(self):
+    def test_sort_field(self):
         names = ["a", "b", "c", "d", "e"]
         workspaces = [Workspace(description=name) for name in names]
         w = workspaces[0]
@@ -44,6 +44,19 @@ class TestModel(CoreTestBase):
 
         self.assertEqual([i.description for i in w.siblings], names[::-1])
         w.sort_siblings("description")
+        self.assertEqual([i.description for i in w.siblings], names)
+
+
+    def test_sort_reverse(self):
+        names = ["a", "b", "c", "d", "e"]
+        workspaces = [Workspace(description=name) for name in names]
+        w = workspaces[0]
+
+        for i in reversed(workspaces):
+            i.save()
+
+        self.assertEqual([i.description for i in w.siblings], names[::-1])
+        w.reverse_siblings()
         self.assertEqual([i.description for i in w.siblings], names)
 
 

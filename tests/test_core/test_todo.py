@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from sqlalchemy import select
 from dooit.api.exceptions import NoParentError, MultipleParentError
 from tests.test_core.core_base import CoreTestBase
@@ -97,7 +98,6 @@ class TestTodo(CoreTestBase):
         self.assertEqual(fields, expected_fields)
 
     def test_nest_level(self):
-
         t = self.default_workspace.add_todo()
         self.assertEqual(t.nest_level, 0)
 
@@ -117,7 +117,35 @@ class TestTodo(CoreTestBase):
     def test_toggle_complete(self):
         t = self.default_workspace.add_todo()
         self.assertTrue(t.pending)
+        self.assertTrue(t.is_pending)
+        self.assertFalse(t.is_completed)
 
         t.toggle_complete()
         self.assertFalse(t.pending)
+        self.assertFalse(t.is_pending)
+        self.assertTrue(t.is_completed)
 
+    def test_due_date_util(self):
+        t = self.default_workspace.add_todo()
+        self.assertFalse(t.has_due_date())
+        self.assertFalse(t.is_overdue)
+        self.assertFalse(t.is_due_today())
+        self.assertEqual(t.status, "pending")
+
+        t.due = datetime.now()
+        self.assertTrue(t.is_overdue)
+        self.assertTrue(t.has_due_date())
+        self.assertTrue(t.is_due_today())
+        self.assertEqual(t.status, "overdue")
+
+        t.due = datetime.now() - timedelta(days=1)
+        self.assertFalse(t.is_due_today())
+        self.assertTrue(t.is_overdue)
+        self.assertEqual(t.status, "overdue")
+
+        t.due = datetime.now() + timedelta(days=1)
+        self.assertFalse(t.is_overdue)
+        self.assertEqual(t.status, "pending")
+
+        t.toggle_complete()
+        self.assertEqual(t.status, "completed")

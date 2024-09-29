@@ -1,4 +1,5 @@
 from datetime import datetime
+from dooit.api.todo import Todo
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.widgets.bars import StatusBarWidget
@@ -28,6 +29,18 @@ def due_formatter(due, _):
     return due.strftime("%H:%M")
 
 
+def desc_formatter(desc: str, todo: Todo):
+    text = desc
+
+    if todo.todos:
+        text += f" ({len(todo.todos)})"
+
+    if r := todo.recurrence:
+        text += f" !{r.days}d"
+
+    return text
+
+
 @events.startup
 def key_setup(api: DooitAPI):
     api.keys.set_normal("tab", api.switch_focus)
@@ -50,6 +63,7 @@ def key_setup(api: DooitAPI):
     api.layouts.workspace_layout = [WorkspaceWidget.description]
     api.layouts.todo_layout = [TodoWidget.description, TodoWidget.due]
 
+    api.formatter.todos.description.add(desc_formatter)
     api.formatter.todos.due.add(due_formatter)
 
     api.set_bar(bar_widgets)

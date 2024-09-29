@@ -7,7 +7,7 @@ from .model import DooitModel
 from .manager import manager
 
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.api.workspace import Workspace
 
 
@@ -57,13 +57,14 @@ class Todo(DooitModel):
 
     @property
     def parent(self) -> Union["Workspace", "Todo"]:
+        assert self.parent_workspace or self.parent_todo
+
         if self.parent_workspace:
             return self.parent_workspace
 
-        if self.parent_todo:
-            return self.parent_todo
+        assert self.parent_todo is not None
 
-        raise ValueError("Parent not found")
+        return self.parent_todo
 
     @property
     def has_same_parent_kind(self) -> bool:

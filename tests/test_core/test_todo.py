@@ -5,11 +5,13 @@ from dooit.api import Todo, Workspace
 
 
 class TestTodo(CoreTestBase):
-    def test_todo_creation(self):
-        workspace = Workspace()
+    def setUp(self):
+        super().setUp()
+        self.default_workspace = Workspace()
 
+    def test_todo_creation(self):
         for _ in range(5):
-            todo = Todo(parent_workspace=workspace)
+            todo = Todo(parent_workspace=self.default_workspace)
             todo.save()
 
         result = Todo.all()
@@ -20,10 +22,8 @@ class TestTodo(CoreTestBase):
         self.assertEqual(indexs, [0, 1, 2, 3, 4])
 
     def test_sibling_methods(self):
-        workspace = Workspace()
-
         for _ in range(5):
-            todo = Todo(parent_workspace=workspace)
+            todo = Todo(parent_workspace=self.default_workspace)
             todo.save()
 
         query = select(Todo)
@@ -38,11 +38,8 @@ class TestTodo(CoreTestBase):
         self.assertTrue(siblings[-1].is_last_sibling())
 
     def test_todo_siblings_by_creation(self):
-        workspace = Workspace()
-        workspace.save()
-
         for _ in range(5):
-            todo = Todo(parent_workspace=workspace)
+            todo = Todo(parent_workspace=self.default_workspace)
             todo.save()
 
         query = select(Todo)
@@ -52,10 +49,7 @@ class TestTodo(CoreTestBase):
         self.assertEqual(len(workspace.siblings), 5)
 
     def test_parent_kind(self):
-        workspace = Workspace()
-        workspace.save()
-
-        todo = Todo(parent_workspace=workspace)
+        todo = Todo(parent_workspace=self.default_workspace)
         todo.save()
 
         self.assertFalse(todo.has_same_parent_kind)
@@ -72,8 +66,7 @@ class TestTodo(CoreTestBase):
             todo.save()
 
     def test_with_both_parents(self):
-        w = Workspace()
-        w.save()
+        w = self.default_workspace
         t = w.add_todo()
 
         todo = Todo(parent_workspace=w, parent_todo=t)
@@ -82,11 +75,8 @@ class TestTodo(CoreTestBase):
             todo.save()
 
     def test_sibling_add(self):
-        w = Workspace()
-        w.save()
-
-        t = w.add_todo()
-        w.add_todo()
+        t = self.default_workspace.add_todo()
+        self.default_workspace.add_todo()
 
         t2 = t.add_sibling()
 
@@ -107,9 +97,8 @@ class TestTodo(CoreTestBase):
         self.assertEqual(fields, expected_fields)
 
     def test_nest_level(self):
-        w = Workspace()
 
-        t = w.add_todo()
+        t = self.default_workspace.add_todo()
         self.assertEqual(t.nest_level, 0)
 
         t = t.add_todo()
@@ -119,11 +108,8 @@ class TestTodo(CoreTestBase):
         self.assertEqual(t.nest_level, 2)
 
     def test_from_id(self):
-        w = Workspace()
-        t = w.add_todo()
-
+        t = self.default_workspace.add_todo()
         _id = t.id
-
         t_from_id = Todo.from_id(str(_id))
 
         self.assertEqual(t_from_id, t)

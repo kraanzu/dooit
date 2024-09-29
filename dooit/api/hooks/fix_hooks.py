@@ -1,4 +1,4 @@
-from sqlalchemy import Connection, Table, event
+from sqlalchemy import event
 from ..workspace import Workspace
 from ..todo import Todo
 

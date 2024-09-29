@@ -96,7 +96,14 @@ class TestTodo(CoreTestBase):
 
     def test_comparable_fields(self):
         fields = Todo.comparable_fields()
-        expected_fields = ['description', 'due', 'effort', 'recurrence', 'urgency', 'pending']
+        expected_fields = [
+            "description",
+            "due",
+            "effort",
+            "recurrence",
+            "urgency",
+            "pending",
+        ]
         self.assertEqual(fields, expected_fields)
 
     def test_nest_level(self):
@@ -110,3 +117,13 @@ class TestTodo(CoreTestBase):
 
         t = t.add_todo()
         self.assertEqual(t.nest_level, 2)
+
+    def test_from_id(self):
+        w = Workspace()
+        t = w.add_todo()
+
+        _id = t.id
+
+        t_from_id = Todo.from_id(str(_id))
+
+        self.assertEqual(t_from_id, t)

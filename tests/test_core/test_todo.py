@@ -149,3 +149,14 @@ class TestTodo(CoreTestBase):
 
         t.toggle_complete()
         self.assertEqual(t.status, "completed")
+
+    def test_tags(self):
+        t = self.default_workspace.add_todo()
+        t.description = "This is a @tag"
+        self.assertEqual(t.tags, ["@tag"])
+
+        t.description = "This is a @tag and @another"
+        self.assertEqual(t.tags, ["@tag", "@another"])
+
+        t.description = "This is a tag"
+        self.assertEqual(t.tags, [])

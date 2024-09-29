@@ -7,7 +7,7 @@ from uuid import uuid4
 dooit_cache_path = Path(user_cache_dir("dooit"))
 
 if getattr(sys, "frozen", False):
-    BASE_PATH = Path(sys._MEIPASS) / "dooit"
+    BASE_PATH = Path(sys._MEIPASS) / "dooit"  # pragma: no cover (binary pkg)
 else:
     BASE_PATH = Path(__file__).parent.parent
 

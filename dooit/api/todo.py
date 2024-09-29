@@ -76,10 +76,10 @@ class Todo(DooitModel):
 
     @property
     def status(self) -> str:
-        if self.is_completed():
+        if self.is_completed:
             return "completed"
 
-        if self.is_overdue():
+        if self.is_overdue:
             return "overdue"
 
         return "pending"
@@ -137,12 +137,15 @@ class Todo(DooitModel):
 
         return self.due and self.due.day == datetime.today().day
 
+    @property
     def is_completed(self) -> bool:
         return self.pending == False
 
+    @property
     def is_pending(self) -> bool:
         return self.pending
 
+    @property
     def is_overdue(self) -> bool:
         if not self.due:
             return False

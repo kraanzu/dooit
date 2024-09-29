@@ -1,5 +1,7 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING, Any, Generic, Iterable, Optional, TypeVar, Union
+from textual.app import ComposeResult
+from textual.widgets import Label
 from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
 from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
@@ -22,6 +24,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     ModelTree {
         height: 1fr;
         width: 1fr;
+        align: center middle;
+
+        & > Label {
+            align: center middle;
+        }
     }
     """
 
@@ -86,6 +93,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def model(self) -> ModelType:
         return self._model
 
+    @property
+    def empty_message(self) -> Label:
+        return self.query_one("#empty_message", expect_type=Label)
+
     @fix_highlight
     def force_refresh(self) -> None:
         self._force_refresh()
@@ -110,6 +121,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         add_children_recurse(self.model)
         self.add_options(options)
         self.highlighted = highlighted
+
+        has_options = bool(options)
+        self.empty_message.display = not has_options
 
     def on_mount(self):
         self.force_refresh()
@@ -158,7 +172,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             if key == "escape":
                 self.reset_state()
 
-            return await super().handle_keypress(key)
+        return True
 
     def refresh_options(self) -> None:
         for i in self._options:
@@ -272,3 +286,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     @refresh_tree
     def shift_down(self):
         self.current_model.shift_down()
+
+    def compose(self) -> ComposeResult:
+        with Label(id="empty_message"):
+            yield Label("No items to display")

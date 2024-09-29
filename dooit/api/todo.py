@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
-from sqlalchemy import ForeignKey, asc, select
+from sqlalchemy import ForeignKey, asc, desc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .model import DooitModel
 from .manager import manager
@@ -94,14 +94,21 @@ class Todo(DooitModel):
 
         return []
 
+    def __get_sort_func(self, field: str) -> Callable:
+        if field in ["pending"]:
+            return desc
+        return asc
+
     def sort_siblings(self, field: str):
+        sort_func = self.__get_sort_func(field)
+
         items = (
             self.session.query(Todo)
             .filter_by(
                 parent_workspace=self.parent_workspace,
                 parent_todo=self.parent_todo,
             )
-            .order_by(asc(getattr(Todo, field)))
+            .order_by(sort_func(getattr(Todo, field)))
             .all()
         )
 

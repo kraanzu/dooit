@@ -113,3 +113,11 @@ class TestTodo(CoreTestBase):
         t_from_id = Todo.from_id(str(_id))
 
         self.assertEqual(t_from_id, t)
+
+    def test_toggle_complete(self):
+        t = self.default_workspace.add_todo()
+        self.assertTrue(t.pending)
+
+        t.toggle_complete()
+        self.assertFalse(t.pending)
+

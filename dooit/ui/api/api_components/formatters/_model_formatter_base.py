@@ -6,8 +6,8 @@ class ModelFormatterBase:
         self.app = app
         self.setup_formatters()
 
-    def setup_formatters(self) -> None:
+    def setup_formatters(self) -> None: # pragma: no cover
         pass
 
-    def trigger(self) -> None:
+    def trigger(self) -> None: # pragma: no cover
         pass

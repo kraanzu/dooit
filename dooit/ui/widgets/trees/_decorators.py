@@ -1,7 +1,7 @@
 from typing import Any, Callable, TYPE_CHECKING
 from textual.widgets.option_list import OptionDoesNotExist
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from .model_tree import ModelTree
 
 

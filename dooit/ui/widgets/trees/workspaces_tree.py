@@ -9,7 +9,7 @@ from .todos_tree import TodosTree
 from ._render_dict import WorkspaceRenderDict
 
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from dooit.ui.api.api_components.formatters.model_formatters import (
         WorkspaceFormatter,
     )

@@ -6,7 +6,7 @@ from ..inputs.simple_input import SimpleInput
 
 ModelType = Union[Todo, Workspace]
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from dooit.ui.widgets.trees.model_tree import ModelTree
 
 

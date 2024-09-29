@@ -8,7 +8,7 @@ from .base_tree import BaseTree
 from ._render_dict import RenderDict
 from ._decorators import fix_highlight, refresh_tree, require_highlighted_node
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from dooit.ui.api.api_components.formatters._model_formatter_base import ModelFormatterBase
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])

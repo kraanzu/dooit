@@ -8,7 +8,7 @@ from dooit.ui.widgets.renderers import (
 
 T = TypeVar("T", bound=BaseRenderer)
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from .model_tree import ModelTree
 
 

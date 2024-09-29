@@ -8,7 +8,7 @@ from dooit.utils import CssManager
 
 from .api_components import KeyManager, LayoutManager, Formatter
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from ..tui import Dooit
 
 

@@ -7,7 +7,7 @@ from .model import DooitModel
 from .manager import manager
 
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from dooit.api.workspace import Workspace
 
 

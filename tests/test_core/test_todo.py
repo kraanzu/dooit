@@ -174,6 +174,24 @@ class TestTodo(CoreTestBase):
         self.assertEqual([t.id for t in t.siblings], ids)
 
         # after sorting
-        ids.sort(key=lambda x: x % 2 )
+        ids.sort(key=lambda x: x % 2)
         t.sort_siblings("pending")
+        self.assertEqual([t.id for t in t.siblings], ids)
+
+    def test_sort_description(self):
+        descriptions = ["a", "b", "c", "d", "e"]
+        todos = [self.default_workspace.add_todo() for _ in range(5)]
+        for index, t in enumerate(todos[::-1]):
+            t.description = descriptions[index]
+            t.save()
+
+        ids = [t.id for t in todos]
+
+        # before sorting
+        self.assertEqual([t.id for t in todos], ids)
+
+        # after sorting
+        t = todos[0]
+        ids = ids[::-1]
+        t.sort_siblings("description")
         self.assertEqual([t.id for t in t.siblings], ids)

@@ -1,4 +1,3 @@
-from typing import List
 from .base_renderer import BaseRenderer, Workspace
 from ..inputs.model_inputs import WorkspaceDescription
 

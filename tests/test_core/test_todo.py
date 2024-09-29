@@ -174,6 +174,6 @@ class TestTodo(CoreTestBase):
         self.assertEqual([t.id for t in t.siblings], ids)
 
         # after sorting
-        ids.sort(key=lambda x: x % 2 == 0)
+        ids.sort(key=lambda x: x % 2 )
         t.sort_siblings("pending")
         self.assertEqual([t.id for t in t.siblings], ids)

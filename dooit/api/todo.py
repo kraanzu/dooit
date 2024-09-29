@@ -125,7 +125,7 @@ class Todo(DooitModel):
     # ----------- HELPER FUNCTIONS --------------
 
     def toggle_complete(self) -> None:
-        self.status = not self.status
+        self.pending = not self.pending
         self.save()
 
     def has_due_date(self) -> bool:

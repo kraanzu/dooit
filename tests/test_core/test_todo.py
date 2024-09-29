@@ -195,3 +195,15 @@ class TestTodo(CoreTestBase):
         ids = ids[::-1]
         t.sort_siblings("description")
         self.assertEqual([t.id for t in t.siblings], ids)
+
+    # TODO:
+    def test_sort_recurrence(self):
+        return
+
+    # TODO:
+    def test_sort_effort(self):
+        return
+
+    # TODO:
+    def test_sort_urgency(self):
+        return

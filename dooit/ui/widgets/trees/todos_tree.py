@@ -6,7 +6,7 @@ from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from ...api.api_components.formatters.model_formatters import (
         TodoFormatter,
     )

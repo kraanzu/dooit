@@ -2,7 +2,7 @@ import importlib.util
 from typing import TYPE_CHECKING
 from pathlib import Path
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from .plug import PluginManager
 
 

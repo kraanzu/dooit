@@ -8,7 +8,7 @@ from .loader import load_dir, load_file
 MAIN_FOLDER = "dooit_v3"
 
 if getattr(sys, "frozen", False):
-    BASE_PATH = Path(sys._MEIPASS) / "dooit" # pragma: no cover (binary pkg)
+    BASE_PATH = Path(sys._MEIPASS) / "dooit"  # pragma: no cover (binary pkg)
 else:
     BASE_PATH = Path(__file__).parent.parent.parent
 

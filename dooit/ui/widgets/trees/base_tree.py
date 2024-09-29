@@ -8,7 +8,7 @@ from ._decorators import require_highlighted_node
 
 ModelType = Union[Todo, Workspace]
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from ....ui.tui import Dooit, DooitAPI
 
 

@@ -8,7 +8,7 @@ from dooit.ui.widgets.renderers import (
 
 T = TypeVar("T", bound=BaseRenderer)
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from .model_tree import ModelTree
 
 
@@ -22,7 +22,7 @@ class RenderDict(Dict, Generic[T]):
         self.tree = tree
 
     def from_id(self, _id: str) -> T:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def __getitem__(self, __key: str) -> T:
         return super().__getitem__(__key)

@@ -4,11 +4,11 @@ from dooit.api.workspace import Workspace
 from tests.test_core.core_base import CoreTestBase
 import tempfile
 
+
 class TestSync(CoreTestBase):
     def test_sync(self):
-
         # create a temporary folder
-        temp_folder = tempfile.TemporaryDirectory(delete = False)
+        temp_folder = tempfile.TemporaryDirectory(delete=False)
         temp_db = Path(temp_folder.name) / "dooit1.db"
         TEMP_CONN = f"sqlite:////{temp_db}"
 

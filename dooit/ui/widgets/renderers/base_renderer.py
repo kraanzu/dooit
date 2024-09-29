@@ -6,7 +6,7 @@ from ..inputs.simple_input import SimpleInput
 
 ModelType = Union[Todo, Workspace]
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.widgets.trees.model_tree import ModelTree
 
 
@@ -41,7 +41,7 @@ class BaseRenderer:
 
     @property
     def model(self) -> ModelType:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def _get_attr_width(self, attr: str) -> int:
         component = self._get_component(attr)

@@ -67,4 +67,3 @@ class TestModel(CoreTestBase):
         self.assertEqual([i.description for i in w.siblings], names[::-1])
         w.reverse_siblings()
         self.assertEqual([i.description for i in w.siblings], names)
-

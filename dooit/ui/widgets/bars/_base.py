@@ -3,7 +3,7 @@ from textual.widgets import Static
 
 from ...events.events import ModeChanged
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from .bar_switcher import BarSwitcher
 
 
@@ -32,7 +32,7 @@ class BarBase(Static):
         return parent
 
     def perform_action(self, cancel: bool):
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def close(self):
         self.switcher.current = "status_bar"

@@ -8,8 +8,10 @@ from .base_tree import BaseTree
 from ._render_dict import RenderDict
 from ._decorators import fix_highlight, refresh_tree, require_highlighted_node
 
-if TYPE_CHECKING: # pragma: no cover
-    from dooit.ui.api.api_components.formatters._model_formatter_base import ModelFormatterBase
+if TYPE_CHECKING:  # pragma: no cover
+    from dooit.ui.api.api_components.formatters._model_formatter_base import (
+        ModelFormatterBase,
+    )
 
 ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 RenderDictType = TypeVar("RenderDictType", bound=RenderDict)
@@ -33,11 +35,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     @property
     def formatter(self) -> "ModelFormatterBase":
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def layout(self) -> Any:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def filter_refresh(self):
@@ -166,10 +168,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._refresh_lines()
 
     def _get_parent(self, id: str) -> Optional[ModelType]:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def _get_children(self, id: str) -> Iterable[ModelType]:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     @refresh_tree
     def _expand_node(self, _id: str) -> None:
@@ -213,7 +215,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._toggle_expand_parent(self.node.id)
 
     def _create_child_node(self) -> ModelType:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def add_child_node(self):
         node = self._create_child_node()
@@ -242,7 +244,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         return self._add_first_item()
 
     def _add_first_item(self) -> ModelType:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def add_sibling(self):
         if not self._options:

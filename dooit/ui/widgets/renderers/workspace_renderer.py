@@ -10,6 +10,5 @@ class WorkspaceRender(BaseRenderer):
             raise ValueError(f"Expected Workspace, got {type(self._model)}")
         return self._model
 
-
     def post_init(self):
         self.description = WorkspaceDescription(self.model)

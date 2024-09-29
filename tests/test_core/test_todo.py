@@ -160,3 +160,20 @@ class TestTodo(CoreTestBase):
 
         t.description = "This is a tag"
         self.assertEqual(t.tags, [])
+
+    def test_sort_pending(self):
+        todos = [self.default_workspace.add_todo() for _ in range(5)]
+        for index, t in enumerate(todos):
+            t.pending = bool(index % 2)
+            t.save()
+
+        t = todos[0]
+        ids = [t.id for t in t.siblings]
+
+        # before sorting
+        self.assertEqual([t.id for t in t.siblings], ids)
+
+        # after sorting
+        ids.sort(key=lambda x: x % 2 == 0)
+        t.sort_siblings("pending")
+        self.assertEqual([t.id for t in t.siblings], ids)

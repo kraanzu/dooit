@@ -3,13 +3,12 @@ from textual.containers import Container
 from textual.widgets import ContentSwitcher
 from dooit.api.workspace import Workspace
 from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
-from dooit.ui.widgets.empty import WORKSPACE_EMPTY_WIDGETS, TODO_EMPTY_WIDGETS
 from dooit.ui.events import (
     SwitchTab,
     SpawnHelp,
 )
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
-from dooit.ui.widgets import BarSwitcher
+from dooit.ui.widgets import BarSwitcher, Dashboard
 from .base import BaseScreen
 
 
@@ -45,11 +44,10 @@ class MainScreen(BaseScreen):
 
         with DualSplit():
             with ContentSwitcher(id="workspace_switcher", initial=workspaces_tree.id):
-                yield from WORKSPACE_EMPTY_WIDGETS
                 yield workspaces_tree
 
-            with ContentSwitcher(initial=TODO_EMPTY_WIDGETS[0].id, id="todo_switcher"):
-                yield from TODO_EMPTY_WIDGETS
+            with ContentSwitcher(initial="dooit-dashboard", id="todo_switcher"):
+                yield Dashboard(id="dooit-dashboard")
 
         yield BarSwitcher()
 

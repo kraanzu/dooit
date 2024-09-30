@@ -92,6 +92,10 @@ SortBar {
   }
 }
 
+ModelTree > * > Label {
+  color: $foreground_3 50%;
+}
+
 # Miscellaneous
 
 * {

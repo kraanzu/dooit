@@ -33,7 +33,11 @@ class Due(SimpleInput[Todo, datetime]):
         if not value:
             return None
 
-        return parse(value)
+        due, ok = parse(value)
+        if not ok:
+            return self.model_value
+
+        return due
 
 
 class Urgency(SimpleInput[Todo, int]):

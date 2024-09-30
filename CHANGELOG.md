@@ -8,8 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 3.0.0
 
 ## Added
+- Brand new dooit api for configurations
+- Faster UI and startup overall
+- Event based code execution via dooit api
+- Customize the columns order and visibility for todos and workspaces
+- Allow addition of custom keybinds to trigger certain functions
+- Better optimized bar (wont block ui)
+- Custom formatters for column values to suit your needs!
+- Multiple Theme support
+- Custom CSS injections into the UI
+
 
 ## Removed
+- Now todos are no longer stored in `todo.yaml`, run dooit --migrate to migrate to new format
+- Old config will no longer work, see the [latest docs]() to check out the configuration
+  also check out [dooit community themes]() and [dooit snippet hacks]() for interesting config options
 
 > [!NOTE]
 > The support for YAML will be dropped from v3.0.0

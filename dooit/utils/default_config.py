@@ -22,11 +22,15 @@ bar_widgets = [
 
 
 def due_formatter(due, _):
-    if due == "none":
-        due = None
+    if not due or due == "none":
+        return ""
 
-    due = due or datetime.now()
-    return due.strftime("%H:%M")
+    text = due.strftime("%Y-%m-%d")
+
+    if due.hour:
+        text += f" ({due.strftime('%H:%M')})"
+
+    return text
 
 
 def desc_formatter(desc: str, todo: Todo):

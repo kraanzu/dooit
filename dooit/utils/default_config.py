@@ -10,12 +10,7 @@ def get_mode():
     return Text(f" {mode} ", style="black on white")
 
 
-def spacer():
-    return Text(" ")
-
-
 bar_widgets = [
-    StatusBarWidget(spacer),
     StatusBarWidget(get_mode),
 ]
 
@@ -31,6 +26,7 @@ def due_formatter(due, _):
 
     return text
 
+
 def workspace_desc_formatter(desc: str, workspace: Workspace):
     text = desc
 
@@ -38,6 +34,7 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
         text += f" ({len(ws)})"
 
     return text
+
 
 def todo_desc_formatter(desc: str, todo: Todo):
     text = desc

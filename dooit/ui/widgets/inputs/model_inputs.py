@@ -26,7 +26,7 @@ class Due(SimpleInput[Todo, datetime]):
         return self.model_value.strftime("%Y-%m-%d %H:%M")
 
     def start_edit(self) -> None:
-        self._value = None
+        self._value = ""
         return super().start_edit()
 
     def _typecast_value(self, value: str) -> Any:

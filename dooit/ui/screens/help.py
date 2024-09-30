@@ -89,5 +89,5 @@ class HelpScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield DooitKeyTable(self.api.keybinds)
+        yield DooitKeyTable(self.api.keys.keybinds)
         yield Outro()

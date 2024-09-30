@@ -10,5 +10,5 @@ __all__ = [
     "LayoutManager",
     "VarManager",
     "Formatter",
-    "DashboardManager"
+    "DashboardManager",
 ]

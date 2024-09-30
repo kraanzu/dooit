@@ -74,4 +74,4 @@ def key_setup(api: DooitAPI):
     api.formatter.todos.description.add(todo_desc_formatter)
     api.formatter.todos.due.add(due_formatter)
 
-    api.set_bar(bar_widgets)
+    api.bar.set(bar_widgets)

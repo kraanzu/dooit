@@ -3,6 +3,7 @@ from .layout import LayoutManager
 from .vars import VarManager
 from .formatters import Formatter
 from .dashboard import DashboardManager
+from .bar import BarManager
 
 __all__ = [
     "KeyManager",
@@ -11,4 +12,5 @@ __all__ = [
     "VarManager",
     "Formatter",
     "DashboardManager",
+    "BarManager",
 ]

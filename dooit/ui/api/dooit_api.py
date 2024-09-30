@@ -6,7 +6,7 @@ from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.utils import CssManager
 
-from .api_components import KeyManager, LayoutManager, Formatter
+from .api_components import KeyManager, LayoutManager, Formatter, BarManager
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..tui import Dooit
@@ -21,6 +21,7 @@ class DooitAPI:
         self.keys = KeyManager(self.app.get_mode)
         self.layouts = LayoutManager(self.app)
         self.formatter = Formatter(self.app)
+        self.bar = BarManager(self.app)
 
         self.css_manager.refresh_css()
 
@@ -109,6 +110,3 @@ class DooitAPI:
 
     def start_sort(self):
         self.focused.start_sort()
-
-    def set_bar(self, widgets: List[StatusBarWidget]):
-        self.app.bar.set_widgets(widgets)

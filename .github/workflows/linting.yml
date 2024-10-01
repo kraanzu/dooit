@@ -20,5 +20,5 @@ jobs:
         pip install ruff black
     - name: Analysing the code with ruff and black
       run: |
-        ruff $(git ls-files '*.py')
+        ruff check $(git ls-files '*.py')
         black $(git ls-files '*.py')

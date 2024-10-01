@@ -1,0 +1,7 @@
+---
+hide:
+  - toc
+  - navigation
+---
+
+# Welcome

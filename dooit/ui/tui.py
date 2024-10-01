@@ -1,11 +1,18 @@
 import webbrowser
-from textual.app import App
-from dooit.api.manager import manager
-from dooit.utils.watcher import Watcher
-from dooit.ui.widgets import WorkspaceTree, TodoTree
-from dooit.ui.css.main import screen_CSS
-from dooit.ui.screens import MainScreen, HelpScreen
+from typing import Optional
+from textual.app import App, on
 from textual.binding import Binding
+
+from dooit.api.theme import DooitThemeBase
+from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
+from dooit.ui.widgets import BarSwitcher
+from dooit.ui.widgets.bars import StatusBar
+from dooit.ui.widgets.trees import WorkspacesTree
+from dooit.ui.screens import MainScreen, HelpScreen
+from dooit.ui.widgets.trees.model_tree import ModelTree
+from dooit.utils import CssManager
+from .api import DooitAPI
+from ..api import manager
 
 PRINTABLE = (
     "0123456789"
@@ -15,10 +22,11 @@ PRINTABLE = (
 
 
 class Dooit(App):
-    CSS = screen_CSS
+    CSS_PATH = CssManager.css_file
+
     SCREENS = {
-        "main": MainScreen(name="main"),
-        "help": HelpScreen(name="help"),
+        "main": MainScreen,
+        "help": HelpScreen,
     }
 
     BINDINGS = [
@@ -26,28 +34,56 @@ class Dooit(App):
         Binding("ctrl+q", "quit", "Quit", show=False, priority=True),
     ]
 
+    def __init__(self, connection_string: Optional[str] = None):
+        super().__init__()
+        self.api = DooitAPI(self)
+        self._mode: ModeType = "NORMAL"
+        manager.register_engine(connection_string)
+
+    async def on_load(self):
+        self.post_message(Startup())
+
     async def on_mount(self):
-        self.watcher = Watcher()
         self.set_interval(1, self.poll)
         self.push_screen("main")
 
-    async def poll(self):
-        if (
-            not manager.is_locked()
-            and self.watcher.has_modified()
-            and manager.refresh_data()
-        ):
-            await self.query_one(WorkspaceTree).force_refresh(manager)
-            for i in self.query(TodoTree):
-                index = manager._get_child_index("workspace", uuid=i.model.uuid)
-                if index == -1:
-                    i.remove()
-                else:
-                    await i.force_refresh(manager._get_children("workspace")[index])
+    @property
+    def workspace_tree(self) -> WorkspacesTree:
+        return self.query_one(WorkspacesTree)
 
-    async def action_quit(self) -> None:
-        manager.commit()
-        return await super().action_quit()
+    @property
+    def bar(self) -> StatusBar:
+        return self.query_one(BarSwitcher).status_bar
+
+    @property
+    def bar_switcher(self) -> BarSwitcher:
+        return self.query_one(BarSwitcher)
+
+    def get_mode(self) -> ModeType:
+        return self._mode
+
+    @property
+    def current_theme(self) -> DooitThemeBase:
+        return self.api.css_manager.theme
+
+    async def poll(self):
+        def refresh_all_trees():
+            trees = self.query(ModelTree)
+            for tree in trees:
+                tree.force_refresh()
+
+        if manager.has_changed():
+            refresh_all_trees()
+
+    @on(DooitEvent)
+    def global_message(self, event: DooitEvent):
+        if isinstance(self.screen, MainScreen):
+            self.api.trigger_event(event)
+            self.bar.trigger_event(event)
+
+    @on(ModeChanged)
+    def change_status(self, event: ModeChanged):
+        self._mode = event.status
 
     async def action_open_url(self, url: str) -> None:
         webbrowser.open(url, new=2)

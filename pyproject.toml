@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dooit"
-version = "2.2.0"
+version = "3.0.0"
 description = "A TUI todo manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]
@@ -11,23 +11,52 @@ repository = "https://github.com/kraanzu/dooit"
 exclude = ["imgs"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 pyperclip = "^1.8.2"
 PyYAML = "^6.0"
 tzlocal = "2.1"
-appdirs = "^1.4.4"
-textual = "^0.47.1"
+textual = "^0.81.0"
 python-dateutil = "^2.8.2"
+sqlalchemy = "^2.0.31"
 
+platformdirs = "^4.3.6"
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.0.261"
-black = "^23.3.0"
+ruff = "^0.5.3"
 pre-commit = "^3.2.2"
-textual-dev = "^1.1.0"
+textual-dev = "^1.5.1"
+mkdocs = "^1.6.0"
+mkdocs-material = "^9.5.29"
+mypy = "^1.11.0"
+pytest = "^8.3.2"
 
+coverage = "^7.6.1"
+pytest-asyncio = "^0.24.0"
+faker = "^29.0.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 dooit = 'dooit.__main__:main'
+
+# -------------- TOOLING --------------
+
+[[tool.mypy.overrides]]
+module = [
+    "appdirs",
+    "msgpack",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff.lint]
+ignore=["E712"]
+
+[tool.coverage.report]
+omit = [
+    "/nix/store/*",
+]

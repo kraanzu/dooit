@@ -1,188 +1,165 @@
-from datetime import datetime
-from typing import Any, List, Optional, Union, Dict
-from .model import Model, Result
+from typing import TYPE_CHECKING, Callable, Optional, Union
+from datetime import datetime, timedelta
+from typing import List
+from sqlalchemy import ForeignKey, asc, desc, select
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from .model import DooitModel
+from .manager import manager
 
 
-TODO = "todo"
-OPTS = {
-    "PENDING": "x",
-    "COMPLETED": "X",
-    "OVERDUE": "O",
-}
+if TYPE_CHECKING:  # pragma: no cover
+    from dooit.api.workspace import Workspace
 
 
-def reversed_dict(d):
-    return {j: i for i, j in d.items()}
+class Todo(DooitModel):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    order_index: Mapped[int] = mapped_column(default=-1)
+    description: Mapped[str] = mapped_column(default="")
+    due: Mapped[Optional[datetime]] = mapped_column(default=None)
+    effort: Mapped[int] = mapped_column(default=0)
+    recurrence: Mapped[Optional[timedelta]] = mapped_column(default=None)
+    urgency: Mapped[int] = mapped_column(default=0)
+    pending: Mapped[bool] = mapped_column(default=True)
 
+    # --------------------------------------------------------------
+    # ------------------- Relationships ----------------------------
+    # --------------------------------------------------------------
 
-class Todo(Model):
-    fields = ["description", "due", "urgency", "effort", "status", "recurrence"]
+    parent_workspace_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("workspace.id")
+    )
+    parent_workspace: Mapped[Optional["Workspace"]] = relationship(
+        "Workspace",
+        back_populates="todos",
+    )
 
-    sortable_fields = [
-        "description",
-        "due",
-        "urgency",
-        "effort",
-        "status",
-    ]
+    parent_todo_id: Mapped[Optional[int]] = mapped_column(ForeignKey("todo.id"))
+    parent_todo: Mapped[Optional["Todo"]] = relationship(
+        "Todo",
+        back_populates="todos",
+        remote_side=[id],
+    )
 
-    def __init__(self, parent: Optional[Model] = None) -> None:
-        from .model_items import (
-            Status,
-            Due,
-            Urgency,
-            Recurrence,
-            Description,
-            Effort,
-        )
+    todos: Mapped[List["Todo"]] = relationship(
+        "Todo",
+        back_populates="parent_todo",
+        cascade="all, delete-orphan",
+        order_by=order_index,
+    )
 
-        super().__init__(parent)
-        self._status = Status(self)
-        self._description = Description(self)
-        self._urgency = Urgency(self)
-        self._effort = Effort(self)
-        self._recurrence = Recurrence(self)
-        self._due = Due(self)
-        self.todos: List[Todo] = []
-
-    @property
-    def effort(self):
-        return self._effort.value
-
-    @property
-    def urgency(self):
-        return str(self._urgency.value)
-
-    @property
-    def description(self):
-        return self._description.value
+    @classmethod
+    def from_id(cls, _id: str) -> "Todo":
+        _id = _id.lstrip("Todo_")
+        query = select(Todo).where(Todo.id == _id)
+        res = manager.session.execute(query).scalars().first()
+        assert res is not None
+        return res
 
     @property
-    def recurrence(self):
-        return self._recurrence.value
+    def parent(self) -> Union["Workspace", "Todo"]:
+        assert self.parent_workspace or self.parent_todo
+
+        if self.parent_workspace:
+            return self.parent_workspace
+
+        assert self.parent_todo is not None
+
+        return self.parent_todo
 
     @property
-    def due(self):
-        return self._due.value
-
-    @property
-    def status(self):
-        return self._status.value
+    def has_same_parent_kind(self) -> bool:
+        return self.parent_todo is not None
 
     @property
     def tags(self) -> List[str]:
         return [i for i in self.description.split() if i[0] == "@"]
 
-    def add_child(
-        self, kind: str = "todo", index: int = 0, inherit: bool = False
-    ) -> Any:
-        if kind != "todo":
-            raise TypeError(f"Cannot add child of kind {kind}")
+    @property
+    def status(self) -> str:
+        if self.is_completed:
+            return "completed"
 
-        return super().add_child(kind, index, inherit)
+        if self.is_overdue:
+            return "overdue"
 
-    def add_todo(self, index: int = 0, inherit: bool = False):
-        return self.add_child(TODO, index, inherit)
+        return "pending"
 
-    def edit(self, key: str, value: str) -> Result:
-        res = super().edit(key, value)
-        self._status.update_others()
-        return res
+    @property
+    def siblings(self) -> List["Todo"]:
+        if self.parent_workspace:
+            return self.parent_workspace.todos
 
-    def toggle_complete(self) -> bool:
-        return self._status.toggle_done()
+        if self.parent_todo:
+            return self.parent_todo.todos
 
-    def set_urgency(self, value: int) -> None:
-        self._urgency.set(value)
+        return []
 
-    def decrease_urgency(self) -> None:
-        self._urgency.decrease()
+    def __get_sort_func(self, field: str) -> Callable:
+        if field in ["pending"]:
+            return desc
+        return asc
 
-    def increase_urgency(self) -> None:
-        self._urgency.increase()
+    def sort_siblings(self, field: str):
+        sort_func = self.__get_sort_func(field)
 
-    def to_data(self) -> Dict[str, str]:
-        """
-        Return storable form of todo
-        """
+        items = (
+            self.session.query(Todo)
+            .filter_by(
+                parent_workspace=self.parent_workspace,
+                parent_todo=self.parent_todo,
+            )
+            .order_by(sort_func(getattr(Todo, field)))
+            .all()
+        )
 
-        return {
-            "uuid": self._uuid,
-            "status": self._status.save(),
-            "urgency": self._urgency.save(),
-            "description": self._description.save(),
-            "due": self._due.save(),
-            "effort": self._effort.save(),
-            "recurrence": self._recurrence.save(),
-        }
+        for index, todo in enumerate(items):
+            todo.order_index = index
 
-    def fill_from_data(
-        self, data: Union[Dict, str], overwrite_uuid: bool = True
-    ) -> None:
-        if isinstance(data, str):
-            self.extract_data_old(data)
-        else:
-            self.extract_data_new(data, overwrite_uuid)
+        self.session.commit()
 
-    # WARNING: This will be deprecated in future versions
-    def extract_data_old(self, data: str):
-        self._status.from_txt(data)
-        self._urgency.from_txt(data)
-        self._due.from_txt(data)
-        self._description.from_txt(data)
-        self._recurrence.from_txt(data)
-        self._effort.from_txt(data)
+    def add_todo(self) -> "Todo":
+        todo = Todo(parent_todo=self)
+        todo.save()
+        return todo
 
-    def extract_data_new(self, data: Dict[str, str], overwrite_uuid: bool = True):
-        def get(key: str) -> str:
-            return data.get(key, "")
-
-        if overwrite_uuid:
-            self._uuid = get("uuid")
-
-        self._status.setup(get("status"))
-        self._urgency.setup(get("urgency"))
-        self._due.setup(get("due"))
-        self._description.setup(get("description"))
-        self._recurrence.setup(get("recurrence"))
-        self._effort.setup(get("effort"))
-
-    def commit(self) -> List[Any]:
-        if self.todos:
-            return [
-                self.to_data(),
-                [child.commit() for child in self.todos],
-            ]
-        else:
-            return [self.to_data()]
-
-    def from_data(self, data: List, overwrite_uuid: bool = True) -> None:
-        self.fill_from_data(data[0], overwrite_uuid)
-        if len(data) > 1:
-            for i in data[1]:
-                # Skips todos with no description and no children
-                if len(i) == 1 and not i[0]['description']:
-                    continue
-                # Don't skip the todo as the children might have data that would be lost otherwise
-                elif len(i) > 1 and not i[0]['description']:
-                    i[0]['description'] = '<Empty>'
-
-                child_todo = self.add_child(kind="todo", index=len(self.todos))
-                child_todo.from_data(i, overwrite_uuid)
+    def _add_sibling(self) -> "Todo":
+        todo = Todo(
+            parent_todo=self.parent_todo,
+            parent_workspace=self.parent_workspace,
+        )
+        return todo
 
     # ----------- HELPER FUNCTIONS --------------
+
+    def toggle_complete(self) -> None:
+        self.pending = not self.pending
+        self.save()
+
     def has_due_date(self) -> bool:
-        return bool(self._due._value)
+        return self.due is not None
 
     def is_due_today(self) -> bool:
-        value = self._due._value
-        return bool(value and (value.date() == datetime.today().date()))
+        if not self.due:
+            return False
 
+        return self.due and self.due.day == datetime.today().day
+
+    @property
     def is_completed(self) -> bool:
-        return self.status == "COMPLETED"
+        return self.pending == False
 
+    @property
     def is_pending(self) -> bool:
-        return self.status == "PENDING"
+        return self.pending
 
+    @property
     def is_overdue(self) -> bool:
-        return self.status == "OVERDUE"
+        if not self.due:
+            return False
+
+        return self.pending and self.due < datetime.now()
+
+    @classmethod
+    def all(cls) -> List["Todo"]:
+        query = select(Todo)
+        return list(manager.session.execute(query).scalars().all())

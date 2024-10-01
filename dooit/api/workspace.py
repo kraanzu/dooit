@@ -1,79 +1,120 @@
-from typing import Any, Dict, Optional
+from typing import List, Optional, Union
+from sqlalchemy import ForeignKey, asc, select
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..api.todo import Todo
-from .model import Model
+from .model import DooitModel
+from .manager import manager
 
-WORKSPACE = "workspace"
-TODO = "todo"
+ModelType = Union["Workspace", "Todo"]
+ModelTypeList = Union[List["Workspace"], List["Todo"]]
 
 
-class Workspace(Model):
-    fields = ["description"]
-    sortable_fields = ["description"]
+class Workspace(DooitModel):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    order_index: Mapped[int] = mapped_column(default=-1)
+    description: Mapped[str] = mapped_column(default="")
+    is_root: Mapped[bool] = mapped_column(default=False)
 
-    def __init__(self, parent: Optional["Model"] = None) -> None:
-        from .model_items import Description
+    # --------------------------------------------------------------
+    # ------------------- Relationships ----------------------------
+    # --------------------------------------------------------------
 
-        super().__init__(parent)
-        self._description = Description(self)
+    parent_workspace_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("workspace.id"), default=None
+    )
+    parent_workspace: Mapped[Optional["Workspace"]] = relationship(
+        "Workspace",
+        back_populates="workspaces",
+        remote_side=[id],
+    )
+
+    workspaces: Mapped[List["Workspace"]] = relationship(
+        "Workspace",
+        back_populates="parent_workspace",
+        cascade="all",
+        order_by="Workspace.order_index",
+    )
+    todos: Mapped[List["Todo"]] = relationship(
+        "Todo",
+        back_populates="parent_workspace",
+        cascade="all, delete-orphan",
+        order_by="Todo.order_index",
+    )
+
+    @classmethod
+    def _get_or_create_root(cls) -> "Workspace":
+        query = select(Workspace).where(Workspace.is_root == True)
+        root = manager.session.execute(query).scalars().first()
+
+        if root is None:
+            root = Workspace(is_root=True)
+
+        return root
+
+    @classmethod
+    def from_id(cls, _id: str) -> "Workspace":
+        _id = _id.lstrip("Workspace_")
+        query = select(Workspace).where(Workspace.id == _id)
+        res = manager.session.execute(query).scalars().first()
+        assert res is not None
+        return res
 
     @property
-    def description(self):
-        return self._description.value
+    def parent(self) -> Optional["Workspace"]:
+        return self.parent_workspace
 
-    def add_workspace(self, index: int = 0) -> "Workspace":
-        return super().add_child(WORKSPACE, index)
+    @property
+    def has_same_parent_kind(self) -> bool:
+        return self.parent is not None
 
-    def add_todo(self, index: int = 0) -> Todo:
-        return super().add_child(TODO, index)
+    @property
+    def siblings(self) -> List["Workspace"]:
+        if not self.parent_workspace:
+            return []
 
-    def commit(self) -> Dict[str, Any]:
-        child_workspaces = [
-            workspace.commit() for workspace in self.workspaces if workspace.description
-        ]
+        assert not self.is_root
 
-        todos = [todo.commit() for todo in self.todos if todo.description]
+        return self.parent_workspace.workspaces
 
-        return {
-            "uuid": self.uuid,
-            "description": self.description,
-            "todos": todos,
-            "workspaces": child_workspaces,
-        }
+    def sort_siblings(self, field: str):
+        items = (
+            self.session.query(Workspace)
+            .filter_by(
+                parent_workspace=self.parent_workspace,
+            )
+            .order_by(asc(getattr(Workspace, field)))
+            .all()
+        )
 
-    # WARNING: This will be deprecated in future versions
-    def extract_data_old(self, data: Dict):
-        for i, j in data.items():
-            if i == "common":
-                for k in j:
-                    todo = self.add_todo(index=len(self.todos))
-                    todo.from_data(k)
-                continue
+        for index, workspace in enumerate(items):
+            workspace.order_index = index
 
-            workspace = self.add_child("workspace", index=len(self.workspaces))
-            workspace.edit("description", i)
-            workspace.from_data(j)
+        self.session.commit()
 
-    def extract_data_new(self, data: Dict, overwrite_uuid: bool):
-        if overwrite_uuid:
-            self._uuid = data["uuid"]
+    def add_workspace(self) -> "Workspace":
+        workspace = Workspace(parent_workspace=self)
+        workspace.save()
+        return workspace
 
-        self._description.set(data["description"])
+    def add_todo(self) -> "Todo":
+        todo = Todo(parent_workspace=self)
+        todo.save()
+        return todo
 
-        for todo in data["todos"]:
-            child_todo = self.add_todo(index=len(self.todos))
-            child_todo.from_data(todo, overwrite_uuid)
+    def _add_sibling(self) -> "Workspace":
+        workspace = Workspace(
+            parent_workspace=self.parent_workspace,
+        )
+        return workspace
 
-        for workspace in data["workspaces"]:
-            child_workspace = self.add_workspace(len(self.workspaces))
-            child_workspace.from_data(workspace, overwrite_uuid)
+    def save(self) -> None:
+        if not self.parent_workspace and not self.is_root:
+            root = self._get_or_create_root()
+            self.parent_workspace = root
 
-    def from_data(self, data: Any, overwrite_uuid: bool = True) -> None:
-        if isinstance(data, dict):
-            if "uuid" not in data:
-                self.extract_data_old(data)
-            else:
-                self.extract_data_new(data, overwrite_uuid)
+        return super().save()
 
-        elif isinstance(data, list):
-            todo = self.add_todo(index=len(self.todos))
-            todo.from_data(data, overwrite_uuid)
+    @classmethod
+    def all(cls) -> List["Workspace"]:
+        query = select(Workspace).where(Workspace.is_root == False)
+        return list(manager.session.execute(query).scalars().all())

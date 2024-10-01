@@ -1,60 +1,93 @@
-from typing import Literal, Optional, Union
-from rich.text import TextType, Text
+from typing import Callable, Literal, Optional
 from textual.message import Message
-from dooit.api.model import Result, SortMethodType
-from dooit.api.workspace import Workspace
 
-StatusType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING"]
+from dooit.api.model import DooitModel, SortMethodType
+from dooit.api import Workspace
+
+ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING", "CONFIRM"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
 
 
-class ExitApp(Message, bubble=True):
+class DooitEvent(Message, bubble=True):
+    """
+    Base class for all events
+    """
+
+    kwargs = {}
+
+    @property
+    def snake_case(self):
+        name = self.__class__.__name__
+        joined = "".join(["_" + i.lower() if i.isupper() else i for i in name])
+        return joined.lstrip("_")
+
+
+class Startup(DooitEvent):
+    """
+    Emitted when the app starts
+    """
+
+
+class ExitApp(DooitEvent):
     """
     Emitted when user presses the exit app keybind
     """
 
 
-class SwitchTab(Message, bubble=True):
+class SwitchTab(DooitEvent):
     """
     Emitted when user needs to focus other pane
     """
 
 
-class SpawnHelp(Message, bubble=True):
+class SpawnHelp(DooitEvent):
     """
     Emitted when user presses `?` in NORMAL mode
     """
 
 
-class ChangeStatus(Message, bubble=True):
+class ModeChanged(DooitEvent):
     """
     Emitted when there is a change in the `status`
     """
 
-    def __init__(self, status: StatusType) -> None:
+    def __init__(self, status: ModeType) -> None:
         super().__init__()
-        self.status: StatusType = status
+        self.status: ModeType = status
 
 
-class Notify(Message, bubble=True):
+class StartSearch(DooitEvent):
     """
-    Emitted when A notification message on status bar is to be shown
+    Emitted when user wants to search
     """
 
-    def __init__(self, message: Union[TextType, Result]) -> None:
+    def __init__(self, callback: Callable) -> None:
         super().__init__()
-
-        if isinstance(message, Text):
-            message = message.markup
-
-        if isinstance(message, Result):
-            message = message.text()
-
-        self.message = message
+        self.callback = callback
 
 
-class TopicSelect(Message, bubble=True):
+class StartSort(DooitEvent):
+    """
+    Emitted when user wants to sort
+    """
+
+    def __init__(self, model: DooitModel) -> None:
+        super().__init__()
+        self.model = model
+
+
+class ShowConfirm(DooitEvent):
+    """
+    Emitted when confirmation from user is required
+    """
+
+    def __init__(self, callback: Callable) -> None:
+        super().__init__()
+        self.callback = callback
+
+
+class TopicSelect(DooitEvent):
     """
     Emitted when the user selects a todo from search list
     """
@@ -64,7 +97,7 @@ class TopicSelect(Message, bubble=True):
         self.model = model
 
 
-class ApplySort(Message, bubble=True):
+class ApplySort(DooitEvent):
     """
     Emitted when the user wants to sort a tree
     """
@@ -74,19 +107,3 @@ class ApplySort(Message, bubble=True):
         self.query = query
         self.widget_id = widget_id
         self.method = method
-
-
-class CommitData(Message):
-    """
-    Emitted when the local data needs to be updated
-    """
-
-
-class DateModeSwitch(Message):
-    """
-    Emitted when the user switches how the dates should render
-
-    ```
-    <day> month -> X days left
-    ```
-    """

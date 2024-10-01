@@ -1,6 +1,15 @@
-from .model import Model
-from .manager import Manager, manager
+from .model import DooitModel, BaseModel
 from .todo import Todo
 from .workspace import Workspace
+from .manager import manager
+from .hooks import fix_hooks, validation_hooks
 
-__all__ = ["Model", "Manager", "Todo", "Workspace", "manager"]
+__all__ = [
+    "BaseModel",
+    "DooitModel",
+    "Todo",
+    "Workspace",
+    "manager",
+    "fix_hooks",
+    "validation_hooks",
+]

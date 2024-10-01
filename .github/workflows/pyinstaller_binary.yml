@@ -1,0 +1,31 @@
+# name: Pyinstaller Binary Run
+#
+# on: [push, pull_request, workflow_dispatch]
+#
+# jobs:
+#   lint:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         python-version: ["3.11"]
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Set up Python ${{ matrix.python-version }}
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: ${{ matrix.python-version }}
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         pip install .
+#         pip install ruff
+#         pip install pyinstaller
+#
+#     - name: Package app with pyinstaller
+#       run: |
+#         python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
+#         pyinstaller --clean -F dooit.py --add-data="dooit/utils/default_config.py:dooit/utils/" --add-data="dooit/ui/styles.tcss:dooit/ui/"
+#     - name: Check by running
+#       run: |
+#         chmod +x ./dist/dooit
+#         ./dist/dooit

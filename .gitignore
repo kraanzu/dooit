@@ -1,7 +1,14 @@
 # dooit stuf
+playground/
+.playground/
 test.py
 todos
 sample_todo.yaml
+snappy.py
+dooit.db
+
+# Nix
+result
 
 # VSCODE
 .vscode/

@@ -1,5 +1,7 @@
 import argparse
-from importlib.metadata import version
+from dooit.ui.tui import Dooit
+
+VERSION = "3.0.0"
 
 
 def main():
@@ -8,8 +10,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        ver = version("dooit")
-        print(f"dooit - {ver}")
+        print(f"dooit - {VERSION}")
     else:
         from dooit.ui.tui import Dooit
         Dooit().run()

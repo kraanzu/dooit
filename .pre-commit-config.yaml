@@ -1,9 +1,9 @@
 repos:
 -   repo: local
     hooks:
-    -   id: black
-        name: black
-        entry: black
+    -   id: ruff
+        name: ruff format
+        entry: ruff format
         language: system
         types: [python]
         require_serial: true
@@ -13,4 +13,11 @@ repos:
         entry: ruff
         language: system
         types: [python]
-        require_serial: true
+        args: [--check]
+
+    -   id: pytest-check
+        name: pytest-check
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true

@@ -1,0 +1,109 @@
+# Extra vars
+
+$border_type: heavy;
+
+
+# CSS
+
+Screen {
+    background: $background_1;
+}
+
+ModelTree {
+    background: $background_1;
+    color: $foreground_3;
+    border: $border_type $background_3;
+    padding: 1;
+
+    border-title-color: $foreground_1;
+    border-title-background: $background_3;
+
+    &:focus {
+        border: $border_type $primary;
+        border-title-color: $foreground_3;
+        border-title-background: $secondary;
+
+        .option-list--option-highlighted, .option-list--option-hover-highlighted {
+            background: $secondary;
+            color: $foreground_3;
+        }
+    }
+
+    # --------- Options ------------------
+
+    .option-list--option-disabled {
+        color: $foreground_1 50%;
+    }
+
+    .option-list--option-highlighted, .option-list--option-hover-highlighted {
+        background: $background_3;
+    }
+
+    .option-list--option-hover {
+        background: $background_1;
+        color: $foreground_3;
+    }
+}
+
+DooitKeyTable {
+  background: $background_2;
+  border: tall $primary;
+
+  .keybind {
+    color: $primary;
+  }
+
+  .arrow {
+    color: $foreground_1 60%;
+  }
+
+  .description {
+    color: $secondary;
+  }
+}
+
+# Bars
+
+
+BarBase {
+  background: $background_2;
+  color: $foreground_3;
+}
+
+ConfirmBar {
+    background: $red;
+    color: $background_1;
+    text-style: bold;
+
+    &.cancelled {
+        background: $yellow;
+        color: $background_1;
+    }
+
+    &.not-cancelled {
+        background: $green;
+        color: $background_1;
+    }
+}
+
+SortBar {
+  .option-highlighted {
+    background: $secondary;
+  }
+}
+
+ModelTree > * > Label {
+  color: $foreground_3 50%;
+}
+
+# Miscellaneous
+
+* {
+    scrollbar-size: 0 1;
+    scrollbar-background: $background_3;
+    scrollbar-background-hover: $background_2;
+    scrollbar-background-active: $background_2;
+    scrollbar-color: $primary;
+    scrollbar-color-active: $secondary;
+    scrollbar-color-hover: $secondary;
+}

@@ -1,6 +1,5 @@
 import argparse
 from importlib.metadata import version
-from dooit.ui.tui import Dooit
 
 
 def main():
@@ -12,6 +11,7 @@ def main():
         ver = version("dooit")
         print(f"dooit - {ver}")
     else:
+        from dooit.ui.tui import Dooit
         Dooit().run()
 
 

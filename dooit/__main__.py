@@ -13,6 +13,7 @@ def main():
         print(f"dooit - {VERSION}")
     else:
         from dooit.ui.tui import Dooit
+
         Dooit().run()
 
 

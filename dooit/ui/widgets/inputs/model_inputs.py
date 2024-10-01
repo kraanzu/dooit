@@ -66,6 +66,18 @@ class Effort(SimpleInput[Todo, int]):
 
 
 class Status(SimpleInput[Todo, str]):
+
+    def _get_default_value(self) -> str:
+        val = self.model_value
+
+        if val == "completed":
+            return "x"
+
+        if val == "overdue":
+            return "!"
+
+        return "o"
+
     def _typecast_value(self, value: str) -> Any:
         if value == "COMPLETED":
             return False

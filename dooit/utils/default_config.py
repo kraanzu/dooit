@@ -14,26 +14,7 @@ bar_widgets = [
     StatusBarWidget(get_mode),
 ]
 
-
-def due_formatter(due, _):
-    if not due or due == "none":
-        return ""
-
-    text = due.strftime("%Y-%m-%d")
-
-    if due.hour:
-        text += f" ({due.strftime('%H:%M')})"
-
-    return text
-
-
-def workspace_desc_formatter(desc: str, workspace: Workspace):
-    text = desc
-
-    if ws := workspace.workspaces:
-        text += f" ({len(ws)})"
-
-    return text
+# Todo formatters
 
 
 def todo_desc_formatter(desc: str, todo: Todo):
@@ -44,6 +25,37 @@ def todo_desc_formatter(desc: str, todo: Todo):
 
     if r := todo.recurrence:
         text += f" !{r.days}d"
+
+    return text
+
+def todo_status_formatter(status: str, todo: Todo):
+    if status == "completed":
+        return " x"
+
+    if status == "overdue":
+        return " !"
+
+    return " o"
+
+
+def todo_due_formatter(due, _):
+    if not due or due == "none":
+        return ""
+
+    text = due.strftime("%Y-%m-%d")
+
+    if due.hour:
+        text += f" ({due.strftime('%H:%M')})"
+
+    return text
+
+# Workspace formatters
+
+def workspace_desc_formatter(desc: str, workspace: Workspace):
+    text = desc
+
+    if ws := workspace.workspaces:
+        text += f" ({len(ws)})"
 
     return text
 
@@ -68,10 +80,16 @@ def key_setup(api: DooitAPI):
     api.keys.set_normal("ctrl+s", api.start_sort)
 
     api.layouts.workspace_layout = [WorkspaceWidget.description]
-    api.layouts.todo_layout = [TodoWidget.description, TodoWidget.due]
+    api.layouts.todo_layout = [
+        TodoWidget.status,
+        TodoWidget.description,
+        TodoWidget.due,
+    ]
 
     api.formatter.workspaces.description.add(workspace_desc_formatter)
+
+    api.formatter.todos.status.add(todo_status_formatter)
     api.formatter.todos.description.add(todo_desc_formatter)
-    api.formatter.todos.due.add(due_formatter)
+    api.formatter.todos.due.add(todo_due_formatter)
 
     api.bar.set(bar_widgets)

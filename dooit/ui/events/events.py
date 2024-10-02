@@ -85,15 +85,3 @@ class ShowConfirm(DooitEvent):
     def __init__(self, callback: Callable) -> None:
         super().__init__()
         self.callback = callback
-
-
-class ApplySort(DooitEvent):
-    """
-    Emitted when the user wants to sort a tree
-    """
-
-    def __init__(self, query: str, widget_id: str, method: SortMethodType) -> None:
-        super().__init__()
-        self.query = query
-        self.widget_id = widget_id
-        self.method = method

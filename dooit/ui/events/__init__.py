@@ -1,5 +1,4 @@
 from .events import (
-    ApplySort,
     ModeChanged,
     ModeType,
     SortMethodType,
@@ -9,7 +8,6 @@ from .events import (
 )
 
 __all__ = [
-    "ApplySort",
     "SpawnHelp",
     "ModeChanged",
     "ModeType",

@@ -5,6 +5,8 @@ from .events import (
     SwitchTab,
     SpawnHelp,
     ExitApp,
+
+    WorkspaceSelected,
 )
 
 __all__ = [
@@ -14,4 +16,6 @@ __all__ = [
     "SortMethodType",
     "SwitchTab",
     "ExitApp",
+
+    "WorkspaceSelected",
 ]

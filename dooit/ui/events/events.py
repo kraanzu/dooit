@@ -85,3 +85,13 @@ class ShowConfirm(DooitEvent):
     def __init__(self, callback: Callable) -> None:
         super().__init__()
         self.callback = callback
+
+
+class WorkspaceSelected(DooitEvent):
+    """
+    Emitted when user selects a workspace
+    """
+
+    def __init__(self, workspace: Workspace) -> None:
+        super().__init__()
+        self.workspace = workspace

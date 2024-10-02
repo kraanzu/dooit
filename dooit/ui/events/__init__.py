@@ -1,21 +1,36 @@
 from .events import (
     ModeChanged,
     ModeType,
-    SortMethodType,
     SwitchTab,
     SpawnHelp,
     ExitApp,
-
     WorkspaceSelected,
+    WorkspaceRemoved,
+    WorkspaceDescriptionChanged,
+    TodoRemoved,
+    TodoSelected,
+    TodoUrgetChanged,
+    TodoStatusChanged,
+    TodoEffortChanged,
+    TodoRecurrenceChanged,
+    TodoDescriptionChanged,
 )
 
 __all__ = [
     "SpawnHelp",
     "ModeChanged",
     "ModeType",
-    "SortMethodType",
     "SwitchTab",
     "ExitApp",
-
     "WorkspaceSelected",
+    "WorkspaceRemoved",
+    "WorkspaceDescriptionChanged",
+    "TodoRemoved",
+    "TodoSelected",
+    "TodoUrgetChanged",
+    "TodoStatusChanged",
+    "TodoEffortChanged",
+    "TodoRecurrenceChanged",
+    "TodoDescriptionChanged",
+    "TodoDescriptionChanged",
 ]

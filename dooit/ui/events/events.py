@@ -1,12 +1,16 @@
+from datetime import timedelta
 from typing import Callable, Literal, Optional
 from textual.message import Message
 
-from dooit.api.model import DooitModel, SortMethodType
-from dooit.api import Workspace
+from dooit.api.model import DooitModel
+from dooit.api import Workspace, Todo
 
 ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING", "CONFIRM"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
+
+
+# Base event
 
 
 class DooitEvent(Message, bubble=True):
@@ -21,6 +25,9 @@ class DooitEvent(Message, bubble=True):
         name = self.__class__.__name__
         joined = "".join(["_" + i.lower() if i.isupper() else i for i in name])
         return joined.lstrip("_")
+
+
+# Events
 
 
 class Startup(DooitEvent):
@@ -87,6 +94,9 @@ class ShowConfirm(DooitEvent):
         self.callback = callback
 
 
+# Workspace events
+
+
 class WorkspaceSelected(DooitEvent):
     """
     Emitted when user selects a workspace
@@ -95,3 +105,110 @@ class WorkspaceSelected(DooitEvent):
     def __init__(self, workspace: Workspace) -> None:
         super().__init__()
         self.workspace = workspace
+
+
+class WorkspaceRemoved(DooitEvent):
+    """
+    Emitted when user removes a workspace
+    """
+
+    def __init__(self, workspace: Workspace) -> None:
+        super().__init__()
+        self.workspace = workspace
+
+
+class WorkspaceDescriptionChanged(DooitEvent):
+    """
+    Emitted when user changes the description of a workspace
+    """
+
+    def __init__(self, old: str, new: str, workspace: Workspace) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.workspace = workspace
+
+
+# Todo events
+
+
+class TodoSelected(DooitEvent):
+    """
+    Emitted when user selects a todo
+    """
+
+    def __init__(self, todo: Todo) -> None:
+        super().__init__()
+        self.todo = todo
+
+
+class TodoRemoved(DooitEvent):
+    """
+    Emitted when user removes a todo
+    """
+
+    def __init__(self, todo: Todo) -> None:
+        super().__init__()
+        self.todo = todo
+
+
+class TodoDescriptionChanged(DooitEvent):
+    """
+    Emitted when user changes the description of a todo
+    """
+
+    def __init__(self, old: str, new: str, todo: Todo) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.todo = todo
+
+
+class TodoStatusChanged(DooitEvent):
+    """
+    Emitted when user changes the status of a todo
+    """
+
+    def __init__(self, old: str, new: str, todo: Todo) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.todo = todo
+
+
+class TodoEffortChanged(DooitEvent):
+    """
+    Emitted when user changes the effort of a todo
+    """
+
+    def __init__(self, old: Optional[int], new: Optional[int], todo: Todo) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.todo = todo
+
+
+class TodoRecurrenceChanged(DooitEvent):
+    """
+    Emitted when user changes the recurrence of a todo
+    """
+
+    def __init__(
+        self, old: Optional[timedelta], new: Optional[timedelta], todo: Todo
+    ) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.todo = todo
+
+
+class TodoUrgetChanged(DooitEvent):
+    """
+    Emitted when user changes the urget of a todo
+    """
+
+    def __init__(self, old: int, new: int, todo: Todo) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.todo = todo

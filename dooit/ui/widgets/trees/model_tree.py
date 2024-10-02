@@ -237,7 +237,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def add_child_node(self):
         node = self._create_child_node()
-        node.description = "New Node"
+        node.description = ""
         node.save()
 
         self.expand_node()
@@ -253,7 +253,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     @refresh_tree
     def _add_sibling_node(self) -> ModelType:
         node = self._create_sibling_node()
-        node.description = "New Node"
+        node.description = ""
         node.save()
         return node
 

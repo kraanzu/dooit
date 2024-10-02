@@ -8,11 +8,12 @@ f = faker.Faker()
 
 
 def gen_todo(parent):
-    words = randint(4, 9)
+    words = randint(2, 9)
     description = " ".join(f.words(nb=words))
     due = f.date_time()
+    urgency = randint(0, 5) if randint(0, 10) == 5 else 0
 
-    todo = Todo(description=description, due=due)
+    todo = Todo(description=description, due=due, urgency=urgency)
 
     if isinstance(parent, Todo):
         todo.parent_todo = parent

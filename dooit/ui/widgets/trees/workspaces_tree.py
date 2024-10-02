@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, List, Optional
 from textual import on
-from textual.widgets import ContentSwitcher
 from textual.widgets.option_list import Option
 
 from dooit.api import Workspace
+from dooit.ui.events.events import WorkspaceSelected
 from .model_tree import ModelTree
 from .todos_tree import TodosTree
 from ._render_dict import WorkspaceRenderDict
@@ -36,20 +36,6 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
     def layout(self):
         return self.api.layouts.workspace_layout
 
-    @on(ModelTree.OptionHighlighted)
-    async def update_todo_tree(self, event: ModelTree.OptionHighlighted):
-        if not event.option_id:
-            return
-
-        switcher = self.screen.query_one("#todo_switcher", expect_type=ContentSwitcher)
-        todo_obj = self._renderers[event.option_id].model
-        tree = TodosTree(todo_obj)
-
-        if not self.screen.query(f"#{tree.id}"):
-            await switcher.add_content(tree, set_current=True)
-
-        switcher.current = tree.id
-
     def _switch_to_todos(self) -> None:
         try:
             if not self.node.id:
@@ -71,3 +57,10 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _add_first_item(self) -> Workspace:
         return self.model.add_workspace()
+
+    @on(ModelTree.OptionHighlighted)
+    def workspace_highlighted(self, event: ModelTree.OptionHighlighted):
+        assert event.option_id
+
+        event.stop()
+        self.post_message(WorkspaceSelected(Workspace.from_id(event.option_id)))

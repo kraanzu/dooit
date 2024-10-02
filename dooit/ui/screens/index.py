@@ -2,7 +2,13 @@ from textual import events, on, work
 from textual.containers import Container
 from textual.widgets import ContentSwitcher
 from dooit.api.workspace import Workspace
-from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
+from dooit.ui.events.events import (
+    ModeChanged,
+    ShowConfirm,
+    StartSearch,
+    StartSort,
+    WorkspaceSelected,
+)
 from dooit.ui.events import (
     SwitchTab,
     SpawnHelp,
@@ -108,3 +114,13 @@ class MainScreen(BaseScreen):
     def show_confirm(self, event: ShowConfirm):
         self.app.bar_switcher.switch_to_confirm(event.callback)
         self.post_message(ModeChanged("CONFIRM"))
+
+    @on(WorkspaceSelected)
+    def workspace_selected(self, event: WorkspaceSelected):
+        switcher = self.query_one("#todo_switcher", expect_type=ContentSwitcher)
+        tree = TodosTree(event.workspace)
+
+        if not switcher.query(f"#{tree.id}"):
+            switcher.add_content(tree, set_current=True)
+        else:
+            switcher.current = tree.id

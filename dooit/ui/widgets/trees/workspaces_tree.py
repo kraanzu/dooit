@@ -3,7 +3,7 @@ from textual import on
 from textual.widgets.option_list import Option
 
 from dooit.api import Workspace
-from dooit.ui.events.events import WorkspaceSelected
+from dooit.ui.events.events import WorkspaceRemoved, WorkspaceSelected
 from .model_tree import ModelTree
 from .todos_tree import TodosTree
 from ._render_dict import WorkspaceRenderDict
@@ -57,6 +57,10 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _add_first_item(self) -> Workspace:
         return self.model.add_workspace()
+
+    def _remove_node(self) -> None:
+        self.post_message(WorkspaceRemoved(self.current_model))
+        return super()._remove_node()
 
     @on(ModelTree.OptionHighlighted)
     def workspace_highlighted(self, event: ModelTree.OptionHighlighted):

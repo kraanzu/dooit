@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Iterable, Optional, Union
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
+from dooit.ui.events.events import TodoRemoved
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
@@ -51,3 +52,10 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
     def _create_child_node(self) -> Todo:
         return self.current_model.add_todo()
+
+    def _remove_node(self) -> None:
+        assert isinstance(self.current_model, Todo)
+        self.post_message(TodoRemoved(self.current_model))
+
+        return super()._remove_node()
+

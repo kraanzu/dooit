@@ -7,6 +7,7 @@ from dooit.ui.events.events import (
     ShowConfirm,
     StartSearch,
     StartSort,
+    TodoRemoved,
     WorkspaceSelected,
 )
 from dooit.ui.events import (
@@ -124,3 +125,7 @@ class MainScreen(BaseScreen):
             switcher.add_content(tree, set_current=True)
         else:
             switcher.current = tree.id
+
+    @on(TodoRemoved)
+    def todo_removed(self, event: TodoRemoved):
+        self.notify(event.todo.description)

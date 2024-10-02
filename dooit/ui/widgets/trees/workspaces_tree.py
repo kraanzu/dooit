@@ -30,11 +30,11 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     @property
     def formatter(self) -> "WorkspaceFormatter":
-        return self.app.api.formatter.workspaces
+        return self.api.formatter.workspaces
 
     @property
     def layout(self):
-        return self.app.api.layouts.workspace_layout
+        return self.api.layouts.workspace_layout
 
     @on(ModelTree.OptionHighlighted)
     async def update_todo_tree(self, event: ModelTree.OptionHighlighted):

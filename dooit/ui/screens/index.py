@@ -85,22 +85,6 @@ class MainScreen(BaseScreen):
     async def mount_dashboard(self) -> None:
         await self.clear_right()
 
-    # @on(events.Paste)
-    # async def paste_texts(self, event: events.Paste) -> None:
-    #     event.prevent_default()
-    #     event.stop()
-    #     if not event.text:
-    #         return
-    #     await self.send_keypress(f"events.Paste:{event.text}")
-    #
-    # @on(TopicSelect)
-    # async def topic_select(self, event: TopicSelect) -> None:
-    #     event.stop()
-    #     if model := event.model:
-    #         await self.mount_todos(model)
-    #     else:
-    #         await self.mount_dashboard()
-
     @on(SwitchTab)
     def switch_tab(self, event: SwitchTab) -> None:
         event.stop()

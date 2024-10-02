@@ -87,16 +87,6 @@ class ShowConfirm(DooitEvent):
         self.callback = callback
 
 
-class TopicSelect(DooitEvent):
-    """
-    Emitted when the user selects a todo from search list
-    """
-
-    def __init__(self, model: Optional[Workspace] = None) -> None:
-        super().__init__()
-        self.model = model
-
-
 class ApplySort(DooitEvent):
     """
     Emitted when the user wants to sort a tree

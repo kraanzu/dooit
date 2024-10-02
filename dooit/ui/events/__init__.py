@@ -3,7 +3,6 @@ from .events import (
     ModeChanged,
     ModeType,
     SortMethodType,
-    TopicSelect,
     SwitchTab,
     SpawnHelp,
     ExitApp,
@@ -15,7 +14,6 @@ __all__ = [
     "ModeChanged",
     "ModeType",
     "SortMethodType",
-    "TopicSelect",
     "SwitchTab",
     "ExitApp",
 ]

@@ -49,6 +49,12 @@ def todo_due_formatter(due, _):
 
     return text
 
+def todo_urgency_formatter(urgency, _):
+    if urgency == 0:
+        return ""
+
+    return f"!{urgency}"
+
 # Workspace formatters
 
 def workspace_desc_formatter(desc: str, workspace: Workspace):
@@ -84,6 +90,7 @@ def key_setup(api: DooitAPI):
         TodoWidget.status,
         TodoWidget.description,
         TodoWidget.due,
+        TodoWidget.urgency
     ]
 
     api.formatter.workspaces.description.add(workspace_desc_formatter)
@@ -91,5 +98,6 @@ def key_setup(api: DooitAPI):
     api.formatter.todos.status.add(todo_status_formatter)
     api.formatter.todos.description.add(todo_desc_formatter)
     api.formatter.todos.due.add(todo_due_formatter)
+    api.formatter.todos.urgency.add(todo_urgency_formatter)
 
     api.bar.set(bar_widgets)

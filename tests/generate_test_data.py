@@ -11,7 +11,7 @@ def gen_todo(parent):
     words = randint(2, 9)
     description = " ".join(f.words(nb=words))
     due = f.date_time()
-    urgency = randint(0, 5) if randint(0, 10) == 5 else 0
+    urgency = randint(2, 5) if randint(0, 10) == 5 else 1
 
     todo = Todo(description=description, due=due, urgency=urgency)
 

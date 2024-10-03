@@ -50,9 +50,6 @@ def todo_due_formatter(due, _):
     return text
 
 def todo_urgency_formatter(urgency, _):
-    if urgency == 0:
-        return ""
-
     return f"!{urgency}"
 
 # Workspace formatters

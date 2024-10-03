@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Iterable, Optional, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Type, Union
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import TodoRemoved
+from dooit.ui.events.events import DooitEvent, TodoDescriptionChanged, TodoRemoved
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
@@ -58,4 +58,3 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         self.post_message(TodoRemoved(self.current_model))
 
         return super()._remove_node()
-

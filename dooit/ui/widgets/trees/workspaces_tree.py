@@ -1,6 +1,3 @@
-from sqlalchemy.event import listen
-from sqlalchemy.orm.attributes import get_history
-
 from typing import TYPE_CHECKING, List, Optional
 from textual import on
 from textual.widgets.option_list import Option
@@ -75,19 +72,3 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
         event.stop()
         self.post_message(WorkspaceSelected(Workspace.from_id(event.option_id)))
-
-    # Listeners
-
-    def setup_listeners(self) -> None:
-        listen(Workspace, "after_update", self._track_description_update)
-
-    def _track_description_update(self, _mapper, _connection, target: Workspace):
-        history = get_history(target, "description")
-        if history.has_changes():
-            old = history.deleted[0] if history.deleted else ""
-            new = history.added[0] if history.added else ""
-
-            if old or new:
-                self.post_message(
-                    WorkspaceDescriptionChanged(old, new, target),
-                )

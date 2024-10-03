@@ -39,10 +39,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
         self._filter_refresh = False
-        self.setup_listeners()
-
-    def setup_listeners(self) -> None: # pragma: no cover
-        pass
 
     @property
     def formatter(self) -> "ModelFormatterBase":

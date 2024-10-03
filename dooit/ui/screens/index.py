@@ -1,12 +1,24 @@
+from typing import Type
+from sqlalchemy.event import listen
+from sqlalchemy.orm.attributes import get_history
 from textual import events, on, work
 from textual.containers import Container
 from textual.widgets import ContentSwitcher
-from dooit.api.workspace import Workspace
+from dooit.api import Todo, Workspace
+from dooit.api.model import DooitModel
 from dooit.ui.events.events import (
+    DooitEvent,
     ModeChanged,
     ShowConfirm,
     StartSearch,
     StartSort,
+    TodoDescriptionChanged,
+    TodoDueChanged,
+    TodoEffortChanged,
+    TodoRecurrenceChanged,
+    TodoStatusChanged,
+    TodoUrgetChanged,
+    WorkspaceDescriptionChanged,
     WorkspaceSelected,
 )
 from dooit.ui.events import (
@@ -124,3 +136,35 @@ class MainScreen(BaseScreen):
             switcher.add_content(tree, set_current=True)
         else:
             switcher.current = tree.id
+
+    # SQLAlchemy event listeners
+
+    def _track_field(
+        self, table: Type[DooitModel], field: str, event: Type[DooitEvent]
+    ) -> None:
+        def track(_mapper, _connection, target: Todo):
+            history = get_history(target, field)
+            if history.has_changes():
+                old = history.deleted[0] if history.deleted else ""
+                new = history.added[0] if history.added else ""
+
+                if old or new:
+                    self.post_message(
+                        event(old, new, target),
+                    )
+
+        listen(table, "after_update", track)
+
+    def on_mount(self):
+        listeners = (
+            (Workspace, "description", WorkspaceDescriptionChanged),
+            (Todo, "description", TodoDescriptionChanged),
+            (Todo, "due", TodoDueChanged),
+            (Todo, "effort", TodoEffortChanged),
+            (Todo, "recurrence", TodoRecurrenceChanged),
+            (Todo, "pending", TodoStatusChanged),
+            (Todo, "urgency", TodoUrgetChanged),
+        )
+
+        for table, field, event in listeners:
+            self._track_field(table, field, event)

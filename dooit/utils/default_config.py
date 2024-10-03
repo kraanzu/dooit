@@ -79,6 +79,7 @@ def key_setup(api: DooitAPI):
     api.keys.set_normal("J", api.shift_down)
     api.keys.set_normal("K", api.shift_up)
     api.keys.set_normal("x", api.remove_node)
+    api.keys.set_normal("c", api.toggle_complete)
     api.keys.set_normal("/", api.start_search)
     api.keys.set_normal("ctrl+s", api.start_sort)
 

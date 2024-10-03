@@ -23,7 +23,7 @@ class Input:
         if self.is_editing:
             text = self._render_text_with_cursor()
         else:
-            text = self._value
+            text = self.value
 
         return text
 

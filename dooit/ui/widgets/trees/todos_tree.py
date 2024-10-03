@@ -58,3 +58,9 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         self.post_message(TodoRemoved(self.current_model))
 
         return super()._remove_node()
+
+    def toggle_complete(self):
+        assert isinstance(self.current_model, Todo)
+
+        self.current_model.toggle_complete()
+        self.refresh_options()

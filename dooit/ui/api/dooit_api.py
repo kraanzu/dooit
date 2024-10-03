@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.widgets import ModelTree
+from dooit.ui.widgets.trees import TodosTree
 from dooit.utils import CssManager
 
 from .api_components import KeyManager, LayoutManager, Formatter, BarManager
@@ -109,3 +110,7 @@ class DooitAPI:
 
     def start_sort(self):
         self.focused.start_sort()
+
+    def toggle_complete(self):
+        if isinstance(self.focused, TodosTree):
+            self.focused.toggle_complete()

@@ -17,7 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom formatters for column values to suit your needs!
 - Multiple Theme support
 - Custom CSS injections into the UI
+- Dooit will now confirm node deletion by default. This behaviour can be changed via config
 
+## Changed
+- Sort options now appear in bar rather than a menu
+- search will now show all items but will disable all non-matching ones
 
 ## Removed
 - Now todos are no longer stored in `todo.yaml`, run dooit --migrate to migrate to new format

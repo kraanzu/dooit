@@ -1,9 +1,8 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from dooit.ui.api.plug import PluginManager
 from dooit.ui.events.events import DooitEvent, SwitchTab
 from dooit.ui.widgets import ModelTree
-from dooit.ui.widgets.bars import StatusBarWidget
 from dooit.utils import CssManager
 
 from .api_components import KeyManager, LayoutManager, Formatter, BarManager

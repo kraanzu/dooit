@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Callable, Literal, Optional
 from textual.message import Message
 
@@ -158,6 +158,18 @@ class TodoDescriptionChanged(DooitEvent):
     """
 
     def __init__(self, old: str, new: str, todo: Todo) -> None:
+        super().__init__()
+        self.old = old
+        self.new = new
+        self.todo = todo
+
+
+class TodoDueChanged(DooitEvent):
+    """
+    Emitted when user changes the due of a todo
+    """
+
+    def __init__(self, old: Optional[datetime], new: Optional[datetime], todo: Todo) -> None:
         super().__init__()
         self.old = old
         self.new = new

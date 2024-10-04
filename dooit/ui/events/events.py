@@ -214,7 +214,7 @@ class TodoRecurrenceChanged(DooitEvent):
         self.todo = todo
 
 
-class TodoUrgetChanged(DooitEvent):
+class TodoUrgencyChanged(DooitEvent):
     """
     Emitted when user changes the urget of a todo
     """

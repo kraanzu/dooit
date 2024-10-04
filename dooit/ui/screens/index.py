@@ -17,7 +17,7 @@ from dooit.ui.events.events import (
     TodoEffortChanged,
     TodoRecurrenceChanged,
     TodoStatusChanged,
-    TodoUrgetChanged,
+    TodoUrgencyChanged,
     WorkspaceDescriptionChanged,
     WorkspaceSelected,
 )
@@ -163,7 +163,7 @@ class MainScreen(BaseScreen):
             (Todo, "effort", TodoEffortChanged),
             (Todo, "recurrence", TodoRecurrenceChanged),
             (Todo, "pending", TodoStatusChanged),
-            (Todo, "urgency", TodoUrgetChanged),
+            (Todo, "urgency", TodoUrgencyChanged),
         )
 
         for table, field, event in listeners:

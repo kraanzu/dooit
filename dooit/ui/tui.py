@@ -42,6 +42,7 @@ class Dooit(App):
 
     async def on_load(self):
         self.post_message(Startup())
+        self.post_message(ModeChanged("NORMAL"))
 
     async def on_mount(self):
         self.set_interval(1, self.poll)

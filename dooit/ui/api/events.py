@@ -2,7 +2,7 @@ from typing import Callable, Type
 from dooit.ui.events.events import *  # noqa
 
 
-class Hooks:
+class Hook:
     def __init__(self, event: Type[DooitEvent]):
         self.event = event
 
@@ -11,6 +11,6 @@ class Hooks:
         return func
 
 
-startup = Hooks(Startup)
-shutdown = Hooks(ShutDown)
-mode_changed = Hooks(ModeChanged)
+startup = Hook(Startup)
+shutdown = Hook(ShutDown)
+mode_changed = Hook(ModeChanged)

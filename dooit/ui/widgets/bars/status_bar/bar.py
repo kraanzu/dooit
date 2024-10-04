@@ -15,7 +15,15 @@ class StatusBar(BarBase):
         self.refresh()
 
     def trigger_event(self, event: DooitEvent):
-        pass
+        flag = False
+
+        for widget in self.bar_widgets:
+            if widget.has_event(event):
+                flag = True
+                widget.calculate(self.app.api, event)
+
+        if flag:
+            self.refresh()
 
     def render(self) -> RenderableType:
         expand = any(widget.width == 0 for widget in self.bar_widgets)

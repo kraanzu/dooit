@@ -2,12 +2,14 @@ from rich.style import Style
 from dooit.api import Todo, Workspace
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
+from dooit.ui.events.events import WorkspaceSelected
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 from functools import partial
 
 
-def get_mode(api: DooitAPI):
+@events.mode_changed
+def get_mode(api: DooitAPI, event):
     theme = api.app.current_theme
     mode = api.app._mode
 
@@ -23,6 +25,13 @@ def get_mode(api: DooitAPI):
             bgcolor=MODES.get(mode, theme.primary),
         ),
     )
+
+
+@events.workspace_selected
+def get_workspace(api: DooitAPI, event: WorkspaceSelected):
+    blue = api.app.current_theme.blue
+    black = api.app.current_theme.background_1
+    return Text(event.workspace.description, style=Style(bgcolor=blue, color=black))
 
 
 # Todo formatters
@@ -127,6 +136,7 @@ def key_setup(api: DooitAPI, _):
     )
 
     bar_widgets = [
-        StatusBarWidget(partial(get_mode, api=api)),
+        StatusBarWidget(get_mode),
+        # StatusBarWidget(get_workspace),
     ]
     api.bar.set(bar_widgets)

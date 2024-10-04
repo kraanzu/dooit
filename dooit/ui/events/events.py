@@ -36,7 +36,7 @@ class Startup(DooitEvent):
     """
 
 
-class ExitApp(DooitEvent):
+class ShutDown(DooitEvent):
     """
     Emitted when user presses the exit app keybind
     """

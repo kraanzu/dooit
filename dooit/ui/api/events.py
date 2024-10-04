@@ -12,5 +12,5 @@ class Hooks:
 
 
 startup = Hooks(Startup)
-shutdown = Hooks(ExitApp)
+shutdown = Hooks(ShutDown)
 mode_changed = Hooks(ModeChanged)

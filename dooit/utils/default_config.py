@@ -1,3 +1,4 @@
+from rich.style import Style
 from dooit.api import Todo, Workspace
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
@@ -6,14 +7,23 @@ from rich.text import Text
 from functools import partial
 
 
-def get_mode():
-    mode = " NORMAL "
-    return Text(f" {mode} ", style="black on white")
+def get_mode(api: DooitAPI):
+    theme = api.app.current_theme
+    mode = api.app._mode
 
+    MODES = {
+        "NORMAL": theme.primary,
+        "INSERT": theme.foreground_1,
+    }
 
-bar_widgets = [
-    StatusBarWidget(get_mode),
-]
+    return Text(
+        f" {mode} ",
+        style=Style(
+            color=theme.background_1,
+            bgcolor=MODES.get(mode, theme.primary),
+        ),
+    )
+
 
 # Todo formatters
 
@@ -116,4 +126,7 @@ def key_setup(api: DooitAPI):
         partial(todo_urgency_formatter, api=api),
     )
 
+    bar_widgets = [
+        StatusBarWidget(partial(get_mode, api=api)),
+    ]
     api.bar.set(bar_widgets)

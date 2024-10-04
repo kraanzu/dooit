@@ -3,6 +3,7 @@ from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
+from functools import partial
 
 
 def get_mode():
@@ -28,6 +29,7 @@ def todo_desc_formatter(desc: str, todo: Todo):
 
     return text
 
+
 def todo_status_formatter(status: str, todo: Todo):
     if status == "completed":
         return " x"
@@ -49,10 +51,24 @@ def todo_due_formatter(due, _):
 
     return text
 
-def todo_urgency_formatter(urgency, _):
-    return f"!{urgency}"
+
+def todo_urgency_formatter(urgency, _, api: DooitAPI):
+    theme = api.app.current_theme
+    colors = {
+        1: theme.green,
+        2: theme.yellow,
+        3: theme.orange,
+        4: theme.red,
+    }
+
+    return Text(
+        f"!{urgency}",
+        style="bold " + colors.get(urgency, theme.primary),
+    )
+
 
 # Workspace formatters
+
 
 def workspace_desc_formatter(desc: str, workspace: Workspace):
     text = desc
@@ -88,7 +104,7 @@ def key_setup(api: DooitAPI):
         TodoWidget.status,
         TodoWidget.description,
         TodoWidget.due,
-        TodoWidget.urgency
+        TodoWidget.urgency,
     ]
 
     api.formatter.workspaces.description.add(workspace_desc_formatter)
@@ -96,6 +112,8 @@ def key_setup(api: DooitAPI):
     api.formatter.todos.status.add(todo_status_formatter)
     api.formatter.todos.description.add(todo_desc_formatter)
     api.formatter.todos.due.add(todo_due_formatter)
-    api.formatter.todos.urgency.add(todo_urgency_formatter)
+    api.formatter.todos.urgency.add(
+        partial(todo_urgency_formatter, api=api),
+    )
 
     api.bar.set(bar_widgets)

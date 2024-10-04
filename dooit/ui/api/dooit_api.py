@@ -39,9 +39,8 @@ class DooitAPI:
             await self.focused.handle_keypress(key)
 
     def trigger_event(self, event: DooitEvent):
-        event_name = event.snake_case
-        for obj in self.plugin_manager.events[event_name]:
-            obj(self)
+        for obj in self.plugin_manager.events[event.__class__]:
+            obj(self, event)
 
     # -----------------------------------------
 

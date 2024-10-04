@@ -90,7 +90,7 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
 
 
 @events.startup
-def key_setup(api: DooitAPI):
+def key_setup(api: DooitAPI, _):
     api.keys.set_normal("tab", api.switch_focus)
     api.keys.set_normal("j", api.move_down)
     api.keys.set_normal("k", api.move_up)

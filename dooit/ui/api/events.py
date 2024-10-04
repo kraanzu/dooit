@@ -1,15 +1,16 @@
-from typing import Callable
+from typing import Callable, Type
+from dooit.ui.events.events import *  # noqa
 
 
-class EventDecorator:
-    def __init__(self, event_name):
-        self.event_name = event_name
+class Hooks:
+    def __init__(self, event: Type[DooitEvent]):
+        self.event = event
 
     def __call__(self, func: Callable):
-        setattr(func, "__dooit_event", self.event_name)
+        setattr(func, "__dooit_event", self.event)
         return func
 
 
-startup = EventDecorator("startup")
-shutdown = EventDecorator("shutdown")
-mode_changed = EventDecorator("mode_changed")
+startup = Hooks(Startup)
+shutdown = Hooks(ExitApp)
+mode_changed = Hooks(ModeChanged)

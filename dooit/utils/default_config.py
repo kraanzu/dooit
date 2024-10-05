@@ -1,14 +1,15 @@
 from rich.style import Style
 from dooit.api import Todo, Workspace
-from dooit.ui.api import events, DooitAPI
+from dooit.ui.api import DooitAPI
+from dooit.ui.api.events import subscribe
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
-from dooit.ui.events.events import ModeChanged, WorkspaceSelected
+from dooit.ui.events.events import ModeChanged, Startup, WorkspaceSelected
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 from functools import partial
 
 
-@events.mode_changed
+@subscribe(ModeChanged)
 def get_mode(api: DooitAPI, event: ModeChanged):
     theme = api.app.current_theme
     mode = event.mode
@@ -27,7 +28,7 @@ def get_mode(api: DooitAPI, event: ModeChanged):
     )
 
 
-@events.workspace_selected
+@subscribe(WorkspaceSelected)
 def get_workspace_completion(api: DooitAPI, event: WorkspaceSelected):
     blue = api.app.current_theme.purple
     black = api.app.current_theme.background_1
@@ -39,7 +40,10 @@ def get_workspace_completion(api: DooitAPI, event: WorkspaceSelected):
         / len(event.workspace.todos)
     )
 
-    text = Text(f"{progress_icon} {completeted_percentage}%", style=Style(bgcolor=blue, color=black))
+    text = Text(
+        f"{progress_icon} {completeted_percentage}%",
+        style=Style(bgcolor=blue, color=black),
+    )
     text.pad(1)
 
     return text
@@ -109,7 +113,7 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
     return text
 
 
-@events.startup
+@subscribe(Startup)
 def key_setup(api: DooitAPI, _):
     api.keys.set_normal("tab", api.switch_focus)
     api.keys.set_normal("j", api.move_down)

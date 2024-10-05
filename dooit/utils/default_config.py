@@ -28,10 +28,21 @@ def get_mode(api: DooitAPI, event: ModeChanged):
 
 
 @events.workspace_selected
-def get_workspace(api: DooitAPI, event: WorkspaceSelected):
-    blue = api.app.current_theme.blue
+def get_workspace_completion(api: DooitAPI, event: WorkspaceSelected):
+    blue = api.app.current_theme.purple
     black = api.app.current_theme.background_1
-    return Text(event.workspace.description, style=Style(bgcolor=blue, color=black))
+    progress_icon = "Completed:"
+
+    completeted_percentage = int(
+        100
+        * sum(t.is_completed for t in event.workspace.todos)
+        / len(event.workspace.todos)
+    )
+
+    text = Text(f"{progress_icon} {completeted_percentage}%", style=Style(bgcolor=blue, color=black))
+    text.pad(1)
+
+    return text
 
 
 # Todo formatters
@@ -137,6 +148,7 @@ def key_setup(api: DooitAPI, _):
 
     bar_widgets = [
         StatusBarWidget(get_mode),
-        # StatusBarWidget(get_workspace),
+        StatusBarWidget(lambda: " ", width=0),
+        StatusBarWidget(get_workspace_completion),
     ]
     api.bar.set(bar_widgets)

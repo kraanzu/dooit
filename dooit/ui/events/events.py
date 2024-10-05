@@ -59,9 +59,9 @@ class ModeChanged(DooitEvent):
     Emitted when there is a change in the `status`
     """
 
-    def __init__(self, status: ModeType) -> None:
+    def __init__(self, mode: ModeType) -> None:
         super().__init__()
-        self.status: ModeType = status
+        self.mode: ModeType = mode
 
 
 class StartSearch(DooitEvent):

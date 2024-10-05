@@ -84,7 +84,7 @@ class Dooit(App):
 
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):
-        self._mode = event.status
+        self._mode = event.mode
 
     async def action_open_url(self, url: str) -> None:
         webbrowser.open(url, new=2)

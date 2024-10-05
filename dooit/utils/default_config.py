@@ -2,16 +2,16 @@ from rich.style import Style
 from dooit.api import Todo, Workspace
 from dooit.ui.api import events, DooitAPI
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
-from dooit.ui.events.events import WorkspaceSelected
+from dooit.ui.events.events import ModeChanged, WorkspaceSelected
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 from functools import partial
 
 
 @events.mode_changed
-def get_mode(api: DooitAPI, event):
+def get_mode(api: DooitAPI, event: ModeChanged):
     theme = api.app.current_theme
-    mode = api.app._mode
+    mode = event.mode
 
     MODES = {
         "NORMAL": theme.primary,

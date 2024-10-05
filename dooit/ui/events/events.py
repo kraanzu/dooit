@@ -169,7 +169,9 @@ class TodoDueChanged(DooitEvent):
     Emitted when user changes the due of a todo
     """
 
-    def __init__(self, old: Optional[datetime], new: Optional[datetime], todo: Todo) -> None:
+    def __init__(
+        self, old: Optional[datetime], new: Optional[datetime], todo: Todo
+    ) -> None:
         super().__init__()
         self.old = old
         self.new = new

@@ -1,10 +1,13 @@
 from typing import TYPE_CHECKING, Callable
 from textual.widgets import Static
 
+
 from ...events.events import ModeChanged
 
 if TYPE_CHECKING:  # pragma: no cover
     from .bar_switcher import BarSwitcher
+    from dooit.ui.tui import Dooit
+    from dooit.ui.api.dooit_api import DooitAPI
 
 
 class BarBase(Static):
@@ -20,6 +23,18 @@ class BarBase(Static):
     def __init__(self, callback: Callable = lambda: None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.callback = callback
+
+    @property
+    def app(self) -> "Dooit":
+        from dooit.ui.tui import Dooit
+
+        app = super().app
+        assert isinstance(app, Dooit)
+        return app
+
+    @property
+    def api(self) -> "DooitAPI":
+        return self.app.api
 
     @property
     def switcher(self) -> "BarSwitcher":

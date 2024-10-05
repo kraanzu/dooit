@@ -20,7 +20,7 @@ class StatusBar(BarBase):
         for widget in self.bar_widgets:
             if widget.has_event(event):
                 flag = True
-                widget.calculate(self.app.api, event)
+                widget.calculate(self.api, event)
 
         if flag:
             self.refresh()

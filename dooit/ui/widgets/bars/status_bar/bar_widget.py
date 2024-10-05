@@ -1,8 +1,10 @@
 from collections.abc import Callable
 from rich.text import TextType
-from typing import Optional
-
+from typing import TYPE_CHECKING, Optional
 from dooit.ui.events.events import DooitEvent
+
+if TYPE_CHECKING:
+    from dooit.ui.api.dooit_api import DooitAPI
 
 
 class StatusBarWidget:
@@ -16,7 +18,7 @@ class StatusBarWidget:
     def has_event(self, event: DooitEvent) -> bool:
         return getattr(self.func, "__dooit_event", None) == event.__class__
 
-    def calculate(self, api,  event: DooitEvent) -> TextType:
+    def calculate(self, api: "DooitAPI", event: DooitEvent) -> TextType:
         self.value = self.func(api, event)
         return self.value
 

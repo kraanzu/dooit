@@ -12,5 +12,5 @@ __all__ = [
     "manager",
     "fix_hooks",
     "validation_hooks",
-    "update_hooks"
+    "update_hooks",
 ]

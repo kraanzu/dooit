@@ -66,7 +66,6 @@ class Effort(SimpleInput[Todo, int]):
 
 
 class Status(SimpleInput[Todo, str]):
-
     def _get_default_value(self) -> str:
         val = self.model_value
 

@@ -5,7 +5,6 @@ from dooit.ui.api import DooitAPI
 from dooit.ui.api.events import subscribe
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.events.events import (
-    ModeChanged,
     Startup,
     TodoStatusChanged,
     WorkspaceSelected,
@@ -13,25 +12,7 @@ from dooit.ui.events.events import (
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 from functools import partial
-
-
-@subscribe(ModeChanged)
-def get_mode(api: DooitAPI, event: ModeChanged):
-    theme = api.app.current_theme
-    mode = event.mode
-
-    MODES = {
-        "NORMAL": theme.primary,
-        "INSERT": theme.foreground_1,
-    }
-
-    return Text(
-        f" {mode} ",
-        style=Style(
-            color=theme.background_1,
-            bgcolor=MODES.get(mode, theme.primary),
-        ),
-    )
+from dooit_bar_utils import widgets as bar_widget
 
 
 @subscribe(WorkspaceSelected, TodoStatusChanged)
@@ -174,7 +155,7 @@ def formatter_setup(api: DooitAPI, _):
 @subscribe(Startup)
 def bar_setup(api: DooitAPI, _):
     bar_widgets = [
-        StatusBarWidget(get_mode),
+        bar_widget.Mode(),
         StatusBarWidget(lambda: " ", width=0),
         StatusBarWidget(get_workspace_completion),
     ]

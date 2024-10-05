@@ -64,10 +64,9 @@ class BaseRenderer:
     def make_renderable(self) -> RenderableType:
         layout = self.table_layout
 
-        table = Table.grid(expand=True, padding=1)
+        table = Table.grid(expand=True, padding=(0, 1), pad_edge=True)
         row = []
 
-        # nested nodes as children
         if nest := self.model.nest_level:
             table.add_column("padding", width=2 * nest)
             row.append("")

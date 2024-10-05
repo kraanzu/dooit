@@ -4,7 +4,6 @@ from textual.widgets.option_list import Option
 
 from dooit.api import Workspace
 from dooit.ui.events.events import (
-    WorkspaceDescriptionChanged,
     WorkspaceRemoved,
     WorkspaceSelected,
 )

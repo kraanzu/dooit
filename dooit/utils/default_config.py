@@ -51,12 +51,12 @@ def todo_desc_formatter(desc: str, todo: Todo):
 
 def todo_status_formatter(status: str, todo: Todo):
     if status == "completed":
-        return " x"
+        return "x"
 
     if status == "overdue":
-        return " !"
+        return "!"
 
-    return " o"
+    return "o"
 
 
 def todo_due_formatter(due, _):

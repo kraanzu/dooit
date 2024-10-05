@@ -30,7 +30,7 @@ class StatusBar(BarBase):
         table = Table.grid(expand=expand, padding=0)
 
         for widget in self.bar_widgets:
-            value = widget.get_value()
+            value = widget.render()
             if widget.width is None:
                 table.add_column(width=len(value))
             elif width := widget.width:
@@ -38,7 +38,7 @@ class StatusBar(BarBase):
             else:
                 table.add_column(ratio=1)
 
-        values = [widget.get_value() for widget in self.bar_widgets]
+        values = [widget.render() for widget in self.bar_widgets]
         table.add_row(*values)
 
         return table

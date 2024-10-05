@@ -24,5 +24,5 @@ class StatusBarWidget:
         self.value = self.func(api, event)
         return self.value
 
-    def get_value(self):
+    def render(self) -> TextType:
         return self.value

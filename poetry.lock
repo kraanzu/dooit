@@ -441,6 +441,24 @@ files = [
 ]
 
 [[package]]
+name = "dooit-bar-utils"
+version = "0.1.0"
+description = "Bar utils for Dooit"
+optional = false
+python-versions = ">=3.8.1"
+files = []
+develop = false
+
+[package.dependencies]
+dooit = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/dooit-org/dooit-bar-utils.git"
+reference = "HEAD"
+resolved_reference = "b991ed1f336f00c10b1b70117c4fc1cf6ac6541b"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.2"
 description = "Backport of PEP 654 (exception groups)"
@@ -2086,4 +2104,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "fbf3cdd8b8411d9b2654d77aa959a5ef71a3cf1a7b846aa2f474d220890e0741"
+content-hash = "bcda0969f75e9145fb17f7e8e786a0a4f79d3c5a994ac37f0e5af206dbf613be"

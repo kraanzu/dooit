@@ -18,7 +18,7 @@ class StatusBarWidget:
     def has_event(self, event: DooitEvent) -> bool:
         from dooit.ui.api.events import DOOIT_EVENT_ATTR
 
-        return getattr(self.func, DOOIT_EVENT_ATTR, None) == event.__class__
+        return event.__class__ in getattr(self.func, DOOIT_EVENT_ATTR, [])
 
     def calculate(self, api: "DooitAPI", event: DooitEvent) -> TextType:
         self.value = self.func(api, event)

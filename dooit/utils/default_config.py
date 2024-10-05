@@ -1,9 +1,15 @@
+from typing import Union
 from rich.style import Style
 from dooit.api import Todo, Workspace
 from dooit.ui.api import DooitAPI
 from dooit.ui.api.events import subscribe
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
-from dooit.ui.events.events import ModeChanged, Startup, WorkspaceSelected
+from dooit.ui.events.events import (
+    ModeChanged,
+    Startup,
+    TodoStatusChanged,
+    WorkspaceSelected,
+)
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 from functools import partial
@@ -28,20 +34,28 @@ def get_mode(api: DooitAPI, event: ModeChanged):
     )
 
 
-@subscribe(WorkspaceSelected)
-def get_workspace_completion(api: DooitAPI, event: WorkspaceSelected):
+@subscribe(WorkspaceSelected, TodoStatusChanged)
+def get_workspace_completion(
+    api: DooitAPI, event: Union[WorkspaceSelected, TodoStatusChanged]
+):
+    def get_complted(workspace: Workspace):
+        return int(
+            100 * sum(t.is_completed for t in workspace.todos) / len(workspace.todos)
+        )
+
     blue = api.app.current_theme.purple
     black = api.app.current_theme.background_1
     progress_icon = "Completed:"
 
-    completeted_percentage = int(
-        100
-        * sum(t.is_completed for t in event.workspace.todos)
-        / len(event.workspace.todos)
-    )
+    if isinstance(event, WorkspaceSelected):
+        workspace = event.workspace
+    elif isinstance(event, TodoStatusChanged):
+        workspace = api.app.workspace_tree.current_model
+
+    completed_percentage = get_complted(workspace)
 
     text = Text(
-        f"{progress_icon} {completeted_percentage}%",
+        f"{progress_icon} {completed_percentage}%",
         style=Style(bgcolor=blue, color=black),
     )
     text.pad(1)

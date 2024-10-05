@@ -1,6 +1,8 @@
 from typing import Callable, Type
 from dooit.ui.events.events import *  # noqa
 
+DOOIT_EVENT_ATTR = "__dooit_event"
+
 
 def subscribe(event: Type[DooitEvent]):
     """
@@ -8,7 +10,7 @@ def subscribe(event: Type[DooitEvent]):
     """
 
     def decorator(func: Callable):
-        setattr(func, "__dooit_event", event)
+        setattr(func, DOOIT_EVENT_ATTR, event)
         return func
 
     return decorator

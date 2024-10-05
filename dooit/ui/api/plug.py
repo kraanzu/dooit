@@ -3,15 +3,17 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Callable
 from platformdirs import user_config_dir
+
+from dooit.ui.api.events import DOOIT_EVENT_ATTR
 from .loader import load_dir, load_file
 
-MAIN_FOLDER = "dooit_v3"
 
 if getattr(sys, "frozen", False):
     BASE_PATH = Path(sys._MEIPASS) / "dooit"  # pragma: no cover (binary pkg)
 else:
     BASE_PATH = Path(__file__).parent.parent.parent
 
+MAIN_FOLDER = "dooit_v3"
 CONFIG_FOLDER = Path(user_config_dir(MAIN_FOLDER))
 DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
@@ -28,5 +30,5 @@ class PluginManager:
         self.events[event].append(obj)
 
     def register(self, obj):
-        if event := getattr(obj, "__dooit_event", None):
+        if event := getattr(obj, DOOIT_EVENT_ATTR, None):
             self._register_event(event, obj)

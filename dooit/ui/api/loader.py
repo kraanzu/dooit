@@ -1,4 +1,5 @@
 import importlib.util
+import sys
 from typing import TYPE_CHECKING
 from pathlib import Path
 
@@ -30,6 +31,10 @@ def load_file(api: "PluginManager", path: Path) -> bool:
 
 
 def load_dir(api: "PluginManager", path: Path) -> bool:
+
+    # allows users to import from the directory
+    sys.path.append(str(path.resolve()))
+
     if not path.exists():
         return False
 

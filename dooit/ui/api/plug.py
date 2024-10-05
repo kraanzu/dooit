@@ -28,5 +28,5 @@ class PluginManager:
         self.events[event].append(obj)
 
     def register(self, obj):
-        if event := getattr(obj, "__event", None):
+        if event := getattr(obj, "__dooit_event", None):
             self._register_event(event, obj)

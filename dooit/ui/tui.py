@@ -1,6 +1,7 @@
 import webbrowser
 from typing import Optional
-from textual.app import App, on
+from textual import on
+from textual.app import App
 from textual.binding import Binding
 
 from dooit.api.theme import DooitThemeBase

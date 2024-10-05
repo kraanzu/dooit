@@ -155,7 +155,7 @@ def formatter_setup(api: DooitAPI, _):
 @subscribe(Startup)
 def bar_setup(api: DooitAPI, _):
     bar_widgets = [
-        bar_widget.Mode(),
+        bar_widget.Mode(api),
         StatusBarWidget(lambda: " ", width=0),
         StatusBarWidget(get_workspace_completion),
     ]

@@ -456,7 +456,7 @@ dooit = "*"
 type = "git"
 url = "https://github.com/dooit-org/dooit-bar-utils.git"
 reference = "HEAD"
-resolved_reference = "b991ed1f336f00c10b1b70117c4fc1cf6ac6541b"
+resolved_reference = "2e50fa876a2e76a6f166c2aca3234790e74a27b1"
 
 [[package]]
 name = "exceptiongroup"

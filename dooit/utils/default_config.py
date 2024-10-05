@@ -147,6 +147,9 @@ def key_setup(api: DooitAPI, _):
     api.keys.set_normal("/", api.start_search)
     api.keys.set_normal("ctrl+s", api.start_sort)
 
+
+@subscribe(Startup)
+def layout_setup(api: DooitAPI, _):
     api.layouts.workspace_layout = [WorkspaceWidget.description]
     api.layouts.todo_layout = [
         TodoWidget.status,
@@ -155,6 +158,9 @@ def key_setup(api: DooitAPI, _):
         TodoWidget.urgency,
     ]
 
+
+@subscribe(Startup)
+def formatter_setup(api: DooitAPI, _):
     api.formatter.workspaces.description.add(workspace_desc_formatter)
 
     api.formatter.todos.status.add(todo_status_formatter)
@@ -164,6 +170,9 @@ def key_setup(api: DooitAPI, _):
         partial(todo_urgency_formatter, api=api),
     )
 
+
+@subscribe(Startup)
+def bar_setup(api: DooitAPI, _):
     bar_widgets = [
         StatusBarWidget(get_mode),
         StatusBarWidget(lambda: " ", width=0),

@@ -27,6 +27,6 @@ class PluginManager:
     def _register_event(self, event: str, obj: Callable):
         self.events[event].append(obj)
 
-    def register(self, name, obj):
-        event = getattr(obj, "__dooit_event")
-        self._register_event(event, obj)
+    def register(self, obj):
+        if event := getattr(obj, "__event", None):
+            self._register_event(event, obj)

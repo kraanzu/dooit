@@ -13,9 +13,9 @@ def register(api: "PluginManager", path: Path) -> None:
         foo = importlib.util.module_from_spec(spec)
         try:
             spec.loader.exec_module(foo)
-            for name, obj in vars(foo).items():
+            for obj in vars(foo).values():
                 if hasattr(obj, "__dooit_event"):
-                    api.register(name, obj)
+                    api.register(obj)
         except Exception:
             pass
 

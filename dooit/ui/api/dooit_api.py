@@ -6,7 +6,7 @@ from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.trees import TodosTree
 from dooit.utils import CssManager
 
-from .api_components import KeyManager, LayoutManager, Formatter, BarManager
+from .api_components import KeyManager, LayoutManager, Formatter, BarManager, VarManager
 
 if TYPE_CHECKING:  # pragma: no cover
     from ..tui import Dooit
@@ -22,6 +22,7 @@ class DooitAPI:
         self.layouts = LayoutManager(self.app)
         self.formatter = Formatter(self.app)
         self.bar = BarManager(self.app)
+        self.vars = VarManager(self.app)
 
         self.css_manager.refresh_css()
 

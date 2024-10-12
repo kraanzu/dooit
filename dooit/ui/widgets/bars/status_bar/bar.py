@@ -14,17 +14,6 @@ class StatusBar(BarBase):
         self.bar_widgets = widgets
         self.refresh()
 
-    def trigger_event(self, event: DooitEvent):
-        flag = False
-
-        for widget in self.bar_widgets:
-            if widget.has_event(event):
-                flag = True
-                widget.calculate(self.api, event)
-
-        if flag:
-            self.refresh()
-
     def render(self) -> RenderableType:
         expand = any(widget.width == 0 for widget in self.bar_widgets)
         table = Table.grid(expand=expand, padding=0)

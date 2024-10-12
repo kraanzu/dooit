@@ -1,10 +1,6 @@
 from collections.abc import Callable
-from rich.text import TextType
-from typing import TYPE_CHECKING, Optional
-from dooit.ui.events.events import DooitEvent
-
-if TYPE_CHECKING:
-    from dooit.ui.api.dooit_api import DooitAPI
+from rich.text import TextType, Text
+from typing import Optional
 
 
 class StatusBarWidget:
@@ -13,16 +9,14 @@ class StatusBarWidget:
     ) -> None:
         self.func = func
         self.width = width
-        self.value = ""
 
-    def has_event(self, event: DooitEvent) -> bool:
-        from dooit.ui.api.events import DOOIT_EVENT_ATTR
+    @property
+    def value(self) -> TextType:
+        res = getattr(self, "__dooit_value", None) or ""
+        if isinstance(res, Text):
+            return res.markup
 
-        return event.__class__ in getattr(self.func, DOOIT_EVENT_ATTR, [])
-
-    def calculate(self, api: "DooitAPI", event: DooitEvent) -> TextType:
-        self.value = self.func(api, event)
-        return self.value
+        return str(res)
 
     def render(self) -> TextType:
         return self.value

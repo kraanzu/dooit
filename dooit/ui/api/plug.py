@@ -35,7 +35,6 @@ class PluginManager:
     def on_event(self, event: DooitEvent):
         for obj in self.events[event.__class__]:
             res = obj(self.api, event)
-            obj.__needs_refresh = True
             obj.__dooit_value = res
 
     def _register_events(self, events: List[DooitEvent], obj: Callable):

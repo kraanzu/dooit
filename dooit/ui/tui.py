@@ -81,7 +81,7 @@ class Dooit(App):
     def global_message(self, event: DooitEvent):
         if isinstance(self.screen, MainScreen):
             self.api.trigger_event(event)
-            self.bar.trigger_event(event)
+            self.bar.refresh()
 
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):

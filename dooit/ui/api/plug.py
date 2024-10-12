@@ -1,13 +1,15 @@
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Callable, List
+from typing import TYPE_CHECKING, Callable, List
 from platformdirs import user_config_dir
-from textual.app import App
 
 from dooit.ui.api.events import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
 from dooit.ui.events.events import DooitEvent
 from .loader import load_dir, load_file
+
+if TYPE_CHECKING:
+    from dooit.ui.api.dooit_api import DooitAPI
 
 
 if getattr(sys, "frozen", False):
@@ -21,13 +23,18 @@ DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
 
 class PluginManager:
-    def __init__(self, app: App) -> None:
+    def __init__(self, api: DooitAPI) -> None:
         self.events = defaultdict(list)
-        self.app = app
+        self.api = api
+        self.app = api.app
 
     def scan(self):
         load_file(self, DEFAULT_CONFIG)
         load_dir(self, CONFIG_FOLDER)
+
+    def on_event(self, event: DooitEvent):
+        for obj in self.events[event]:
+            obj(event)
 
     def _register_events(self, events: List[DooitEvent], obj: Callable):
         for event in events:

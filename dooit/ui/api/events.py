@@ -2,6 +2,7 @@ from typing import Callable, Type
 from dooit.ui.events.events import *  # noqa
 
 DOOIT_EVENT_ATTR = "__dooit_event"
+DOOIT_TIMER_ATTR = "__dooit_timer"
 
 
 def subscribe(*events: Type[DooitEvent]):
@@ -14,6 +15,18 @@ def subscribe(*events: Type[DooitEvent]):
         attrs.extend(events)
 
         setattr(func, DOOIT_EVENT_ATTR, attrs)
+        return func
+
+    return decorator
+
+
+def timer(interval: float):
+    """
+    Timer decorator for event handlers
+    """
+
+    def decorator(func: Callable):
+        setattr(func, DOOIT_TIMER_ATTR, interval)
         return func
 
     return decorator

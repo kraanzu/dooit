@@ -15,7 +15,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class DooitAPI:
     def __init__(self, app: "Dooit") -> None:
         self.app = app
-        self.plugin_manager = PluginManager()
+        self.plugin_manager = PluginManager(self.app)
         self.plugin_manager.scan()
         self.css_manager = CssManager()
         self.keys = KeyManager(self.app.get_mode)

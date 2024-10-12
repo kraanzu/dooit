@@ -24,14 +24,11 @@ platformdirs = "^4.3.6"
 ruff = "^0.5.3"
 pre-commit = "^3.2.2"
 textual-dev = "^1.5.1"
-mkdocs = "^1.6.0"
-mkdocs-material = "^9.5.29"
-mypy = "^1.11.0"
 pytest = "^8.3.2"
-
 coverage = "^7.6.1"
 pytest-asyncio = "^0.24.0"
 faker = "^29.0.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

@@ -41,13 +41,6 @@ dooit = 'dooit.__main__:main'
 
 # -------------- TOOLING --------------
 
-[[tool.mypy.overrides]]
-module = [
-    "appdirs",
-    "msgpack",
-]
-ignore_missing_imports = true
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

@@ -23,7 +23,7 @@ DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
 
 class PluginManager:
-    def __init__(self, api: DooitAPI) -> None:
+    def __init__(self, api: "DooitAPI") -> None:
         self.events = defaultdict(list)
         self.api = api
         self.app = api.app
@@ -33,8 +33,10 @@ class PluginManager:
         load_dir(self, CONFIG_FOLDER)
 
     def on_event(self, event: DooitEvent):
-        for obj in self.events[event]:
-            obj(event)
+        for obj in self.events[event.__class__]:
+            res = obj(self.api, event)
+            obj.__needs_refresh = True
+            obj.__dooit_value = res
 
     def _register_events(self, events: List[DooitEvent], obj: Callable):
         for event in events:

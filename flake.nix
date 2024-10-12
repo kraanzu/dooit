@@ -46,6 +46,7 @@
           ];
 
           buildInputs = mainPkgs;
+          propagatedBuildInputs = mainPkgs;
 
           # TODO: enable this
           doCheck = false;

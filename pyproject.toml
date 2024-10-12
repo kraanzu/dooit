@@ -19,7 +19,6 @@ textual = "^0.81.0"
 python-dateutil = "^2.8.2"
 sqlalchemy = "^2.0.31"
 platformdirs = "^4.3.6"
-dooit-bar-utils = {git = "https://github.com/dooit-org/dooit-bar-utils.git"}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.5.3"

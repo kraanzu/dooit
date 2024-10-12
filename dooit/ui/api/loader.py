@@ -12,12 +12,9 @@ def register(api: "PluginManager", path: Path) -> None:
 
     if spec and spec.loader:
         foo = importlib.util.module_from_spec(spec)
-        try:
-            spec.loader.exec_module(foo)
-            for obj in vars(foo).values():
-                api.register(obj)
-        except Exception:
-            pass
+        spec.loader.exec_module(foo)
+        for obj in vars(foo).values():
+            api.register(obj)
 
 
 def load_file(api: "PluginManager", path: Path) -> bool:

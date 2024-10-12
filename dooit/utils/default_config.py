@@ -1,12 +1,51 @@
+import os
+from rich.style import Style
 from dooit.api import Todo, Workspace
 from dooit.ui.api import DooitAPI
 from dooit.ui.api.events import subscribe
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
-from dooit.ui.events.events import Startup
+from dooit.ui.events.events import ModeChanged, Startup
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 from functools import partial
-from dooit_bar_utils import widgets as bar_widget
+
+
+@subscribe(ModeChanged)
+def get_mode(api: DooitAPI, event: ModeChanged):
+    theme = api.app.current_theme
+    mode = event.mode
+
+    MODES = {
+        "NORMAL": theme.primary,
+        "INSERT": theme.foreground_1,
+    }
+
+    return Text(
+        f" {mode} ",
+        style=Style(
+            color=theme.background_1,
+            bgcolor=MODES.get(mode, theme.primary),
+        ),
+    )
+
+
+@subscribe(Startup)
+def get_user(api: DooitAPI, _: Startup):
+    theme = api.app.current_theme
+    try:
+        username = os.getlogin()
+    except OSError:
+        uid = os.getuid()
+        import pwd
+
+        username = pwd.getpwuid(uid).pw_name
+    return Text(
+        f" {username} ",
+        style=Style(
+            color=theme.background_1,
+            bgcolor=theme.secondary,
+        ),
+    )
 
 
 # Todo formatters
@@ -120,8 +159,8 @@ def formatter_setup(api: DooitAPI, _):
 @subscribe(Startup)
 def bar_setup(api: DooitAPI, _):
     bar_widgets = [
-        bar_widget.Mode(api),
+        StatusBarWidget(get_mode),
         StatusBarWidget(lambda: " ", width=0),
-        bar_widget.WorkspaceProgress(api),
+        StatusBarWidget(get_user),
     ]
     api.bar.set(bar_widgets)

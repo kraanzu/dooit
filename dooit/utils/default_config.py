@@ -174,8 +174,9 @@ def formatter_setup(api: DooitAPI, _):
 def bar_setup(api: DooitAPI, _):
     bar_widgets = [
         StatusBarWidget(get_mode),
-        StatusBarWidget(subscribe(Startup)(lambda: " "), width=0),
+        StatusBarWidget(lambda: "", width=0),
         StatusBarWidget(get_clock),
+        StatusBarWidget(lambda: " ", width=1),
         StatusBarWidget(get_user),
     ]
     api.bar.set(bar_widgets)

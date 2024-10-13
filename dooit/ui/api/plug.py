@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Callable, List, Type
 from platformdirs import user_config_dir
 
 from dooit.ui.api.events import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
-from dooit.ui.events.events import DooitEvent
+from dooit.ui.events.events import DooitEvent, Startup
 from .loader import load_dir, load_file
 
 if TYPE_CHECKING:
@@ -48,6 +48,9 @@ class PluginManager:
             self.events[event].append(obj)
 
     def _register_timer(self, obj: Callable):
+
+        self._register_events([Startup], obj)
+
         if interval := getattr(obj, DOOIT_TIMER_ATTR, None):
             func = partial(self._update_dooit_value, obj)
             self.timers[interval].append(func)

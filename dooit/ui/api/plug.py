@@ -1,3 +1,4 @@
+from functools import partial
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -25,6 +26,7 @@ DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 class PluginManager:
     def __init__(self, api: "DooitAPI") -> None:
         self.events: defaultdict[Type[DooitEvent], List[Callable]] = defaultdict(list)
+        self.timers: defaultdict[float, List[Callable]] = defaultdict(list)
         self.api = api
         self.app = api.app
 
@@ -32,16 +34,27 @@ class PluginManager:
         load_file(self, DEFAULT_CONFIG)
         load_dir(self, CONFIG_FOLDER)
 
+    def _update_dooit_value(self, obj, *params):
+        res = obj(self.api, *params)
+        setattr(obj, "__dooit_value", res)
+        self.api.app.bar.refresh()
+
     def on_event(self, event: DooitEvent):
         for obj in self.events[event.__class__]:
-            res = obj(self.api, event)
-            setattr(obj, "__dooit_value", res)
+            self._update_dooit_value(obj, event)
 
     def _register_events(self, events: List[Type[DooitEvent]], obj: Callable):
         for event in events:
             self.events[event].append(obj)
 
+    def _register_timer(self, obj: Callable):
+        if interval := getattr(obj, DOOIT_TIMER_ATTR, None):
+            func = partial(self._update_dooit_value, obj)
+            self.timers[interval].append(func)
+
     def register(self, obj):
         if event := getattr(obj, DOOIT_EVENT_ATTR, None):
             self._register_events(event, obj)
 
+        if getattr(obj, DOOIT_TIMER_ATTR, None):
+            self._register_timer(obj)

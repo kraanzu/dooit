@@ -1,8 +1,9 @@
+from datetime import datetime
 import os
 from rich.style import Style
 from dooit.api import Todo, Workspace
 from dooit.ui.api import DooitAPI
-from dooit.ui.api.events import subscribe
+from dooit.ui.api.events import subscribe, timer
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.events.events import ModeChanged, Startup
 from dooit.ui.widgets.bars import StatusBarWidget
@@ -25,6 +26,19 @@ def get_mode(api: DooitAPI, event: ModeChanged):
         style=Style(
             color=theme.background_1,
             bgcolor=MODES.get(mode, theme.primary),
+        ),
+    )
+
+
+@timer(1)
+def get_clock(api: DooitAPI):
+    theme = api.app.current_theme
+    time = datetime.now().strftime("%H:%M:%S")
+    return Text(
+        f" {time} ",
+        style=Style(
+            color=theme.background_1,
+            bgcolor=theme.secondary,
         ),
     )
 
@@ -160,7 +174,8 @@ def formatter_setup(api: DooitAPI, _):
 def bar_setup(api: DooitAPI, _):
     bar_widgets = [
         StatusBarWidget(get_mode),
-        StatusBarWidget(lambda: " ", width=0),
+        StatusBarWidget(subscribe(Startup)(lambda: " "), width=0),
+        StatusBarWidget(get_clock),
         StatusBarWidget(get_user),
     ]
     api.bar.set(bar_widgets)

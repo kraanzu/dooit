@@ -49,6 +49,12 @@ class Dooit(App):
         self.set_interval(1, self.poll)
         self.push_screen("main")
 
+        timers = self.api.plugin_manager.timers
+        for interval, funcs in timers.items():
+            for func in funcs:
+                self.notify(f"{func} {interval}")
+                self.set_interval(interval, func)
+
     @property
     def workspace_tree(self) -> WorkspacesTree:
         return self.query_one(WorkspacesTree)

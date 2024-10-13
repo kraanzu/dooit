@@ -11,12 +11,13 @@ class StatusBarWidget:
         self.width = width
 
     @property
-    def value(self) -> TextType:
-        res = getattr(self, "__dooit_value", None) or ""
+    def value(self) -> str:
+        res = getattr(self.func, "__dooit_value", "")
+
         if isinstance(res, Text):
             return res.markup
 
         return str(res)
 
     def render(self) -> TextType:
-        return self.value
+        return Text.from_markup(self.value)

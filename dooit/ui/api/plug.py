@@ -1,7 +1,7 @@
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, List
+from typing import TYPE_CHECKING, Callable, List, Type
 from platformdirs import user_config_dir
 
 from dooit.ui.api.events import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
@@ -24,7 +24,7 @@ DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
 class PluginManager:
     def __init__(self, api: "DooitAPI") -> None:
-        self.events = defaultdict(list)
+        self.events: defaultdict[Type[DooitEvent], List[Callable]] = defaultdict(list)
         self.api = api
         self.app = api.app
 
@@ -35,19 +35,13 @@ class PluginManager:
     def on_event(self, event: DooitEvent):
         for obj in self.events[event.__class__]:
             res = obj(self.api, event)
-            obj.__dooit_value = res
+            setattr(obj, "__dooit_value", res)
 
-    def _register_events(self, events: List[DooitEvent], obj: Callable):
+    def _register_events(self, events: List[Type[DooitEvent]], obj: Callable):
         for event in events:
             self.events[event].append(obj)
-
-    def _register_timer(self, obj):
-        if interval := getattr(obj, DOOIT_TIMER_ATTR, None):
-            self.app.set_interval(interval, obj)
 
     def register(self, obj):
         if event := getattr(obj, DOOIT_EVENT_ATTR, None):
             self._register_events(event, obj)
 
-        if getattr(obj, DOOIT_TIMER_ATTR, None):
-            self._register_timer(obj)

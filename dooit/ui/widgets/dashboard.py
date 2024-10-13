@@ -11,6 +11,11 @@ class Dashboard(Widget):
         align: center middle;
         content-align: center middle;
     }
+
+    Dashboard > Label {
+        width: 100%;
+        content-align: center middle;
+    }
     """
 
     items = reactive([], recompose=True)
@@ -21,4 +26,3 @@ class Dashboard(Widget):
 
     def render(self) -> RenderableType:
         return ""
-

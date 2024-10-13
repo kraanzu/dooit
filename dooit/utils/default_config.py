@@ -184,4 +184,10 @@ def bar_setup(api: DooitAPI, _):
 
 @subscribe(Startup)
 def dashboard_setup(api: DooitAPI, _):
-    api.dashboard.set(["Welcome to Dooit!"])
+    api.dashboard.set(
+        [
+            "Welcome to Dooit!",
+            "",
+            "If you're stuck, press '?' for help.",
+        ]
+    )

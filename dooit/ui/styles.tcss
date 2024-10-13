@@ -9,6 +9,11 @@ Screen {
     background: $background_1;
 }
 
+Dashboard {
+    background: $background_1;
+    border: $border_type $background_3;
+}
+
 ModelTree {
     background: $background_1;
     color: $foreground_3;

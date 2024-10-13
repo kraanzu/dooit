@@ -4,6 +4,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, List, Type
 from platformdirs import user_config_dir
+from textual.css.query import NoMatches
 
 from dooit.ui.api.events import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
 from dooit.ui.events.events import DooitEvent, Startup
@@ -46,7 +47,7 @@ class PluginManager:
         try:
             if bar := getattr(self.app, "bar", None):
                 bar.refresh()
-        except:
+        except NoMatches:
             pass
 
     def on_event(self, event: DooitEvent):

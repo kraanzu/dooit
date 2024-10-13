@@ -52,7 +52,6 @@ class Dooit(App):
         timers = self.api.plugin_manager.timers
         for interval, funcs in timers.items():
             for func in funcs:
-                self.notify(f"{func} {interval}")
                 self.set_interval(interval, func)
 
     @property

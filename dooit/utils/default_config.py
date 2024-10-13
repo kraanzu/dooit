@@ -180,3 +180,8 @@ def bar_setup(api: DooitAPI, _):
         StatusBarWidget(get_user),
     ]
     api.bar.set(bar_widgets)
+
+
+@subscribe(Startup)
+def dashboard_setup(api: DooitAPI, _):
+    api.dashboard.set(["Welcome to Dooit!"])

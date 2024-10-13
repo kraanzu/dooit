@@ -34,10 +34,20 @@ class PluginManager:
         load_file(self, DEFAULT_CONFIG)
         load_dir(self, CONFIG_FOLDER)
 
+    def kickstart_timers(self):
+        for funcs in self.timers.values():
+            for obj in funcs:
+                obj()
+
     def _update_dooit_value(self, obj, *params):
         res = obj(self.api, *params)
         setattr(obj, "__dooit_value", res)
-        self.api.app.bar.refresh()
+
+        try:
+            if bar := getattr(self.app, "bar", None):
+                bar.refresh()
+        except:
+            pass
 
     def on_event(self, event: DooitEvent):
         for obj in self.events[event.__class__]:
@@ -48,7 +58,6 @@ class PluginManager:
             self.events[event].append(obj)
 
     def _register_timer(self, obj: Callable):
-
         self._register_events([Startup], obj)
 
         if interval := getattr(obj, DOOIT_TIMER_ATTR, None):

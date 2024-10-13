@@ -42,6 +42,7 @@ class Dooit(App):
         manager.register_engine(connection_string)
 
     async def on_load(self):
+        self.api.plugin_manager.kickstart_timers()
         self.post_message(Startup())
         self.post_message(ModeChanged("NORMAL"))
 

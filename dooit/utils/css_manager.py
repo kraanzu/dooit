@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from typing import Type, Union
 from platformdirs import user_cache_dir
 from dooit.api.theme import DooitThemeBase
 from uuid import uuid4
@@ -20,6 +21,7 @@ class CssManager:
     base_css: Path = BASE_PATH / "ui" / "styles.tcss"
     stylesheets: Path = dooit_cache_path / "stylesheets"
     css_file: Path = dooit_cache_path / "dooit.tcss"
+    themes = dict()
 
     def __init__(self, theme: DooitThemeBase = DooitThemeBase()):
         self.theme = theme
@@ -46,8 +48,16 @@ class CssManager:
 
         self.write(css)
 
-    def set_theme(self, theme: DooitThemeBase):
-        self.theme = theme
+    def add_theme(self, theme: DooitThemeBase):
+        self.themes[theme._name] = theme
+        self.refresh_css()
+
+    def set_theme(self, theme: Union[str, Type[DooitThemeBase]]):
+        if isinstance(theme, str):
+            self.theme = self.themes.get(theme, DooitThemeBase)
+        else:
+            self.theme = theme
+
         self.refresh_css()
 
     def inject_css(self, css: str) -> str:

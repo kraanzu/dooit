@@ -131,7 +131,7 @@ def add_default_themes(api: DooitAPI, _):
     from dooit.api.themes import Nord, Dracula, Gruvbox, Nymph, Material
 
     for theme in [Nord, Dracula, Gruvbox, Nymph, Material]:
-        pass
+        api.css.add_theme(theme)
 
 
 @subscribe(Startup)

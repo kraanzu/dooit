@@ -23,10 +23,9 @@ def trigger_refresh(func: Callable) -> Callable:
 
 
 class FormatterStore:
-    def __init__(self, trigger: Callable, allow_multiple: bool = False) -> None:
+    def __init__(self, trigger: Callable) -> None:
         self.formatters = dict()
         self.trigger = trigger
-        self.allow_multiple = allow_multiple
 
     @trigger_refresh
     def add(self, func: Callable, id: Optional[str] = None) -> str:

@@ -36,7 +36,7 @@ class Dooit(App):
     ]
 
     def __init__(self, connection_string: Optional[str] = None):
-        super().__init__()
+        super().__init__(watch_css=True)
         self.api = DooitAPI(self)
         self._mode: ModeType = "NORMAL"
         manager.register_engine(connection_string)

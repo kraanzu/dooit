@@ -314,6 +314,24 @@ files = [
 ]
 
 [[package]]
+name = "dooit-extras"
+version = "0.1.0"
+description = "A collection of a items to customize your dooit!"
+optional = false
+python-versions = "^3.8.1"
+files = []
+develop = false
+
+[package.dependencies]
+dooit = {git = "https://github.com/kraanzu/dooit.git", rev = "develop"}
+
+[package.source]
+type = "git"
+url = "https://github.com/dooit-org/dooit-extras.git"
+reference = "HEAD"
+resolved_reference = "f98924b1228be50cb27d34b6a8ce1cc0fe52b8cc"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.2"
 description = "Backport of PEP 654 (exception groups)"
@@ -1622,4 +1640,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "134214dab32f5466c2eb758cb144a5310711a13bfa759a5fd8cd3d30352f07c7"
+content-hash = "c3cfcb95945284549f5089f93b000a6dc740510ffaf375689deca586958b86f3"

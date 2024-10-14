@@ -130,7 +130,7 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
 def add_default_themes(api: DooitAPI, _):
     from dooit.api.themes import all_themes
 
-    for theme in all_themes
+    for theme in all_themes:
         api.css.add_theme(theme)
 
 

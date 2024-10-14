@@ -3,11 +3,13 @@
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.dooit-extras.url = "github:dooit-org/dooit-extras";
 
   outputs = {
     self,
     nixpkgs,
     flake-utils,
+    dooit-extras,
   }
   :
     flake-utils.lib.eachDefaultSystem (
@@ -65,7 +67,8 @@
               pytest
               pytest-aio
               faker
-            ]);
+            ])
+            ++ [dooit-extras.packages.${system}.default];
         };
       }
     );

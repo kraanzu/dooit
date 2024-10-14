@@ -24,7 +24,7 @@ class DooitAPI:
         self.app = app
         self.plugin_manager = PluginManager(self)
         self.plugin_manager.scan()
-        self.css_manager = CssManager()
+        self.css = CssManager()
         self.keys = KeyManager(self.app.get_mode)
         self.layouts = LayoutManager(self.app)
         self.formatter = Formatter(self.app)
@@ -32,7 +32,7 @@ class DooitAPI:
         self.vars = VarManager(self.app)
         self.dashboard = DashboardManager(self.app)
 
-        self.css_manager.refresh_css()
+        self.css.refresh_css()
 
     def no_op(self):
         pass

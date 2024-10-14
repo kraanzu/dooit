@@ -72,7 +72,7 @@ class Dooit(App):
 
     @property
     def current_theme(self) -> DooitThemeBase:
-        return self.api.css_manager.theme
+        return self.api.css.theme
 
     async def poll(self):
         def refresh_all_trees():

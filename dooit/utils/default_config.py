@@ -127,6 +127,14 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
 
 
 @subscribe(Startup)
+def add_default_themes(api: DooitAPI, _):
+    from dooit.api.themes import Nord, Dracula, Gruvbox, Nymph, Material
+
+    for theme in [Nord, Dracula, Gruvbox, Nymph, Material]:
+        pass
+
+
+@subscribe(Startup)
 def key_setup(api: DooitAPI, _):
     api.keys.set_normal("tab", api.switch_focus)
     api.keys.set_normal("j", api.move_down)

@@ -13,7 +13,12 @@ def gen_todo(parent):
     due = f.date_time()
     urgency = randint(2, 5) if randint(0, 10) == 5 else 1
 
-    todo = Todo(description=description, due=due, urgency=urgency)
+    todo = Todo(
+        description=description,
+        due=due,
+        urgency=urgency,
+        pending=randint(1, 3) == 3,
+    )
 
     if isinstance(parent, Todo):
         todo.parent_todo = parent

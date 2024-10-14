@@ -10,6 +10,7 @@ class FormatterFunc:
     name: str
     func: Callable
     disabled: bool = False
+    previous_formatter: Optional["FormatterFunc"] = None
 
 
 def trigger_refresh(func: Callable) -> Callable:
@@ -30,7 +31,11 @@ class FormatterStore:
     @trigger_refresh
     def add(self, func: Callable, id: Optional[str] = None) -> str:
         id = id or uuid4().hex
-        self.formatters[id] = FormatterFunc(id, func)
+        self.formatters[id] = FormatterFunc(
+            id,
+            func,
+            previous_formatter=self.current_formatter,
+        )
         return id
 
     @trigger_refresh
@@ -62,18 +67,13 @@ class FormatterStore:
     def formatter_functions(self) -> List[Callable]:
         return [formatter.func for formatter in self.formatters.values()]
 
+    @property
+    def current_formatter(self) -> FormatterFunc:
+        enabled_formatters = [i for i in self.formatters.values() if not i.disabled]
+        if not enabled_formatters:
+            return FormatterFunc("default", lambda x, _: str(x))
+
+        return enabled_formatters[-1]
+
     def format_value(self, value: Any, model: ModelType) -> str:
-        enabled_funcs = [i.func for i in self.formatters.values() if not i.disabled]
-
-        if not enabled_funcs:
-            enabled_funcs = [lambda x, _: str(x)]
-
-        if self.allow_multiple:
-            funcs = enabled_funcs
-        else:
-            funcs = enabled_funcs[-1:]
-
-        for func in funcs:
-            value = func(value, model)
-
-        return value
+        return self.current_formatter.func(value, model)

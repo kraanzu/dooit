@@ -2,6 +2,8 @@ from ..theme import DooitThemeBase
 
 
 class Gruvbox(DooitThemeBase):
+    _name = "dooit-gruvbox"
+
     background_1: str = "#282828"  # Darkest
     background_2: str = "#3c3836"  # Lighter
     background_3: str = "#504945"  # Lightest

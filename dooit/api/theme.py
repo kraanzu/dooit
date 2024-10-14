@@ -1,4 +1,6 @@
 class DooitThemeBase:
+    _name: str = "dooit-base"
+
     # background colors
     background_1: str = "#2E3440"  # Darkest
     background_2: str = "#3B4252"  # Lighter
@@ -22,26 +24,27 @@ class DooitThemeBase:
     primary: str = "#88C0D0"
     secondary: str = "#81A1C1"
 
-    def to_css(self) -> str:
+    @classmethod
+    def to_css(cls) -> str:
         css = f"""\
-$background_1: {self.background_1};
-$background_2: {self.background_2};
-$background_3: {self.background_3};
+$background_1: {cls.background_1};
+$background_2: {cls.background_2};
+$background_3: {cls.background_3};
 
-$foreground_1: {self.foreground_1};
-$foreground_2: {self.foreground_2};
-$foreground_3: {self.foreground_3};
+$foreground_1: {cls.foreground_1};
+$foreground_2: {cls.foreground_2};
+$foreground_3: {cls.foreground_3};
 
-$red: {self.red};
-$orange: {self.orange};
-$yellow: {self.yellow};
-$green: {self.green};
-$blue: {self.blue};
-$purple: {self.purple};
-$magenta: {self.magenta};
+$red: {cls.red};
+$orange: {cls.orange};
+$yellow: {cls.yellow};
+$green: {cls.green};
+$blue: {cls.blue};
+$purple: {cls.purple};
+$magenta: {cls.magenta};
 
-$primary: {self.primary};
-$secondary: {self.secondary};
+$primary: {cls.primary};
+$secondary: {cls.secondary};
 """
 
         return css

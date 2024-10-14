@@ -2,6 +2,8 @@ from ..theme import DooitThemeBase
 
 
 class Dracula(DooitThemeBase):
+    _name = "dooit-dracula"
+
     background_1: str = "#282a36"  # Darkest
     background_2: str = "#44475a"  # Lighter
     background_3: str = "#5f637e"  # Lightest

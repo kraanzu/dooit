@@ -2,6 +2,8 @@ from ..theme import DooitThemeBase
 
 
 class Nord(DooitThemeBase):
+    _name = "dooit-nord"
+
     background_1: str = "#2E3440"  # Darkest
     background_2: str = "#3B4252"  # Lighter
     background_3: str = "#434C5E"  # Lightest

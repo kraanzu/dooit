@@ -2,6 +2,8 @@ from ..theme import DooitThemeBase
 
 
 class Material(DooitThemeBase):
+    _name = "dooit-material"
+
     background_1: str = "#263238"  # Darkest
     background_2: str = "#2E3C43"  # Lighter
     background_3: str = "#314549"  # Lightest

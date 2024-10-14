@@ -2,6 +2,8 @@ from ..theme import DooitThemeBase
 
 
 class Nymph(DooitThemeBase):
+    _name = "dooit-nymph"
+
     background_1: str = "#1A2023"  # Darkest
     background_2: str = "#252B2E"  # Lighter
     background_3: str = "#373D40"  # Lightest

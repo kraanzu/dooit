@@ -128,9 +128,9 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
 
 @subscribe(Startup)
 def add_default_themes(api: DooitAPI, _):
-    from dooit.api.themes import Nord, Dracula, Gruvbox, Nymph, Material
+    from dooit.api.themes import all_themes
 
-    for theme in [Nord, Dracula, Gruvbox, Nymph, Material]:
+    for theme in all_themes
         api.css.add_theme(theme)
 
 

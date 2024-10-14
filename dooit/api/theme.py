@@ -16,8 +16,7 @@ class DooitThemeBase:
     green: str = "#A3BE8C"
     blue: str = "#5E81AC"
     purple: str = "#B48EAD"
-    pink: str = "#B48EAD"  # Nord doesn't have a distinct pink, using purple
-    gray: str = "#4C566A"
+    magenta: str = "#B48EAD"
 
     # accent colors
     primary: str = "#88C0D0"
@@ -39,8 +38,7 @@ $yellow: {self.yellow};
 $green: {self.green};
 $blue: {self.blue};
 $purple: {self.purple};
-$pink: {self.pink};
-$gray: {self.gray};
+$magenta: {self.magenta};
 
 $primary: {self.primary};
 $secondary: {self.secondary};

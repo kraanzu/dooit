@@ -18,7 +18,7 @@ def get_mode(api: DooitAPI, event: ModeChanged):
 
     MODES = {
         "NORMAL": theme.primary,
-        "INSERT": theme.foreground_1,
+        "INSERT": theme.secondary,
     }
 
     return Text(

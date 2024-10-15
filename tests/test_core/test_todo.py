@@ -125,6 +125,20 @@ class TestTodo(CoreTestBase):
         self.assertFalse(t.is_pending)
         self.assertTrue(t.is_completed)
 
+    def test_toggle_complete_parent(self):
+        t = self.default_workspace.add_todo()
+        t1 = t.add_todo()
+        t2 = t.add_todo()
+
+        t1.toggle_complete()
+        self.assertFalse(t.is_completed)
+
+        t2.toggle_complete()
+        self.assertTrue(t.is_completed)
+
+        t1.toggle_complete()
+        self.assertFalse(t.is_completed)
+
     def test_due_date_util(self):
         t = self.default_workspace.add_todo()
         self.assertFalse(t.has_due_date())

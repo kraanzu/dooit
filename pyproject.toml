@@ -49,5 +49,6 @@ ignore=["E712"]
 
 [tool.coverage.report]
 omit = [
-    "/nix/store/*",
+    "nix/store/*",
+    "dooit/utils/default_config.py"
 ]

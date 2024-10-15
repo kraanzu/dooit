@@ -93,9 +93,9 @@ class Dooit(App):
     def change_status(self, event: ModeChanged):
         self._mode = event.mode
 
-    async def action_open_url(self, url: str) -> None:
+    async def action_open_url(self, url: str) -> None: # pragma: no cover
         webbrowser.open(url, new=2)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     Dooit().run()

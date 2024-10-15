@@ -74,7 +74,7 @@ class Dooit(App):
     def current_theme(self) -> DooitThemeBase:
         return self.api.css.theme
 
-    async def poll(self):
+    async def poll(self): # pragma: no cover
         def refresh_all_trees():
             trees = self.query(ModelTree)
             for tree in trees:

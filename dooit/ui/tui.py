@@ -26,7 +26,6 @@ class Dooit(App):
     CSS_PATH = CssManager.css_file
 
     SCREENS = {
-        "main": MainScreen,
         "help": HelpScreen,
     }
 
@@ -48,7 +47,7 @@ class Dooit(App):
 
     async def on_mount(self):
         self.set_interval(1, self.poll)
-        self.push_screen("main")
+        self.push_screen(MainScreen())
 
         timers = self.api.plugin_manager.timers
         for interval, funcs in timers.items():

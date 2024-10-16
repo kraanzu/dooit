@@ -28,7 +28,9 @@ async def test_workspaces_tree():
 
         await sleep(0.5)
 
-        current = app.query_one("#todo_switcher", expect_type=ContentSwitcher).visible_content
+        current = app.query_one(
+            "#todo_switcher", expect_type=ContentSwitcher
+        ).visible_content
         assert current is not None
         assert current.id == TodosTree(wtree.current_model).id
 
@@ -59,6 +61,7 @@ async def test_base_addition():
 
         wtree.add_sibling()
         assert wtree.highlighted == 0
+        await pilot.press("escape")
         await sleep(0.5)
 
         wtree.add_sibling()

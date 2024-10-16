@@ -261,6 +261,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         raise NotImplementedError  # pragma: no cover
 
     def add_sibling(self):
+        if self.is_editing:
+            return
+
         if not self._options:
             node = self.add_first_item()
         else:

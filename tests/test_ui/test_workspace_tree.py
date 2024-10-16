@@ -66,3 +66,28 @@ async def test_base_addition():
 
         wtree.add_sibling()
         assert wtree.highlighted == 1
+
+
+async def test_workspace_remove():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        wtree = app.workspace_tree
+
+        wtree.add_sibling()
+        await pilot.press("escape")
+        wtree.add_sibling()
+        await pilot.press("escape")
+
+        current = app.query_one(
+            "#todo_switcher", expect_type=ContentSwitcher
+        ).visible_content
+        assert current is not None
+        assert current.id == TodosTree(wtree.current_model).id
+
+        wtree.remove_node()
+        current = app.query_one(
+            "#todo_switcher", expect_type=ContentSwitcher
+        ).visible_content
+        assert current is not None
+        assert current.id == TodosTree(wtree.current_model).id

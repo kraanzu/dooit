@@ -270,10 +270,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.start_edit("description")
 
     @refresh_tree
-    @require_highlighted_node
     def _remove_node(self):
         self.current_model.drop()
 
+    @require_highlighted_node
     def remove_node(self):
         self.post_message(
             ShowConfirm(self._remove_node),

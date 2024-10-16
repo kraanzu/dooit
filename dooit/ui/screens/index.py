@@ -128,12 +128,12 @@ class MainScreen(BaseScreen):
         self.post_message(ModeChanged("CONFIRM"))
 
     @on(WorkspaceSelected)
-    def workspace_selected(self, event: WorkspaceSelected):
+    async def workspace_selected(self, event: WorkspaceSelected):
         switcher = self.query_one("#todo_switcher", expect_type=ContentSwitcher)
         tree = TodosTree(event.workspace)
 
         if not switcher.query(f"#{tree.id}"):
-            switcher.add_content(tree, set_current=True)
+            await switcher.add_content(tree, set_current=True)
         else:
             switcher.current = tree.id
 

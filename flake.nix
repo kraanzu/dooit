@@ -68,7 +68,13 @@
               pytest-aio
               faker
             ])
-            ++ [dooit-extras.packages.${system}.default];
+            ++ [dooit-extras.packages.${system}.default]
+            ++ [pkgs.bun];
+          shellHook = ''
+            cd site/
+            ${pkgs.bun}/bin/bun install
+            cd ..
+          '';
         };
       }
     );

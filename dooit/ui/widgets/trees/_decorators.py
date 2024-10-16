@@ -1,6 +1,8 @@
 from typing import Any, Callable, TYPE_CHECKING
 from textual.widgets.option_list import OptionDoesNotExist
 
+from dooit.api.exceptions import NoNodeError
+
 if TYPE_CHECKING:  # pragma: no cover
     from .model_tree import ModelTree
 
@@ -36,7 +38,7 @@ def refresh_tree(func: Callable) -> Callable:
 def require_highlighted_node(func: Callable) -> Callable:
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
         if self.highlighted is None:
-            raise ValueError("No node is currently highlighted")
+            raise NoNodeError()
 
         return func(self, *args, **kwargs)
 

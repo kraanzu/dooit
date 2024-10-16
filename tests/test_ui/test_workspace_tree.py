@@ -79,15 +79,24 @@ async def test_workspace_remove():
         wtree.add_sibling()
         await pilot.press("escape")
 
+        w1 = wtree.current_model
+
         current = app.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None
-        assert current.id == TodosTree(wtree.current_model).id
+        assert current.id == TodosTree(w1).id
 
         wtree.remove_node()
+        await sleep(0.5)
+        await pilot.press("y")
+        await sleep(0.5)
+
+        w2 = wtree.current_model
         current = app.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         ).visible_content
         assert current is not None
-        assert current.id == TodosTree(wtree.current_model).id
+        assert current.id == TodosTree(w2).id
+
+        assert w1.id != w2.id

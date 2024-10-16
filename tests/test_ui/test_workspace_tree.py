@@ -1,4 +1,6 @@
+from pytest import raises
 from textual.widgets import ContentSwitcher
+from dooit.api.exceptions import NoNodeError
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
@@ -99,3 +101,13 @@ async def test_workspace_remove():
         assert current.id == TodosTree(w2).id
 
         assert w1.id != w2.id
+
+
+async def test_no_node_error():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        wtree = app.workspace_tree
+
+        with raises(NoNodeError):
+            wtree.remove_node()

@@ -32,3 +32,9 @@ class TodoAdditionError(DooitError):
     """
     Raised when user tries to add a todo to manager class
     """
+
+
+class NoNodeError(DooitError):
+    """
+    Raised when user tried to perform an operation that requires a node, but no node is selected
+    """

@@ -1,4 +1,3 @@
-from asyncio import sleep
 from textual.widgets import ContentSwitcher
 from dooit.ui.widgets.trees.todos_tree import TodosTree
 from tests.test_ui.ui_base import run_pilot
@@ -26,7 +25,7 @@ async def test_workspaces_tree():
         wtree.highlight_id(w)
         assert wtree.highlighted == 3  # n-1
 
-        await sleep(0.5)
+        await pilot.pause()
 
         current = app.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
@@ -62,7 +61,7 @@ async def test_base_addition():
         wtree.add_sibling()
         assert wtree.highlighted == 0
         await pilot.press("escape")
-        await sleep(0.5)
+        await pilot.pause()
 
         wtree.add_sibling()
         assert wtree.highlighted == 1
@@ -88,9 +87,9 @@ async def test_workspace_remove():
         assert current.id == TodosTree(w1).id
 
         wtree.remove_node()
-        await sleep(0.5)
+        await pilot.pause()
         await pilot.press("y")
-        await sleep(0.5)
+        await pilot.pause()
 
         w2 = wtree.current_model
         current = app.query_one(

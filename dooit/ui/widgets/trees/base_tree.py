@@ -2,6 +2,7 @@ from collections import defaultdict
 from typing import TYPE_CHECKING, Union
 from textual.widgets import OptionList
 from textual.widgets.option_list import Option
+from textual import events, on
 
 from dooit.api import Todo, Workspace
 from ._decorators import require_highlighted_node
@@ -45,3 +46,7 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
             return
 
         return super().action_cursor_up()
+
+    @on(events.Click)
+    def on_click(self, event: events.Click) -> None:
+        event.prevent_default()

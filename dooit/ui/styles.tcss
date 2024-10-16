@@ -29,7 +29,7 @@ ModelTree {
         border-title-background: $secondary;
 
         .option-list--option-highlighted, .option-list--option-hover-highlighted {
-            background: $secondary;
+            background: $secondary 40%;
             color: $foreground_3;
         }
     }

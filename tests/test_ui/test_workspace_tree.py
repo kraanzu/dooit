@@ -50,15 +50,16 @@ async def test_workspaces_tree():
         # switch
 
 
-# async def test_base_addition():
-#     async with run_pilot() as pilot:
-#         app = pilot.app
-#         assert isinstance(app, Dooit)
-#
-#         wtree = app.workspace_tree
-#
-#         wtree.add_sibling()
-#         assert wtree.highlighted == 0
-#
-#         wtree.add_sibling()
-#         # assert wtree.highlighted == 1
+async def test_base_addition():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        wtree = app.workspace_tree
+
+        wtree.add_sibling()
+        assert wtree.highlighted == 0
+        await sleep(0.5)
+
+        wtree.add_sibling()
+        assert wtree.highlighted == 1

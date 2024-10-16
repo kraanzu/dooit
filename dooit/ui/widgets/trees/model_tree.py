@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import TYPE_CHECKING, Any, Generic, Iterable, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Union
 from textual.app import ComposeResult
 from textual.widgets import Label
 from textual.widgets.option_list import Option
@@ -182,9 +182,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._refresh_lines()
 
     def _get_parent(self, id: str) -> Optional[ModelType]:
-        raise NotImplementedError  # pragma: no cover
-
-    def _get_children(self, id: str) -> Iterable[ModelType]:
         raise NotImplementedError  # pragma: no cover
 
     @refresh_tree

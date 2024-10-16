@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Iterable, Optional, Type, Union
+from typing import TYPE_CHECKING, Optional, Union
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import DooitEvent, TodoDescriptionChanged, TodoRemoved
+from dooit.ui.events.events import TodoRemoved
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
@@ -23,9 +23,6 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
     def _get_parent(self, id: str) -> Optional[Todo]:
         return Todo.from_id(id).parent_todo
-
-    def _get_children(self, id: str) -> Iterable[Todo]:
-        return Todo.from_id(id).todos
 
     @property
     def formatter(self) -> "TodoFormatter":

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 from textual import on
 from textual.widgets.option_list import Option
 
@@ -8,7 +8,6 @@ from dooit.ui.events.events import (
     WorkspaceSelected,
 )
 from .model_tree import ModelTree
-from .todos_tree import TodosTree
 from ._render_dict import WorkspaceRenderDict
 
 
@@ -27,9 +26,6 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
 
     def _get_parent(self, id: str) -> Optional[Workspace]:
         return Workspace.from_id(id).parent_workspace
-
-    def _get_children(self, id: str) -> List[Workspace]:
-        return Workspace.from_id(id).workspaces
 
     @property
     def formatter(self) -> "WorkspaceFormatter":

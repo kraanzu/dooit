@@ -39,16 +39,6 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
     def layout(self):
         return self.api.layouts.workspace_layout
 
-    def _switch_to_todos(self) -> None:
-        try:
-            if not self.node.id:
-                return
-
-            tree = TodosTree(self.current.model)
-            self.screen.query_one(f"#{tree.id}", expect_type=TodosTree).focus()
-        except ValueError:
-            self.notify("No workspace selected")
-
     def add_workspace(self) -> str:
         workspace = self.model.add_workspace()
         renderer = self._renderers[workspace.uuid]

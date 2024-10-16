@@ -27,12 +27,6 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
     def _get_children(self, id: str) -> Iterable[Todo]:
         return Todo.from_id(id).todos
 
-    def _switch_to_workspace(self) -> None:
-        if not self.node.id:
-            return
-
-        self.screen.query_one("WorkspacesTree").focus()
-
     @property
     def formatter(self) -> "TodoFormatter":
         return self.api.formatter.todos

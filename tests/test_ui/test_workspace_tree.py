@@ -1,3 +1,5 @@
+from textual.widgets import ContentSwitcher
+from dooit.ui.widgets.trees.todos_tree import TodosTree
 from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
 
@@ -11,6 +13,7 @@ async def test_workspaces_tree():
 
         assert len(wtree._options) == 0
 
+        # basic addition
         wtree.add_workspace()
         wtree.add_workspace()
         wtree.add_workspace()
@@ -18,13 +21,19 @@ async def test_workspaces_tree():
 
         assert len(wtree._options) == 4
 
+        # highlights
         wtree.highlight_id(w)
         assert wtree.highlighted == 3  # n-1
+        # current = app.query_one("#todo_switcher", expect_type=ContentSwitcher).visible_content
+        # assert current is not None
+        # assert current.id == TodosTree(wtree.current_model).id
 
+        # child nodes
         w = wtree.add_child_node()
         assert len(wtree._options) == 5
         assert wtree.highlighted == 4
 
+        # nested nodes
         wtree.toggle_expand()
         assert len(wtree._options) == 5
 
@@ -33,3 +42,5 @@ async def test_workspaces_tree():
 
         wtree.toggle_expand()
         assert len(wtree._options) == 5
+
+        # switch

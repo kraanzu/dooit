@@ -18,7 +18,7 @@ class BaseRenderer(Generic[ModelType]):
         self.tree = tree
         self.post_init()
 
-    def post_init(self):
+    def post_init(self): # pragma: no cover
         pass
 
     def matches_filter(self, filter: str) -> bool:

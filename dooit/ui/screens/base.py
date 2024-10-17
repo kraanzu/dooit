@@ -22,8 +22,7 @@ class BaseScreen(Screen, inherit_bindings=False):
         from ..tui import Dooit
 
         app = super().app
-        if not isinstance(app, Dooit):
-            raise ValueError(f"Expected Dooit, got {type(app)}")
+        assert isinstance(app, Dooit)
 
         return app
 

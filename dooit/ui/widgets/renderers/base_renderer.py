@@ -61,7 +61,7 @@ class BaseRenderer:
             renderers[sibling.uuid]._get_attr_width(attr) for sibling in siblings
         )
 
-    def make_renderable(self) -> RenderableType:
+    def make_renderable(self) -> Table:
         layout = self.table_layout
 
         table = Table.grid(expand=True, padding=(0, 1), pad_edge=True)

@@ -9,11 +9,9 @@ from ..inputs.model_inputs import (
 from .base_renderer import BaseRenderer, Todo
 
 
-class TodoRender(BaseRenderer):
+class TodoRender(BaseRenderer[Todo]):
     @property
     def model(self) -> Todo:
-        if not isinstance(self._model, Todo):
-            raise ValueError(f"Expected Todo, got {type(self._model)}")
         return self._model
 
     def post_init(self):

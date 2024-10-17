@@ -1,16 +1,16 @@
-from typing import TYPE_CHECKING, Dict, List, Union
+from typing import TYPE_CHECKING, Dict, Generic, List, TypeVar, Union
 from rich.console import RenderableType
 from rich.table import Table
 from dooit.api import Todo, Workspace
 from ..inputs.simple_input import SimpleInput
 
-ModelType = Union[Todo, Workspace]
+ModelType = TypeVar("ModelType", bound=Union[Todo, Workspace])
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.widgets.trees.model_tree import ModelTree
 
 
-class BaseRenderer:
+class BaseRenderer(Generic[ModelType]):
     editing: str = ""
 
     def __init__(self, model: ModelType, tree: "ModelTree"):

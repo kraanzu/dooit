@@ -27,6 +27,7 @@ class Dooit(App):
 
     SCREENS = {
         "help": HelpScreen,
+        "main": MainScreen,
     }
 
     BINDINGS = [
@@ -47,7 +48,7 @@ class Dooit(App):
 
     async def on_mount(self):
         self.set_interval(1, self.poll)
-        self.push_screen(MainScreen())
+        self.push_screen("main")
 
         timers = self.api.plugin_manager.timers
         for interval, funcs in timers.items():

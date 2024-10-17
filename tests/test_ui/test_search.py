@@ -5,19 +5,17 @@ from dooit.ui.tui import Dooit
 
 async def test_search():
     async with run_pilot() as pilot:
-
         app = pilot.app
         assert isinstance(app, Dooit)
+        await create_and_move_to_todo(pilot)
+
+        tree = app.focused
+        assert isinstance(tree, TodosTree)
 
         async def create_todo(tree: TodosTree, description: str):
             tree.add_sibling()
             await pilot.press(*list(description))
             await pilot.press("escape")
-
-        await create_and_move_to_todo(pilot)
-
-        tree = app.focused
-        assert isinstance(tree, TodosTree)
 
         items = ["apple", "apps", "applet", "apricot"]
         for item in items:
@@ -43,8 +41,20 @@ async def test_search():
         await pilot.press(*list("applet"))
         assert sum(i.disabled for i in tree._options) == 3
 
-        # await pilot.press("enter")
+        # confirm search
+        await pilot.press("enter")
+        assert app.bar_switcher.current == "status_bar"
 
-        # await pilot.press("escape")
-        # await pilot.pause()
-        # assert sum(i.disabled for i in tree._options) == 0
+        await pilot.press("escape")
+        await pilot.pause()
+        assert sum(i.disabled for i in tree._options) == 0
+
+        # cancel search
+        tree.start_search()
+        await pilot.pause()
+
+        await pilot.press("escape")
+        assert app.bar_switcher.current == "status_bar"
+
+        await pilot.pause()
+        assert sum(i.disabled for i in tree._options) == 0

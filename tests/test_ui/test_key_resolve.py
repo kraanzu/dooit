@@ -14,4 +14,5 @@ async def test_base_screen_keys():
 
         assert isinstance(screen, MainScreen)
 
-        screen.resolve_key(events.Key("home", None))
+        assert screen.resolve_key(events.Key("home", None)) == "home"
+        assert screen.resolve_key(events.Key("space", " ")) == " "

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Optional
 
-from dooit.api import Workspace, Todo
+from dooit.api import Workspace
 from ._base import ApiComponent
 
 
@@ -20,14 +20,6 @@ class VarManager(ApiComponent):
     @property
     def current_workspace(self) -> Optional[Workspace]:
         tree = self.app.workspace_tree
-        if tree.highlighted is None:
-            return None
-
-        return tree.current_model
-
-    @property
-    def current_too(self) -> Optional[Todo]:
-        tree = self.app.todos_tree
         if tree.highlighted is None:
             return None
 

@@ -18,8 +18,6 @@ class BarSwitcher(ContentSwitcher):
     }
     """
 
-    status_bar = StatusBar()
-
     @property
     def search_bar(self):
         return self.query_one(SearchBar)
@@ -47,6 +45,7 @@ class BarSwitcher(ContentSwitcher):
         return super().add_content(widget, id=id, set_current=set_current)
 
     async def on_mount(self):
+        self.status_bar = StatusBar()
         self.add_content(
             widget=self.status_bar,
             id="status_bar",

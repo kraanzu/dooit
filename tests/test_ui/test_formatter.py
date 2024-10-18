@@ -99,3 +99,41 @@ async def test_multiple_formatting_skip():
 
         formatted = store.format_value(w2.description, w2)
         assert formatted == "(icon) another description 123 test"
+
+
+async def test_multiple_formatting_toggle():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        store, w1, _ = setup(app.api)
+
+        w1.description += " 123"
+
+        store.add(set_italic, id="italic")
+        store.add(add_icon, id="icon")
+        formatted = store.format_value(w1.description, w1)
+        assert (
+            formatted
+            == "(icon) this is a [italic #bf616a]test[/italic #bf616a] description 123"
+        )
+
+        assert store.disable("italic")
+        formatted = store.format_value(w1.description, w1)
+        assert formatted == "(icon) this is a test description 123"
+
+        assert store.disable("icon")
+        formatted = store.format_value(w1.description, w1)
+        assert formatted == "this is a test description 123"
+
+        assert store.enable("italic")
+        formatted = store.format_value(w1.description, w1)
+        assert (
+            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description 123"
+        )
+
+        assert not store.enable("random_gibberish_id")
+        assert not store.disable("random_gibberish_id")
+
+        store.remove("italic")
+        formatted = store.format_value(w1.description, w1)
+        assert formatted == "this is a test description 123"

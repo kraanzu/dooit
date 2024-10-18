@@ -31,15 +31,15 @@ class CssManager:
         self.stylesheets: Path = cache_path / "stylesheets"
         self.css_file: Path = cache_path / "dooit.tcss"
 
-    def _create_files(self):
-        if not self.stylesheets.exists():
-            self.stylesheets.mkdir(
-                parents=True,
-                exist_ok=True,
-            )
+        self.stylesheets.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+    def read_css(self) -> str:
+        return self.css_file.read_text()
 
     def refresh_css(self):
-        self._create_files()
         css = self.theme.to_css()
 
         # setup base variables
@@ -53,7 +53,7 @@ class CssManager:
 
         self.write(css)
 
-    def add_theme(self, theme: DooitThemeBase):
+    def add_theme(self, theme: Type[DooitThemeBase]):
         self.themes[theme._name] = theme
         self.refresh_css()
 
@@ -75,7 +75,7 @@ class CssManager:
         self.refresh_css()
         return uuid
 
-    def uninject_css(self, _id: str) -> bool:
+    def unject_css(self, _id: str) -> bool:
         css_file = self.stylesheets / f"{_id}.tcss"
 
         if not css_file.exists():

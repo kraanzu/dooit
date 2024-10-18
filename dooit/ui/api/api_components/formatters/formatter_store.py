@@ -26,7 +26,12 @@ def trigger_refresh(func: Callable) -> Callable:
 
 class FormatterStore:
     def __init__(self, trigger: Callable, app: "DooitAPI") -> None:
-        self.formatters = dict()
+        self.formatters = dict(
+            default=FormatterFunc(
+                "dooit_default",
+                lambda x, *_: str(x),
+            )
+        )
         self.trigger = trigger
         self.api = app
 
@@ -48,6 +53,7 @@ class FormatterStore:
         formatter = self.formatters.get(id)
         if not formatter:
             return False
+
         formatter.disabled = True
         return True
 
@@ -56,6 +62,7 @@ class FormatterStore:
         formatter = self.formatters.get(id)
         if not formatter:
             return False
+
         formatter.disabled = False
 
         if set_current:
@@ -71,14 +78,6 @@ class FormatterStore:
             for formatter in self.formatters.values()
             if not formatter.disabled
         ]
-
-    @property
-    def current_formatter(self) -> FormatterFunc:
-        enabled_formatters = [i for i in self.formatters.values() if not i.disabled]
-        if not enabled_formatters:
-            return FormatterFunc("default", lambda x, _: str(x))
-
-        return enabled_formatters[-1]
 
     def _get_function_params(self, func: Callable) -> List[str]:
         return list(func.__code__.co_varnames)

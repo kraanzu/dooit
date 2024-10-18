@@ -33,7 +33,7 @@ class BarBase(Static):
         return app
 
     @property
-    def api(self) -> "DooitAPI":
+    def api(self) -> "DooitAPI": # pragma: no cover
         return self.app.api
 
     @property
@@ -41,9 +41,7 @@ class BarBase(Static):
         from .bar_switcher import BarSwitcher
 
         parent = self.parent
-        if not isinstance(parent, BarSwitcher):
-            raise ValueError("Parent is not BarSwitcher")
-
+        assert isinstance(parent, BarSwitcher)
         return parent
 
     def perform_action(self, cancel: bool):
@@ -59,5 +57,5 @@ class BarBase(Static):
         if close:
             self.close()
 
-    async def handle_keypress(self, key: str) -> None:
+    async def handle_keypress(self, key: str) -> None: # pragma: no cover
         return

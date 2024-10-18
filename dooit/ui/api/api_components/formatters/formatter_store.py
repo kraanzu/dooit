@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 from uuid import uuid4
 from dataclasses import dataclass
-
 from dooit.api.workspace import ModelType
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
 
 

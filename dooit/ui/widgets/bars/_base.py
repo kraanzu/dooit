@@ -33,7 +33,7 @@ class BarBase(Static):
         return app
 
     @property
-    def api(self) -> "DooitAPI": # pragma: no cover
+    def api(self) -> "DooitAPI":  # pragma: no cover
         return self.app.api
 
     @property
@@ -57,5 +57,5 @@ class BarBase(Static):
         if close:
             self.close()
 
-    async def handle_keypress(self, key: str) -> None: # pragma: no cover
+    async def handle_keypress(self, key: str) -> None:  # pragma: no cover
         return

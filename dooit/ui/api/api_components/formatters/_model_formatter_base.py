@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from .formatter_store import FormatterStore
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
 
 

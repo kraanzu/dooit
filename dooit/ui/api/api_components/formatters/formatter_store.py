@@ -13,7 +13,6 @@ class FormatterFunc:
     name: str
     func: Callable
     disabled: bool = False
-    previous_formatter: Optional["FormatterFunc"] = None
 
 
 def trigger_refresh(func: Callable) -> Callable:
@@ -37,7 +36,6 @@ class FormatterStore:
         self.formatters[id] = FormatterFunc(
             id,
             func,
-            previous_formatter=self.current_formatter,
         )
         return id
 
@@ -68,7 +66,11 @@ class FormatterStore:
 
     @property
     def formatter_functions(self) -> List[Callable]:
-        return [formatter.func for formatter in self.formatters.values()]
+        return [
+            formatter.func
+            for formatter in self.formatters.values()
+            if not formatter.disabled
+        ]
 
     @property
     def current_formatter(self) -> FormatterFunc:
@@ -79,4 +81,11 @@ class FormatterStore:
         return enabled_formatters[-1]
 
     def format_value(self, value: Any, model: ModelType) -> str:
-        return self.current_formatter.func(value, model)
+        res = None
+
+        for func in reversed(self.formatter_functions):
+            res = func(value, model)
+            if res is not None:
+                return res
+
+        return "???"

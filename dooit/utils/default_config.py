@@ -8,7 +8,6 @@ from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.events.events import ModeChanged, Startup
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
-from functools import partial
 
 
 @subscribe(ModeChanged)
@@ -173,9 +172,7 @@ def formatter_setup(api: DooitAPI, _):
     api.formatter.todos.status.add(todo_status_formatter)
     api.formatter.todos.description.add(todo_desc_formatter)
     api.formatter.todos.due.add(todo_due_formatter)
-    api.formatter.todos.urgency.add(
-        partial(todo_urgency_formatter, api=api),
-    )
+    api.formatter.todos.urgency.add(todo_urgency_formatter)
 
 
 @subscribe(Startup)

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Callable, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 from uuid import uuid4
 from dataclasses import dataclass
 
@@ -80,11 +80,26 @@ class FormatterStore:
 
         return enabled_formatters[-1]
 
+    def _get_function_params(self, func: Callable) -> List[str]:
+        return list(func.__code__.co_varnames)
+
     def format_value(self, value: Any, model: ModelType) -> str:
+        params = dict(api=self.api)
+
+        def get_extra_args(func: Callable) -> Dict[str, Any]:
+            func_params = self._get_function_params(func)
+            extra_args = {}
+
+            for param in func_params:
+                if param in params:
+                    extra_args[param] = params[param]
+
+            return extra_args
+
         res = None
 
         for func in reversed(self.formatter_functions):
-            res = func(value, model)
+            res = func(value, model, **get_extra_args(func))
             if res is not None:
                 return res
 

@@ -1,8 +1,5 @@
 from pytest import raises
-from textual.widgets import ContentSwitcher
 from dooit.api.exceptions import NoNodeError
-from dooit.ui.widgets.trees.todos_tree import TodosTree
-from dooit.ui.widgets.trees.workspaces_tree import WorkspacesTree
 from dooit.ui.widgets.bars import SortBar
 
 from tests.test_ui.ui_base import run_pilot, create_and_move_to_todo

@@ -1,5 +1,5 @@
 from typing import Callable, Type
-from dooit.ui.events.events import *  # noqa
+from dooit.ui.events.events import DooitEvent
 
 DOOIT_EVENT_ATTR = "__dooit_event"
 DOOIT_TIMER_ATTR = "__dooit_timer"

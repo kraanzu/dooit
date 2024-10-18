@@ -1,5 +1,4 @@
 import argparse
-from dooit.ui.tui import Dooit
 
 VERSION = "3.0.0"
 

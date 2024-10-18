@@ -1,7 +1,7 @@
 from typing import Type
 from sqlalchemy.event import listen
 from sqlalchemy.orm.attributes import get_history
-from textual import events, on, work
+from textual import events, on
 from textual.containers import Container
 from textual.widgets import ContentSwitcher
 from dooit.api import Todo, Workspace

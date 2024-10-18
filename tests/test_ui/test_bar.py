@@ -1,4 +1,4 @@
-from tests.test_ui.ui_base import run_pilot, create_and_move_to_todo
+from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
 
 

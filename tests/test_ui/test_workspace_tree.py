@@ -231,6 +231,12 @@ async def test_cursor_movements():
         wtree.action_cursor_down()
         assert wtree.highlighted == 1
 
+        # clicking should not affect the highlight
+        for x in range(5):
+            for y in range(5):
+                await pilot.click(wtree, offset=(x, y))
+                assert wtree.highlighted == 1
+
 
 async def test_add_sibling_while_editing():
     async with run_pilot() as pilot:

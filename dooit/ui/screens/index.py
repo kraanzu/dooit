@@ -100,9 +100,6 @@ class MainScreen(BaseScreen):
                 current_widget.add_class("current")
                 await self.query_one(DualSplitRight).mount(current_widget)
 
-    async def mount_dashboard(self) -> None:
-        await self.clear_right()
-
     @on(SwitchTab)
     def switch_tab(self, event: SwitchTab) -> None:
         event.stop()

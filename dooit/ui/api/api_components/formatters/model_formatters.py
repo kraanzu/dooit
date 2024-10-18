@@ -12,7 +12,7 @@ class TodoFormatter(ModelFormatterBase):
         self.status = self.get_formatter_store()
 
     def trigger(self) -> None:
-        for widget in self.app.query(TodosTree):
+        for widget in self.api.app.query(TodosTree):
             widget.force_refresh()
 
 
@@ -21,5 +21,5 @@ class WorkspaceFormatter(ModelFormatterBase):
         self.description = self.get_formatter_store()
 
     def trigger(self) -> None:
-        for widget in self.app.query(WorkspacesTree):
+        for widget in self.api.app.query(WorkspacesTree):
             widget.force_refresh()

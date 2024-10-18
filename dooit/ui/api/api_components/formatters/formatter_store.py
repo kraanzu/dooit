@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from dooit.api.workspace import ModelType
 
 if TYPE_CHECKING:
-    from dooit.ui.tui import Dooit
+    from dooit.ui.api.dooit_api import DooitAPI
 
 
 @dataclass
@@ -26,10 +26,10 @@ def trigger_refresh(func: Callable) -> Callable:
 
 
 class FormatterStore:
-    def __init__(self, trigger: Callable, app: "Dooit") -> None:
+    def __init__(self, trigger: Callable, app: "DooitAPI") -> None:
         self.formatters = dict()
         self.trigger = trigger
-        self.app = app
+        self.api = app
 
     @trigger_refresh
     def add(self, func: Callable, id: Optional[str] = None) -> str:

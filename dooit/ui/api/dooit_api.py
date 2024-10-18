@@ -27,7 +27,7 @@ class DooitAPI:
         self.css = CssManager()
         self.keys = KeyManager(self.app.get_mode)
         self.layouts = LayoutManager(self.app)
-        self.formatter = Formatter(self.app)
+        self.formatter = Formatter(self)
         self.bar = BarManager(self.app)
         self.vars = VarManager(self.app)
         self.dashboard = DashboardManager(self.app)

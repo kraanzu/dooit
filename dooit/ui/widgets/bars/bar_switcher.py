@@ -72,7 +72,7 @@ class BarSwitcher(ContentSwitcher):
         sort_bar = SortBar(model)
         self.add_content(
             widget=sort_bar,
-            id="confirm_bar",
+            id="sort_bar",
             set_current=True,
         )
 

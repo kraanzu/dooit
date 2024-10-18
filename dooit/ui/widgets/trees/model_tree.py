@@ -214,7 +214,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def _toggle_expand_parent(self, _id: str) -> None:
         parent = self._get_parent(_id)
 
-        if not parent:
+        if not parent or getattr(parent, "is_root", False):
             return
 
         parent_id = parent.uuid

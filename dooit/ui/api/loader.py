@@ -28,7 +28,6 @@ def load_file(api: "PluginManager", path: Path) -> bool:
 
 
 def load_dir(api: "PluginManager", path: Path) -> bool:
-
     # allows users to import from the directory
     sys.path.append(str(path.resolve()))
 

@@ -10,7 +10,7 @@ from dooit.ui.api.events import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
 from dooit.ui.events.events import DooitEvent, Startup
 from .loader import load_dir, load_file
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
 
 

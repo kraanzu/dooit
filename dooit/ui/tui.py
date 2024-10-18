@@ -74,7 +74,7 @@ class Dooit(App):
     def current_theme(self) -> DooitThemeBase:
         return self.api.css.theme
 
-    async def poll(self): # pragma: no cover
+    async def poll(self):  # pragma: no cover
         def refresh_all_trees():
             trees = self.query(ModelTree)
             for tree in trees:
@@ -93,9 +93,9 @@ class Dooit(App):
     def change_status(self, event: ModeChanged):
         self._mode = event.mode
 
-    async def action_open_url(self, url: str) -> None: # pragma: no cover
+    async def action_open_url(self, url: str) -> None:  # pragma: no cover
         webbrowser.open(url, new=2)
 
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     Dooit().run()

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from .._base import ApiComponent
 from .model_formatters import TodoFormatter, WorkspaceFormatter
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
 
 

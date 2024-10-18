@@ -28,6 +28,7 @@ def test_css_manager():
     manager.set_theme("test_theme")
     assert manager.theme is TestTheme
 
+
 # ----------------------------------------
 
 RANDOM_CSS = """
@@ -35,6 +36,7 @@ RANDOM_CSS = """
     background: red;
 }
 """
+
 
 def test_css_injections():
     cache_path = Path(TemporaryDirectory().name)

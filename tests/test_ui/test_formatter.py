@@ -14,7 +14,7 @@ def set_italic(value: str, _: Workspace) -> str:
 
 
 def add_icon(value: str, _: Workspace) -> str:
-    if "test" in value:
+    if "123" in value:
         return f"[icon] {value}"
     else:
         return value
@@ -22,38 +22,48 @@ def add_icon(value: str, _: Workspace) -> str:
 
 def setup(api: DooitAPI):
     store = FormatterStore(lambda: None, api)
-    w = Workspace(description="this is a test description")
-    return store, w
+    w1 = Workspace(description="this is a test description")
+    w2 = Workspace(description="another description 123")
+    return store, w1, w2
 
 
 async def test_no_formatting():
     async with run_pilot() as pilot:
         app = pilot.app
         assert isinstance(app, Dooit)
-        store, w = setup(app.api)
+        store, w1, w2 = setup(app.api)
 
-        formatted = store.format_value(w.description, w)
+        formatted = store.format_value(w1.description, w1)
         assert formatted == "this is a test description"
+
+        formatted = store.format_value(w2.description, w2)
+        assert formatted == "another description 123"
 
 
 async def test_basic_formatting():
     async with run_pilot() as pilot:
         app = pilot.app
         assert isinstance(app, Dooit)
-        store, w = setup(app.api)
+        store, w1, w2 = setup(app.api)
 
         store.add(set_italic)
-        formatted = store.format_value(w.description, w)
+        formatted = store.format_value(w1.description, w1)
         assert formatted == "this is a [italic]test[/italic] description"
+
+        formatted = store.format_value(w2.description, w2)
+        assert formatted == "another description 123"
 
 
 async def test_multiple_formatting():
     async with run_pilot() as pilot:
         app = pilot.app
         assert isinstance(app, Dooit)
-        store, w = setup(app.api)
+        store, w1, w2 = setup(app.api)
 
         store.add(set_italic)
         store.add(add_icon)
-        formatted = store.format_value(w.description, w)
-        assert formatted == "[icon] this is a test description"
+        formatted = store.format_value(w1.description, w1)
+        assert formatted == "this is a test description"
+
+        formatted = store.format_value(w2.description, w2)
+        assert formatted == "[icon] another description 123"

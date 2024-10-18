@@ -7,10 +7,7 @@ async def test_search():
     async with run_pilot() as pilot:
         app = pilot.app
         assert isinstance(app, Dooit)
-        await create_and_move_to_todo(pilot)
-
-        tree = app.focused
-        assert isinstance(tree, TodosTree)
+        tree = await create_and_move_to_todo(pilot)
 
         async def create_todo(tree: TodosTree, description: str):
             tree.add_sibling()

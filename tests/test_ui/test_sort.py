@@ -39,18 +39,12 @@ async def test_search_on_todo():
         assert isinstance(app, Dooit)
         api = app.api
 
-        await create_and_move_to_todo(pilot)
-
-        tree = app.query_one(
-            "#todo_switcher", expect_type=ContentSwitcher
-        ).visible_content
-        assert isinstance(tree, TodosTree)
+        tree = await create_and_move_to_todo(pilot)
 
         with raises(NoNodeError):
             api.start_sort()
 
         tree.add_sibling()
-        await pilot.press(*list("zzz"))
         await pilot.press("escape")
 
         api.start_sort()

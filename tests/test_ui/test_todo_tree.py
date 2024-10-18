@@ -15,11 +15,7 @@ async def test_todo_tree_focus():
     async with run_pilot() as pilot:
         app = pilot.app
         assert isinstance(app, Dooit)
-
         await create_and_move_to_todo(pilot)
-
-        ttree = app.focused
-        assert isinstance(ttree, TodosTree)
 
 
 async def test_todo_formatter():
@@ -34,16 +30,13 @@ async def test_todo_formatter():
         app = pilot.app
         assert isinstance(app, Dooit)
 
-        await create_and_move_to_todo(pilot)
+        tree = await create_and_move_to_todo(pilot)
 
-        ttree = app.focused
-        assert isinstance(ttree, TodosTree)
-
-        ttree.add_sibling()
+        tree.add_sibling()
         await pilot.press(*list("nixos"))
         await pilot.press("escape")
 
-        renderer = ttree.current
+        renderer = tree.current
         assert get_formatted(renderer, "description") == "nixos"
 
         app.api.formatter.todos.description.add(custom_formatter)
@@ -55,13 +48,10 @@ async def test_no_node_error():
         app = pilot.app
         assert isinstance(app, Dooit)
 
-        await create_and_move_to_todo(pilot)
-
-        ttree = app.focused
-        assert isinstance(ttree, TodosTree)
+        tree = await create_and_move_to_todo(pilot)
 
         with raises(NoNodeError):
-            ttree.current
+            tree.current
 
 
 async def test_todo_tree_layout():
@@ -69,20 +59,17 @@ async def test_todo_tree_layout():
         app = pilot.app
         assert isinstance(app, Dooit)
 
-        await create_and_move_to_todo(pilot)
+        tree = await create_and_move_to_todo(pilot)
 
-        ttree = app.focused
-        assert isinstance(ttree, TodosTree)
-
-        ttree.add_sibling()
+        tree.add_sibling()
         await pilot.press(*list("nixos"))
         await pilot.press("escape")
 
-        table = ttree.current.make_renderable()
+        table = tree.current.make_renderable()
         assert table.columns[0].header == "status"
 
         app.api.layouts.todo_layout = [TodoWidget.description]
-        table = ttree.current.make_renderable()
+        table = tree.current.make_renderable()
         assert table.columns[0].header == "description"
 
 
@@ -91,13 +78,10 @@ async def test_incorrect_edit():
         app = pilot.app
         assert isinstance(app, Dooit)
 
-        await create_and_move_to_todo(pilot)
+        tree = await create_and_move_to_todo(pilot)
 
-        ttree = app.focused
-        assert isinstance(ttree, TodosTree)
-
-        ttree.add_sibling()
+        tree.add_sibling()
         await pilot.press(*list("nixos"))
         await pilot.press("escape")
 
-        assert not ttree.current.start_edit("incorrect")
+        assert not tree.current.start_edit("incorrect")

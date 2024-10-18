@@ -25,6 +25,11 @@ def add_icon(value: str, _: Workspace) -> Optional[Tuple[str, bool]]:
         return f"(icon) {value}", True
 
 
+def add_icon_skip_multiple(value: str, _: Workspace) -> Optional[Tuple[str, bool]]:
+    if "123" in value:
+        return f"(icon) {value}", False
+
+
 def setup(api: DooitAPI):
     store = FormatterStore(lambda: None, api)
     w1 = Workspace(description="this is a test description")
@@ -53,7 +58,9 @@ async def test_basic_formatting():
 
         store.add(set_italic)
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+        assert (
+            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+        )
 
         formatted = store.format_value(w2.description, w2)
         assert formatted == "another description 123"
@@ -68,7 +75,27 @@ async def test_multiple_formatting():
         store.add(set_italic)
         store.add(add_icon)
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+        assert (
+            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+        )
 
         formatted = store.format_value(w2.description, w2)
         assert formatted == "(icon) another description 123"
+
+
+async def test_multiple_formatting_skip():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        store, w1, w2 = setup(app.api)
+        w2.description = "another description 123 test"
+
+        store.add(set_italic)
+        store.add(add_icon_skip_multiple)
+        formatted = store.format_value(w1.description, w1)
+        assert (
+            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+        )
+
+        formatted = store.format_value(w2.description, w2)
+        assert formatted == "(icon) another description 123 test"

@@ -23,7 +23,7 @@ PRINTABLE = (
 
 
 class Dooit(App):
-    CSS_PATH = CssManager.css_file
+    CSS_PATH = CssManager().css_file
 
     SCREENS = {
         "help": HelpScreen,

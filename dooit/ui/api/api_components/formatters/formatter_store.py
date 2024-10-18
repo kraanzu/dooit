@@ -54,17 +54,12 @@ class FormatterStore:
         return True
 
     @trigger_refresh
-    def enable(self, id: str, set_current: bool = False) -> bool:
+    def enable(self, id: str) -> bool:
         formatter = self.formatters.get(id)
         if not formatter:
             return False
 
         formatter.disabled = False
-
-        if set_current:
-            formatter = self.formatters.pop(id)
-            self.formatters.update({id: formatter})
-
         return True
 
     @property

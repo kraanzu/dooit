@@ -1,10 +1,12 @@
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 from uuid import uuid4
 from dataclasses import dataclass
 from dooit.api.workspace import ModelType
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
+
+FormatterReturnType = Union[str, Tuple[str, bool]]
 
 
 @dataclass
@@ -98,7 +100,14 @@ class FormatterStore:
 
         for func in reversed(self.formatter_functions):
             res = func(value, model, **get_extra_args(func))
-            if res is not None:
-                return res
+            if res is None:
+                continue
+            else:
+                if isinstance(res, Tuple):
+                    value, multiple = res
+                    if not multiple:
+                        return value
+                else:
+                    return res
 
         return "???"

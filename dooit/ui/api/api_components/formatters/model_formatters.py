@@ -1,16 +1,15 @@
 from ._model_formatter_base import ModelFormatterBase
-from .formatter_store import FormatterStore
 from dooit.ui.widgets.trees import TodosTree, WorkspacesTree
 
 
 class TodoFormatter(ModelFormatterBase):
     def setup_formatters(self):
-        self.description = FormatterStore(self.trigger)
-        self.due = FormatterStore(self.trigger)
-        self.effort = FormatterStore(self.trigger)
-        self.recurrence = FormatterStore(self.trigger)
-        self.urgency = FormatterStore(self.trigger)
-        self.status = FormatterStore(self.trigger)
+        self.description = self.get_formatter_store()
+        self.due = self.get_formatter_store()
+        self.effort = self.get_formatter_store()
+        self.recurrence = self.get_formatter_store()
+        self.urgency = self.get_formatter_store()
+        self.status = self.get_formatter_store()
 
     def trigger(self) -> None:
         for widget in self.app.query(TodosTree):
@@ -19,7 +18,7 @@ class TodoFormatter(ModelFormatterBase):
 
 class WorkspaceFormatter(ModelFormatterBase):
     def setup_formatters(self):
-        self.description = FormatterStore(self.trigger)
+        self.description = self.get_formatter_store()
 
     def trigger(self) -> None:
         for widget in self.app.query(WorkspacesTree):

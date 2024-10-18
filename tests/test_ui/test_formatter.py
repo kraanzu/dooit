@@ -1,3 +1,4 @@
+from typing import Optional, Tuple
 from rich.text import Text
 from rich.style import Style
 from dooit.api.workspace import Workspace
@@ -7,17 +8,15 @@ from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
 
 
-def set_italic(value: str, _: Workspace) -> str:
+def set_italic(value: str, _: Workspace) -> Optional[str]:
     text_value = Text(value)
     text_value.highlight_words(["test"], Style(italic=True))
     return text_value.markup
 
 
-def add_icon(value: str, _: Workspace) -> str:
+def add_icon(value: str, _: Workspace) -> Optional[Tuple[str, bool]]:
     if "123" in value:
-        return f"[icon] {value}"
-    else:
-        return value
+        return f"(icon) {value}", True
 
 
 def setup(api: DooitAPI):
@@ -63,7 +62,7 @@ async def test_multiple_formatting():
         store.add(set_italic)
         store.add(add_icon)
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a test description"
+        assert formatted == "this is a [italic]test[/italic] description"
 
         formatted = store.format_value(w2.description, w2)
-        assert formatted == "[icon] another description 123"
+        assert formatted == "(icon) another description 123"

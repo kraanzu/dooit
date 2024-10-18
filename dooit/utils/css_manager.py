@@ -19,12 +19,17 @@ def generate_random_id():
 
 class CssManager:
     base_css: Path = BASE_PATH / "ui" / "styles.tcss"
-    stylesheets: Path = dooit_cache_path / "stylesheets"
-    css_file: Path = dooit_cache_path / "dooit.tcss"
     themes = dict()
 
-    def __init__(self, theme: DooitThemeBase = DooitThemeBase()):
+    def __init__(
+        self,
+        theme: DooitThemeBase = DooitThemeBase(),
+        cache_path: Path = dooit_cache_path,
+    ):
         self.theme = theme
+        self.cache_path = cache_path
+        self.stylesheets: Path = cache_path / "stylesheets"
+        self.css_file: Path = cache_path / "dooit.tcss"
 
     def _create_files(self):
         if not self.stylesheets.exists():

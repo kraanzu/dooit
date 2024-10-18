@@ -8,9 +8,15 @@ from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
 
 
-def set_italic(value: str, _: Workspace) -> Optional[str]:
+def set_italic(value: str, _: Workspace, api: DooitAPI) -> Optional[str]:
     text_value = Text(value)
-    text_value.highlight_words(["test"], Style(italic=True))
+    text_value.highlight_words(
+        ["test"],
+        Style(
+            italic=True,
+            color=api.vars.theme.red,
+        ),
+    )
     return text_value.markup
 
 
@@ -47,7 +53,7 @@ async def test_basic_formatting():
 
         store.add(set_italic)
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a [italic]test[/italic] description"
+        assert formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
 
         formatted = store.format_value(w2.description, w2)
         assert formatted == "another description 123"
@@ -62,7 +68,7 @@ async def test_multiple_formatting():
         store.add(set_italic)
         store.add(add_icon)
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a [italic]test[/italic] description"
+        assert formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
 
         formatted = store.format_value(w2.description, w2)
         assert formatted == "(icon) another description 123"

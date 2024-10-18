@@ -35,6 +35,9 @@ async def test_workspaces_tree():
         assert current is not None
         assert current.id == TodosTree(wtree.current_model).id
 
+        wtree.toggle_expand_parent()
+        assert wtree.highlighted == 3  # no change
+
         # child nodes
         w = wtree.add_child_node()
         assert len(wtree._options) == 5
@@ -49,8 +52,6 @@ async def test_workspaces_tree():
 
         wtree.toggle_expand()
         assert len(wtree._options) == 5
-
-        # switch
 
 
 async def test_base_addition():
@@ -145,3 +146,76 @@ async def test_no_node_error():
 
         with raises(NoNodeError):
             wtree.remove_node()
+
+
+async def test_shifts_single_item():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        wtree = app.workspace_tree
+
+        wtree.add_sibling()
+        await pilot.press("escape")
+
+        wtree.shift_up()
+        await pilot.pause()
+
+        assert wtree.highlighted == 0
+
+        wtree.shift_down()
+        await pilot.pause()
+
+        assert wtree.highlighted == 0
+
+
+async def test_shifts():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        wtree = app.workspace_tree
+
+        wtree.add_sibling()
+        await pilot.press("escape")
+        wtree.add_sibling()
+        await pilot.press("escape")
+        wtree.highlighted = 0
+
+        # shift up with first index
+        wtree.shift_up()
+        await pilot.pause()
+
+        assert wtree.highlighted == 0
+
+        # shift down with first index
+        wtree.shift_down()
+        await pilot.pause()
+
+        assert wtree.highlighted == 1
+
+        # shift down with last index
+        wtree.shift_down()
+        await pilot.pause()
+
+        assert wtree.highlighted == 1
+
+        # shift down with last index
+        wtree.shift_up()
+        await pilot.pause()
+
+        assert wtree.highlighted == 0
+
+
+async def test_add_sibling_while_editing():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        wtree = app.workspace_tree
+
+        wtree.add_sibling()
+        # await pilot.press("escape") # Dont stop editing
+
+        wtree.add_sibling()
+        await pilot.press("escape")
+        assert wtree.highlighted == 0
+
+        assert len(wtree._options) == 1

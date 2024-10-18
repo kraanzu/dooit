@@ -196,10 +196,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def _collapse_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = False
 
-    def collapse_node(self) -> None:
-        if self.node.id:
-            self._collapse_node(self.node.id)
-
     def _toggle_expand_node(self, _id: str) -> None:
         expanded = self.expanded_nodes[_id]
         if expanded:

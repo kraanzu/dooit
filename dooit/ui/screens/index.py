@@ -82,24 +82,6 @@ class MainScreen(BaseScreen):
         await self.api.handle_key(key)
         return True
 
-    async def clear_right(self) -> None:
-        try:
-            self.query_one("TodoTree.current").remove_class("current")
-        except Exception:
-            pass
-
-    @work(exclusive=True)
-    async def mount_todos(self, model) -> None:
-        with self.app.batch_update():
-            await self.clear_right()
-            if widgets := self.query(f"#Tree-{model.uuid}"):
-                current_widget = widgets.first()
-                current_widget.add_class("current")
-            else:
-                current_widget = TodosTree(model)
-                current_widget.add_class("current")
-                await self.query_one(DualSplitRight).mount(current_widget)
-
     @on(SwitchTab)
     def switch_tab(self, event: SwitchTab) -> None:
         event.stop()

@@ -1,6 +1,7 @@
+from dooit.ui.events.events import SpawnHelp
 from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
-from dooit.ui.screens import HelpScreen
+from dooit.ui.screens import HelpScreen, MainScreen
 
 
 async def test_help_screen_mount():
@@ -10,10 +11,16 @@ async def test_help_screen_mount():
 
         # test if help screen is mounted
         await app.push_screen("help")
-        assert app.screen.__class__ == HelpScreen
+        assert isinstance(app.screen, HelpScreen)
 
         await app.push_screen("main")
 
         # test with keybinding
         await pilot.press("?")
-        assert app.screen.__class__ == HelpScreen
+        assert isinstance(app.screen, HelpScreen)
+        await app.push_screen("main")
+
+        # test function
+        assert isinstance(app.screen, MainScreen)
+        await app.screen.spawn_help(SpawnHelp())
+        assert isinstance(app.screen, HelpScreen)

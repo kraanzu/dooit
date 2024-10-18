@@ -205,6 +205,33 @@ async def test_shifts():
         assert wtree.highlighted == 0
 
 
+async def test_cursor_movements():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+        wtree = app.workspace_tree
+
+        wtree.add_sibling()
+        await pilot.press("escape")
+
+        wtree.add_sibling()
+        await pilot.press("escape")
+
+        assert wtree.highlighted == 1
+
+        wtree.action_cursor_down()
+        assert wtree.highlighted == 1
+
+        wtree.action_cursor_up()
+        assert wtree.highlighted == 0
+
+        wtree.action_cursor_up()
+        assert wtree.highlighted == 0
+
+        wtree.action_cursor_down()
+        assert wtree.highlighted == 1
+
+
 async def test_add_sibling_while_editing():
     async with run_pilot() as pilot:
         app = pilot.app

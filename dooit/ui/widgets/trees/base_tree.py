@@ -24,10 +24,8 @@ class BaseTree(OptionList, can_focus=True, inherit_bindings=False):
     def tui(self) -> "Dooit":
         from ....ui.tui import Dooit
 
-        if isinstance(self.app, Dooit):
-            return self.app
-
-        raise ValueError("App is not a Dooit instance")
+        assert isinstance(self.app, Dooit)
+        return self.app
 
     @property
     @require_highlighted_node

@@ -25,7 +25,7 @@ def trigger_refresh(func: Callable) -> Callable:
 
 
 class FormatterStore:
-    def __init__(self, trigger: Callable, app: "DooitAPI") -> None:
+    def __init__(self, trigger: Callable, api: "DooitAPI") -> None:
         self.formatters = dict(
             default=FormatterFunc(
                 "dooit_default",
@@ -33,7 +33,7 @@ class FormatterStore:
             )
         )
         self.trigger = trigger
-        self.api = app
+        self.api = api
 
     @trigger_refresh
     def add(self, func: Callable, id: Optional[str] = None) -> str:

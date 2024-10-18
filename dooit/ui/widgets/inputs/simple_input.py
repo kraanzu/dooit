@@ -45,20 +45,10 @@ class SimpleInput(Input, Generic[ModelType, ModelValue]):
         self._cursor_pos = len(self.value)
         return self.value
 
-    def stop_edit(self, cancel: bool = False) -> None:
+    def stop_edit(self) -> None:
         super().stop_edit()
-
-        if not cancel:
-            self.model_value = self._typecast_value(self.value)
-            self.model.save()
-        else:
-            self.reset()
-
-    def cancel_edit(self) -> None:
-        return self.stop_edit(cancel=True)
+        self.model_value = self._typecast_value(self.value)
+        self.model.save()
 
     def keypress(self, key: str) -> None:
         super().keypress(key)
-
-        if key == "escape":
-            self.stop_edit()

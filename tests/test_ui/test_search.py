@@ -23,6 +23,8 @@ async def test_search():
         tree.start_search()
         await pilot.pause()
 
+        assert app.bar_switcher.search_bar
+
         await pilot.press("a")
         assert sum(i.disabled for i in tree._options) == 0
 

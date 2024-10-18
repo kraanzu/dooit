@@ -27,12 +27,7 @@ def trigger_refresh(func: Callable) -> Callable:
 
 class FormatterStore:
     def __init__(self, trigger: Callable, api: "DooitAPI") -> None:
-        self.formatters = dict(
-            default=FormatterFunc(
-                "dooit_default",
-                lambda x, *_: str(x),
-            )
-        )
+        self.formatters = dict()
         self.trigger = trigger
         self.api = api
 
@@ -110,4 +105,4 @@ class FormatterStore:
                 else:
                     return res
 
-        return "???"
+        return str(value)

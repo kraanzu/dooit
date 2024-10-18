@@ -7,8 +7,15 @@ from rich.style import Style
 
 def set_italic(value: str, _: Workspace) -> str:
     text_value = Text(value)
-    text_value.highlight_words(['test'], Style(italic=True))
+    text_value.highlight_words(["test"], Style(italic=True))
     return text_value.markup
+
+
+def add_icon(value: str, _: Workspace) -> str:
+    if "test" in value:
+        return f"[icon] {value}"
+    else:
+        return value
 
 
 class FormatterTest(CoreTestBase):
@@ -25,3 +32,9 @@ class FormatterTest(CoreTestBase):
         self.store.add(set_italic)
         formatted = self.store.format_value(self.w.description, self.w)
         assert formatted == "this is a [italic]test[/italic] description"
+
+    def test_multiple_formatting(self):
+        self.store.add(set_italic)
+        self.store.add(add_icon)
+        formatted = self.store.format_value(self.w.description, self.w)
+        assert formatted == "[icon] this is a test description"

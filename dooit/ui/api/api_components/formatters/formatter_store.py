@@ -1,8 +1,11 @@
-from typing import Any, Callable, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, List, Optional
 from uuid import uuid4
 from dataclasses import dataclass
 
 from dooit.api.workspace import ModelType
+
+if TYPE_CHECKING:
+    from dooit.ui.tui import Dooit
 
 
 @dataclass
@@ -23,9 +26,10 @@ def trigger_refresh(func: Callable) -> Callable:
 
 
 class FormatterStore:
-    def __init__(self, trigger: Callable) -> None:
+    def __init__(self, trigger: Callable, app: "Dooit") -> None:
         self.formatters = dict()
         self.trigger = trigger
+        self.app = app
 
     @trigger_refresh
     def add(self, func: Callable, id: Optional[str] = None) -> str:

@@ -90,14 +90,9 @@ class FormatterStore:
 
         for func in reversed(self.formatter_functions):
             res = func(value, model, **get_extra_args(func))
-            if res is None:
-                continue
-            else:
-                if isinstance(res, Tuple):
-                    value, multiple = res
-                    if not multiple:
-                        return value
-                else:
-                    return res
+            if res:
+                value = res
+                if not getattr(func, "__allow_multiple", False):
+                    return value
 
         return str(value)

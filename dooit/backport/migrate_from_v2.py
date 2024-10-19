@@ -6,6 +6,7 @@ from pathlib import Path
 from platformdirs import user_data_dir
 from dooit.api import Todo, Workspace, manager
 from dooit.utils.cli_logger import logger
+from dooit.utils.database import delete_all_data
 
 manager.register_engine()
 BASE_PATH = Path(user_data_dir("dooit"))
@@ -71,8 +72,15 @@ class Migrator2to3:
         logger.info("Found old data. Converting ...")
 
         try:
-            # self.new_location.unlink(missing_ok=True)
-            # self.new_location.touch()
+            if self.new_location.exists():
+                confirm = logger.console.input(
+                    "Database already exists. Do you want to overwrite it? (y/n): "
+                )
+                if confirm.lower() == "y":
+                    delete_all_data(manager.session)
+                else:
+                    logger.error("Migration aborted")
+                    return
 
             data = self.load_old()
             for workspace in data:

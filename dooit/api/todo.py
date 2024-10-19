@@ -131,6 +131,14 @@ class Todo(DooitModel):
 
     # ----------- HELPER FUNCTIONS --------------
 
+    def increase_urgency(self) -> None:
+        self.urgency += 1
+        self.save()
+
+    def decrease_urgency(self) -> None:
+        self.urgency -= 1
+        self.save()
+
     def toggle_complete(self) -> None:
         self.pending = not self.pending
         self.save()

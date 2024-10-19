@@ -91,9 +91,11 @@ class FormatterStore:
 
         for func in reversed(self.formatter_functions):
             res = func(value, model, **get_extra_args(func))
-            if res is not None:
-                value = res
-                if not getattr(func, MUTLIPLE_FORMATTER_ATTR, False):
-                    return value
+            if res is None:
+                continue
+
+            value = res
+            if not getattr(func, MUTLIPLE_FORMATTER_ATTR, False):
+                return value
 
         return str(value)

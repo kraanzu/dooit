@@ -1,4 +1,5 @@
 from enum import Enum
+from rich.style import Style
 from rich.text import Text
 from rich.console import Console
 
@@ -31,8 +32,9 @@ class CliLogger:
         }[level]
 
         message = Text.assemble(
-            Text(f"[{icon}]"),
-            *[Text(f" {message}", style=color) for message in messages],
+            Text(f"[{icon}]", style=Style(color=color, bold=True)),
+            Text(),
+            *[Text.from_markup(f" {message}", style=color) for message in messages],
         )
 
         self.print(message)

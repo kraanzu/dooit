@@ -11,3 +11,10 @@ def validate_parent_todo(mapper, connection, target: Todo):
 
     if target.parent_workspace is not None and target.parent_todo is not None:
         raise MultipleParentError("Todo cannot have both a parent workspace and todo")
+
+
+@event.listens_for(Todo, "before_insert")
+@event.listens_for(Todo, "before_update")
+def validate_urgency(mapper, connection, target: Todo):
+    target.urgency = max(0, target.urgency)
+    target.urgency = min(4, target.urgency)

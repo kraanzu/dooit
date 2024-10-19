@@ -41,9 +41,16 @@ def main():
 
     if args.version:
         print(f"dooit - {VERSION}")
+    elif args.migrate:
+        handle_migration(args)
     else:
         if Migrator2to3.check_for_old_data():
-            handle_migration(args)
+            print(
+                Text.from_markup(
+                    "Found todos for v2. Please migrate to v3 using [reverse] dooit --migrate [/reverse] first",
+                    style="yellow",
+                )
+            )
             return
 
         run_dooit()

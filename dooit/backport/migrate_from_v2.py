@@ -11,6 +11,7 @@ from rich.console import Console
 console = Console()
 print = console.print
 manager.register_engine()
+BASE_PATH = Path(user_data_dir("dooit"))
 
 
 def parse_recurrence(recurrence: str) -> timedelta:
@@ -41,10 +42,12 @@ def parse_due(due: str) -> Optional[datetime]:
 
 
 class Migrator2to3:
-    old_location = XDG_DATA = Path(user_data_dir("dooit")) / "todo.yaml"
+    old_location = BASE_PATH / "todo.yaml"
+    new_location = BASE_PATH / "dooit.db"
 
-    def check_for_old_data(self):
-        if not self.old_location.exists():
+    @classmethod
+    def check_for_old_data(cls):
+        if not cls.old_location.exists():
             return False
 
         return True
@@ -52,6 +55,17 @@ class Migrator2to3:
     def load_old(self):
         with self.old_location.open() as f:
             return safe_load(f)
+
+    def backup_old_config(self):
+        print(
+            Text("[+] ", style="bold green")
+            + Text("Moving old config to a backup file ...", style="green")
+        )
+
+        backup_location = self.old_location.with_suffix(".bak")
+        self.old_location.rename(backup_location)
+
+        print(Text("[+] ", style="bold green") + Text("Done!", style="green"))
 
     def migrate(self):
         print(
@@ -70,9 +84,26 @@ class Migrator2to3:
             + Text("Found old data. Converting ... ", style="green")
         )
 
-        data = self.load_old()
-        for workspace in data:
-            self.create_workspace(workspace)
+        try:
+            # self.new_location.unlink(missing_ok=True)
+            # self.new_location.touch()
+
+            data = self.load_old()
+            for workspace in data:
+                self.create_workspace(workspace)
+
+            self.backup_old_config()
+            print(
+                Text("[+] ", style="bold green")
+                + Text(
+                    "Successfully moved to new version. Happy todoing!", style="green"
+                )
+            )
+        except Exception as e:
+            print(
+                Text("[-] ", style="bold red")
+                + Text(f"Error converting data: {e}", style="red")
+            )
 
     # ------------------------------------------------
 

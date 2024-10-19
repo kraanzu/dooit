@@ -1,7 +1,6 @@
 import argparse
 from pathlib import Path
 from platformdirs import user_data_dir
-from dooit.utils.cli_logger import logger
 
 
 OLD_CONFIG = Path(user_data_dir("dooit")) / "todo.yaml"
@@ -22,6 +21,8 @@ def migrate_data():
 
 
 def handle_migration():
+    from dooit.utils.cli_logger import logger
+
     logger.info("Migrating from v2 ...")
     migrate_data()
 
@@ -34,7 +35,11 @@ def main():
 
     if args.version:
         print(f"dooit - {VERSION}")
-    elif args.migrate:
+        return
+
+    from dooit.utils.cli_logger import logger
+
+    if args.migrate:
         handle_migration()
     else:
         if OLD_CONFIG.exists():

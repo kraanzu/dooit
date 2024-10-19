@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Un
 from uuid import uuid4
 from dataclasses import dataclass
 from dooit.api.workspace import ModelType
+from dooit.ui.api.api_components.formatters._decorators import MUTLIPLE_FORMATTER_ATTR
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
@@ -92,7 +93,7 @@ class FormatterStore:
             res = func(value, model, **get_extra_args(func))
             if res:
                 value = res
-                if not getattr(func, "__allow_multiple", False):
+                if not getattr(func, MUTLIPLE_FORMATTER_ATTR, False):
                     return value
 
         return str(value)

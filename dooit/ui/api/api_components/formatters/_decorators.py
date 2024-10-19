@@ -1,7 +1,9 @@
+MUTLIPLE_FORMATTER_ATTR = "__allow_multiple"
+
 def allow_multiple_formatting(func):
     """
     Decorator to allow multiple formatters to be registered for a single field.
     """
 
-    func.__allow_multiple = True
+    setattr(func, MUTLIPLE_FORMATTER_ATTR, True)
     return func

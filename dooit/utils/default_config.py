@@ -76,14 +76,19 @@ def todo_desc_formatter(desc: str, todo: Todo):
     return text
 
 
-def todo_status_formatter(status: str, todo: Todo):
+def todo_status_formatter(status: str, todo: Todo, api: DooitAPI):
+    text = "o"
+    color = api.app.current_theme.yellow
+
     if status == "completed":
-        return "x"
+        text = "x"
+        color = api.app.current_theme.green
 
     if status == "overdue":
-        return "!"
+        text = "!"
+        color = api.app.current_theme.red
 
-    return "o"
+    return Text(text, style=Style(color=color, bold=True))
 
 
 def todo_due_formatter(due, _):

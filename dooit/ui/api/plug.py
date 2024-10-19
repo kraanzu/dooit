@@ -51,8 +51,13 @@ class PluginManager:
             pass
 
     def on_event(self, event: DooitEvent):
-        for obj in self.events[event.__class__]:
-            self._update_dooit_value(obj, event)
+        matched_events = [
+            e for e in self.events.keys() if issubclass(e, event.__class__)
+        ]
+
+        for e in matched_events:
+            for obj in self.events[e]:
+                self._update_dooit_value(obj, event)
 
     def _register_events(self, events: List[Type[DooitEvent]], obj: Callable):
         for event in events:

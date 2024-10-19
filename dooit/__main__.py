@@ -1,6 +1,7 @@
 import argparse
 from rich.console import Console
 from rich.text import Text
+from dooit.backport.migrate_from_v2 import Migrator2to3
 
 console = Console()
 print = console.print
@@ -14,14 +15,15 @@ def run_dooit():
     Dooit().run()
 
 
-def v2_exists() -> bool:
-    return True
+def migrate_data():
+    migrator = Migrator2to3()
+    migrator.migrate()
 
 
 def handle_migration(args: argparse.Namespace):
     if args.migrate:
         print(Text("Migrating from v2 ...", style="green"))
-        # migrate()
+        migrate_data()
     else:
         print(
             Text.from_markup(
@@ -40,7 +42,7 @@ def main():
     if args.version:
         print(f"dooit - {VERSION}")
     else:
-        if v2_exists():
+        if Migrator2to3.check_for_old_data():
             handle_migration(args)
             return
 

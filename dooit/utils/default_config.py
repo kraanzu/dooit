@@ -104,6 +104,9 @@ def todo_due_formatter(due, _):
 
 
 def todo_urgency_formatter(urgency, _, api: DooitAPI):
+    if urgency == 0:
+        return ""
+
     theme = api.app.current_theme
     colors = {
         1: theme.green,

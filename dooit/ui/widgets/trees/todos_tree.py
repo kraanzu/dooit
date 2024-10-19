@@ -55,3 +55,15 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
         self.current_model.toggle_complete()
         self.refresh_options()
+
+    def increase_urgency(self):
+        assert isinstance(self.current_model, Todo)
+
+        self.current_model.increase_urgency()
+        self.refresh_options()
+
+    def decrease_urgency(self):
+        assert isinstance(self.current_model, Todo)
+
+        self.current_model.decrease_urgency()
+        self.refresh_options()

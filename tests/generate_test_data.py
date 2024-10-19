@@ -1,21 +1,11 @@
 import faker
 from random import randint
-
-from sqlalchemy import MetaData
-from sqlalchemy.orm import Session
 from dooit.api import Todo, Workspace, manager
+from dooit.utils.database import delete_all_data
 
 manager.register_engine()
 
 f = faker.Faker()
-
-
-def delete_all_data(session: Session):
-    meta = MetaData()
-    meta.reflect(bind=session.get_bind())
-    for table in reversed(meta.sorted_tables):
-        session.execute(table.delete())
-    session.commit()
 
 
 def gen_todo(parent):

@@ -16,5 +16,8 @@ def validate_parent_todo(mapper, connection, target: Todo):
 @event.listens_for(Todo, "before_insert")
 @event.listens_for(Todo, "before_update")
 def validate_urgency(mapper, connection, target: Todo):
+    if target.urgency is None:
+        return
+
     target.urgency = max(0, target.urgency)
     target.urgency = min(4, target.urgency)

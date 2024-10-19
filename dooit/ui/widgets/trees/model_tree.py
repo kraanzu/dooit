@@ -72,7 +72,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         return self.current.model
 
     def update_current_prompt(self):
-        self.node.set_prompt(self.current.prompt)
+        self.replace_option_prompt(self.current.id, self.current.prompt)
 
     def set_filter(self, filter: str) -> None:
         self.filter_refresh = bool(filter)

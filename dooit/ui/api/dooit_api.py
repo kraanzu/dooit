@@ -121,3 +121,11 @@ class DooitAPI:
     def toggle_complete(self):
         if isinstance(self.focused, TodosTree):
             self.focused.toggle_complete()
+
+    def increase_urgency(self):
+        if isinstance(self.focused, TodosTree):
+            self.focused.increase_urgency()
+
+    def decrease_urgency(self):
+        if isinstance(self.focused, TodosTree):
+            self.focused.decrease_urgency()

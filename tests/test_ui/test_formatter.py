@@ -1,9 +1,10 @@
-from typing import Optional, Tuple
+from typing import Optional
 from rich.text import Text
 from rich.style import Style
 from dooit.api.workspace import Workspace
 from dooit.ui.api.api_components.formatters import FormatterStore
 from dooit.ui.api.dooit_api import DooitAPI
+from dooit.ui.api import allow_multiple_formatting
 from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
 
@@ -20,14 +21,15 @@ def set_italic(value: str, _: Workspace, api: DooitAPI) -> Optional[str]:
     return text_value.markup
 
 
-def add_icon(value: str, _: Workspace) -> Optional[Tuple[str, bool]]:
+@allow_multiple_formatting
+def add_icon(value: str, _: Workspace) -> Optional[str]:
     if "123" in value:
-        return f"(icon) {value}", True
+        return f"(icon) {value}"
 
 
-def add_icon_skip_multiple(value: str, _: Workspace) -> Optional[Tuple[str, bool]]:
+def add_icon_skip_multiple(value: str, _: Workspace) -> Optional[str]:
     if "123" in value:
-        return f"(icon) {value}", False
+        return f"(icon) {value}"
 
 
 def setup(api: DooitAPI):
@@ -128,7 +130,8 @@ async def test_multiple_formatting_toggle():
         assert store.enable("italic")
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description 123"
+            formatted
+            == "this is a [italic #bf616a]test[/italic #bf616a] description 123"
         )
 
         assert not store.enable("random_gibberish_id")

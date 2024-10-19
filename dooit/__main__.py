@@ -37,19 +37,22 @@ def main():
         print(f"dooit - {VERSION}")
         return
 
-    from dooit.utils.cli_logger import logger
-
     if args.migrate:
         handle_migration()
-    else:
-        if OLD_CONFIG.exists():
-            logger.warn(
-                "Found todos for v2.",
-                "Please migrate to v3 using [reverse] dooit --migrate [/reverse] first",
-            )
-            return
+        return
 
-        run_dooit()
+    # -------------------------------------
+
+    from dooit.utils.cli_logger import logger
+
+    if OLD_CONFIG.exists():
+        logger.warn(
+            "Found todos for v2.",
+            "Please migrate to v3 using [reverse] dooit --migrate [/reverse] first",
+        )
+        return
+
+    run_dooit()
 
 
 if __name__ == "__main__":

@@ -5,11 +5,8 @@ from yaml import safe_load
 from pathlib import Path
 from platformdirs import user_data_dir
 from dooit.api import Todo, Workspace, manager
-from rich.text import Text
-from rich.console import Console
+from dooit.utils.cli_logger import logger
 
-console = Console()
-print = console.print
 manager.register_engine()
 BASE_PATH = Path(user_data_dir("dooit"))
 
@@ -57,32 +54,21 @@ class Migrator2to3:
             return safe_load(f)
 
     def backup_old_config(self):
-        print(
-            Text("[+] ", style="bold green")
-            + Text("Moving old config to a backup file ...", style="green")
-        )
+        logger.info("Moving old config to a backup file ...")
 
         backup_location = self.old_location.with_suffix(".bak")
         self.old_location.rename(backup_location)
 
-        print(Text("[+] ", style="bold green") + Text("Done!", style="green"))
+        logger.success("Backup successful")
 
     def migrate(self):
-        print(
-            Text("[?] ", style="bold yellow")
-            + Text("Checking for old data ...", style="yellow")
-        )
+        logger.info("Checking for old data ...")
 
         if not self.check_for_old_data():
-            print(
-                Text("[-] ", style="bold red") + Text("No old data found", style="red")
-            )
+            logger.error("No old data found")
             return
 
-        print(
-            Text("[+] ", style="bold green")
-            + Text("Found old data. Converting ... ", style="green")
-        )
+        logger.info("Found old data. Converting ...")
 
         try:
             # self.new_location.unlink(missing_ok=True)
@@ -93,17 +79,9 @@ class Migrator2to3:
                 self.create_workspace(workspace)
 
             self.backup_old_config()
-            print(
-                Text("[+] ", style="bold green")
-                + Text(
-                    "Successfully moved to new version. Happy todoing!", style="green"
-                )
-            )
+            logger.success("Successfully moved to new version. Happy todoing!")
         except Exception as e:
-            print(
-                Text("[-] ", style="bold red")
-                + Text(f"Error converting data: {e}", style="red")
-            )
+            logger.error(f"Error converting data: {e}")
 
     # ------------------------------------------------
 

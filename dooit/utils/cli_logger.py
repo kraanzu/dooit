@@ -37,16 +37,16 @@ class CliLogger:
 
         self.print(message)
 
-    def log_info(self, *messages: str) -> None:
+    def info(self, *messages: str) -> None:
         self._log(LogLevel.INFO, *messages)
 
-    def log_warn(self, *messages: str) -> None:
+    def warn(self, *messages: str) -> None:
         self._log(LogLevel.WARN, *messages)
 
-    def log_error(self, *messages: str) -> None:
+    def error(self, *messages: str) -> None:
         self._log(LogLevel.ERROR, *messages)
 
-    def log_success(self, *messages: str) -> None:
+    def success(self, *messages: str) -> None:
         self._log(LogLevel.SUCCESS, *messages)
 
 

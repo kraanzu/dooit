@@ -10,12 +10,27 @@ EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
 
 
-# Base event
+# Super event
 
 
 class DooitEvent(Message, bubble=True):
     """
     Base class for all events
+    """
+
+
+# Base events
+
+
+class WorkspaceEvent(DooitEvent):
+    """
+    Base class for all workspace events
+    """
+
+
+class TodoEvent(DooitEvent):
+    """
+    Base class for all todo events
     """
 
 
@@ -89,7 +104,7 @@ class ShowConfirm(DooitEvent):
 # Workspace events
 
 
-class WorkspaceSelected(DooitEvent):
+class WorkspaceSelected(WorkspaceEvent):
     """
     Emitted when user selects a workspace
     """
@@ -99,7 +114,7 @@ class WorkspaceSelected(DooitEvent):
         self.workspace = workspace
 
 
-class WorkspaceRemoved(DooitEvent):
+class WorkspaceRemoved(WorkspaceEvent):
     """
     Emitted when user removes a workspace
     """
@@ -109,7 +124,7 @@ class WorkspaceRemoved(DooitEvent):
         self.workspace = workspace
 
 
-class WorkspaceDescriptionChanged(DooitEvent):
+class WorkspaceDescriptionChanged(WorkspaceEvent):
     """
     Emitted when user changes the description of a workspace
     """
@@ -124,7 +139,7 @@ class WorkspaceDescriptionChanged(DooitEvent):
 # Todo events
 
 
-class TodoSelected(DooitEvent):
+class TodoSelected(TodoEvent):
     """
     Emitted when user selects a todo
     """
@@ -134,7 +149,7 @@ class TodoSelected(DooitEvent):
         self.todo = todo
 
 
-class TodoRemoved(DooitEvent):
+class TodoRemoved(TodoEvent):
     """
     Emitted when user removes a todo
     """
@@ -144,7 +159,7 @@ class TodoRemoved(DooitEvent):
         self.todo = todo
 
 
-class TodoDescriptionChanged(DooitEvent):
+class TodoDescriptionChanged(TodoEvent):
     """
     Emitted when user changes the description of a todo
     """
@@ -156,7 +171,7 @@ class TodoDescriptionChanged(DooitEvent):
         self.todo = todo
 
 
-class TodoDueChanged(DooitEvent):
+class TodoDueChanged(TodoEvent):
     """
     Emitted when user changes the due of a todo
     """
@@ -170,7 +185,7 @@ class TodoDueChanged(DooitEvent):
         self.todo = todo
 
 
-class TodoStatusChanged(DooitEvent):
+class TodoStatusChanged(TodoEvent):
     """
     Emitted when user changes the status of a todo
     """
@@ -182,7 +197,7 @@ class TodoStatusChanged(DooitEvent):
         self.todo = todo
 
 
-class TodoEffortChanged(DooitEvent):
+class TodoEffortChanged(TodoEvent):
     """
     Emitted when user changes the effort of a todo
     """
@@ -194,7 +209,7 @@ class TodoEffortChanged(DooitEvent):
         self.todo = todo
 
 
-class TodoRecurrenceChanged(DooitEvent):
+class TodoRecurrenceChanged(TodoEvent):
     """
     Emitted when user changes the recurrence of a todo
     """
@@ -208,7 +223,7 @@ class TodoRecurrenceChanged(DooitEvent):
         self.todo = todo
 
 
-class TodoUrgencyChanged(DooitEvent):
+class TodoUrgencyChanged(TodoEvent):
     """
     Emitted when user changes the urget of a todo
     """

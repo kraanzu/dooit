@@ -1651,4 +1651,4 @@ extras = ["dooit-extras"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "70df6c1d7dee7150292a153dcea73ec540494b51567e8c3387683ceb30dd487c"
+content-hash = "f663155ecc053b0efae4ae81d1656ef88c8323413230472382880a73620f9042"

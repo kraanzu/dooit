@@ -21,6 +21,7 @@ sqlalchemy = "^2.0.31"
 platformdirs = "^4.3.6"
 dooit-extras = {git = "https://github.com/dooit-org/dooit-extras.git", optional = true}
 
+click = "^8.1.7"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.9"
 pre-commit = "^3.2.2"

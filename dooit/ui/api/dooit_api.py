@@ -68,6 +68,8 @@ class DooitAPI:
         raise ValueError(f"Expected BaseTree, got {type(focused)}")
 
     def switch_focus(self):
+        """Switch focus between the workspace and the todo list"""
+
         if self.app.bar_switcher.is_focused:
             return
 
@@ -75,64 +77,88 @@ class DooitAPI:
             w.post_message(SwitchTab())
 
     def move_down(self):
+        """Move the cursor down in the focused list"""
+
         self.focused.action_cursor_down()
 
     def move_up(self):
+        """Move the cursor up in the focused list"""
+
         self.focused.action_cursor_up()
 
     def shift_up(self):
+        """Shift the highlighted item up"""
+
         self.focused.shift_up()
 
     def shift_down(self):
+        """Shift the highlighted item down"""
+
         self.focused.shift_down()
 
     def go_to_top(self):
+        """Move the cursor to the top of the list"""
         self.focused.action_first()
 
     def go_to_bottom(self):
+        """Move the cursor to the bottom of the list"""
         self.focused.action_last()
 
     def edit(self, property: str):
+        """Start editing a property of the focused item"""
         self.focused.start_edit(property)
 
     def edit_description(self):
+        """Start editing the description of the focused item"""
         return self.edit("description")
 
     def edit_due(self):
+        """Start editing the due date of the todo"""
         return self.edit("due")
 
     def edit_recurrence(self):
+        """Start editing the recurrence of the todo"""
         return self.edit("recurrence")
 
     def add_sibling(self):
+        """Add a sibling to highlighted item"""
         self.focused.add_sibling()
 
     def toggle_expand(self):
+        """Toggle the expansion of the highlighted item"""
         self.focused.toggle_expand()
 
     def toggle_expand_parent(self):
+        """Toggle the expansion of the parent of the highlighted item"""
         self.focused.toggle_expand_parent()
 
     def add_child_node(self):
+        """Add a child to the highlighted item"""
         self.focused.add_child_node()
 
     def remove_node(self):
+        """Remove the highlighted item"""
         self.focused.remove_node()
 
     def start_search(self):
+        """Start a search within the list"""
         self.focused.start_search()
 
     def start_sort(self):
+        """Start sorting the siblings of the highlighted item"""
         self.focused.start_sort()
 
     def toggle_complete(self):
+        """Toggle the completion of the todo"""
         if isinstance(self.focused, TodosTree):
             self.focused.toggle_complete()
 
     def increase_urgency(self):
+        """Increase the urgency of the todo"""
         if isinstance(self.focused, TodosTree):
             self.focused.increase_urgency()
 
     def decrease_urgency(self):
+        """Decrease the urgency of the todo"""
         if isinstance(self.focused, TodosTree):
             self.focused.decrease_urgency()

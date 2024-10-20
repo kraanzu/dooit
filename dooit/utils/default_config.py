@@ -158,8 +158,8 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("K", api.shift_up)
     api.keys.set("x", api.remove_node)
     api.keys.set("c", api.toggle_complete)
-    api.keys.set("+", api.increase_urgency)
-    api.keys.set("-", api.decrease_urgency)
+    api.keys.set("=,+", api.increase_urgency)
+    api.keys.set("-,_", api.decrease_urgency)
     api.keys.set("/", api.start_search)
     api.keys.set("ctrl+s", api.start_sort)
 

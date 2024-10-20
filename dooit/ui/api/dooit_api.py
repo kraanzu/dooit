@@ -52,7 +52,7 @@ class DooitAPI:
             return
 
         assert keymatch.function is not None
-        keymatch.function()
+        keymatch.function.callback()
 
     def trigger_event(self, event: DooitEvent):
         self.plugin_manager.on_event(event)

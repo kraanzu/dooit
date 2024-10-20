@@ -6,7 +6,13 @@ from typing import Callable, List, Optional
 from ._base import ApiComponent
 from dooit.ui.events.events import ModeType
 
-KeyBindType = defaultdict[str, defaultdict[str, Optional[Callable]]]
+KeyBindType = defaultdict[str, defaultdict[str, Optional["DooitFunction"]]]
+
+
+@dataclass
+class DooitFunction:
+    callback: Callable
+    description: str = ""
 
 
 class KeyMatchType(Enum):
@@ -18,7 +24,7 @@ class KeyMatchType(Enum):
 @dataclass
 class KeyMatch:
     match_type: KeyMatchType
-    function: Optional[Callable] = None
+    function: Optional[DooitFunction] = None
 
     @staticmethod
     def no_match():
@@ -29,7 +35,7 @@ class KeyMatch:
         return KeyMatch(match_type=KeyMatchType.MultipleMatchFound)
 
     @staticmethod
-    def match_found(func: Callable):
+    def match_found(func: DooitFunction):
         return KeyMatch(match_type=KeyMatchType.MatchFound, function=func)
 
 
@@ -39,12 +45,22 @@ class KeyManager(ApiComponent):
         self._inputs: List[str] = []
         self.get_mode = get_mode
 
-    def __set_key(self, mode: ModeType, key: str, callback: Callable) -> None:
-        self.keybinds[mode][key] = callback
+    def __set_key(
+        self,
+        mode: ModeType,
+        key: str,
+        callback: Callable,
+        description: Optional[str],
+    ) -> None:
+        self.keybinds[mode][key] = DooitFunction(
+            callback, description or callback.__doc__ or ""
+        )
 
-    def set(self, keys: str, callback: Callable) -> None:
+    def set(
+        self, keys: str, callback: Callable, description: Optional[str] = None
+    ) -> None:
         for key in keys.split(","):
-            self.__set_key("NORMAL", key, callback)
+            self.__set_key("NORMAL", key, callback, description)
 
     @property
     def input(self) -> str:
@@ -60,7 +76,7 @@ class KeyManager(ApiComponent):
     def clear_input(self):
         self._inputs.clear()
 
-    def _find_matched_functions(self) -> List[Callable]:
+    def _find_matched_functions(self) -> List[DooitFunction]:
         keybinds = self.keybinds[self.get_mode()].items()
         return [func for key, func in keybinds if key.startswith(self.input) and func]
 

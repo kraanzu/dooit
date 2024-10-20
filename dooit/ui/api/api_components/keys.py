@@ -14,6 +14,9 @@ class DooitFunction:
     callback: Callable
     description: str = ""
 
+    def __post_init__(self):
+        self.description = self.description.strip("\n")
+
 
 class KeyMatchType(Enum):
     NoMatchFound = "NoMatchFound"

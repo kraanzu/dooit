@@ -52,7 +52,10 @@ ModelTree {
 
 DooitKeyTable {
   background: $background_2;
-  border: tall $primary;
+  border: blank $secondary;
+  border-title-background: $primary;
+  border-title-color: $background_1;
+  border-title-align: center;
 
   .keybind {
     color: $primary;
@@ -64,6 +67,7 @@ DooitKeyTable {
 
   .description {
     color: $secondary;
+    text-style: bold;
   }
 }
 

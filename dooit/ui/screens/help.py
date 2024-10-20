@@ -38,7 +38,7 @@ class DooitKeyTable(Static):
     DooitKeyTable {
         content-align: center middle;
         width: 80%;
-        padding: 2;
+        padding: 1 2;
     }
     """
     COMPONENT_CLASSES = {
@@ -46,6 +46,7 @@ class DooitKeyTable(Static):
         "arrow",
         "description",
     }
+    BORDER_TITLE = "Key Bindings"
 
     def __init__(self, keybinds: KeyBindType):
         super().__init__()
@@ -54,11 +55,12 @@ class DooitKeyTable(Static):
     def render(self) -> RenderableType:
         t = Table.grid(expand=True, padding=(0, 1))
 
-        t.add_column("key", width=10)
-        t.add_column("arrow", width=15)
+        t.add_column("key")
+        t.add_column("arrow")
         t.add_column("description")
+        t.title_justify = 'left'
 
-        for mode, keybinds in self.keybinds.items():
+        for _, keybinds in self.keybinds.items():
             for keybind, func in keybinds.items():
                 keybind = Text(keybind, style=self.get_component_rich_style("keybind"))
                 arrow = Text("->", style=self.get_component_rich_style("arrow"))

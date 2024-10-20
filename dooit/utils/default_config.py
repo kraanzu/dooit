@@ -143,7 +143,7 @@ def add_default_themes(api: DooitAPI, _):
 
 @subscribe(Startup)
 def key_setup(api: DooitAPI, _):
-    api.keys.set("tab", api.switch_focus)
+    api.keys.set("<tab>", api.switch_focus)
     api.keys.set("j", api.move_down)
     api.keys.set("k", api.move_up)
     api.keys.set("i", api.edit_description)
@@ -161,7 +161,7 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("=,+", api.increase_urgency)
     api.keys.set("-,_", api.decrease_urgency)
     api.keys.set("/", api.start_search)
-    api.keys.set("ctrl+s", api.start_sort)
+    api.keys.set("<ctrl+s>", api.start_sort)
 
 
 @subscribe(Startup)

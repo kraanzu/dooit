@@ -16,7 +16,7 @@ class KeyManager(ApiComponent):
     def __set_key(self, mode: ModeType, key: str, callback: Callable) -> None:
         self.keybinds[mode][key] = callback
 
-    def set_normal(self, key: str, callback: Callable) -> None:
+    def set(self, key: str, callback: Callable) -> None:
         self.__set_key("NORMAL", key, callback)
 
     @property

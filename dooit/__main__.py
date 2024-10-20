@@ -6,6 +6,12 @@ OLD_CONFIG = Path(user_data_dir("dooit")) / "todo.yaml"
 VERSION = "3.0.0"
 
 
+def run_dooit():
+    from dooit.ui.tui import Dooit
+
+    Dooit().run()
+
+
 @click.group(
     context_settings={"help_option_names": ["-h", "--help"]},
     invoke_without_command=True,
@@ -18,12 +24,10 @@ VERSION = "3.0.0"
 )
 @click.pass_context
 def main(ctx, version: bool) -> None:
-    """Main entry point for the command-line interface."""
     if version:
         return print(f"dooit - {VERSION}")
 
     if ctx.invoked_subcommand is None:
-        # Check for old configuration and show warning if needed
         if OLD_CONFIG.exists():
             from dooit.utils.cli_logger import logger
 
@@ -33,15 +37,11 @@ def main(ctx, version: bool) -> None:
             )
             return
 
-        # Run the main Dooit application if no subcommand is invoked
-        from dooit.ui.tui import Dooit
-
-        Dooit().run()
+        run_dooit()
 
 
 @main.command(help="Migrate data from v2 to v3.")
 def migrate() -> None:
-    """Perform migration from v2."""
     from dooit.utils.cli_logger import logger
 
     logger.info("Migrating from v2 ...")

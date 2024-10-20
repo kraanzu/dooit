@@ -24,7 +24,7 @@ class KeyManager(ApiComponent):
     def input(self) -> str:
         formatted = ""
         for i in self._inputs:
-            if len(i) > 1 and len(self._inputs) > 1:
+            if len(i) > 1:
                 formatted += f"<{i}>"
             else:
                 formatted += i

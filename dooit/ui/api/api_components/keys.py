@@ -16,12 +16,20 @@ class KeyManager(ApiComponent):
     def __set_key(self, mode: ModeType, key: str, callback: Callable) -> None:
         self.keybinds[mode][key] = callback
 
-    def set(self, key: str, callback: Callable) -> None:
-        self.__set_key("NORMAL", key, callback)
+    def set(self, keys: str, callback: Callable) -> None:
+        for key in keys.split(","):
+            self.__set_key("NORMAL", key, callback)
 
     @property
     def input(self) -> str:
-        return ",".join([i.strip() for i in self._inputs])
+        formatted = ""
+        for i in self._inputs:
+            if len(i) > 1 and len(self._inputs) > 1:
+                formatted += f"<{i}>"
+            else:
+                formatted += i
+
+        return formatted
 
     def clear_input(self):
         self._inputs.clear()

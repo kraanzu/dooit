@@ -62,9 +62,13 @@ class DooitKeyTable(Static):
             for keybind, func in keybinds.items():
                 keybind = Text(keybind, style=self.get_component_rich_style("keybind"))
                 arrow = Text("->", style=self.get_component_rich_style("arrow"))
-                description = Text(
-                    func.__doc__ or "Example function",
-                    style=self.get_component_rich_style("description"),
+                description = (
+                    Text(
+                        func.description,
+                        style=self.get_component_rich_style("description"),
+                    )
+                    if func
+                    else Text("")
                 )
 
                 t.add_row(keybind, arrow, description)

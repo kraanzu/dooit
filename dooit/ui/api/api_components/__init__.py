@@ -1,4 +1,4 @@
-from .keys import KeyManager, KeyBindType
+from .keys import KeyManager, KeyBindType, KeyMatchType
 from .layout import LayoutManager
 from .vars import VarManager
 from .formatters import Formatter
@@ -8,6 +8,7 @@ from .bar import BarManager
 __all__ = [
     "KeyManager",
     "KeyBindType",
+    "KeyMatchType",
     "LayoutManager",
     "VarManager",
     "Formatter",

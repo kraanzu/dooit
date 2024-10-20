@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
 
 from dooit.ui.api.plug import PluginManager
-from dooit.ui.events.events import DooitEvent, SwitchTab
+from dooit.ui.events.events import DooitEvent, ModeChanged, SwitchTab
 from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.trees import TodosTree
 from dooit.utils import CssManager
 
 from .api_components import (
     KeyManager,
+    KeyMatchType,
     LayoutManager,
     Formatter,
     BarManager,
@@ -41,11 +42,17 @@ class DooitAPI:
         self.app.notify(message)
 
     async def handle_key(self, key: str) -> None:
-        func = self.keys.register_key(key)
-        if func is not None:
-            func()
-        else:
+        keymatch = self.keys.register_key(key)
+
+        if keymatch.match_type == KeyMatchType.NoMatchFound:
             await self.focused.handle_keypress(key)
+            return
+
+        if keymatch.match_type == KeyMatchType.MultipleMatchFound:
+            return
+
+        assert keymatch.function is not None
+        keymatch.function()
 
     def trigger_event(self, event: DooitEvent):
         self.plugin_manager.on_event(event)

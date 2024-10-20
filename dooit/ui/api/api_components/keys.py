@@ -1,3 +1,5 @@
+from enum import Enum
+from dataclasses import dataclass
 from collections import defaultdict
 from typing import Callable, List, Optional
 
@@ -5,6 +7,30 @@ from ._base import ApiComponent
 from dooit.ui.events.events import ModeType
 
 KeyBindType = defaultdict[str, defaultdict[str, Optional[Callable]]]
+
+
+class KeyMatchType(Enum):
+    NoMatchFound = "NoMatchFound"
+    MultipleMatchFound = "MultipleMatchFound"
+    MatchFound = "MatchFound"
+
+
+@dataclass
+class KeyMatch:
+    match_type: KeyMatchType
+    function: Optional[Callable] = None
+
+    @staticmethod
+    def no_match():
+        return KeyMatch(match_type=KeyMatchType.NoMatchFound)
+
+    @staticmethod
+    def multiple_match():
+        return KeyMatch(match_type=KeyMatchType.MultipleMatchFound)
+
+    @staticmethod
+    def match_found(func: Callable):
+        return KeyMatch(match_type=KeyMatchType.MatchFound, function=func)
 
 
 class KeyManager(ApiComponent):
@@ -34,13 +60,25 @@ class KeyManager(ApiComponent):
     def clear_input(self):
         self._inputs.clear()
 
-    def search_for_key(self) -> Optional[Callable]:
-        mode = self.get_mode()
-        func = self.keybinds[mode].get(self.input)
+    def _find_matched_functions(self) -> List[Callable]:
+        keybinds = self.keybinds[self.get_mode()].items()
+        return [func for key, func in keybinds if key.startswith(self.input) and func]
+
+    def search_for_key(self) -> KeyMatch:
+        matched = self._find_matched_functions()
+        if not matched:
+            return KeyMatch.no_match()
+
+        if len(matched) > 1 or self.input not in self.keybinds[self.get_mode()]:
+            return KeyMatch.multiple_match()
+
         self.clear_input()
+        return KeyMatch.match_found(matched[0])
 
-        return func
+    def register_key(self, key: str) -> KeyMatch:
+        if key == "escape":
+            self.clear_input()
+            return KeyMatch.no_match()
 
-    def register_key(self, key: str) -> Optional[Callable]:
         self._inputs.append(key)
         return self.search_for_key()

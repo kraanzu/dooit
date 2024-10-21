@@ -15,6 +15,8 @@ from .events import (
     TodoEffortChanged,
     TodoRecurrenceChanged,
     TodoDescriptionChanged,
+    TodoEvent,
+    WorkspaceEvent,
 )
 
 __all__ = [
@@ -35,4 +37,6 @@ __all__ = [
     "TodoRecurrenceChanged",
     "TodoDescriptionChanged",
     "TodoDescriptionChanged",
+    "TodoEvent",
+    "WorkspaceEvent",
 ]

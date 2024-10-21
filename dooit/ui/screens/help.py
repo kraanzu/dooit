@@ -25,10 +25,24 @@ class Header(HelpWidget):
 
 
 class Outro(HelpWidget):
+    COMPONENT_CLASSES = {
+        "exit",
+        "thanks",
+        "github",
+    }
+
     def render(self) -> RenderableType:
-        thanks = Text.from_markup("     Thanks for using Dooit <3")
+        thanks = Text.from_markup(
+            "     Thanks for using Dooit <3",
+            style=self.get_component_rich_style("thanks"),
+        )
         github = Text.from_markup("You can find this project on  github -> ")
-        go_back = Text.from_markup("     Use [reverse] escape [/reverse] to go back")
+        go_back = Text.from_markup("     Use  escape  to go back")
+
+        go_back.highlight_words(
+            [" escape "],
+            style=self.get_component_rich_style("exit"),
+        )
 
         github.highlight_words(
             [" github -> "],
@@ -37,7 +51,7 @@ class Outro(HelpWidget):
             ),
         )
 
-        return thanks + "\n" + github + "\n\n" + go_back
+        return Text() + thanks + "\n" + github + "\n\n" + go_back
 
 
 class DooitKeyTable(HelpWidget):

@@ -54,6 +54,22 @@ Header {
   border: tall $background_3;
 }
 
+Outro {
+  .thanks {
+    color: $purple;
+  }
+  
+  .github {
+    color: $primary;
+  }
+
+  .exit {
+    background: $primary;
+    color: $background_1;
+  }
+
+}
+
 DooitKeyTable {
   background: $background_2;
   border: blank $secondary;

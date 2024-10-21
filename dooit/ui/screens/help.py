@@ -27,11 +27,11 @@ class Header(HelpWidget):
 class Outro(HelpWidget):
     def render(self) -> RenderableType:
         thanks = Text.from_markup("     Thanks for using Dooit <3")
-        github = Text.from_markup("You can find this project on  github ")
+        github = Text.from_markup("You can find this project on  github -> ")
         go_back = Text.from_markup("     Use [reverse] escape [/reverse] to go back")
 
         github.highlight_words(
-            [" github "],
+            [" github -> "],
             style=Style.from_meta(
                 {"@click": "app.quit"},
             ),

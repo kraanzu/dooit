@@ -1,4 +1,5 @@
 from rich.console import RenderableType
+from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 from textual.app import ComposeResult
@@ -13,12 +14,12 @@ class Header(Static):
     Header {
         content-align: center middle;
         width: 80%;
-        margin: 3;
+        margin: 1;
     }
     """
 
     def render(self) -> RenderableType:
-        return "Dooit's Keybindings"
+        return "Welcome to Dooit!"
 
 
 class Outro(Static):
@@ -26,11 +27,23 @@ class Outro(Static):
     Outro {
         content-align: center middle;
         width: 80%;
+        margin: 1;
     }
     """
 
     def render(self) -> RenderableType:
-        return "Thanks for using Dooit <3"
+        thanks = Text.from_markup("     Thanks for using Dooit <3") 
+        github = Text.from_markup("You can find this project on github")
+        go_back = Text.from_markup("     Use [reverse] escape [/reverse] to go back")
+
+        github.highlight_words(
+            ["github"],
+            style=Style.from_meta(
+                {"@click": "app.quit"},
+            ),
+        )
+
+        return thanks + "\n" + github + "\n\n" + go_back
 
 
 class DooitKeyTable(Static):
@@ -58,7 +71,7 @@ class DooitKeyTable(Static):
         t.add_column("key")
         t.add_column("arrow")
         t.add_column("description")
-        t.title_justify = 'left'
+        t.title_justify = "left"
 
         for _, keybinds in self.keybinds.items():
             for keybind, func in keybinds.items():
@@ -85,7 +98,7 @@ class HelpScreen(BaseScreen):
 
     DEFAULT_CSS = """
     HelpScreen {
-        align: center middle;
+        align: center top;
     }
     """
 

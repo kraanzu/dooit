@@ -86,6 +86,7 @@ class KeyManager(ApiComponent):
     def search_for_key(self) -> KeyMatch:
         matched = self._find_matched_functions()
         if not matched:
+            self.clear_input()
             return KeyMatch.no_match()
 
         if len(matched) > 1 or self.input not in self.keybinds[self.get_mode()]:

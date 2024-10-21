@@ -9,30 +9,24 @@ from dooit.ui.api import KeyBindType
 from .base import BaseScreen
 
 
-class Header(Static):
+class HelpWidget(Static):
     DEFAULT_CSS = """
-    Header {
+    HelpWidget {
         content-align: center middle;
         width: 80%;
         margin: 1;
     }
     """
 
+
+class Header(HelpWidget):
     def render(self) -> RenderableType:
         return "Welcome to Dooit!"
 
 
-class Outro(Static):
-    DEFAULT_CSS = """
-    Outro {
-        content-align: center middle;
-        width: 80%;
-        margin: 1;
-    }
-    """
-
+class Outro(HelpWidget):
     def render(self) -> RenderableType:
-        thanks = Text.from_markup("     Thanks for using Dooit <3") 
+        thanks = Text.from_markup("     Thanks for using Dooit <3")
         github = Text.from_markup("You can find this project on github")
         go_back = Text.from_markup("     Use [reverse] escape [/reverse] to go back")
 
@@ -46,14 +40,13 @@ class Outro(Static):
         return thanks + "\n" + github + "\n\n" + go_back
 
 
-class DooitKeyTable(Static):
+class DooitKeyTable(HelpWidget):
     DEFAULT_CSS = """
     DooitKeyTable {
-        content-align: center middle;
-        width: 80%;
         padding: 1 2;
     }
     """
+
     COMPONENT_CLASSES = {
         "keybind",
         "arrow",

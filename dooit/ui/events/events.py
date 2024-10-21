@@ -27,11 +27,19 @@ class WorkspaceEvent(DooitEvent):
     Base class for all workspace events
     """
 
+    def __init__(self, workspace: Workspace) -> None:
+        super().__init__()
+        self.workspace = workspace
+
 
 class TodoEvent(DooitEvent):
     """
     Base class for all todo events
     """
+
+    def __init__(self, todo: Todo) -> None:
+        super().__init__()
+        self.todo = todo
 
 
 # Events
@@ -110,8 +118,7 @@ class WorkspaceSelected(WorkspaceEvent):
     """
 
     def __init__(self, workspace: Workspace) -> None:
-        super().__init__()
-        self.workspace = workspace
+        super().__init__(workspace)
 
 
 class WorkspaceRemoved(WorkspaceEvent):
@@ -120,8 +127,7 @@ class WorkspaceRemoved(WorkspaceEvent):
     """
 
     def __init__(self, workspace: Workspace) -> None:
-        super().__init__()
-        self.workspace = workspace
+        super().__init__(workspace)
 
 
 class WorkspaceDescriptionChanged(WorkspaceEvent):
@@ -130,10 +136,9 @@ class WorkspaceDescriptionChanged(WorkspaceEvent):
     """
 
     def __init__(self, old: str, new: str, workspace: Workspace) -> None:
-        super().__init__()
+        super().__init__(workspace)
         self.old = old
         self.new = new
-        self.workspace = workspace
 
 
 # Todo events
@@ -145,8 +150,7 @@ class TodoSelected(TodoEvent):
     """
 
     def __init__(self, todo: Todo) -> None:
-        super().__init__()
-        self.todo = todo
+        super().__init__(todo)
 
 
 class TodoRemoved(TodoEvent):
@@ -155,8 +159,7 @@ class TodoRemoved(TodoEvent):
     """
 
     def __init__(self, todo: Todo) -> None:
-        super().__init__()
-        self.todo = todo
+        super().__init__(todo)
 
 
 class TodoDescriptionChanged(TodoEvent):
@@ -165,10 +168,9 @@ class TodoDescriptionChanged(TodoEvent):
     """
 
     def __init__(self, old: str, new: str, todo: Todo) -> None:
-        super().__init__()
+        super().__init__(todo)
         self.old = old
         self.new = new
-        self.todo = todo
 
 
 class TodoDueChanged(TodoEvent):
@@ -179,10 +181,9 @@ class TodoDueChanged(TodoEvent):
     def __init__(
         self, old: Optional[datetime], new: Optional[datetime], todo: Todo
     ) -> None:
-        super().__init__()
-        self.old = old
+        super().__init__(todo)
         self.new = new
-        self.todo = todo
+        self.old = old
 
 
 class TodoStatusChanged(TodoEvent):
@@ -191,10 +192,9 @@ class TodoStatusChanged(TodoEvent):
     """
 
     def __init__(self, old: str, new: str, todo: Todo) -> None:
-        super().__init__()
+        super().__init__(todo)
         self.old = old
         self.new = new
-        self.todo = todo
 
 
 class TodoEffortChanged(TodoEvent):
@@ -203,10 +203,9 @@ class TodoEffortChanged(TodoEvent):
     """
 
     def __init__(self, old: Optional[int], new: Optional[int], todo: Todo) -> None:
-        super().__init__()
+        super().__init__(todo)
         self.old = old
         self.new = new
-        self.todo = todo
 
 
 class TodoRecurrenceChanged(TodoEvent):
@@ -217,10 +216,9 @@ class TodoRecurrenceChanged(TodoEvent):
     def __init__(
         self, old: Optional[timedelta], new: Optional[timedelta], todo: Todo
     ) -> None:
-        super().__init__()
+        super().__init__(todo)
         self.old = old
         self.new = new
-        self.todo = todo
 
 
 class TodoUrgencyChanged(TodoEvent):
@@ -229,7 +227,6 @@ class TodoUrgencyChanged(TodoEvent):
     """
 
     def __init__(self, old: int, new: int, todo: Todo) -> None:
-        super().__init__()
+        super().__init__(todo)
         self.old = old
         self.new = new
-        self.todo = todo

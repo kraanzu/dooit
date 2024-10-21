@@ -50,6 +50,10 @@ ModelTree {
     }
 }
 
+Header {
+  border: tall $background_3;
+}
+
 DooitKeyTable {
   background: $background_2;
   border: blank $secondary;
@@ -110,9 +114,20 @@ ModelTree > * > Label {
 * {
     scrollbar-size: 0 1;
     scrollbar-background: $background_3;
-    scrollbar-background-hover: $background_2;
-    scrollbar-background-active: $background_2;
     scrollbar-color: $primary;
-    scrollbar-color-active: $secondary;
+
+    scrollbar-background-hover: $background_2;
     scrollbar-color-hover: $secondary;
+
+    scrollbar-background-active: $background_2;
+    scrollbar-color-active: $secondary;
+
+    link-background: $background_3;
+    link-color: $primary;
+ 
+    link-background-hover: $primary 50%;
+    link-color-hover: $background_1;
+
+    link-style: italic;
+    link-style-hover: italic;
 }

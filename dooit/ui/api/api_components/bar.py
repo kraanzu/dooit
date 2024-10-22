@@ -3,13 +3,16 @@ from dooit.ui.widgets.bars import StatusBarWidget
 from ._base import ApiComponent
 
 if TYPE_CHECKING:  # pragma: no cover
-    from dooit.ui.tui import Dooit
+    from dooit.ui.tui import DooitAPI
 
 
 class BarManager(ApiComponent):
-    def __init__(self, app: "Dooit") -> None:
+    def __init__(self, api: "DooitAPI") -> None:
         super().__init__()
-        self.app = app
+        self.api = api
 
     def set(self, widgets: List[StatusBarWidget]):
-        self.app.bar.set_widgets(widgets)
+        for widget in widgets:
+            self.api.plugin_manager.register(widget.func)
+
+        self.api.app.bar.set_widgets(widgets)

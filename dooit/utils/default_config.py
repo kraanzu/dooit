@@ -5,7 +5,7 @@ from dooit.api import Todo, Workspace
 from dooit.ui.api import DooitAPI
 from dooit.ui.api.events import subscribe, timer
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
-from dooit.ui.events.events import ModeChanged, Startup
+from dooit.ui.events import ModeChanged, Startup
 from dooit.ui.widgets.bars import StatusBarWidget
 from rich.text import Text
 

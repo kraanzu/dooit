@@ -1,4 +1,10 @@
 from .events import (
+    DooitEvent,
+    Startup,
+    StartSearch,
+    StartSort,
+    ShowConfirm,
+    SwitchTab,
     ModeChanged,
     ModeType,
     SwitchTab,
@@ -20,6 +26,11 @@ from .events import (
 )
 
 __all__ = [
+    "DooitEvent",
+    "Startup",
+    "StartSearch",
+    "StartSort",
+    "ShowConfirm",
     "SpawnHelp",
     "ModeChanged",
     "ModeType",

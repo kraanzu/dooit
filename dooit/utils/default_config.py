@@ -134,14 +134,6 @@ def workspace_desc_formatter(desc: str, workspace: Workspace):
 
 
 @subscribe(Startup)
-def add_default_themes(api: DooitAPI, _):
-    from dooit.api.themes import all_themes
-
-    for theme in all_themes:
-        api.css.add_theme(theme)
-
-
-@subscribe(Startup)
 def key_setup(api: DooitAPI, _):
     api.keys.set("<tab>", api.switch_focus)
     api.keys.set("j", api.move_down)

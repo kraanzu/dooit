@@ -16,17 +16,22 @@ class StatusBar(BarBase):
     def render(self) -> RenderableType:
         expand = any(widget.width == 0 for widget in self.bar_widgets)
         table = Table.grid(expand=expand, padding=0)
+        row = []
 
         for widget in self.bar_widgets:
             value = widget.render()
+            row.append(value)
+
             if widget.width is None:
-                table.add_column(width=len(value))
+                if len(value):
+                    table.add_column(width=len(value))
+                else:
+                    row.pop()
+
             elif width := widget.width:
                 table.add_column(width=width)
             else:
                 table.add_column(ratio=1)
 
-        values = [widget.render() for widget in self.bar_widgets]
-        table.add_row(*values)
-
+        table.add_row(*row)
         return table

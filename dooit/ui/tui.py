@@ -42,6 +42,7 @@ class Dooit(App):
 
     async def base_setup(self):
         self.api = DooitAPI(self)
+        self.api.plugin_manager.scan()
         self.post_message(Startup())
         self.post_message(ModeChanged("NORMAL"))
         self.push_screen("main")

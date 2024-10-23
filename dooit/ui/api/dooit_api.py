@@ -24,7 +24,6 @@ class DooitAPI:
     def __init__(self, app: "Dooit") -> None:
         self.app = app
         self.plugin_manager = PluginManager(self)
-        self.plugin_manager.scan()
         self.css = CssManager()
         self.keys = KeyManager(self.app.get_mode)
         self.layouts = LayoutManager(self.app)

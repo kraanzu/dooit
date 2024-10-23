@@ -19,6 +19,7 @@ class DooitThemeBase:
     blue: str = "#5E81AC"
     purple: str = "#B48EAD"
     magenta: str = "#B48EAD"
+    cyan: str = "#8FBCBB"
 
     # accent colors
     primary: str = "#88C0D0"

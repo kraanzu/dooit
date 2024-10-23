@@ -37,23 +37,26 @@ class Dooit(App):
 
     def __init__(self, connection_string: Optional[str] = None):
         super().__init__(watch_css=True)
-        self.api = DooitAPI(self)
         self._mode: ModeType = "NORMAL"
         manager.register_engine(connection_string)
 
-    async def on_load(self):
-        self.api.plugin_manager.kickstart_timers()
+    async def base_setup(self):
+        self.api = DooitAPI(self)
         self.post_message(Startup())
         self.post_message(ModeChanged("NORMAL"))
-
-    async def on_mount(self):
-        self.set_interval(1, self.poll)
         self.push_screen("main")
+
+    async def setup_poller(self):
+        self.set_interval(1, self.poll)
 
         timers = self.api.plugin_manager.timers
         for interval, funcs in timers.items():
             for func in funcs:
                 self.set_interval(interval, func)
+
+    async def on_mount(self):
+        await self.base_setup()
+        await self.setup_poller()
 
     @property
     def workspace_tree(self) -> WorkspacesTree:

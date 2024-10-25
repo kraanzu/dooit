@@ -63,19 +63,6 @@ def get_user(api: DooitAPI, _: Startup):
 
 # Todo formatters
 
-
-def todo_desc_formatter(desc: str, todo: Todo):
-    text = desc
-
-    if ts := todo.todos:
-        text += f" ({len(ts)})"
-
-    if r := todo.recurrence:
-        text += f" !{r.days}d"
-
-    return text
-
-
 def todo_status_formatter(status: str, todo: Todo, api: DooitAPI):
     text = "o"
     color = api.app.current_theme.yellow
@@ -172,7 +159,6 @@ def formatter_setup(api: DooitAPI, _):
     api.formatter.workspaces.description.add(workspace_desc_formatter)
 
     api.formatter.todos.status.add(todo_status_formatter)
-    api.formatter.todos.description.add(todo_desc_formatter)
     api.formatter.todos.due.add(todo_due_formatter)
     api.formatter.todos.urgency.add(todo_urgency_formatter)
 

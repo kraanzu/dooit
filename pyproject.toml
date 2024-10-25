@@ -19,7 +19,7 @@ textual = "^0.83.0"
 python-dateutil = "^2.8.2"
 sqlalchemy = "^2.0.31"
 platformdirs = "^4.3.6"
-dooit-extras = {git = "https://github.com/dooit-org/dooit-extras.git", optional = true}
+dooit-extras = {git = "https://github.com/dooit-org/dooit-extras.git", branch="main", optional = true}
 
 click = "^8.1.7"
 [tool.poetry.group.dev.dependencies]

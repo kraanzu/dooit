@@ -10,7 +10,7 @@ hero:
       link: /introduction
     - theme: alt
       text: View on Github
-      link: https://www.github.com/kraanzu/dooit
+      link: https://www.github.com/dooit-org/dooit
 ---
 
 ::: danger ALERT!

@@ -328,7 +328,7 @@ dooit = {path = "../dooit", develop = true}
 [package.source]
 type = "git"
 url = "https://github.com/dooit-org/dooit-extras.git"
-reference = "HEAD"
+reference = "main"
 resolved_reference = "9b990474b2d299bb08a766464d572edd6a520650"
 
 [[package]]
@@ -1666,4 +1666,4 @@ extras = ["dooit-extras"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "f663155ecc053b0efae4ae81d1656ef88c8323413230472382880a73620f9042"
+content-hash = "f939b272f0a4b608e6ff504ea15e6f22350966d71acbbd2adbd9c0a738dcde65"

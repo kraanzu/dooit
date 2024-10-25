@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "Dooit"
-  tagline: "Documentation for Dooit TUI Todo Manager"
+  tagline: "Everything You need to know about Dooit"
   actions:
     - theme: brand
       text: Get Started

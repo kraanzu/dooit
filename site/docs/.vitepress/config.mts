@@ -26,7 +26,7 @@ export default defineConfig({
       {
         text: 'Models',
         collapsible: true,
-        collapsed: true,
+        collapsed: false,
         items: [
           { text: 'Workspace', link: '/models/workspace' },
           { text: 'Todo', link: '/models/todo' },
@@ -35,7 +35,7 @@ export default defineConfig({
       {
         text: 'Configuration',
         collapsible: true,
-        collapsed: true,
+        collapsed: false,
         items: [
           { text: 'Default Config File', link: '/configuration/default_config' },
           { text: 'Events', link: '/configuration/events' },
@@ -49,7 +49,7 @@ export default defineConfig({
       {
         text: 'Extra',
         collapsible: true,
-        collapsed: true,
+        collapsed: false,
         items: [
           { text: 'Dooit Extras', link: '/extra/dooit_extras' },
           { text: 'Moving from v2', link: '/extra/moving_from_v2' },

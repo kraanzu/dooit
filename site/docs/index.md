@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "Dooit"
-  tagline: "Everything You need to know about Dooit"
+  text: "All your todos, from the terminal"
   actions:
     - theme: brand
       text: Get Started

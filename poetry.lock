@@ -329,7 +329,7 @@ dooit = {path = "../dooit", develop = true}
 type = "git"
 url = "https://github.com/dooit-org/dooit-extras.git"
 reference = "main"
-resolved_reference = "9b990474b2d299bb08a766464d572edd6a520650"
+resolved_reference = "cc9fe885a70cfbbe7d7dad82f89308fdfdd873de"
 
 [[package]]
 name = "exceptiongroup"

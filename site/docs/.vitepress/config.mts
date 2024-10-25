@@ -14,7 +14,7 @@ export default defineConfig({
     },
     nav: [
       { text: "Home", link: "/" },
-      { text: "Get Started", link: "/introduction" },
+      { text: "Get Started", link: "/getting_started/installation" },
     ],
     sidebar: [
       {

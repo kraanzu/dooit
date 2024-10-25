@@ -63,6 +63,7 @@ def get_user(api: DooitAPI, _: Startup):
 
 # Todo formatters
 
+
 def todo_status_formatter(status: str, todo: Todo, api: DooitAPI):
     text = "o"
     color = api.app.current_theme.yellow
@@ -111,15 +112,6 @@ def todo_urgency_formatter(urgency, _, api: DooitAPI):
 # Workspace formatters
 
 
-def workspace_desc_formatter(desc: str, workspace: Workspace):
-    text = desc
-
-    if ws := workspace.workspaces:
-        text += f" ({len(ws)})"
-
-    return text
-
-
 @subscribe(Startup)
 def key_setup(api: DooitAPI, _):
     api.keys.set("<tab>", api.switch_focus)
@@ -156,8 +148,6 @@ def layout_setup(api: DooitAPI, _):
 
 @subscribe(Startup)
 def formatter_setup(api: DooitAPI, _):
-    api.formatter.workspaces.description.add(workspace_desc_formatter)
-
     api.formatter.todos.status.add(todo_status_formatter)
     api.formatter.todos.due.add(todo_due_formatter)
     api.formatter.todos.urgency.add(todo_urgency_formatter)

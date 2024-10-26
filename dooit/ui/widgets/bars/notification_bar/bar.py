@@ -28,12 +28,15 @@ class NotificationBar(BarBase):
         self.focused = not auto_exit
         self.add_class(self.level)
 
+    def perform_action(self, cancel: bool):
+        return
+
     def on_mount(self):
         if self.auto_exit:
             self.set_interval(1, self.close)
 
     async def handle_keypress(self, key: str) -> None:
-        self.dismiss(cancel=True)
+        self.close()
 
     def render(self) -> RenderableType:
         return self.message

@@ -122,7 +122,7 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("a", api.add_sibling)
     api.keys.set("z", api.toggle_expand)
     api.keys.set("Z", api.toggle_expand_parent)
-    api.keys.set("g", api.go_to_top)
+    api.keys.set("gg", api.go_to_top)
     api.keys.set("G", api.go_to_bottom)
     api.keys.set("A", api.add_child_node)
     api.keys.set("J", api.shift_down)

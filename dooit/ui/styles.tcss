@@ -124,15 +124,15 @@ SortBar {
 NotificationBar {
   color: $background_1;
 
-  .info {
+  &.info {
     background: $primary;
   }
 
-  .warning {
+  &.warning {
     background: $yellow;
   }
 
-  .error {
+  &.error {
     background: $red;
   }
 

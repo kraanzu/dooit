@@ -8,6 +8,7 @@ from dooit.api.theme import DooitThemeBase
 from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
+from dooit.ui.widgets.bars.notification_bar.bar import NotificationType
 from dooit.ui.widgets.trees import WorkspacesTree
 from dooit.ui.screens import MainScreen, HelpScreen
 from dooit.ui.widgets.trees.model_tree import ModelTree
@@ -58,6 +59,9 @@ class Dooit(App):
     async def on_mount(self):
         await self.base_setup()
         await self.setup_poller()
+
+    def notify_bar(self, message: str, level: NotificationType = "info", auto_exit: bool = True):
+        self.bar_switcher.switch_to_notification(message, level, auto_exit)
 
     @property
     def workspace_tree(self) -> WorkspacesTree:

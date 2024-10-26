@@ -1,4 +1,3 @@
-from asyncio import sleep
 from pytest import raises
 from dooit.api.exceptions import NoNodeError
 from dooit.ui.widgets.bars import SortBar

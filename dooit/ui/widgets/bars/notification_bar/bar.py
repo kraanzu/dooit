@@ -2,8 +2,6 @@ from typing import Literal
 from rich.console import RenderableType
 from .._base import BarBase
 
-DEFFAULT_MSG = r"Are you sure? \[y/N]"
-
 NotificationType = Literal["info", "warning", "error"]
 
 
@@ -15,11 +13,9 @@ class NotificationBar(BarBase):
     }
     """
 
-    COMPONENT_CLASSES = {"info", "warning", "error"}
-
     def __init__(
         self,
-        message: str = DEFFAULT_MSG,
+        message: str,
         level: NotificationType = "info",
         auto_exit: bool = True,
         *args,

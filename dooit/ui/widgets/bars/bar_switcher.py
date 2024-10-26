@@ -7,6 +7,7 @@ from dooit.ui.widgets.bars._base import BarBase
 from .status_bar import StatusBar
 from .search_bar import SearchBar
 from .confirm_bar import ConfirmBar
+from .notification_bar import NotificationBar, NotificationType
 from .sort_bar import SortBar
 
 
@@ -73,6 +74,16 @@ class BarSwitcher(ContentSwitcher):
         self.add_content(
             widget=sort_bar,
             id="sort_bar",
+            set_current=True,
+        )
+
+    def switch_to_notification(
+        self, message: str, level: NotificationType, auto_exit: bool
+    ):
+        notification_bar = NotificationBar(message, level, auto_exit)
+        self.add_content(
+            widget=notification_bar,
+            id="notification_bar",
             set_current=True,
         )
 

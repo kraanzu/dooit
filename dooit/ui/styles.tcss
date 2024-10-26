@@ -121,6 +121,23 @@ SortBar {
   }
 }
 
+NotificationBar {
+  color: $background_1;
+
+  .info {
+    background: $primary;
+  }
+
+  .warning {
+    background: $yellow;
+  }
+
+  .error {
+    background: $red;
+  }
+
+}
+
 ModelTree > * > Label {
   color: $foreground_3 50%;
 }

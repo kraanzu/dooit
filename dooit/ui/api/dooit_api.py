@@ -51,7 +51,10 @@ class DooitAPI:
             return
 
         assert keymatch.function is not None
-        keymatch.function.callback()
+        try:
+            keymatch.function.callback()
+        except Exception as e:
+            self.app.notify_bar(str(e), "error", auto_exit=True)
 
     def trigger_event(self, event: DooitEvent):
         self.plugin_manager.on_event(event)

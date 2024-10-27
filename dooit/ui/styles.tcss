@@ -103,16 +103,6 @@ ConfirmBar {
     background: $red;
     color: $background_1;
     text-style: bold;
-
-    &.cancelled {
-        background: $yellow;
-        color: $background_1;
-    }
-
-    &.not-cancelled {
-        background: $green;
-        color: $background_1;
-    }
 }
 
 SortBar {

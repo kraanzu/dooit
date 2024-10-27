@@ -1,4 +1,4 @@
-from rich.console import RenderableType
+from rich.console import Group, RenderableType
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
@@ -6,6 +6,7 @@ from textual.app import ComposeResult
 from textual.widgets import Static
 
 from dooit.ui.api import KeyBindType
+from dooit.ui.api.api_components.keys import KeyManager
 from .base import BaseScreen
 
 
@@ -66,23 +67,27 @@ class DooitKeyTable(HelpWidget):
         "keybind",
         "arrow",
         "description",
+        "table-title",
     }
     BORDER_TITLE = "Key Bindings"
 
-    def __init__(self, keybinds: KeyBindType):
+    def __init__(self, keybinds: KeyManager):
         super().__init__()
         self.keybinds = keybinds
 
     def render(self) -> RenderableType:
-        t = Table.grid(expand=True, padding=(0, 1))
+        tables = []
 
-        t.add_column("key")
-        t.add_column("arrow")
-        t.add_column("description")
-        t.title_justify = "left"
+        for group in self.keybinds.groups:
+            t = Table.grid(expand=True, padding=(0, 1))
+            t_title = Text(group, style=self.get_component_rich_style("table-title"))
+            if group: t_title.pad(1)
 
-        for _, keybinds in self.keybinds.items():
-            for keybind, func in keybinds.items():
+            t.add_column("key")
+            t.add_column("arrow")
+            t.add_column("description")
+
+            for keybind, func in self.keybinds.get_keybinds_by_group(group):
                 keybind = Text(keybind, style=self.get_component_rich_style("keybind"))
                 arrow = Text("->", style=self.get_component_rich_style("arrow"))
                 description = (
@@ -96,7 +101,11 @@ class DooitKeyTable(HelpWidget):
 
                 t.add_row(keybind, arrow, description)
 
-        return t
+            tables.append(t_title)
+            tables.append(t)
+            t.add_row()  # padding
+
+        return Group(*tables)
 
 
 class HelpScreen(BaseScreen):
@@ -116,5 +125,5 @@ class HelpScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield DooitKeyTable(self.api.keys.keybinds)
+        yield DooitKeyTable(self.api.keys)
         yield Outro()

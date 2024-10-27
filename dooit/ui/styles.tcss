@@ -89,6 +89,11 @@ DooitKeyTable {
     color: $secondary;
     text-style: bold;
   }
+
+  .table-title {
+    color: $background_3;
+    background: $primary;
+  }
 }
 
 # Bars

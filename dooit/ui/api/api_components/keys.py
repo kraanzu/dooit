@@ -1,7 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 from collections import defaultdict
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Tuple
 
 from ._base import ApiComponent
 from dooit.ui.events.events import ModeType
@@ -13,6 +13,7 @@ KeyBindType = defaultdict[str, defaultdict[str, Optional["DooitFunction"]]]
 class DooitFunction:
     callback: Callable
     description: str = ""
+    group: str = ""
 
     def __post_init__(self):
         self.description = self.description.strip("\n")
@@ -48,22 +49,40 @@ class KeyManager(ApiComponent):
         self._inputs: List[str] = []
         self.get_mode = get_mode
 
+    @property
+    def groups(self) -> List[str]:
+        return list(
+            sorted(set(func.group for func in self.keybinds["NORMAL"].values() if func))
+        )
+
+    def get_keybinds_by_group(self, group: str) -> List[Tuple[str, DooitFunction]]:
+        return [
+            (key, func)
+            for key, func in self.keybinds["NORMAL"].items()
+            if func and func.group == group
+        ]
+
     def __set_key(
         self,
         mode: ModeType,
         key: str,
         callback: Callable,
         description: Optional[str],
+        group: str,
     ) -> None:
         self.keybinds[mode][key] = DooitFunction(
-            callback, description or callback.__doc__ or ""
+            callback, description or callback.__doc__ or "", group
         )
 
     def set(
-        self, keys: str, callback: Callable, description: Optional[str] = None
+        self,
+        keys: str,
+        callback: Callable,
+        description: Optional[str] = None,
+        group: str = "",
     ) -> None:
         for key in keys.split(","):
-            self.__set_key("NORMAL", key, callback, description)
+            self.__set_key("NORMAL", key, callback, description, group)
 
     @property
     def input(self) -> str:

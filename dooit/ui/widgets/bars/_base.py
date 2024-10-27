@@ -44,18 +44,15 @@ class BarBase(Static):
         assert isinstance(parent, BarSwitcher)
         return parent
 
+    def on_unmount(self):
+        self.switcher.current = "status_bar"
+
     def perform_action(self, cancel: bool):
         raise NotImplementedError  # pragma: no cover
 
-    def close(self):
-        self.switcher.current = "status_bar"
-        self.remove()
-
-    def dismiss(self, cancel: bool, close: bool = True):
+    def dismiss(self, cancel: bool):
         self.perform_action(cancel)
         self.app.post_message(ModeChanged("NORMAL"))
-        if close:
-            self.close()
 
     async def handle_keypress(self, key: str) -> None:  # pragma: no cover
         return

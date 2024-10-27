@@ -33,10 +33,10 @@ class NotificationBar(BarBase):
 
     def on_mount(self):
         if self.auto_exit:
-            self.set_interval(1, self.close)
+            self.app.set_interval(1, self.remove)
 
     async def handle_keypress(self, key: str) -> None:
-        self.close()
+        self.remove()
 
     def render(self) -> RenderableType:
         return self.message

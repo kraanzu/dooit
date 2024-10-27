@@ -27,22 +27,15 @@ class ConfirmBar(BarBase):
         if not cancel:
             self.callback()
 
-    def flash_confirm(self, cancelled: bool):
-        self.focused = False
-        if not cancelled:
-            self.message = "The items were deleted!"
-            self.add_class("not-cancelled")
-        else:
-            self.message = "The items were retained!"
-            self.add_class("cancelled")
-
-        self.refresh()
-        self.set_interval(1.2, self.close)
-
     async def handle_keypress(self, key: str) -> None:
         cancel = key.lower() != "y"
-        self.flash_confirm(cancel)
-        self.dismiss(cancel, close=False)
+        app = self.app
+
+        self.dismiss(cancel)
+        if cancel:
+            app.notify_bar("The items were retained!", "info")
+        else:
+            app.notify_bar("The items were deleted!", "error")
 
     def render(self) -> RenderableType:
         return self.message

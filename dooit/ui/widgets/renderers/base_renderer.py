@@ -50,7 +50,7 @@ class BaseRenderer(Generic[ModelType]):
             component.model_value, component.model
         )
 
-        return max(len(component.value), len(rendered))
+        return max(len(component.value) + 1, len(rendered))
 
     # TODO: [Optimize] This is a bit of a hack, but it works for now
     def _get_max_width(self, attr: str) -> int:

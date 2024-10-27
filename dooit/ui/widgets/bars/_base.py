@@ -53,6 +53,7 @@ class BarBase(Static):
     def dismiss(self, cancel: bool):
         self.perform_action(cancel)
         self.app.post_message(ModeChanged("NORMAL"))
+        self.remove()
 
     async def handle_keypress(self, key: str) -> None:  # pragma: no cover
         return

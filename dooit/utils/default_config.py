@@ -80,8 +80,8 @@ def todo_status_formatter(status: str, todo: Todo, api: DooitAPI):
 
 
 def todo_due_formatter(due, _):
-    if not due or due == "none":
-        return ""
+    if due is None:
+        return
 
     text = due.strftime("%Y-%m-%d")
 
@@ -141,6 +141,7 @@ def layout_setup(api: DooitAPI, _):
     api.layouts.todo_layout = [
         TodoWidget.status,
         TodoWidget.description,
+        TodoWidget.recurrence,
         TodoWidget.due,
         TodoWidget.urgency,
     ]

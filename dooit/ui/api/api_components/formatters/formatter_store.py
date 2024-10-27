@@ -98,4 +98,4 @@ class FormatterStore:
             if not getattr(func, MUTLIPLE_FORMATTER_ATTR, False):
                 return value
 
-        return str(value)
+        return str(value) if value is not None else ""

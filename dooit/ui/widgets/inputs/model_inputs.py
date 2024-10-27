@@ -20,14 +20,15 @@ class WorkspaceDescription(SimpleInput[Workspace, str]):
 
 class Due(SimpleInput[Todo, datetime]):
     def _get_default_value(self) -> str:
-        if self.model_value is None:
+        value = self.model_value
+
+        if value is None:
             return ""
 
-        return self.model_value.strftime("%Y-%m-%d %H:%M")
+        if value.hour or value.minute:
+            return self.model_value.strftime("%Y-%m-%d %H:%M")
 
-    def start_edit(self) -> None:
-        self._value = ""
-        return super().start_edit()
+        return value.strftime("%Y-%m-%d")
 
     def _typecast_value(self, value: str) -> Any:
         if not value:

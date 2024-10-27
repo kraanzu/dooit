@@ -1,3 +1,5 @@
+from functools import cmp_to_key
+from operator import lt
 from typing import TYPE_CHECKING, Callable, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
@@ -9,6 +11,29 @@ from .manager import manager
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.api.workspace import Workspace
+
+
+def _custom_sort_by_status(x: "Todo", y: "Todo") -> int:
+    if x.status == y.status:
+        d1 = x.due or datetime.max
+        d2 = y.due or datetime.max
+        if d1 < d2:
+            return 1
+        elif d1 > d2:
+            return -1
+        else:
+            return 0
+
+    values = {"completed": 0, "pending": 1, "overdue": 2}
+    s1 = values[x.status]
+    s2 = values[y.status]
+
+    if s1 < s2:
+        return 1
+    elif s1 > s2:
+        return -1
+    else:
+        return 0
 
 
 class Todo(DooitModel):
@@ -94,23 +119,22 @@ class Todo(DooitModel):
 
         return []
 
-    def __get_sort_func(self, field: str) -> Callable:
-        if field in ["pending"]:
-            return desc
-        return asc
-
     def sort_siblings(self, field: str):
-        sort_func = self.__get_sort_func(field)
-
-        items = (
-            self.session.query(Todo)
-            .filter_by(
-                parent_workspace=self.parent_workspace,
-                parent_todo=self.parent_todo,
+        if field != "pending":
+            items = (
+                self.session.query(Todo)
+                .filter_by(
+                    parent_workspace=self.parent_workspace,
+                    parent_todo=self.parent_todo,
+                )
+                .order_by(asc(getattr(Todo, field)))
+                .all()
             )
-            .order_by(sort_func(getattr(Todo, field)))
-            .all()
-        )
+        else:
+            items = sorted(
+                self.siblings,
+                key=cmp_to_key(_custom_sort_by_status),
+            )
 
         for index, todo in enumerate(items):
             todo.order_index = index

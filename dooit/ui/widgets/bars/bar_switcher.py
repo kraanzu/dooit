@@ -38,8 +38,7 @@ class BarSwitcher(ContentSwitcher):
         self, widget: Widget, *, id: str | None = None, set_current: bool = False
     ) -> AwaitComplete:
         try:
-            widget = self.query_one(f"#{id}", expect_type=BarBase)
-            widget.close()
+            self.query_one(f"#{id}", expect_type=BarBase).remove()
         except Exception as _:
             pass
 

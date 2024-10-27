@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 from uuid import uuid4
 from dataclasses import dataclass
+
+from rich.text import Text
 from dooit.api.workspace import ModelType
 from dooit.ui.api.api_components.formatters._decorators import MUTLIPLE_FORMATTER_ATTR
 
@@ -98,4 +100,7 @@ class FormatterStore:
             if not getattr(func, MUTLIPLE_FORMATTER_ATTR, False):
                 return value
 
-        return str(value) if value is not None else ""
+        if value:
+            return str(value)
+
+        return Text("-", justify="center", style = "dim").markup

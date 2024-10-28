@@ -29,7 +29,7 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
         return self.api.formatter.todos
 
     @property
-    def layout(self):
+    def render_layout(self):
         return self.api.layouts.todo_layout
 
     def add_todo(self) -> str:

@@ -45,7 +45,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         raise NotImplementedError  # pragma: no cover
 
     @property
-    def layout(self) -> Any:
+    def render_layout(self) -> Any:
         raise NotImplementedError  # pragma: no cover
 
     @property

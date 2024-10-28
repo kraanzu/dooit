@@ -32,7 +32,7 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
         return self.api.formatter.workspaces
 
     @property
-    def layout(self):
+    def render_layout(self):
         return self.api.layouts.workspace_layout
 
     def add_workspace(self) -> str:

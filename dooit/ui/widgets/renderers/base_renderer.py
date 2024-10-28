@@ -33,7 +33,7 @@ class BaseRenderer(Generic[ModelType]):
 
     @property
     def table_layout(self) -> List:
-        return self.tree.layout
+        return self.tree.render_layout
 
     @property
     def prompt(self) -> RenderableType:

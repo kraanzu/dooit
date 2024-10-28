@@ -8,7 +8,7 @@ from dooit.api import Todo, Workspace, manager
 from dooit.utils.cli_logger import logger
 from dooit.utils.database import delete_all_data
 
-manager.register_engine()
+manager.connect()
 BASE_PATH = Path(user_data_dir("dooit"))
 
 

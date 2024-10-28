@@ -10,7 +10,7 @@ class Manager:
     Class for managing sqlalchemy sessions
     """
 
-    def register_engine(self, conn: Optional[str] = None):
+    def connect(self, conn: Optional[str] = None):
         from dooit.api import BaseModel
 
         conn = conn or DATABASE_CONN_STRING

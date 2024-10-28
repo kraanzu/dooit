@@ -8,10 +8,10 @@ TEMP_CONN = "sqlite:///:memory:"
 class CoreTestBase(TestCase):
     @classmethod
     def setUpClass(cls):
-        manager.register_engine(TEMP_CONN)
+        manager.connect(TEMP_CONN)
 
     def setUp(self):
-        manager.register_engine(TEMP_CONN)
+        manager.connect(TEMP_CONN)
 
     def tearDown(self) -> None:
         manager.session.rollback()

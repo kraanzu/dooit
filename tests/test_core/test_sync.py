@@ -15,8 +15,8 @@ class TestSync(CoreTestBase):
         manager1 = Manager()
         manager2 = Manager()
 
-        manager1.register_engine(TEMP_CONN)
-        manager2.register_engine(TEMP_CONN)
+        manager1.connect(TEMP_CONN)
+        manager2.connect(TEMP_CONN)
 
         w = Workspace(description="test")
         manager1.save(w)

@@ -3,7 +3,7 @@ from random import randint
 from dooit.api import Todo, Workspace, manager
 from dooit.utils.database import delete_all_data
 
-manager.register_engine()
+manager.connect()
 
 f = faker.Faker()
 

@@ -149,7 +149,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         return res
 
     def stop_edit(self):
-        self.current.stop_edit()
+        try:
+            self.current.stop_edit()
+        except Exception as e:
+            self.app.notify_bar(f"Error: {e}")
+
         self.app.post_message(ModeChanged("NORMAL"))
 
     def reset_state(self):

@@ -1,5 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
+from typing import Optional
 from rich.style import Style
 from dooit.api import Todo
 from dooit.ui.api import DooitAPI
@@ -7,6 +8,7 @@ from dooit.ui.api.events import subscribe, timer
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.events import ModeChanged, Startup
 from dooit.ui.widgets.bars import StatusBarWidget
+from dooit.ui.widgets.inputs.model_inputs import Recurrence
 from rich.text import Text
 
 
@@ -109,6 +111,13 @@ def todo_urgency_formatter(urgency, _, api: DooitAPI):
     )
 
 
+def todo_recurrence_formatter(recurrence: Optional[timedelta], _):
+    if recurrence is None:
+        return
+
+    return Recurrence.timedelta_to_simple_string(recurrence)
+
+
 # Workspace formatters
 
 
@@ -119,6 +128,7 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("k", api.move_up)
     api.keys.set("i", api.edit_description)
     api.keys.set("d", api.edit_due)
+    api.keys.set("r", api.edit_recurrence)
     api.keys.set("a", api.add_sibling)
     api.keys.set("z", api.toggle_expand)
     api.keys.set("Z", api.toggle_expand_parent)
@@ -152,6 +162,7 @@ def formatter_setup(api: DooitAPI, _):
     api.formatter.todos.status.add(todo_status_formatter)
     api.formatter.todos.due.add(todo_due_formatter)
     api.formatter.todos.urgency.add(todo_urgency_formatter)
+    api.formatter.todos.recurrence.add(todo_recurrence_formatter)
 
 
 @subscribe(Startup)

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from sqlalchemy import select
+from pytest import raises
 from dooit.api.exceptions import NoParentError, MultipleParentError
 from tests.test_core.core_base import CoreTestBase
 from dooit.api import Todo, Workspace
@@ -209,6 +210,12 @@ class TestTodo(CoreTestBase):
         ids = ids[::-1]
         t.sort_siblings("description")
         self.assertEqual([t.id for t in t.siblings], ids)
+
+    def test_sort_invalid(self):
+        t = self.default_workspace.add_todo()
+
+        with raises(AttributeError):
+            t.sort_siblings('???????')
 
     # TODO:
     def test_sort_recurrence(self):

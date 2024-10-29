@@ -142,14 +142,14 @@ class TestTodo(CoreTestBase):
 
     def test_due_date_util(self):
         t = self.default_workspace.add_todo()
-        self.assertFalse(t.has_due_date())
+        self.assertFalse(t.due)
         self.assertFalse(t.is_overdue)
         self.assertFalse(t.is_due_today())
         self.assertEqual(t.status, "pending")
 
         t.due = datetime.now()
         self.assertTrue(t.is_overdue)
-        self.assertTrue(t.has_due_date())
+        self.assertTrue(t.due)
         self.assertTrue(t.is_due_today())
         self.assertEqual(t.status, "overdue")
 

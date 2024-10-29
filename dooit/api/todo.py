@@ -166,9 +166,6 @@ class Todo(DooitModel):
         self.pending = not self.pending
         self.save()
 
-    def has_due_date(self) -> bool:
-        return self.due is not None
-
     def is_due_today(self) -> bool:
         if not self.due:
             return False

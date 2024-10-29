@@ -21,10 +21,11 @@ export default defineConfig({
         text: 'Getting Started',
         items: [
           { text: 'Installation', link: '/getting_started/installation' },
+          { text: 'Default Config File', link: '/getting_started/default_config' },
         ]
       },
       {
-        text: 'Models',
+        text: 'Backend API',
         collapsible: true,
         collapsed: false,
         items: [
@@ -37,7 +38,6 @@ export default defineConfig({
         collapsible: true,
         collapsed: false,
         items: [
-          { text: 'Default Config File', link: '/configuration/default_config' },
           { text: 'Events', link: '/configuration/events' },
           { text: 'Keys', link: '/configuration/keys' },
           { text: 'Formatter', link: '/configuration/formatter' },

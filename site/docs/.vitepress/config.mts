@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress'config
 
 export default defineConfig({
   title: "Dooit",
@@ -29,6 +29,7 @@ export default defineConfig({
         collapsible: true,
         collapsed: false,
         items: [
+          { text: 'Introduction', link: '/backend/introduction' },
           { text: 'Workspace', link: '/backend/workspace' },
           { text: 'Todo', link: '/backend/todo' },
         ]

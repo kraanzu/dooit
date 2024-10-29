@@ -1,9 +1,8 @@
 from functools import cmp_to_key
-from operator import lt
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
-from sqlalchemy import ForeignKey, asc, desc, select
+from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .model import DooitModel
 from .manager import manager

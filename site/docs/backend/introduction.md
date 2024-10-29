@@ -2,9 +2,9 @@
 
 Dooit uses [sqlalchemy](https://www.sqlalchemy.org/) to store its data
 
-For backend, **there are two tables**: [Workspace](/backend/workspace) and  [Todo](/backend/todo)
+For backend, **there are two tables**: `Workspace` and  `Todo`
 
-The code below will show you the relationship between these two models
+An overview code below will show you the relationship between these two models
 
 ## Workspace
 

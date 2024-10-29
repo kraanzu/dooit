@@ -12,6 +12,8 @@ In this page, I'll lay out all the methods available on the todo class
 As mentioned in the introduction, `Todo` class is a table and any sql operations can be performed using sqlalchemy
 :::
 
+<!-- --------------------- CLASSMETHODS ----------------------------------- -->
+
 ## `classmethod` from_id
 
 ```python
@@ -53,110 +55,7 @@ Returns all the todos from the database
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | List[Todo]    |                     | List of the todos present in the database                                           |
 
-
-## `method` siblings
-
-```python
-siblings() -> List[Todo]
-```
-
-Returns the siblings for the todo (including self)
-
-**Returns:**
-
-| Type|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| List[Self]    |                     | List of the siblings (including self)                                                    |
-
-
-## `method` sort_siblings
-
-
-```python
-sort_siblings(field: str)
-```
-
-Sorts all the siblings by the given field
-
-**Parameters:**
-
-| Param|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| field         |                     | The field/column you'd want to sort the todo with                                        |
-
-**Raises:**
-
-| Type|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| AttributeError|                     | If an invalid field is passed                                                            |
-
-## `method` add_todo
-
-```python
-add_todo() -> Todo
-```
-
-Adds a todo to the todo object
-
-**Returns:**
-
-| Type|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| Todo          |                     | The newly added todo                                                                     |
-
-
-## `method` save
-
-
-```python
-save()
-```
-
-Saves any modifications done to the database
-
-## `method` increase_urgency
-
-
-```python
-increase_urgency()
-```
-
-Increases the urgency for the todo (max `4`)
-
-## `method` decrease_urgency
-
-
-```python
-decrease_urgency()
-```
-
-Decreases the urgency for the todo (min `0`)
-
-## `method` toggle_complete
-
-
-```python
-toggle_complete()
-```
-
-Toggles the pending status of a todo
-
-
-## `property` is_due_today
-
-```python
-is_due_today() -> bool
-```
-
-Returns if the todo is due on the same day
-
-**Returns:**
-
-| Type|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| bool          |                     | If the todo is overdue                                                                   |
-
-<!-- ----------------------------------------------------------------- -->
+<!-- ---------------- PROPERTIES ------------------------------------- -->
 
 
 ## `property` parent
@@ -263,3 +162,108 @@ Returns if the todo is overdue or not
 | Type|<div style="width: 100px">Default</div> |Description|
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | bool          |                     | If the todo is overdue                                                                   |
+
+<!-- ------------------ METHODS -------------------------------------- -->
+
+## `method` siblings
+
+```python
+siblings() -> List[Todo]
+```
+
+Returns the siblings for the todo (including self)
+
+**Returns:**
+
+| Type|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| List[Self]    |                     | List of the siblings (including self)                                                    |
+
+
+## `method` sort_siblings
+
+
+```python
+sort_siblings(field: str)
+```
+
+Sorts all the siblings by the given field
+
+**Parameters:**
+
+| Param|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| field         |                     | The field/column you'd want to sort the todo with                                        |
+
+**Raises:**
+
+| Type|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| AttributeError|                     | If an invalid field is passed                                                            |
+
+## `method` add_todo
+
+```python
+add_todo() -> Todo
+```
+
+Adds a todo to the todo object
+
+**Returns:**
+
+| Type|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| Todo          |                     | The newly added todo                                                                     |
+
+
+## `method` save
+
+
+```python
+save()
+```
+
+Saves any modifications done to the database
+
+## `method` increase_urgency
+
+
+```python
+increase_urgency()
+```
+
+Increases the urgency for the todo (max `4`)
+
+## `method` decrease_urgency
+
+
+```python
+decrease_urgency()
+```
+
+Decreases the urgency for the todo (min `0`)
+
+## `method` toggle_complete
+
+
+```python
+toggle_complete()
+```
+
+Toggles the pending status of a todo
+
+
+## `property` is_due_today
+
+```python
+is_due_today() -> bool
+```
+
+Returns if the todo is due on the same day
+
+**Returns:**
+
+| Type|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| bool          |                     | If the todo is overdue                                                                   |
+

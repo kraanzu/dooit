@@ -12,6 +12,9 @@ In this page, I'll lay out all the methods available on the workspace class
 As mentioned in the introduction, `Workspace` class is a table and any sql operations can be performed using sqlalchemy
 :::
 
+
+<!-- --------------------- CLASSMETHODS ----------------------------------- -->
+
 ## `classmethod` from_id
 
 ```python
@@ -38,6 +41,22 @@ Returns the workspace object with the given id
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | ValueError    |                     | If an invalid ID is passed                                                               |
 
+
+## `classmethod` all
+
+```python
+all() -> List[Workspace]
+```
+
+Returns all the workspaces from the database
+
+**Returns:**
+
+| Type|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| List[Self]    |                     | List of the workspaces present in the database                                           |
+
+<!-- ---------------- PROPERTIES ------------------------------------- -->
 
 ## `property` parent
 
@@ -67,6 +86,8 @@ Returns the nested level from the root
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | int           |                     | Depth of the nesting                                                                     |
 
+
+<!-- ------------------ METHODS -------------------------------------- -->
 
 ## `method` siblings
 
@@ -133,16 +154,3 @@ save()
 
 Saves any modifications done to the database
 
-## `classmethod` all
-
-```python
-all() -> List[Workspace]
-```
-
-Returns all the workspaces from the database
-
-**Returns:**
-
-| Type|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| List[Self]    |                     | List of the workspaces present in the database                                           |

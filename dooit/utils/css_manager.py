@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import Type, Union
+from typing import Optional, Type, Union
 from platformdirs import user_cache_dir
 from dooit.api.theme import DooitThemeBase
 from uuid import uuid4
@@ -65,8 +65,8 @@ class CssManager:
 
         self.refresh_css()
 
-    def inject_css(self, css: str) -> str:
-        uuid = generate_random_id()
+    def inject_css(self, css: str, _id: Optional[str] = None) -> str:
+        uuid = _id or generate_random_id()
         css_file = self.stylesheets / f"{uuid}.tcss"
 
         with open(css_file, "w") as f:
@@ -84,6 +84,9 @@ class CssManager:
         css_file.unlink()
         self.refresh_css()
         return True
+
+    def is_active(self, _id: str) -> bool:
+        return (self.stylesheets / f"{_id}.tcss").exists()
 
     def write(self, css: str):
         with open(self.css_file, "w") as f:

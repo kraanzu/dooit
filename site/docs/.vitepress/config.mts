@@ -29,8 +29,8 @@ export default defineConfig({
         collapsible: true,
         collapsed: false,
         items: [
-          { text: 'Workspace', link: '/models/workspace' },
-          { text: 'Todo', link: '/models/todo' },
+          { text: 'Workspace', link: '/backend/workspace' },
+          { text: 'Todo', link: '/backend/todo' },
         ]
       },
       {

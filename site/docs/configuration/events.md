@@ -2,21 +2,37 @@
 
 Dooit emits event when certain things happen, you can use `@subscribe` or `@timer` to execute code when that event fires
 
-### Usage
+
+### Timer Usage
+
+::: info NOTE
+Timer is not an event, it just tells dooit to update a function every `X` seconds
+:::
 
 ``` python
-from dooit.ui.api.events import subscribe, timer
+from dooit.ui.api.events import timer
 from dooit.ui.api import DooitAPI
 
+@timer(1) # in seconds
+def foo(api: DooitAPI):
+    # your code here
+```
+
+### Subscribe Usage
+
+Subscribe can be used to execute and update values of function on a particular event
+It takes in two parameters: `api` and `event` which are a copy of dooit api and the event respectively
+
+``` python
+from dooit.ui.api.events import subscribe, DooitEvent
+from dooit.ui.api import DooitAPI
 
 @subscribe(DooitEvent)
 def foo(api: DooitAPI, event: DooitEvent):
     # your code here
-
-@timer(1) # in seconds
-def bar(api: DooitAPI):
-    # your code here
 ```
+
+You can find all the available events below
 
 ## DooitEvent
 

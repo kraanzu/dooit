@@ -301,15 +301,29 @@ Adds a todo to the todo object
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | Todo          |                     | The newly added todo                                                                     |
 
+## `method` shift_down
+
+Shifts the todo down by one index (Nothing happens if its the first todo)
+
+```python
+shift_down()
+```
+
+## `method` shift_up
+
+Shifts the todo down by one index (Nothing happens if its the last todo)
+
+```python
+shift_up()
+```
 
 ## `method` save
 
+Saves any modifications done on the attributes to the database
 
 ```python
 save()
 ```
-
-Saves any modifications done to the database
 
 ## `method` increase_urgency
 

@@ -190,14 +190,27 @@ Adds a child workspace to the workspace object
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | Workspace     |                     | The newly added Workspace                                                                |
 
+## `method` shift_down
 
+Shifts the workspace down by one index (Nothing happens if its the first workspace)
+
+```python
+shift_down()
+```
+
+## `method` shift_up
+
+Shifts the workspace down by one index (Nothing happens if its the last workspace)
+
+```python
+shift_up()
+```
 
 ## `method` save
 
+Saves any modifications done on the attributes to the database
 
 ```python
 save()
 ```
-
-Saves any modifications done to the database
 

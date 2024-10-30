@@ -12,6 +12,92 @@ In this page, I'll lay out all the methods available on the todo class
 As mentioned in the introduction, `Todo` class is a table and any sql operations can be performed using sqlalchemy
 :::
 
+<!-- ----------------------- ATTRIBUTES ---------------------------------- -->
+
+## `attr`  description
+
+The description of the workspace
+
+```python
+description: Mapped[str] = mapped_column(default="")
+```
+
+## `attr`  due
+
+The due date for the workspace
+
+```python
+due: Mapped[Optional[datetime]] = mapped_column(default=None)
+```
+
+## `attr`  effort
+
+The effort value for the workspace
+
+```python
+effort: Mapped[int] = mapped_column(default=0)
+```
+
+## `attr`  recurrence
+
+The recurrence for the given todo
+
+```python
+recurrence: Mapped[Optional[timedelta]] = mapped_column(default=None)
+```
+
+## `attr`  urgency
+
+The urgency for the workspace (from `0` to `4`)
+
+```python
+due: Mapped[Optional[datetime]] = mapped_column(default=None)
+```
+
+## `attr`  pending
+
+Whether the todo is completed or not (`True` if not completed)
+
+```python
+pending: Mapped[bool] = mapped_column(default=True)
+```
+
+## `attr`  parent_workspace
+
+The parent workspace of the todo ( will be `None` if the todo is a subtask for another `Todo`)
+
+```python
+parent_workspace: Mapped[Optional["Workspace"]] = relationship(
+    "Workspace",
+    back_populates="todos",
+)
+```
+
+## `attr`  parent_todo
+
+The parent todo of the todo ( will be `None` if the todo is ***not*** a subtask for another `Todo`)
+
+```python
+parent_workspace: Mapped[Optional["Workspace"]] = relationship(
+    "Workspace",
+    back_populates="todos",
+)
+```
+
+## `attr` todos
+
+The sub-todos for the todo
+
+```python
+todos: Mapped[List["Todo"]] = relationship(
+    "Todo",
+    back_populates="parent_todo",
+    cascade="all, delete-orphan",
+    order_by=order_index,
+)
+```
+
+
 <!-- --------------------- CLASSMETHODS ----------------------------------- -->
 
 ## `classmethod` from_id

@@ -12,6 +12,53 @@ In this page, I'll lay out all the methods available on the workspace class
 As mentioned in the introduction, `Workspace` class is a table and any sql operations can be performed using sqlalchemy
 :::
 
+<!-- ----------------------- ATTRIBUTES ---------------------------------- -->
+
+## `attr`  description
+
+The description of the workspace
+
+```python
+description: Mapped[str] = mapped_column(default="")
+```
+
+## `attr`  parent_workspace
+
+The parent workspace of the workpsace
+
+```python
+parent_workspace: Mapped[Optional["Workspace"]] = relationship(
+    "Workspace",
+    back_populates="workspaces",
+    remote_side=[id],
+)
+```
+
+## `attr`  workspaces
+
+The child workspaces of the workspace
+
+```python
+workspaces: Mapped[List["Workspace"]] = relationship(
+    "Workspace",
+    back_populates="parent_workspace",
+    cascade="all",
+    order_by="Workspace.order_index",
+)
+```
+
+## `attr` todos
+
+The todos for the workspace
+
+```python
+todos: Mapped[List["Todo"]] = relationship(
+    "Todo",
+    back_populates="parent_workspace",
+    cascade="all, delete-orphan",
+    order_by="Todo.order_index",
+)
+```
 
 <!-- --------------------- CLASSMETHODS ----------------------------------- -->
 

@@ -64,7 +64,7 @@ class PluginManager:
             self.events[event].append(obj)
 
     def _register_timer(self, obj: Callable):
-        self._register_events([Startup], obj)
+        # self._register_events([Startup], obj)
 
         if interval := getattr(obj, DOOIT_TIMER_ATTR, None):
             func = partial(self._update_dooit_value, obj)

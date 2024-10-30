@@ -32,7 +32,7 @@ def get_mode(api: DooitAPI, event: ModeChanged):
 
 
 @timer(1)
-def get_clock(api: DooitAPI, *_):
+def get_clock(api: DooitAPI):
     theme = api.app.current_theme
     time = datetime.now().strftime("%H:%M:%S")
     return Text(

@@ -5,7 +5,7 @@ Dooit emits event when certain things happen, you can use `@subscribe` or `@time
 
 ### Timer Usage
 
-::: info NOTE
+:::info :grey_exclamation: NOTE
 Timer is not an event, it just tells dooit to update a function every `X` seconds
 :::
 

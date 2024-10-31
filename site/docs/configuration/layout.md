@@ -8,13 +8,15 @@ For using you'd have to import `TodoWidget` and `WorkspaceWidget`
 and then you can use their variables to set the columns:
 
 
-> [!IMPORTANT] NOTE
-> Description will take up all the space left after rendering all other columns
+:::info :grey_exclamation: NOTE
+Description will take up all the space left after rendering all other columns
+:::
 
 
-> [!DANGER] WARNING
-> You wont be able to edit the items if their column is not present in the layout \
-> i.e. all the text inputs like `description` or `due`
+:::danger :bangbang: WARNING
+You wont be able to edit the items if their column is not present in the layout \
+i.e. all the text inputs like `description` or `due`
+:::
 
 ```py
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
@@ -32,12 +34,12 @@ def layout_setup(api: DooitAPI, _):
     ]
 ```
 
-:::info NOTE
+:::info :grey_exclamation: NOTE
 For `Workspace` the only available option is `description` \
 For `Todo`, the options are `description`, `due`, `effort`, `recurrence`, `status` and `urgency`
 :::
 
-:::tip
+:::tip :bulb: TIP
 In some cases, you might want columns like `effort` or `recurrence` are better off inside the description. \
 In such scenario, you can edit the column-specific formatter to show nothing and modify the description formatter
 

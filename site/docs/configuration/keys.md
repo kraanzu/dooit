@@ -35,7 +35,7 @@ api.keys.set("=,+", api.increase_urgency)
 api.keys.set("-,_", api.decrease_urgency)
 ```
 
-::: tip ***ADVANCED:***
+:::tip :fire: ***EXTRA***
 You can also pass custom functions as callbacks
 Check out [Backend API](/backend/introduction)
 :::

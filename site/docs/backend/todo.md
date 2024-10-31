@@ -8,7 +8,7 @@ h2 code {
 
 In this page, I'll lay out all the methods available on the todo class
 
-:::tip
+:::tip :bulb: TIP
 As mentioned in the introduction, `Todo` class is a table and any sql operations can be performed using sqlalchemy
 :::
 

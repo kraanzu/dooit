@@ -35,3 +35,9 @@ def setup(api: DooitAPI, _):
 This will render a bar like this: 
 
 ![Sample Bar](./imgs/sample_bar.png)
+
+:::tip :bulb: TIP
+
+If you want to create your own widget that displays some information based on a function, you can use [`Custom`](https://dooit-org.github.io/dooit-extras/widgets/custom.html) widget from dooit_extras
+
+If you want to take it further and totally create from scratch, have a look at [`BarUtilWidgetBase`](https://github.com/dooit-org/dooit-extras/blob/1f442ed6e6b98d53aa20e5ab8a64e59ef2f3abdb/dooit_extras/bar_widgets/_base.py#L9)

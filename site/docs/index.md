@@ -22,7 +22,3 @@ features:
     title: Beautiful
     details: Built with Textual, it has a beautiful UI and supports custom theming and css
 ---
-
-::: danger ALERT!
-This documentation is for v3 which is yet to be released
-:::

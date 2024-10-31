@@ -1,4 +1,3 @@
-from dooit.ui import events
 from .dooit_api import DooitAPI
 from .plug import PluginManager
 from .event_handlers import subscribe, timer
@@ -13,7 +12,6 @@ from .api_components import (
 
 __all__ = [
     "DooitAPI",
-    "events",
     "PluginManager",
     "KeyManager",
     "KeyBindType",

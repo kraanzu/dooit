@@ -4,7 +4,7 @@ from textual.app import ComposeResult
 from textual.widgets import Label
 from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import ModeChanged, ShowConfirm, StartSearch, StartSort
+from dooit.ui.api.events import ModeChanged, ShowConfirm, StartSearch, StartSort
 from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict

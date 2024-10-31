@@ -6,7 +6,7 @@ from textual.containers import Container
 from textual.widgets import ContentSwitcher
 from dooit.api import Todo, Workspace
 from dooit.api.model import DooitModel
-from dooit.ui.events.events import (
+from dooit.ui.api.events import (
     DooitEvent,
     ModeChanged,
     ShowConfirm,
@@ -20,8 +20,6 @@ from dooit.ui.events.events import (
     TodoUrgencyChanged,
     WorkspaceDescriptionChanged,
     WorkspaceSelected,
-)
-from dooit.ui.events import (
     SwitchTab,
     SpawnHelp,
 )

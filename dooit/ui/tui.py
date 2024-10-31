@@ -5,7 +5,7 @@ from textual.app import App
 from textual.binding import Binding
 
 from dooit.api.theme import DooitThemeBase
-from dooit.ui.events.events import ModeChanged, DooitEvent, ModeType, Startup
+from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup
 from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
 from dooit.ui.widgets.bars.notification_bar.bar import NotificationType

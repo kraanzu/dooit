@@ -3,7 +3,7 @@ from textual import on
 from textual.widgets.option_list import Option
 
 from dooit.api import Workspace
-from dooit.ui.events.events import (
+from dooit.ui.api.events import (
     WorkspaceRemoved,
     WorkspaceSelected,
 )

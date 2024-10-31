@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Optional, Union
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
-from dooit.ui.events.events import TodoRemoved
+from dooit.ui.api.events import TodoRemoved
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict

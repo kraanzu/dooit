@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Callable
 from textual.widgets import Static
 
 
-from ...events.events import ModeChanged
+from ...api.events import ModeChanged
 
 if TYPE_CHECKING:  # pragma: no cover
     from .bar_switcher import BarSwitcher

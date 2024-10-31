@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from dooit.ui.api.plug import PluginManager
-from dooit.ui.events.events import DooitEvent, SwitchTab
+from .events import DooitEvent, SwitchTab
 from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.trees import TodosTree
 from dooit.utils import CssManager

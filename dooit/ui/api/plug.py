@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Callable, List, Type
 from platformdirs import user_config_dir
 from textual.css.query import NoMatches
 
-from dooit.ui.api.events import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
+from dooit.ui.api.event_handlers import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
 from dooit.ui.events.events import DooitEvent
 from .loader import load_dir, load_file
 

@@ -4,7 +4,7 @@ from typing import Optional
 from rich.style import Style
 from dooit.api import Todo
 from dooit.ui.api import DooitAPI
-from dooit.ui.api.events import subscribe, timer
+from dooit.ui.api import subscribe, timer
 from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
 from dooit.ui.events import ModeChanged, Startup
 from dooit.ui.widgets.bars import StatusBarWidget

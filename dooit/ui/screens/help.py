@@ -5,7 +5,6 @@ from rich.text import Text
 from textual.app import ComposeResult
 from textual.widgets import Static
 
-from dooit.ui.api import KeyBindType
 from dooit.ui.api.api_components.keys import KeyManager
 from .base import BaseScreen
 
@@ -81,7 +80,8 @@ class DooitKeyTable(HelpWidget):
         for group in self.keybinds.groups:
             t = Table.grid(expand=True, padding=(0, 1))
             t_title = Text(group, style=self.get_component_rich_style("table-title"))
-            if group: t_title.pad(1)
+            if group:
+                t_title.pad(1)
 
             t.add_column("key")
             t.add_column("arrow")

@@ -215,7 +215,7 @@ class TestTodo(CoreTestBase):
         t = self.default_workspace.add_todo()
 
         with raises(AttributeError):
-            t.sort_siblings('???????')
+            t.sort_siblings("???????")
 
     # TODO:
     def test_sort_recurrence(self):

@@ -60,7 +60,9 @@ class Dooit(App):
         await self.base_setup()
         await self.setup_poller()
 
-    def notify_bar(self, message: str, level: NotificationType = "info", auto_exit: bool = True):
+    def notify_bar(
+        self, message: str, level: NotificationType = "info", auto_exit: bool = True
+    ):
         self.bar_switcher.switch_to_notification(message, level, auto_exit)
 
     @property

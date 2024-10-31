@@ -129,8 +129,6 @@ class Recurrence(SimpleInput[Todo, timedelta]):
         return "?"
 
     def _get_default_value(self) -> str:
-
-
         value = self.model_value
 
         if value is None:

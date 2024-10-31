@@ -4,7 +4,6 @@ from .events import (
     StartSearch,
     StartSort,
     ShowConfirm,
-    SwitchTab,
     ModeChanged,
     ModeType,
     SwitchTab,

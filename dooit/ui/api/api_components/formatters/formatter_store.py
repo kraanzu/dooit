@@ -103,4 +103,4 @@ class FormatterStore:
         if value:
             return str(value)
 
-        return Text("-", justify="center", style = "dim").markup
+        return Text("-", justify="center", style="dim").markup

@@ -14,9 +14,8 @@ Dooit's api provides `bar` attribute to set bar widgets
 
 ```python
 from dooit_extras.bar_widgets import Mode, Spacer, Clock, Date
-from dooit.ui.events import subscribe, Startup
-from dooit.ui.api import DooitAPI
-from dooit.ui.api.events import subscribe
+from dooit.ui.api.events import subscribe, Startup
+from dooit.ui.api import DooitAPI, subscribe
 
 
 @subscribe(Startup)

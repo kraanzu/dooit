@@ -10,8 +10,7 @@ Timer is not an event, it just tells dooit to update a function every `X` second
 :::
 
 ``` python
-from dooit.ui.api.events import timer
-from dooit.ui.api import DooitAPI
+from dooit.ui.api import DooitAPI, timer
 
 @timer(1) # in seconds
 def foo(api: DooitAPI):
@@ -24,8 +23,8 @@ Subscribe can be used to execute and update values of function on a particular e
 It takes in two parameters: `api` and `event` which are a copy of dooit api and the event respectively
 
 ``` python
-from dooit.ui.api.events import subscribe, DooitEvent
-from dooit.ui.api import DooitAPI
+from dooit.ui.api.events import DooitEvent
+from dooit.ui.api import DooitAPI, subscribe
 
 @subscribe(DooitEvent)
 def foo(api: DooitAPI, event: DooitEvent):

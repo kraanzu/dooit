@@ -98,7 +98,7 @@ def dashboard_setup(api: DooitAPI, _):
 
     ART = "some ascii art"
     NL = " \n"
-    SEP = Text("─" * 60, "d " + theme.background_3)
+    SEP = Text("─" * 60, "d " + theme.background3)
     help_message = f"Press {colored('?', magenta)} to spawn help menu"
     DASHBOARD = [ART, NL, SEP, NL, NL, NL, help_message]
 

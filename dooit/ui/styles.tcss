@@ -6,52 +6,52 @@ $border_type: heavy;
 # CSS
 
 Screen {
-    background: $background_1;
+    background: $background1;
 }
 
 Dashboard {
-    background: $background_1;
-    border: $border_type $background_3;
+    background: $background1;
+    border: $border_type $background3;
 }
 
 ModelTree {
-    background: $background_1;
-    color: $foreground_3;
-    border: $border_type $background_3;
+    background: $background1;
+    color: $foreground3;
+    border: $border_type $background3;
     padding: 1;
 
-    border-title-color: $foreground_1;
-    border-title-background: $background_3;
+    border-title-color: $foreground1;
+    border-title-background: $background3;
 
     &:focus {
         border: $border_type $primary;
-        border-title-color: $foreground_3;
+        border-title-color: $foreground3;
         border-title-background: $secondary;
 
         .option-list--option-highlighted, .option-list--option-hover-highlighted {
             background: $secondary 40%;
-            color: $foreground_3;
+            color: $foreground3;
         }
     }
 
     # --------- Options ------------------
 
     .option-list--option-disabled {
-        color: $foreground_1 50%;
+        color: $foreground1 50%;
     }
 
     .option-list--option-highlighted, .option-list--option-hover-highlighted {
-        background: $background_3;
+        background: $background3;
     }
 
     .option-list--option-hover {
-        background: $background_1;
-        color: $foreground_3;
+        background: $background1;
+        color: $foreground3;
     }
 }
 
 Header {
-  border: tall $background_3;
+  border: tall $background3;
 }
 
 Outro {
@@ -65,16 +65,16 @@ Outro {
 
   .exit {
     background: $primary;
-    color: $background_1;
+    color: $background1;
   }
 
 }
 
 DooitKeyTable {
-  background: $background_2;
+  background: $background2;
   border: blank $secondary;
   border-title-background: $primary;
-  border-title-color: $background_1;
+  border-title-color: $background1;
   border-title-align: center;
 
   .keybind {
@@ -82,7 +82,7 @@ DooitKeyTable {
   }
 
   .arrow {
-    color: $foreground_1 60%;
+    color: $foreground1 60%;
   }
 
   .description {
@@ -91,7 +91,7 @@ DooitKeyTable {
   }
 
   .table-title {
-    color: $background_3;
+    color: $background3;
     background: $primary;
   }
 }
@@ -100,13 +100,13 @@ DooitKeyTable {
 
 
 BarBase {
-  background: $background_2;
-  color: $foreground_3;
+  background: $background2;
+  color: $foreground3;
 }
 
 ConfirmBar {
     background: $red;
-    color: $background_1;
+    color: $background1;
     text-style: bold;
 }
 
@@ -117,7 +117,7 @@ SortBar {
 }
 
 NotificationBar {
-  color: $background_1;
+  color: $background1;
 
   &.info {
     background: $primary;
@@ -134,27 +134,27 @@ NotificationBar {
 }
 
 ModelTree > * > Label {
-  color: $foreground_3 50%;
+  color: $foreground3 50%;
 }
 
 # Miscellaneous
 
 * {
     scrollbar-size: 0 1;
-    scrollbar-background: $background_3;
+    scrollbar-background: $background3;
     scrollbar-color: $primary;
 
-    scrollbar-background-hover: $background_2;
+    scrollbar-background-hover: $background2;
     scrollbar-color-hover: $secondary;
 
-    scrollbar-background-active: $background_2;
+    scrollbar-background-active: $background2;
     scrollbar-color-active: $secondary;
 
-    link-background: $background_3;
+    link-background: $background3;
     link-color: $primary;
  
     link-background-hover: $primary 50%;
-    link-color-hover: $background_1;
+    link-color-hover: $background1;
 
     link-style: italic;
     link-style-hover: italic;

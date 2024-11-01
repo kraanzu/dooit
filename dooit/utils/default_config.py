@@ -24,7 +24,7 @@ def get_mode(api: DooitAPI, event: ModeChanged):
     return Text(
         f" {mode} ",
         style=Style(
-            color=theme.background_1,
+            color=theme.background1,
             bgcolor=MODES.get(mode, theme.primary),
         ),
     )
@@ -37,7 +37,7 @@ def get_clock(api: DooitAPI):
     return Text(
         f" {time} ",
         style=Style(
-            color=theme.background_1,
+            color=theme.background1,
             bgcolor=theme.secondary,
         ),
     )
@@ -56,7 +56,7 @@ def get_user(api: DooitAPI, _: Startup):
     return Text(
         f" {username} ",
         style=Style(
-            color=theme.background_1,
+            color=theme.background1,
             bgcolor=theme.secondary,
         ),
     )

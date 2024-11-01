@@ -130,8 +130,8 @@ def bar_setup(api: DooitAPI, _):
     theme = api.vars.theme
 
     mode_styles = {
-        "NORMAL": Style(bgcolor=theme.primary, color=theme.background_1),
-        "INSERT": Style(bgcolor=theme.secondary, color=theme.background_1),
+        "NORMAL": Style(bgcolor=theme.primary, color=theme.background1),
+        "INSERT": Style(bgcolor=theme.secondary, color=theme.background1),
     }
 
     bar_widgets = [

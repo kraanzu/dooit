@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from rich.console import Group, RenderableType
 from rich.style import Style
 from rich.table import Table
@@ -70,9 +71,10 @@ class DooitKeyTable(HelpWidget):
     }
     BORDER_TITLE = "Key Bindings"
 
-    def __init__(self, keybinds: KeyManager):
+    def __init__(self, keybinds: KeyManager, no_op: Callable):
         super().__init__()
         self.keybinds = keybinds
+        self.no_op = no_op
 
     def render(self) -> RenderableType:
         tables = []
@@ -88,6 +90,10 @@ class DooitKeyTable(HelpWidget):
             t.add_column("description")
 
             for keybind, func in self.keybinds.get_keybinds_by_group(group):
+
+                if func == self.no_op:
+                    continue
+
                 keybind = Text(keybind, style=self.get_component_rich_style("keybind"))
                 arrow = Text("->", style=self.get_component_rich_style("arrow"))
                 description = (
@@ -125,5 +131,5 @@ class HelpScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield DooitKeyTable(self.api.keys)
+        yield DooitKeyTable(self.api.keys, self.api.no_op)
         yield Outro()

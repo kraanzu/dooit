@@ -25,14 +25,14 @@ This would show up in the help menu like this:
 
 ## Multiple key binding
 
-If you'd like to set multiple keybinding for same function, you can separate them by comma
+If you'd like to set multiple keybinding for same function, you can send all the keys in a list
 
 For example, you'd like to use `+/-` keys for increasing or decreasing urgency but on QWERTY US layout, the `+` key needs shift as well
 So you could set something like this:
 
 ```python
-api.keys.set("=,+", api.increase_urgency)
-api.keys.set("-,_", api.decrease_urgency)
+api.keys.set(["=","+"], api.increase_urgency)
+api.keys.set(["-","_"], api.decrease_urgency)
 ```
 
 :::tip :fire: ***EXTRA***

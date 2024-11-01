@@ -40,6 +40,8 @@ api.keys.set(["-","_"], api.decrease_urgency)
 If you want to remove some default keybind, you can set function callback to `api.no_op` \
 For example, if you use a different layout keyboard and `+` and `-` are enough for you
 
+`This will also hide the keybinds from help menu`
+
 ```python
 api.keys.set("=", api.no_op)
 api.keys.set("_", api.no_op)

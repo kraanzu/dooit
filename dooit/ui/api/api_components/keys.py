@@ -1,12 +1,13 @@
 from enum import Enum
 from dataclasses import dataclass
 from collections import defaultdict
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple, Union
 
 from ._base import ApiComponent
 from dooit.ui.api.events import ModeType
 
 KeyBindType = defaultdict[str, defaultdict[str, Optional["DooitFunction"]]]
+KeyType = Union[str, List[str]]
 
 
 @dataclass
@@ -76,12 +77,15 @@ class KeyManager(ApiComponent):
 
     def set(
         self,
-        keys: str,
+        keys: KeyType,
         callback: Callable,
         description: Optional[str] = None,
         group: str = "",
     ) -> None:
-        for key in keys.split(","):
+        if isinstance(keys, str):
+            keys = [keys]
+
+        for key in keys:
             self.__set_key("NORMAL", key, callback, description, group)
 
     @property

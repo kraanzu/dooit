@@ -35,6 +35,16 @@ api.keys.set(["=","+"], api.increase_urgency)
 api.keys.set(["-","_"], api.decrease_urgency)
 ```
 
+## Removing a keybind
+
+If you want to remove some default keybind, you can set function callback to `api.no_op` \
+For example, if you use a different layout keyboard and `+` and `-` are enough for you
+
+```python
+api.keys.set("=", api.no_op)
+api.keys.set("_", api.no_op)
+```
+
 :::tip :fire: ***EXTRA***
 You can also pass custom functions as callbacks
 Check out [Backend API](/backend/introduction)

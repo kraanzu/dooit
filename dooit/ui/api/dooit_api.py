@@ -35,6 +35,7 @@ class DooitAPI:
         self.css.refresh_css()
 
     def no_op(self):
+        """<NOP>"""
         pass
 
     def notify(self, message: str) -> None:

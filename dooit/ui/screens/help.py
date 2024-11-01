@@ -91,7 +91,7 @@ class DooitKeyTable(HelpWidget):
 
             for keybind, func in self.keybinds.get_keybinds_by_group(group):
 
-                if func == self.no_op:
+                if func.description == "<NOP>":
                     continue
 
                 keybind = Text(keybind, style=self.get_component_rich_style("keybind"))

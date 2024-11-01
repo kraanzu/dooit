@@ -147,7 +147,7 @@ bar = {
 ### New
 
 Most of the common widgets that you might wanna have should already be in [`dooit-extras`](https://dooit-org.github.io/dooit-extras/widgets/clock.html)
-If you still want to have custom functions, check out [`Custom` Widget](https://dooit-org.github.io/dooit-extras/widgets/custom.html) and use the above functions like that
+If you still want to have custom functions, check out [`Custom`](https://dooit-org.github.io/dooit-extras/widgets/custom.html) widget and use the above functions like that
 
 ```py
 from dooit_extras.bar_widgets import Mode, Spacer, Clock, Date

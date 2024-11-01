@@ -40,6 +40,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Events', link: '/configuration/events' },
+          { text: 'Themes', link: '/configuration/theme' },
           { text: 'Keys', link: '/configuration/keys' },
           { text: 'Formatter', link: '/configuration/formatter' },
           { text: 'Layout', link: '/configuration/layout' },

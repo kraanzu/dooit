@@ -4,7 +4,7 @@ from rich.style import Style
 from dooit.api.workspace import Workspace
 from dooit.ui.api.api_components.formatters import FormatterStore
 from dooit.ui.api.dooit_api import DooitAPI
-from dooit.ui.api import allow_multiple_formatting
+from dooit.ui.api import extra_formatter
 from tests.test_ui.ui_base import run_pilot
 from dooit.ui.tui import Dooit
 
@@ -21,7 +21,7 @@ def set_italic(value: str, _: Workspace, api: DooitAPI) -> Optional[str]:
     return text_value.markup
 
 
-@allow_multiple_formatting
+@extra_formatter
 def add_icon(value: str, _: Workspace) -> Optional[str]:
     if "123" in value:
         return f"(icon) {value}"

@@ -19,5 +19,5 @@ def validate_urgency(mapper, connection, target: Todo):
     if target.urgency is None:
         return
 
-    target.urgency = max(0, target.urgency)
+    target.urgency = max(1, target.urgency)
     target.urgency = min(4, target.urgency)

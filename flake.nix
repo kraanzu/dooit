@@ -62,8 +62,6 @@
             mainPkgs
             ++ (with python3; [
               textual-dev
-              mkdocs
-              mkdocs-material
               pre-commit-hooks
               pytest
               pytest-aio

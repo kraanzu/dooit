@@ -117,7 +117,7 @@ class FormatterStore:
         for func in reversed(self.type2_formatter_functions):
             res = func(value, model, **get_extra_args(func))
             if res is not None:
-                if isinstance(res, Text): # pragma: no cover
+                if isinstance(res, Text):  # pragma: no cover
                     res = res.markup
 
                 value = res

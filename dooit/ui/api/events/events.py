@@ -238,7 +238,9 @@ class BarNotification(DooitEvent):
     Emitted when a notification is to be displayed
     """
 
-    def __init__(self, message: str, level: NotificationType, auto_exit: bool = True) -> None:
+    def __init__(
+        self, message: str, level: NotificationType, auto_exit: bool = True
+    ) -> None:
         super().__init__()
         self.message = message
         self.level: NotificationType = level

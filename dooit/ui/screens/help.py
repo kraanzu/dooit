@@ -90,7 +90,6 @@ class DooitKeyTable(HelpWidget):
             t.add_column("description")
 
             for keybind, func in self.keybinds.get_keybinds_by_group(group):
-
                 if func.description == "<NOP>":
                     continue
 

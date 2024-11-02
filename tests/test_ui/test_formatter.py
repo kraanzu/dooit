@@ -61,7 +61,8 @@ async def test_basic_formatting():
         store.add(set_italic)
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted.markup == "this is a [italic #bf616a]test[/italic #bf616a] description"
+            formatted.markup
+            == "this is a [italic #bf616a]test[/italic #bf616a] description"
         )
 
         formatted = store.format_value(w2.description, w2)
@@ -78,7 +79,8 @@ async def test_multiple_formatting():
         store.add(add_icon)
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted.markup == "this is a [italic #bf616a]test[/italic #bf616a] description"
+            formatted.markup
+            == "this is a [italic #bf616a]test[/italic #bf616a] description"
         )
 
         formatted = store.format_value(w2.description, w2)
@@ -96,7 +98,8 @@ async def test_multiple_formatting_skip():
         store.add(add_icon_skip_multiple)
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted.markup == "this is a [italic #bf616a]test[/italic #bf616a] description"
+            formatted.markup
+            == "this is a [italic #bf616a]test[/italic #bf616a] description"
         )
 
         formatted = store.format_value(w2.description, w2)

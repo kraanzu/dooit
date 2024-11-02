@@ -55,7 +55,9 @@ class DooitAPI:
         try:
             keymatch.function.callback()
         except Exception as e:
-            self.app.bar_switcher.switch_to_notification(BarNotification(str(e), "error"))
+            self.app.bar_switcher.switch_to_notification(
+                BarNotification(str(e), "error")
+            )
 
     def trigger_event(self, event: DooitEvent):
         self.plugin_manager.on_event(event)
@@ -122,7 +124,7 @@ class DooitAPI:
     def edit_recurrence(self):
         """Start editing the recurrence of the todo"""
         return self.edit("recurrence")
-    
+
     def edit_effort(self):
         return self.edit("effort")
 

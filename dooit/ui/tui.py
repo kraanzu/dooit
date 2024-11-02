@@ -50,11 +50,6 @@ class Dooit(App):
     async def setup_poller(self):
         self.set_interval(1, self.poll)
 
-        timers = self.api.plugin_manager.timers
-        for interval, funcs in timers.items():
-            for func in funcs:
-                self.set_interval(interval, func)
-
     async def on_mount(self):
         await self.base_setup()
         await self.setup_poller()

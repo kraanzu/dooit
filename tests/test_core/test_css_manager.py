@@ -45,6 +45,8 @@ def test_css_injections():
     injection_id = manager.inject_css(RANDOM_CSS)
     assert RANDOM_CSS in manager.read_css()
 
+    assert manager.is_active(injection_id)
+
     assert manager.unject_css(injection_id)
     assert RANDOM_CSS not in manager.read_css()
 

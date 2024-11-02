@@ -23,6 +23,7 @@ from dooit.ui.api.events import (
     SwitchTab,
     SpawnHelp,
 )
+from dooit.ui.api.events.events import Notification
 from dooit.ui.widgets.trees import WorkspacesTree, TodosTree
 from dooit.ui.widgets import BarSwitcher, Dashboard
 from .base import BaseScreen
@@ -79,6 +80,10 @@ class MainScreen(BaseScreen):
         key = self.resolve_key(event)
         await self.api.handle_key(key)
         return True
+
+    @on(Notification)
+    def show_notification(self, event: Notification):
+        self.app.bar_switcher.switch_to_notification(event)
 
     @on(SwitchTab)
     def switch_tab(self, event: SwitchTab) -> None:

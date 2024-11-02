@@ -1,8 +1,6 @@
-from typing import Literal
 from rich.console import RenderableType
+from dooit.ui.api.events.events import NotificationType
 from .._base import BarBase
-
-NotificationType = Literal["info", "warning", "error"]
 
 
 class NotificationBar(BarBase):

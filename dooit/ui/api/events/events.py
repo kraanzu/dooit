@@ -8,6 +8,7 @@ from dooit.api import Workspace, Todo
 ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING", "CONFIRM"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
+NotificationType = Literal["info", "warning", "error"]
 
 
 # Super event
@@ -230,3 +231,15 @@ class TodoUrgencyChanged(TodoEvent):
         super().__init__(todo)
         self.old = old
         self.new = new
+
+
+class Notification(DooitEvent):
+    """
+    Emitted when a notification is to be displayed
+    """
+
+    def __init__(self, message: str, level: NotificationType, auto_exit: bool = True) -> None:
+        super().__init__()
+        self.message = message
+        self.level: NotificationType = level
+        self.auto_exit = auto_exit

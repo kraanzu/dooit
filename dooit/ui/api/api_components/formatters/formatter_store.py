@@ -66,19 +66,12 @@ class FormatterStore:
         return True
 
     @property
-    def formatter_functions(self) -> List[Callable]:
-        return [
-            formatter.func
-            for formatter in self.formatters.values()
-            if not formatter.disabled
-        ]
-
-    @property
     def type1_formatter_functions(self) -> List[Callable]:
         return [
             formatter.func
             for formatter in self.formatters.values()
             if not hasattr(formatter.func, MUTLIPLE_FORMATTER_ATTR)
+            and not formatter.disabled
         ]
 
     @property
@@ -87,6 +80,7 @@ class FormatterStore:
             formatter.func
             for formatter in self.formatters.values()
             if hasattr(formatter.func, MUTLIPLE_FORMATTER_ATTR)
+            and not formatter.disabled
         ]
 
     def _get_function_params(self, func: Callable) -> List[str]:

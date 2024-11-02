@@ -1,7 +1,7 @@
 from .dooit_api import DooitAPI
 from .plug import PluginManager
 from .event_handlers import subscribe, timer
-from .api_components.formatters import allow_multiple_formatting
+from .api_components.formatters import extra_formatter
 from .api_components import (
     KeyManager,
     KeyBindType,
@@ -18,7 +18,7 @@ __all__ = [
     "LayoutManager",
     "VarManager",
     "Formatter",
-    "allow_multiple_formatting",
+    "extra_formatter",
     "subscribe",
     "timer",
 ]

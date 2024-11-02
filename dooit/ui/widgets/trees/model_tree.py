@@ -141,11 +141,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     def start_edit(self, property: str) -> bool:
         res = self.current.start_edit(property)
-        self.refresh_options()
+        self.update_current_prompt()
         if res:
             self.app.post_message(ModeChanged("INSERT"))
             self.update_current_prompt()
-            self.refresh_options()
         return res
 
     def stop_edit(self):
@@ -180,7 +179,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def refresh_options(self) -> None:
         for i in self._options:
             assert i.id is not None
-            i.set_prompt(self._renderers[i.id].prompt)
+            new_prompt = self._renderers[i.id].prompt
+            if i.prompt != new_prompt:
+                i.set_prompt(self._renderers[i.id].prompt)
 
         self._refresh_lines()
 

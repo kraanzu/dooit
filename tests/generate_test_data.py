@@ -24,7 +24,6 @@ def gen_todo(parent):
     if isinstance(parent, Todo):
         todo.parent_todo = parent
         todo.due = None
-        todo.urgency = 0
     else:
         todo.parent_workspace = parent
 

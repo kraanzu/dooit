@@ -9,6 +9,8 @@ async def test_help_screen_mount():
         app = pilot.app
         assert isinstance(app, Dooit)
 
+        app.api.keys.set('X', app.api.no_op) # test cover no_op
+
         # test if help screen is mounted
         await app.push_screen("help")
         assert isinstance(app.screen, HelpScreen)

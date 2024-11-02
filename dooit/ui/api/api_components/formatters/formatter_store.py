@@ -92,7 +92,7 @@ class FormatterStore:
     def _get_function_params(self, func: Callable) -> List[str]:
         return list(func.__code__.co_varnames)
 
-    def format_value(self, value: Any, model: ModelType) -> str:
+    def format_value(self, value: Any, model: ModelType) -> Text:
         params = dict(api=self.api)
 
         def get_extra_args(func: Callable) -> Dict[str, Any]:
@@ -107,16 +107,28 @@ class FormatterStore:
 
         res = None
 
-        for func in reversed(self.formatter_functions):
+        for func in reversed(self.type1_formatter_functions):
             res = func(value, model, **get_extra_args(func))
-            if res is None:
-                continue
 
-            value = res
-            if not getattr(func, MUTLIPLE_FORMATTER_ATTR, False):
-                return value
+            if isinstance(res, Text):
+                res = res.markup
+
+            if res is not None:
+                break
+
+        if res is None:
+            res = str(value)
+
+        value = res
+        for func in reversed(self.type2_formatter_functions):
+            res = func(value, model, **get_extra_args(func))
+            if res is not None:
+                if isinstance(res, Text):
+                    res = res.markup
+
+                value = res
 
         if value:
-            return str(value)
+            return Text.from_markup(value)
 
-        return Text("-", justify="center", style="dim").markup
+        return Text("-", justify="center", style="dim")

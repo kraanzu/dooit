@@ -82,7 +82,7 @@ def todo_status_formatter(status: str, todo: Todo, api: DooitAPI):
 
 def todo_due_formatter(due, _):
     if due is None:
-        return
+        return ""
 
     text = due.strftime("%Y-%m-%d")
 
@@ -112,7 +112,7 @@ def todo_urgency_formatter(urgency, _, api: DooitAPI):
 
 def todo_recurrence_formatter(recurrence: Optional[timedelta], _):
     if recurrence is None:
-        return
+        return ""
 
     return Recurrence.timedelta_to_simple_string(recurrence)
 

@@ -73,6 +73,22 @@ class FormatterStore:
             if not formatter.disabled
         ]
 
+    @property
+    def type1_formatter_functions(self) -> List[Callable]:
+        return [
+            formatter.func
+            for formatter in self.formatters.values()
+            if not hasattr(formatter.func, MUTLIPLE_FORMATTER_ATTR)
+        ]
+
+    @property
+    def type2_formatter_functions(self) -> List[Callable]:
+        return [
+            formatter.func
+            for formatter in self.formatters.values()
+            if hasattr(formatter.func, MUTLIPLE_FORMATTER_ATTR)
+        ]
+
     def _get_function_params(self, func: Callable) -> List[str]:
         return list(func.__code__.co_varnames)
 

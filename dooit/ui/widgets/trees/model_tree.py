@@ -170,7 +170,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
                 self.current.handle_keypress(key)
 
             self.update_current_prompt()
-            self.refresh_options()
             return True
         else:
             if key == "escape":

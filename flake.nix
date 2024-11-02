@@ -29,6 +29,7 @@
           sqlalchemy
           platformdirs
           tzlocal
+          click
         ];
       in {
         packages.default = python3.buildPythonPackage {

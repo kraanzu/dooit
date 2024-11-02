@@ -1,4 +1,5 @@
 from collections import defaultdict
+from functools import cache
 from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Union
 from textual.app import ComposeResult
 from textual.widgets import Label
@@ -39,6 +40,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.expaned = defaultdict(bool)
         self._renderers: RenderDictType = render_dict
         self._filter_refresh = False
+
+    @cache
+    def get_column_width(self, attr: str) -> int:
+        return max(i._get_attr_width(attr) for i in self._renderers.values())
 
     @property
     def formatter(self) -> "ModelFormatterBase":

@@ -52,14 +52,8 @@ class BaseRenderer(Generic[ModelType]):
 
         return max(len(component.value) + 1, len(rendered))
 
-    # TODO: [Optimize] This is a bit of a hack, but it works for now
     def _get_max_width(self, attr: str) -> int:
-        renderers: Dict = self.tree._renderers
-        siblings = self.model.siblings
-
-        return max(
-            renderers[sibling.uuid]._get_attr_width(attr) for sibling in siblings
-        )
+        return self.tree.get_column_width(attr)
 
     def make_renderable(self) -> Table:
         layout = self.table_layout
@@ -74,6 +68,9 @@ class BaseRenderer(Generic[ModelType]):
         for item in layout:
             attr = item.value
             component = self._get_component(attr)
+
+            if len(component.render()) > self._get_max_width(attr):
+                self.tree.get_column_width.cache_clear()
 
             if component.is_editing:
                 rendered = component.render()
@@ -103,6 +100,7 @@ class BaseRenderer(Generic[ModelType]):
 
     def stop_edit(self):
         getattr(self, self.editing).stop_edit()
+        self.tree.get_column_width.cache_clear()
         self.editing = ""
 
     def handle_keypress(self, key: str) -> bool:

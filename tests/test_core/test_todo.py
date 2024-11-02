@@ -176,6 +176,21 @@ class TestTodo(CoreTestBase):
         t.description = "This is a tag"
         self.assertEqual(t.tags, [])
 
+    def test_urgency(self):
+        t = self.default_workspace.add_todo()
+        assert t.urgency == 1
+
+        t.decrease_urgency()
+        assert t.urgency == 1
+
+        t.increase_urgency()
+        t.increase_urgency()
+        t.increase_urgency()
+        t.increase_urgency()
+        t.increase_urgency()
+
+        assert t.urgency == 4
+
     def test_sort_pending(self):
         todos = [self.default_workspace.add_todo() for _ in range(5)]
         for index, t in enumerate(todos):

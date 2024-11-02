@@ -105,6 +105,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     @fix_highlight
     def force_refresh(self) -> None:
         self._force_refresh()
+        self.get_column_width.cache_clear()
 
     def _force_refresh(self) -> None:
         highlighted = self.highlighted

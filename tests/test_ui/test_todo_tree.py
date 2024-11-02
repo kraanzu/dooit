@@ -23,7 +23,7 @@ async def test_todo_formatter():
         formatter = renderer.tree.formatter
         return getattr(formatter, attr).format_value(
             component.model_value, component.model
-        )
+        ).markup
 
     async with run_pilot() as pilot:
         app = pilot.app

@@ -46,10 +46,10 @@ async def test_no_formatting():
         store, w1, w2 = setup(app.api)
 
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a test description"
+        assert formatted.markup == "this is a test description"
 
         formatted = store.format_value(w2.description, w2)
-        assert formatted == "another description 123"
+        assert formatted.markup == "another description 123"
 
 
 async def test_basic_formatting():
@@ -61,11 +61,11 @@ async def test_basic_formatting():
         store.add(set_italic)
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+            formatted.markup == "this is a [italic #bf616a]test[/italic #bf616a] description"
         )
 
         formatted = store.format_value(w2.description, w2)
-        assert formatted == "another description 123"
+        assert formatted.markup == "another description 123"
 
 
 async def test_multiple_formatting():
@@ -78,11 +78,11 @@ async def test_multiple_formatting():
         store.add(add_icon)
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+            formatted.markup == "this is a [italic #bf616a]test[/italic #bf616a] description"
         )
 
         formatted = store.format_value(w2.description, w2)
-        assert formatted == "(icon) another description 123"
+        assert formatted.markup == "(icon) another description 123"
 
 
 async def test_multiple_formatting_skip():
@@ -96,11 +96,11 @@ async def test_multiple_formatting_skip():
         store.add(add_icon_skip_multiple)
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted == "this is a [italic #bf616a]test[/italic #bf616a] description"
+            formatted.markup == "this is a [italic #bf616a]test[/italic #bf616a] description"
         )
 
         formatted = store.format_value(w2.description, w2)
-        assert formatted == "(icon) another description 123 test"
+        assert formatted.markup == "(icon) another description 123 test"
 
 
 async def test_multiple_formatting_toggle():
@@ -115,22 +115,22 @@ async def test_multiple_formatting_toggle():
         store.add(add_icon, id="icon")
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted
+            formatted.markup
             == "(icon) this is a [italic #bf616a]test[/italic #bf616a] description 123"
         )
 
         assert store.disable("italic")
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "(icon) this is a test description 123"
+        assert formatted.markup == "(icon) this is a test description 123"
 
         assert store.disable("icon")
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a test description 123"
+        assert formatted.markup == "this is a test description 123"
 
         assert store.enable("italic")
         formatted = store.format_value(w1.description, w1)
         assert (
-            formatted
+            formatted.markup
             == "this is a [italic #bf616a]test[/italic #bf616a] description 123"
         )
 
@@ -139,4 +139,4 @@ async def test_multiple_formatting_toggle():
 
         store.remove("italic")
         formatted = store.format_value(w1.description, w1)
-        assert formatted == "this is a test description 123"
+        assert formatted.markup == "this is a test description 123"

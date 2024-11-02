@@ -71,7 +71,7 @@ class PluginManager:
 
     def register(self, obj):
         if event := getattr(obj, DOOIT_EVENT_ATTR, None):
-            self._register_events(event, obj)
+            return self._register_events(event, obj)
 
         if getattr(obj, DOOIT_TIMER_ATTR, None):
-            self._register_timer(obj)
+            return self._register_timer(obj)

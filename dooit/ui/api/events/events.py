@@ -233,7 +233,7 @@ class TodoUrgencyChanged(TodoEvent):
         self.new = new
 
 
-class Notification(DooitEvent):
+class BarNotification(DooitEvent):
     """
     Emitted when a notification is to be displayed
     """

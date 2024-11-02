@@ -1,7 +1,7 @@
 from typing import Callable
 from rich.console import RenderableType
 
-from dooit.ui.api.events.events import Notification
+from dooit.ui.api.events import BarNotification
 from .._base import BarBase
 
 DEFFAULT_MSG = r"Are you sure? \[y/N]"
@@ -33,9 +33,9 @@ class ConfirmBar(BarBase):
         cancel = key.lower() != "y"
         self.dismiss(cancel)
         if cancel:
-            self.post_message(Notification("The items were retained", "info"))
+            self.post_message(BarNotification("The items were retained", "info"))
         else:
-            self.post_message(Notification("The items were deleted", "error"))
+            self.post_message(BarNotification("The items were deleted", "error"))
 
     def render(self) -> RenderableType:
         return self.message

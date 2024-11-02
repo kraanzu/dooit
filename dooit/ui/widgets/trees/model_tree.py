@@ -5,8 +5,7 @@ from textual.app import ComposeResult
 from textual.widgets import Label
 from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
-from dooit.ui.api.events import ModeChanged, ShowConfirm, StartSearch, StartSort
-from dooit.ui.api.events.events import Notification
+from dooit.ui.api.events import ModeChanged, ShowConfirm, StartSearch, StartSort, BarNotification
 from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
@@ -158,7 +157,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         try:
             self.current.stop_edit()
         except Exception as e:
-            self.post_message(Notification(str(e), "error"))
+            self.post_message(BarNotification(str(e), "error"))
 
         self.app.post_message(ModeChanged("NORMAL"))
 

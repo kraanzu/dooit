@@ -3,12 +3,12 @@ from textual.await_complete import AwaitComplete
 from textual.widget import Widget
 from textual.widgets import ContentSwitcher
 from dooit.api.model import DooitModel
-from dooit.ui.api.events.events import Notification
+from dooit.ui.api.events.events import BarNotification
 from dooit.ui.widgets.bars._base import BarBase
 from .status_bar import StatusBar
 from .search_bar import SearchBar
 from .confirm_bar import ConfirmBar
-from .notification_bar import NotificationBar, NotificationType
+from .notification_bar import NotificationBar
 from .sort_bar import SortBar
 
 
@@ -77,7 +77,7 @@ class BarSwitcher(ContentSwitcher):
             set_current=True,
         )
 
-    def switch_to_notification(self, event: Notification):
+    def switch_to_notification(self, event: BarNotification):
         notification_bar = NotificationBar(event.message, event.level, event.auto_exit)
         self.add_content(
             widget=notification_bar,

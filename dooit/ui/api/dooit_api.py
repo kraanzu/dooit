@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
-
-from dooit.ui.api.events.events import Notification
+from dooit.ui.api.events import BarNotification
 from dooit.ui.api.plug import PluginManager
 from .events import DooitEvent, SwitchTab
 from dooit.ui.widgets import ModelTree
@@ -56,7 +55,7 @@ class DooitAPI:
         try:
             keymatch.function.callback()
         except Exception as e:
-            self.app.bar_switcher.switch_to_notification(Notification(str(e), "error"))
+            self.app.bar_switcher.switch_to_notification(BarNotification(str(e), "error"))
 
     def trigger_event(self, event: DooitEvent):
         self.plugin_manager.on_event(event)

@@ -122,6 +122,9 @@ class DooitAPI:
     def edit_recurrence(self):
         """Start editing the recurrence of the todo"""
         return self.edit("recurrence")
+    
+    def edit_effort(self):
+        return self.edit("effort")
 
     def add_sibling(self):
         """Add a sibling to highlighted item"""

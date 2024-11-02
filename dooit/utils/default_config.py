@@ -128,6 +128,7 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("i", api.edit_description)
     api.keys.set("d", api.edit_due)
     api.keys.set("r", api.edit_recurrence)
+    api.keys.set("e", api.edit_effort)
     api.keys.set("a", api.add_sibling)
     api.keys.set("z", api.toggle_expand)
     api.keys.set("Z", api.toggle_expand_parent)

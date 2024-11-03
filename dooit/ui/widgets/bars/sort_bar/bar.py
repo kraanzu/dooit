@@ -1,3 +1,4 @@
+from typing import Callable
 from rich.console import RenderableType
 from rich.text import Text
 from dooit.ui.widgets.bars._base import BarBase
@@ -9,9 +10,10 @@ class SortBar(BarBase):
         "option-highlighted",
     }
 
-    def __init__(self, model: DooitModel, *args, **kwargs):
+    def __init__(self, model: DooitModel, callback: Callable, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model = model
+        self.callback = callback
         self.options = ["reverse"] + self.model.comparable_fields()
         self._selected = 0
 
@@ -32,10 +34,7 @@ class SortBar(BarBase):
             return
 
         selected = self.options[self.selected]
-        if selected == "reverse":
-            self.model.reverse_siblings()
-        else:
-            self.model.sort_siblings(selected)
+        self.callback(selected)
 
     async def handle_keypress(self, key: str) -> None:
         if key == "escape":

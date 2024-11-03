@@ -89,7 +89,7 @@ class Workspace(DooitModel):
         for index, workspace in enumerate(items):
             workspace.order_index = index
 
-        self.session.commit()
+        manager.commit()
 
     def add_workspace(self) -> "Workspace":
         workspace = Workspace(parent_workspace=self)

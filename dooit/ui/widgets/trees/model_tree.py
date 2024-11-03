@@ -145,7 +145,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     @require_highlighted_node
     def start_sort(self):
-        self.post_message(StartSort(self.current_model))
+        self.post_message(StartSort(self.current_model, self.sort))
 
     @require_highlighted_node
     def start_search(self):
@@ -301,7 +301,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
     @refresh_tree
     def sort(self, attr: str):
-        self.current_model.sort_siblings(attr)
+        if attr == "reverse":
+            self.current_model.reverse_siblings()
+        else:
+            self.current_model.sort_siblings(attr)
 
     def compose(self) -> ComposeResult:
         with Label(id="empty_message"):

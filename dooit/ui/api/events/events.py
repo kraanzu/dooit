@@ -95,9 +95,10 @@ class StartSort(DooitEvent):
     Emitted when user wants to sort
     """
 
-    def __init__(self, model: DooitModel) -> None:
+    def __init__(self, model: DooitModel, callback: Callable) -> None:
         super().__init__()
         self.model = model
+        self.callback = callback
 
 
 class ShowConfirm(DooitEvent):

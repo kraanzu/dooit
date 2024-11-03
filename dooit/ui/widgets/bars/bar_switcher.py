@@ -69,8 +69,8 @@ class BarSwitcher(ContentSwitcher):
             set_current=True,
         )
 
-    def switch_to_sort(self, model: DooitModel):
-        sort_bar = SortBar(model)
+    def switch_to_sort(self, model: DooitModel, callback: Callable):
+        sort_bar = SortBar(model, callback)
         self.add_content(
             widget=sort_bar,
             id="sort_bar",

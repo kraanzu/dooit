@@ -101,7 +101,7 @@ class MainScreen(BaseScreen):
 
     @on(StartSort)
     def start_sort(self, event: StartSort):
-        self.app.bar_switcher.switch_to_sort(event.model)
+        self.app.bar_switcher.switch_to_sort(event.model, event.callback)
         self.post_message(ModeChanged("SORT"))
 
     @on(ShowConfirm)

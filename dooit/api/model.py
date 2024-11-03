@@ -94,7 +94,7 @@ class DooitModel(BaseModel, BaseModelMixin):
         for index, model in enumerate(reversed(self.siblings)):
             model.order_index = index
 
-        self.session.commit()
+        manager.commit()
 
     def shift_up(self) -> bool:
         """

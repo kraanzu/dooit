@@ -1,3 +1,4 @@
+from typing import List, Tuple
 from datetime import datetime, timedelta
 from sqlalchemy import select
 from pytest import raises
@@ -191,55 +192,59 @@ class TestTodo(CoreTestBase):
 
         assert t.urgency == 4
 
-    def test_sort_pending(self):
-        todos = [self.default_workspace.add_todo() for _ in range(5)]
-        for index, t in enumerate(todos):
-            t.pending = bool(index % 2)
-            t.save()
-
-        t = todos[0]
-        ids = [t.id for t in t.siblings]
-
-        # before sorting
-        self.assertEqual([t.id for t in t.siblings], ids)
-
-        # after sorting
-        ids.sort(key=lambda x: x % 2)
-        t.sort_siblings("pending")
-        self.assertEqual([t.id for t in t.siblings], ids)
-
-    def test_sort_description(self):
-        descriptions = ["a", "b", "c", "d", "e"]
-        todos = [self.default_workspace.add_todo() for _ in range(5)]
-        for index, t in enumerate(todos[::-1]):
-            t.description = descriptions[index]
-            t.save()
-
-        ids = [t.id for t in todos]
-
-        # before sorting
-        self.assertEqual([t.id for t in todos], ids)
-
-        # after sorting
-        t = todos[0]
-        ids = ids[::-1]
-        t.sort_siblings("description")
-        self.assertEqual([t.id for t in t.siblings], ids)
-
     def test_sort_invalid(self):
         t = self.default_workspace.add_todo()
 
         with raises(AttributeError):
             t.sort_siblings("???????")
 
-    # TODO:
+    def _sort_before_and_after(self, field) -> Tuple[List[Todo], List[Todo]]:
+        from tests.generate_test_data import generate
+
+        generate()
+
+        w = Workspace.all()[2]
+        t = w.todos[0]
+
+        old_todos = t.siblings
+        t.sort_siblings(field)
+        new_descriptions = t.siblings
+
+        return old_todos, new_descriptions
+
+    def test_sort_pending(self):
+        _, new = self._sort_before_and_after("pending")
+        values_dict = {"completed": 3, "pending": 2, "overdue": 1}
+        values = [values_dict[t.status] for t in new]
+
+        self.assertEqual(values, sorted(values))
+
+    def test_sort_description(self):
+        old, new = self._sort_before_and_after("description")
+        old.sort(key=lambda x: x.description)
+
+        self.assertEqual(old, new)
+
     def test_sort_recurrence(self):
-        return
+        old, new = self._sort_before_and_after("recurrence")
+        has_recurrence = [t for t in old if t.recurrence]
 
-    # TODO:
+        has_recurrence.sort(key=lambda x: x.recurrence)
+        self.assertEqual(has_recurrence, new[: len(has_recurrence)])
+
     def test_sort_effort(self):
-        return
+        old, new = self._sort_before_and_after("effort")
+        old.sort(key=lambda x: x.effort)
+        self.assertEqual(old, new)
 
-    # TODO:
     def test_sort_urgency(self):
-        return
+        old, new = self._sort_before_and_after("urgency")
+        old.sort(key=lambda x: x.urgency)
+        self.assertEqual(old, new)
+
+    def test_due(self):
+        old, new = self._sort_before_and_after("due")
+        has_due = [t for t in old if t.due]
+
+        has_due.sort(key=lambda x: x.due)
+        self.assertEqual(has_due, new[: len(has_due)])

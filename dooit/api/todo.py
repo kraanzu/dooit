@@ -2,7 +2,7 @@ from functools import cmp_to_key
 from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
-from sqlalchemy import ForeignKey, asc, select
+from sqlalchemy import ForeignKey, select, nulls_last
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .model import DooitModel
 from .manager import manager
@@ -126,7 +126,7 @@ class Todo(DooitModel):
                     parent_workspace=self.parent_workspace,
                     parent_todo=self.parent_todo,
                 )
-                .order_by(asc(getattr(Todo, field)))
+                .order_by(nulls_last(getattr(Todo, field).asc()))
                 .all()
             )
         else:

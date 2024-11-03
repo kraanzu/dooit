@@ -1,9 +1,10 @@
 import faker
+from datetime import timedelta
 from random import randint
 from dooit.api import Todo, Workspace, manager
 from dooit.utils.database import delete_all_data
 
-manager.connect()
+manager.connect("sqlite:///:memory:")
 
 f = faker.Faker()
 
@@ -19,6 +20,7 @@ def gen_todo(parent):
         due=due,
         urgency=urgency,
         pending=randint(1, 3) == 3,
+        recurrence=timedelta(days=randint(1, 30)) if randint(0, 10) == 5 else None,
     )
 
     if isinstance(parent, Todo):
@@ -61,6 +63,7 @@ def generate():
     _ = [gen_todos(w, randint(1, 20)) for w in w1_childs]
     gen_todos(w2, 20)
     gen_todos(w3, 30)
+
 
 if __name__ == "__main__":
     generate()

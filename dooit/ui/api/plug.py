@@ -35,11 +35,6 @@ class PluginManager:
         load_file(self, DEFAULT_CONFIG)
         load_dir(self, CONFIG_FOLDER)
 
-    def kickstart_timers(self):
-        for funcs in self.timers.values():
-            for obj in funcs:
-                setattr(obj, "__dooit_value", obj())
-
     def _update_dooit_value(self, obj, *params):
         res = obj(self.api, *params)
         setattr(obj, "__dooit_value", res)

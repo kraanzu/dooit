@@ -299,6 +299,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def shift_down(self):
         self.current_model.shift_down()
 
+    @refresh_tree
+    def sort(self, attr: str):
+        self.current_model.sort_siblings(attr)
+
     def compose(self) -> ComposeResult:
         with Label(id="empty_message"):
             yield Label("No items to display")

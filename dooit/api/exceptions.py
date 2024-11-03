@@ -39,5 +39,5 @@ class NoNodeError(DooitError):
     Raised when user tried to perform an operation that requires a node, but no node is selected
     """
 
-    def __str__(self) -> str:
+    def __str__(self) -> str: # pragma: no cover
         return "No item selected"

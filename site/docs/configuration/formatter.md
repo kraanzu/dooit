@@ -67,6 +67,10 @@ Adding a formatter is pretty straightforward, and in this format:
 
 `api.formatter.<todos or workspaces>.<name of the column>.add(<your function>)`
 
+:::tip
+Check out [`Layout`](./layout) Section for column names
+:::
+
 
 ```py
 from dooit.ui.api import DooitAPI, subscribe

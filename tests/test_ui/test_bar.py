@@ -13,10 +13,10 @@ async def test_bar_switcher():
 
         await pilot.press("escape")
 
-        bar_switcher.switch_to_sort(wtree.current_model)
+        bar_switcher.switch_to_sort(wtree.current_model, wtree.sort)
         await pilot.pause()
         assert bar_switcher.current == "sort_bar"
 
-        bar_switcher.switch_to_sort(wtree.current_model)
+        bar_switcher.switch_to_sort(wtree.current_model, wtree.sort)
         await pilot.pause()
         assert bar_switcher.current == "sort_bar"

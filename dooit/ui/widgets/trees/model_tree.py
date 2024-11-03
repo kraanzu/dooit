@@ -162,7 +162,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def stop_edit(self):
         try:
             self.current.stop_edit()
-        except Exception as e:
+        except Exception as e: # pragma: no cover
             self.post_message(BarNotification(str(e), "error"))
 
         self.app.post_message(ModeChanged("NORMAL"))

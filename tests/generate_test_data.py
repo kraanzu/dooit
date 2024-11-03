@@ -4,7 +4,6 @@ from random import randint
 from dooit.api import Todo, Workspace, manager
 from dooit.utils.database import delete_all_data
 
-manager.connect("sqlite:///:memory:")
 
 f = faker.Faker()
 
@@ -47,7 +46,12 @@ def gen_workspace(parent=None):
     return workspace
 
 
-def generate():
+def generate(test = True):
+    if test:
+        manager.connect("sqlite:///:memory:")
+    else:
+        manager.connect()
+
     delete_all_data(manager.session)
 
     w1 = gen_workspace()
@@ -66,5 +70,5 @@ def generate():
 
 
 if __name__ == "__main__":
-    generate()
+    generate(test = False)
     print("Data generated.")

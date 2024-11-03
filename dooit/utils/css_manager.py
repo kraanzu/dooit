@@ -51,6 +51,7 @@ class CssManager:
             css = css + "\n" + f.read()
 
         # inject extra stylesheets
+        self.stylesheets.mkdir(parents=True, exist_ok=True)
         for sheet in self.stylesheets.iterdir():
             with open(sheet, "r") as f:
                 css = css + "\n" + f.read()

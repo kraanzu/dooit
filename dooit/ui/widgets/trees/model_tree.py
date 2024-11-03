@@ -125,7 +125,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
                 self.__class__.__name__.replace("Tree", "").lower(),
             ):
                 render = self._renderers[child.uuid]
-                options.append(Option(render.prompt, id=render.id))
+                options.append(Option("", id=render.id))
 
                 if self.expanded_nodes[child.uuid] or self.filter_refresh:
                     add_children_recurse(child)
@@ -136,6 +136,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
 
         has_options = bool(options)
         self.empty_message.display = not has_options
+        self.refresh_options()
 
     def on_mount(self):
         self.force_refresh()
@@ -162,7 +163,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def stop_edit(self):
         try:
             self.current.stop_edit()
-        except Exception as e: # pragma: no cover
+        except Exception as e:  # pragma: no cover
             self.post_message(BarNotification(str(e), "error"))
 
         self.app.post_message(ModeChanged("NORMAL"))

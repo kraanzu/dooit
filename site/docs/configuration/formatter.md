@@ -82,26 +82,24 @@ def set_formatters(api: DooitAPI, _):
     fmt.todos.due.add(my_custom_due)
 ```
 
+:::details Combining Multiple formatters :fire:
 
-## Combining formatters :fire:
-
-:::info :grey_exclamation: NOTE
-You can still apply all your customization within one formatter, this section can be a bit for developer friendly and for people who'd like to ship their own formatters
-
-If you're still interested, lets go (I'll try to keep it as simple as possible)
-:::
+> [!NOTE]
+> You can still apply all your customization within one formatter, this section can be a bit for developer friendly and for people who'd like to ship their own formatters
+>
+> If you're still interested, lets go (I'll try to keep it as simple as possible)
 
 There are two types of formattters:
 
 - First one take in the original value and convert into a custom string value to be shown, after it has converted to a string value, its difficult to further modify it since we wont know the original value (even if we know and change it, then we'd completely override the first format )
 
-For example, lets take the `my_custom_due` formatter,
+For example, lets take the [`my_custom_due`](#an-example-formatter-to-format-due-into-a-readable-format) formatter defined above,
 
 Suppose, the due date is a datetime object for date `31-12-2024`, but after formatting, it changed to `31 Dec`
 
 Now the second formatter will see this value instead of the datetime object.
 
-- Now here comes the role of second formatter, it does not change the value of text, but accepts a string and changes it. \
+- Now here comes the role of second formatter, it does not change the value of text, but accepts a string and modified it by adding more data. \
 A good example would be [`Due Icons Formatter`](https://dooit-org.github.io/dooit-extras/formatters/due.html#due-icon) from dooit extras
 It is similiar to first type of formatter except a few changes:
 
@@ -122,3 +120,4 @@ def due_icon(due: str, model: Todo) -> str:
 def set_formatters(api: DooitAPI, _):
     api.formatter.todos.due.add(due_icon)
 ```
+:::

@@ -97,7 +97,7 @@ async def test_reverse_sort():
         await pilot.press(*list("abcd"))
         await pilot.press("escape")
 
-        # current_options = [node.prompt for node in tree._options]
+        current_options = [node.id for node in tree._options]
 
         api.start_sort()
         await pilot.pause()
@@ -111,13 +111,11 @@ async def test_reverse_sort():
         current_bar = app.bar_switcher.visible_content
         assert isinstance(current_bar, StatusBar)
 
-        # FIXME: This is not working for some reason
-        #
-        # new_options = [node.prompt for node in tree._options]
-        # assert current_options != new_options
-        # await sleep(0.2)
-        # await pilot.pause()
-        # assert tree.highlighted == 0 # sorted in reverse
+        new_options = [node.id for node in tree._options]
+        assert current_options != new_options
+        await sleep(0.2)
+        await pilot.pause()
+        assert tree.highlighted == 0 # sorted in reverse
 
 
 async def test_sort_cancelled():

@@ -48,6 +48,7 @@ class SimpleInput(Input, Generic[ModelType, ModelValue]):
     def stop_edit(self) -> None:
         super().stop_edit()
         self.model_value = self._typecast_value(self.value)
+        self._value = self._get_default_value()
         self.model.save()
 
     def keypress(self, key: str) -> None:

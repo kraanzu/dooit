@@ -167,6 +167,8 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             self.post_message(BarNotification(str(e), "error"))
 
         self.app.post_message(ModeChanged("NORMAL"))
+        self.get_column_width.cache_clear()
+        self.update_current_prompt()
 
     def reset_state(self):
         """

@@ -103,3 +103,4 @@ class CssManager:
             sheet.unlink()
 
         self.stylesheets.rmdir()
+        self.refresh_css()

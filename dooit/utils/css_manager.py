@@ -31,8 +31,8 @@ class CssManager:
         self.stylesheets: Path = cache_path / "stylesheets"
         self.css_file: Path = cache_path / "dooit.tcss"
 
+        cache_path.mkdir(parents=True, exist_ok=True)
         if not self.css_file.exists():
-            cache_path.mkdir(parents=True, exist_ok=True)
             self.write("")
 
         self.stylesheets.mkdir(

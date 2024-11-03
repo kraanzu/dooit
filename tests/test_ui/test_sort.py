@@ -1,3 +1,4 @@
+from asyncio import sleep
 from pytest import raises
 from dooit.api.exceptions import NoNodeError
 from dooit.ui.widgets.bars import SortBar
@@ -169,14 +170,13 @@ async def test_description_sort():
         await pilot.press(*list("abcd"))
         await pilot.press("escape")
 
-        # current_options = [node.prompt for node in tree._options]
-
         api.start_sort()
         await pilot.pause()
 
         sort_bar = app.bar_switcher.visible_content
         assert isinstance(sort_bar, SortBar)
         assert tree.highlighted == 1  # sorted in reverse
+        current_options = [node.id for node in tree._options]
 
         sort_bar.selected = 1
         await pilot.press("enter")
@@ -184,10 +184,8 @@ async def test_description_sort():
         current_bar = app.bar_switcher.visible_content
         assert isinstance(current_bar, StatusBar)
 
-        # FIXME: This is not working for some reason
-        #
-        # new_options = [node.prompt for node in tree._options]
-        # assert current_options != new_options
-        # await sleep(0.2)
-        # await pilot.pause()
-        # assert tree.highlighted == 0 # sorted in reverse
+        new_options = [node.id for node in tree._options]
+        assert current_options == new_options[::-1]
+        await sleep(0.2)
+        await pilot.pause()
+        assert tree.highlighted == 0

@@ -45,19 +45,23 @@ def gen_workspace(parent=None):
     return workspace
 
 
-delete_all_data(manager.session)
+def generate():
+    delete_all_data(manager.session)
 
-w1 = gen_workspace()
-w1_childs = [gen_workspace(w1) for _ in range(5)]
+    w1 = gen_workspace()
+    w1_childs = [gen_workspace(w1) for _ in range(5)]
 
-w2 = gen_workspace()
-w3 = gen_workspace()
+    w2 = gen_workspace()
+    w3 = gen_workspace()
 
+    t1 = gen_todos(w1, 5)
+    gen_todos(t1[0], 7)
+    gen_todos(t1[3], 3)
 
-t1 = gen_todos(w1, 5)
-gen_todos(t1[0], 7)
-gen_todos(t1[3], 3)
+    _ = [gen_todos(w, randint(1, 20)) for w in w1_childs]
+    gen_todos(w2, 20)
+    gen_todos(w3, 30)
 
-_ = [gen_todos(w, randint(1, 20)) for w in w1_childs]
-gen_todos(w2, 20)
-gen_todos(w3, 30)
+if __name__ == "__main__":
+    generate()
+    print("Data generated.")

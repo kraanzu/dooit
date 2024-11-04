@@ -6,6 +6,7 @@ from textual.binding import Binding
 
 from dooit.api.theme import DooitThemeBase
 from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup
+from dooit.ui.api.events.events import ShutDown
 from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
 from dooit.ui.widgets.trees import WorkspacesTree
@@ -54,6 +55,10 @@ class Dooit(App):
         await self.base_setup()
         await self.setup_poller()
 
+    async def action_quit(self) -> None:
+        self.post_message(ShutDown())
+        return await super().action_quit()
+
     @property
     def workspace_tree(self) -> WorkspacesTree:
         return self.query_one(WorkspacesTree)
@@ -87,6 +92,10 @@ class Dooit(App):
         if isinstance(self.screen, MainScreen):
             self.api.trigger_event(event)
             self.bar.refresh()
+
+    @on(ShutDown)
+    def shutdown(self, event: ShutDown):
+        self.api.css.cleanup()
 
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):

@@ -97,9 +97,7 @@ class CssManager:
         with open(self.css_file, "w") as f:
             f.write(css)
 
-    def __del__(self):
-        # cleaning up any injected stylesheets
-
+    def cleanup(self):
         for sheet in self.stylesheets.iterdir():
             sheet.unlink()
 

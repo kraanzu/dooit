@@ -86,3 +86,26 @@ async def test_incorrect_edit():
         await pilot.press("escape")
 
         assert not tree.current.start_edit("incorrect")
+
+
+async def test_remove_todo():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        tree = await create_and_move_to_todo(pilot)
+
+        tree.add_sibling()
+        await pilot.press(*list("nixos"))
+        await pilot.press("escape")
+
+        tree.remove_node()
+        await pilot.pause()
+
+        assert len(tree._options) == 1
+        assert tree.highlighted == 0
+        assert tree.current_model.description == "nixos"
+
+        await pilot.press("y")
+        assert len(tree._options) == 0
+        assert tree.highlighted == None

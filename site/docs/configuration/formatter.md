@@ -1,5 +1,10 @@
 # Dooit Formatters
 
+:::tip :bulb: TIP
+Check out [`Dooit Extras' Formatters`](https://dooit-org.github.io/dooit-extras/formatters/description.html) for cool formatters
+:::
+
+
 ## What are formatters?
 
 Formatters are, _simply put_, functions to modify the content you're seeing by default on dooit

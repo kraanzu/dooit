@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING, Optional, Union
+from textual import on
 from textual.widgets.option_list import Option
 
 from dooit.api import Todo, Workspace
 from dooit.ui.api.events import TodoRemoved
+from dooit.ui.api.events.events import TodoSelected
 from .model_tree import ModelTree
 from ..renderers.todo_renderer import TodoRender
 from ._render_dict import TodoRenderDict
@@ -67,3 +69,10 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
 
         self.current_model.decrease_urgency()
         self.update_current_prompt()
+
+    @on(ModelTree.OptionHighlighted)
+    def todo_highlighted(self, event: ModelTree.OptionHighlighted):
+        assert event.option_id
+
+        event.stop()
+        self.post_message(TodoSelected(Todo.from_id(event.option_id)))

@@ -169,17 +169,83 @@ def setup(api: DooitAPI, _):
     )
 ```
 
-## Formatting
+## Layout
+
+Dooit now provides a layout api to order your columns
 
 ### Old
 
 ```py
-
+COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
 ```
 
 ### New
 
 ```py
+from dooit.ui.api.widgets import TodoWidget, WorkspaceWidget
+
+@subscribe(Startup)
+def layout_setup(api: DooitAPI, _):
+    api.layouts.workspace_layout = [WorkspaceWidget.description]
+
+    api.layouts.todo_layout = [
+        TodoWidget.status,
+        TodoWidget.description, 
+        TodoWidget.recurrence,
+        TodoWidget.due,
+        TodoWidget.urgency,
+    ]
+```
+
+## Formatting
+
+Formatting for workspaces and todos is now even more customizable! \
+You can use dooit formatters to custom format your items :D
+
+Plus, some general settings from the old config as well
+
+### Old
+
+```py
+#################################
+#           WORKSPACE           #
+#################################
+WORKSPACE = {
+    "editing": cyan,
+    "pointer": ">",
+    "children_hint": "+",  # "[{count}]", # vars: count
+    "start_expanded": False,
+}
+
+COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
+TODO = {
+    "color_todos": False,
+    "editing": cyan,
+    "pointer": ">",
+    "children_hint": colored(
+        " ({done}/{total})", green
+    ),  # vars: remaining, done, total
+    # "children_hint": "[b magenta]({remaining}!)[/b magenta]",
+    "due_icon": "? ",
+    "effort_icon": "+",
+    "effort_color": yellow,
+    "recurrence_icon": "!",
+    "recurrence_color": blue,
+    "tags_color": red,
+    "completed_icon": "x",
+    "pending_icon": "o",
+    "overdue_icon": "!",
+    "urgency1_icon": "A",
+    "urgency2_icon": "B",
+    "urgency3_icon": "C",
+    "urgency4_icon": "D",
+    "start_expanded": False,
+    "initial_urgency": 1,
+    "urgency1_color": "green",
+    "urgency2_color": "yellow",
+    "urgency3_color": "orange",
+    "urgency4_color": "red",
+}
 
 ```
 
@@ -226,83 +292,4 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("-,_", api.decrease_urgency)
     api.keys.set("/", api.start_search)
     api.keys.set("<ctrl+s>", api.start_sort)
-```
-
-
-
-```py
-
-#################################
-#            GENERAL            #
-#################################
-BACKGROUND = black
-BAR_BACKGROUND = black
-WORKSPACES_BACKGROUND = black
-TODOS_BACKGROUND = black
-BORDER_DIM = grey + " 50%"
-BORDER_LIT = blue
-BORDER_TITLE_DIM = grey, dark_black
-BORDER_TITLE_LIT = white, blue
-SEARCH_COLOR = red
-YANK_COLOR = blue
-SAVE_ON_ESCAPE = False
-USE_DAY_FIRST = True
-DATE_FORMAT = "%d %h"
-TIME_FORMAT = "%H:%M"
-
-#################################
-#           WORKSPACE           #
-#################################
-WORKSPACE = {
-    "editing": cyan,
-    "pointer": ">",
-    "children_hint": "+",  # "[{count}]", # vars: count
-    "start_expanded": False,
-}
-EMPTY_WORKSPACE = [
-    ":(",
-    "No workspaces yet?",
-    f"Press {colored('a', cyan)} to add some!",
-]
-
-#################################
-#            TODOS              #
-#################################
-
-
-COLUMN_ORDER = ["description", "due", "urgency"]  # order of columns
-TODO = {
-    "color_todos": False,
-    "editing": cyan,
-    "pointer": ">",
-    "children_hint": colored(
-        " ({done}/{total})", green
-    ),  # vars: remaining, done, total
-    # "children_hint": "[b magenta]({remaining}!)[/b magenta]",
-    "due_icon": "? ",
-    "effort_icon": "+",
-    "effort_color": yellow,
-    "recurrence_icon": "!",
-    "recurrence_color": blue,
-    "tags_color": red,
-    "completed_icon": "x",
-    "pending_icon": "o",
-    "overdue_icon": "!",
-    "urgency1_icon": "A",
-    "urgency2_icon": "B",
-    "urgency3_icon": "C",
-    "urgency4_icon": "D",
-    "start_expanded": False,
-    "initial_urgency": 1,
-    "urgency1_color": "green",
-    "urgency2_color": "yellow",
-    "urgency3_color": "orange",
-    "urgency4_color": "red",
-}
-
-EMPTY_TODO = [
-    ":(",
-    "Wow so Empty!?",
-    "Add some todos to get started!",
-]
 ```

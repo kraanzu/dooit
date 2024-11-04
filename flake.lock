@@ -2,6 +2,67 @@
   "nodes": {
     "dooit": {
       "inputs": {
+        "dooit-extras": "dooit-extras_2",
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1730690606,
+        "narHash": "sha256-CwgbSEgrUJSStKvej5hjOdXrISM6ZVKNUkwi3tvg4Vk=",
+        "owner": "kraanzu",
+        "repo": "dooit",
+        "rev": "d30db706245a381c01dd0f70539c9efff415b9b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kraanzu",
+        "ref": "develop",
+        "repo": "dooit",
+        "type": "github"
+      }
+    },
+    "dooit-extras": {
+      "inputs": {
+        "dooit": "dooit",
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "lastModified": 1730695720,
+        "narHash": "sha256-OqvMMVkGpeilEEWKpsULYkZfVdqb3lO+a+m+7vl/1TQ=",
+        "owner": "dooit-org",
+        "repo": "dooit-extras",
+        "rev": "85d57b9270fa80ec243a8b4efb761487335a87a9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dooit-org",
+        "repo": "dooit-extras",
+        "type": "github"
+      }
+    },
+    "dooit-extras_2": {
+      "inputs": {
+        "dooit": "dooit_2",
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1730517451,
+        "narHash": "sha256-6RrztQN8H5hv3zkalegTs+gdA6Ar5ThSODxmlwgDMV0=",
+        "owner": "dooit-org",
+        "repo": "dooit-extras",
+        "rev": "768fa9776ab29b334bd577905f5bedf889a2131e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dooit-org",
+        "repo": "dooit-extras",
+        "type": "github"
+      }
+    },
+    "dooit_2": {
+      "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs"
       },
@@ -17,26 +78,6 @@
         "owner": "kraanzu",
         "ref": "develop",
         "repo": "dooit",
-        "type": "github"
-      }
-    },
-    "dooit-extras": {
-      "inputs": {
-        "dooit": "dooit",
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1730695346,
-        "narHash": "sha256-GeoP3672CifWmzTMaL5tc09/WQ5o9Dk7pC80kXTRCX4=",
-        "owner": "dooit-org",
-        "repo": "dooit-extras",
-        "rev": "d2d58d1e3c94b71c624e9f4deb6de83398807726",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dooit-org",
-        "repo": "dooit-extras",
         "type": "github"
       }
     },
@@ -94,6 +135,42 @@
         "type": "github"
       }
     },
+    "flake-utils_4": {
+      "inputs": {
+        "systems": "systems_4"
+      },
+      "locked": {
+        "lastModified": 1726560853,
+        "narHash": "sha256-X6rJYSESBVr3hBoH0WbKE5KvhPU5bloyZ2L4K60/fPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c1dfcf08411b08f6b8615f7d8971a2bfa81d5e8a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_5": {
+      "inputs": {
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1726560853,
+        "narHash": "sha256-X6rJYSESBVr3hBoH0WbKE5KvhPU5bloyZ2L4K60/fPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c1dfcf08411b08f6b8615f7d8971a2bfa81d5e8a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1728018373,
@@ -128,6 +205,38 @@
     },
     "nixpkgs_3": {
       "locked": {
+        "lastModified": 1730200266,
+        "narHash": "sha256-l253w0XMT8nWHGXuXqyiIC/bMvh1VRszGXgdpQlfhvU=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "807e9154dcb16384b1b765ebe9cd2bba2ac287fd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1730531603,
+        "narHash": "sha256-Dqg6si5CqIzm87sp57j5nTaeBbWhHFaVyG7V6L8k3lY=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "7ffd9ae656aec493492b44d0ddfb28e79a1ea25d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_5": {
+      "locked": {
         "lastModified": 1730531603,
         "narHash": "sha256-Dqg6si5CqIzm87sp57j5nTaeBbWhHFaVyG7V6L8k3lY=",
         "owner": "nixos",
@@ -145,8 +254,8 @@
     "root": {
       "inputs": {
         "dooit-extras": "dooit-extras",
-        "flake-utils": "flake-utils_3",
-        "nixpkgs": "nixpkgs_3"
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": "nixpkgs_5"
       }
     },
     "systems": {
@@ -180,6 +289,36 @@
       }
     },
     "systems_3": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_5": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

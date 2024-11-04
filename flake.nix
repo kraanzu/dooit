@@ -20,17 +20,19 @@
         pkgs = import nixpkgs {inherit system;};
         python3 = pkgs.python312Packages;
 
-        mainPkgs = with python3; [
-          poetry-core
-          pyperclip
-          textual
-          pyyaml
-          dateutil
-          sqlalchemy
-          platformdirs
-          tzlocal
-          click
-        ];
+        mainPkgs = with python3;
+          [
+            poetry-core
+            pyperclip
+            textual
+            pyyaml
+            dateutil
+            sqlalchemy
+            platformdirs
+            tzlocal
+            click
+          ]
+          ++ [dooit-extras.packages.${system}.default];
       in {
         packages.default = python3.buildPythonPackage {
           pname = name;

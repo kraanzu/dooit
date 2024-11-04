@@ -12,7 +12,7 @@ def test_css_manager():
     cache_path = Path(TemporaryDirectory().name)
     manager = CssManager(cache_path=cache_path)
 
-    assert manager.css_file.exists() is False
+    assert manager.css_file.exists()
     manager.refresh_css()
 
     # via classname

@@ -29,6 +29,10 @@ Below, I'll split parts of it and provide you with newer format \
 
 ## Colors
 
+:::tip :bulb: TIP
+Check out [`Theme`](../configuration/theme.md) for more info
+:::
+
 ### Old
 
 ```py
@@ -50,7 +54,6 @@ orange = "#d08770"
 
 Dooit now has a dedicated theme api for colors so that the colors will match properly with everything
 
-Check out [`Theme`](../configuration/theme.md) for available colors
 
 ```py
 from dooit.ui.api import DooitAPI, subscribe
@@ -62,6 +65,10 @@ def foo(api: DooitAPI, _):
 ```
 
 ## Dashboard
+
+:::tip :bulb: TIP
+Check out [`Dashboard`](../configuration/dashboard.md) for more info
+:::
 
 :::info :grey_exclamation: NOTE
 I have removed the ascii dashboard section from old config since it takes too much lines of code
@@ -107,6 +114,10 @@ def dashboard_setup(api: DooitAPI, _):
 
 
 ## Bar
+
+:::tip :bulb: TIP
+Check out [`Bar`](../configuration/bar.md) for more info
+:::
 
 :::info :grey_exclamation: NOTE
 The function `get_message` is now of no use hence removed. \
@@ -171,6 +182,10 @@ def setup(api: DooitAPI, _):
 
 ## Layout
 
+:::tip :bulb: TIP
+Check out [`Layouts`](../configuration/layout.md) for more info
+:::
+
 Dooit now provides a layout api to order your columns
 
 ### Old
@@ -198,6 +213,10 @@ def layout_setup(api: DooitAPI, _):
 ```
 
 ## Formatting
+
+:::tip :bulb: TIP
+Check out [`Formatters`](../configuration/formatter.md) for more info
+:::
 
 Formatting for workspaces and todos is now even more customizable! \
 You can use dooit formatters to custom format your items :D
@@ -250,6 +269,10 @@ TODO = {
 ```
 
 ## Keybindings
+
+:::tip :bulb: TIP
+Check out [`Keys`](../configuration/keys.md) for more info
+:::
 
 Keybidings now are much more easier to understand and implement + now you get support for custom keybindings executing some custom code
 

@@ -50,7 +50,7 @@ orange = "#d08770"
 
 Dooit now has a dedicated theme api for colors so that the colors will match properly with everything
 
-Check out [`Theme`]() for available colors
+Check out [`Theme`](../configuration/theme.md) for available colors
 
 ```py
 from dooit.ui.api import DooitAPI, subscribe
@@ -227,7 +227,6 @@ def key_setup(api: DooitAPI, _):
     api.keys.set("/", api.start_search)
     api.keys.set("<ctrl+s>", api.start_sort)
 ```
-
 
 
 

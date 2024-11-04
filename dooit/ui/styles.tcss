@@ -26,7 +26,7 @@ ModelTree {
     &:focus {
         border: $border_type $primary;
         border-title-color: $foreground3;
-        border-title-background: $secondary;
+        border-title-background: $primary;
 
         .option-list--option-highlighted, .option-list--option-hover-highlighted {
             background: $secondary 40%;

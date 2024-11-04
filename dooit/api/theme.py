@@ -16,14 +16,14 @@ class DooitThemeBase:
     orange: str = "#D08770"
     yellow: str = "#EBCB8B"
     green: str = "#A3BE8C"
-    blue: str = "#5E81AC"
+    blue: str = "#81A1C1"
     purple: str = "#B48EAD"
     magenta: str = "#B48EAD"
     cyan: str = "#8FBCBB"
 
     # accent colors
-    primary: str = "#88C0D0"
-    secondary: str = "#81A1C1"
+    primary: str = cyan
+    secondary: str = blue
 
     @classmethod
     def to_css(cls) -> str:

@@ -1,6 +1,6 @@
 import click
 from pathlib import Path
-from platformdirs import user_data_dir
+from platformdirs import user_data_dir, user_config_dir
 
 OLD_CONFIG = Path(user_data_dir("dooit")) / "todo.yaml"
 VERSION = "3.0.0"
@@ -49,6 +49,12 @@ def migrate() -> None:
 
     migrator = Migrator2to3()
     migrator.migrate()
+
+
+@main.command(help="Show config location.")
+def config_loc() -> None:
+    """Print the location of the configuration file."""
+    print(Path(user_config_dir("dooit")) / "config.py")
 
 
 if __name__ == "__main__":

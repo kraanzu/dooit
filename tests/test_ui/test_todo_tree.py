@@ -1,5 +1,7 @@
+from datetime import datetime, timedelta
 from pytest import raises
 from dooit.api.exceptions import NoNodeError
+from dooit.api import Todo
 from dooit.ui.api.widgets import TodoWidget
 from dooit.ui.widgets.renderers.base_renderer import BaseRenderer
 from tests.test_ui.ui_base import run_pilot, create_and_move_to_todo
@@ -109,3 +111,124 @@ async def test_remove_todo():
         await pilot.press("y")
         assert len(tree._options) == 0
         assert tree.highlighted == None
+
+
+async def test_due():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        tree = await create_and_move_to_todo(pilot)
+
+        tree.add_sibling()
+        await pilot.press(*list("nixos"))
+        await pilot.press("escape")
+
+        app.api.edit_due()
+        await pilot.press(*list("2022-01-01"))
+        await pilot.press("escape")
+
+        todo = tree.current_model
+        assert isinstance(todo, Todo)
+
+        assert todo.due == datetime(2022, 1, 1)
+
+
+async def test_urgency():
+    async with run_pilot() as pilot:
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        tree = await create_and_move_to_todo(pilot)
+
+        tree.add_sibling()
+        await pilot.press(*list("nixos"))
+        await pilot.press("escape")
+
+        todo = tree.current_model
+        assert isinstance(todo, Todo)
+
+        urgency = todo.urgency
+        tree.increase_urgency()
+
+        await pilot.pause()
+        assert todo.urgency == urgency + 1
+
+        tree.decrease_urgency()
+        await pilot.pause()
+        assert todo.urgency == urgency
+
+
+async def test_status_change():
+    async with run_pilot() as pilot:
+        await pilot.pause()
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        tree = await create_and_move_to_todo(pilot)
+
+        tree.add_sibling()
+        await pilot.press(*list("nixos"))
+        await pilot.press("escape")
+
+        app.api.edit_due()
+        await pilot.press(*list("2022-01-01"))
+        await pilot.press("escape")
+
+        todo = tree.current_model
+        assert isinstance(todo, Todo)
+
+        assert todo.status == "overdue"
+        tree.toggle_complete()
+        await pilot.pause()
+
+        assert todo.status == "completed"
+
+
+async def test_effort_change():
+    async with run_pilot() as pilot:
+        await pilot.pause()
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        tree = await create_and_move_to_todo(pilot)
+
+        tree.add_sibling()
+        await pilot.press(*list("nixos"))
+        await pilot.press("escape")
+
+        todo = tree.current_model
+        assert isinstance(todo, Todo)
+
+        assert todo.effort == 0
+
+        app.api.layouts.todo_layout = [TodoWidget.effort] # make sure the column is there
+        tree.start_edit("effort")
+        await pilot.press("2")
+        await pilot.press("escape")
+
+        assert todo.effort == 2
+
+async def test_recurrence_change():
+    async with run_pilot() as pilot:
+        await pilot.pause()
+        app = pilot.app
+        assert isinstance(app, Dooit)
+
+        tree = await create_and_move_to_todo(pilot)
+
+        tree.add_sibling()
+        await pilot.press(*list("nixos"))
+        await pilot.press("escape")
+
+        todo = tree.current_model
+        assert isinstance(todo, Todo)
+
+        assert todo.recurrence is None
+
+        app.api.layouts.todo_layout = [TodoWidget.recurrence] # make sure the column is there
+        tree.start_edit("recurrence")
+        await pilot.press("1", "d")
+        await pilot.press("escape")
+
+        assert todo.recurrence == timedelta(days=1)

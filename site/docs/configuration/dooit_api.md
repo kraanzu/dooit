@@ -16,6 +16,10 @@ There are two things that you need to know of:
 - The api has certain functions to perform some particular tasks
 - The api also exposes other sub modules which you can find in other section for configurations
 
+:::tip :bulb: TIP
+You probably wont need to deep dive too much into api functions, check out [`Default Keys from config`](/extra/moving_from_v2#new-4) as probably everything is already set to sane defaults
+:::
+
 ### Sub-modules
 ------------
 

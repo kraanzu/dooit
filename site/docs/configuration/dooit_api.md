@@ -52,10 +52,6 @@ Add a sibling to the highlighted item
 
 Decrease the urgency of the todo
 
-## `method` edit 
-
-Start editing a property of the focused item
-
 ## `method` edit_description 
 
 Start editing the description of the focused item

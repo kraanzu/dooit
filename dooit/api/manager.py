@@ -17,7 +17,7 @@ class Manager:
 
         self.engine = create_engine(conn)
         self.session = Session(self.engine)
-        self.session.autoflush = False
+        # self.session.autoflush = False
 
         BaseModel.metadata.create_all(bind=self.engine)
         self._db_last_modified = self._get_db_last_modified()

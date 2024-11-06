@@ -30,28 +30,29 @@
           click
         ];
       in {
-        packages.default = python3.buildPythonPackage {
-          pname = name;
-          version = version;
-          src = ./.;
-          format = "pyproject";
+        packages.default = {extraPackages ? []}:
+          python3.buildPythonPackage {
+            pname = name;
+            version = version;
+            src = ./.;
+            format = "pyproject";
 
-          nativeBuildInputs = with pkgs; [
-            poetry
-          ];
+            nativeBuildInputs = with pkgs; [
+              poetry
+            ];
 
-          pythonRelaxDeps = [
-            "textual"
-            "tzlocal"
-            "platformdirs"
-          ];
+            pythonRelaxDeps = [
+              "textual"
+              "tzlocal"
+              "platformdirs"
+            ];
 
-          buildInputs = mainPkgs;
-          propagatedBuildInputs = mainPkgs;
+            buildInputs = mainPkgs ++ extraPackages;
+            propagatedBuildInputs = mainPkgs;
 
-          # TODO: enable this
-          doCheck = false;
-        };
+            # TODO: enable this
+            doCheck = false;
+          };
 
         # Deps: Devshell
         devShell = pkgs.mkShell {

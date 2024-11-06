@@ -103,7 +103,7 @@ Triggered when the user initiates a sort operation.
 
 | Param | <div style="width: 100px">Default</div> | Description                                   |
 |-------|:--------------------------------------:|-----------------------------------------------|
-| model |                                        | The model (`DooitModel`) to be sorted.        |
+| model |                                        | The model (`Todo` or `Workspace`) to be sorted.        |
 
 
 ## ShowConfirm

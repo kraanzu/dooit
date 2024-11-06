@@ -20,12 +20,7 @@ jobs:
         pip install ruff
     - name: Lint Check
       run: |
-<<<<<<< HEAD:.github/workflows/linting.yml
-        ruff check $(git ls-files '*.py')
-        black $(git ls-files '*.py')
-=======
         ruff check .
     - name: Format Check
       run: |
         ruff format --check .
->>>>>>> origin/snappy:.github/workflows/ruff.yml

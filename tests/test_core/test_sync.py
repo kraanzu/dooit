@@ -1,3 +1,4 @@
+from time import sleep
 from pathlib import Path
 from dooit.api.manager import Manager
 from dooit.api.workspace import Workspace
@@ -22,6 +23,7 @@ class TestSync(CoreTestBase):
         manager1.save(w)
 
         self.assertFalse(manager1.has_changed())
-        self.assertTrue(manager2.has_changed())
+        sleep(1) # ensuring the times dont match
 
+        self.assertTrue(manager2.has_changed())
         temp_folder.cleanup()

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "dooit"
 version = "3.0.0"
-description = "A TUI todo manager"
+description = "A TUI Todo Manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]
 license = "MIT"
@@ -11,31 +11,27 @@ repository = "https://github.com/kraanzu/dooit"
 exclude = ["imgs"]
 
 [tool.poetry.dependencies]
-python = "^3.8.1"
-pyperclip = "^1.8.2"
-PyYAML = "^6.0"
-tzlocal = "2.1"
-textual = "^0.85.1"
-python-dateutil = "^2.8.2"
-sqlalchemy = "^2.0.31"
+python = "^3.9"
+pyperclip = "^1.9.0"
+pyyaml = "^6.0.2"
+tzlocal = "^5.2"
+textual = "^0.85.2"
+python-dateutil = "^2.9.0.post0"
+sqlalchemy = "^2.0.36"
 platformdirs = "^4.3.6"
-dooit-extras = {git = "https://github.com/dooit-org/dooit-extras.git", branch="main", optional = true}
 click = "^8.1.7"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.6.9"
-pre-commit = "^3.2.2"
+ruff = "^0.7.2"
+pre-commit = "^4.0.1"
 textual-dev = "^1.6.1"
-pytest = "^8.3.2"
-coverage = "^7.6.1"
+pytest = "^8.3.3"
+coverage = "^7.6.4"
 pytest-asyncio = "^0.24.0"
-faker = "^29.0.0"
-
-[tool.poetry.extras]
-extras = ["dooit-extras"]
+faker = "^30.8.2"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]

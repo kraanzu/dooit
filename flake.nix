@@ -44,6 +44,7 @@
             "textual"
             "tzlocal"
             "platformdirs"
+            "sqlalchemy"
           ];
 
           buildInputs = mainPkgs;

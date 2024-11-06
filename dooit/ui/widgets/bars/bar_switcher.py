@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 from textual.await_complete import AwaitComplete
 from textual.widget import Widget
 from textual.widgets import ContentSwitcher
@@ -36,7 +36,7 @@ class BarSwitcher(ContentSwitcher):
         return self.current != "status_bar" and self.visible_content.focused
 
     def add_content(
-        self, widget: Widget, *, id: str | None = None, set_current: bool = False
+        self, widget: Widget, *, id: Optional[str] = None, set_current: bool = False
     ) -> AwaitComplete:
         try:
             self.query_one(f"#{id}", expect_type=BarBase).remove()

@@ -3,13 +3,11 @@
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.dooit-extras.url = "github:dooit-org/dooit-extras";
 
   outputs = {
     self,
     nixpkgs,
     flake-utils,
-    dooit-extras,
   }
   :
     flake-utils.lib.eachDefaultSystem (
@@ -20,19 +18,17 @@
         pkgs = import nixpkgs {inherit system;};
         python3 = pkgs.python312Packages;
 
-        mainPkgs = with python3;
-          [
-            poetry-core
-            pyperclip
-            textual
-            pyyaml
-            dateutil
-            sqlalchemy
-            platformdirs
-            tzlocal
-            click
-          ]
-          ++ [dooit-extras.packages.${system}.default];
+        mainPkgs = with python3; [
+          poetry-core
+          pyperclip
+          textual
+          pyyaml
+          dateutil
+          sqlalchemy
+          platformdirs
+          tzlocal
+          click
+        ];
       in {
         packages.default = python3.buildPythonPackage {
           pname = name;
@@ -69,7 +65,6 @@
               pytest-aio
               faker
             ])
-            ++ [dooit-extras.packages.${system}.default]
             ++ [pkgs.bun];
           shellHook = ''
             cd site/

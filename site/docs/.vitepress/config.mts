@@ -42,7 +42,8 @@ export default defineConfig({
         collapsible: true,
         collapsed: false,
         items: [
-        { text: "Dooit API", link: "/configuration/dooit_api" },
+          { text: "Dooit API", link: "/configuration/dooit_api" },
+          { text: "Vars", link: "/configuration/vars" },
           { text: "Events", link: "/configuration/events" },
           { text: "Themes", link: "/configuration/theme" },
           { text: "Keys", link: "/configuration/keys" },

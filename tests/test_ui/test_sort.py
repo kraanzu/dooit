@@ -115,7 +115,7 @@ async def test_reverse_sort():
         assert current_options != new_options
         await sleep(0.2)
         await pilot.pause()
-        assert tree.highlighted == 0 # sorted in reverse
+        assert tree.highlighted == 0  # sorted in reverse
 
 
 async def test_sort_cancelled():

@@ -46,11 +46,11 @@ def gen_workspace(parent=None):
     return workspace
 
 
-def generate(test = True):
+def generate(test=True):
     if test:
         manager.connect("sqlite:///:memory:")
     else:
-        manager.connect() # pragma: no cover (not called in tests)
+        manager.connect()  # pragma: no cover (not called in tests)
 
     delete_all_data(manager.session)
 
@@ -69,6 +69,6 @@ def generate(test = True):
     gen_todos(w3, 30)
 
 
-if __name__ == "__main__": # pragma: no cover (not called in tests)
-    generate(test = False)
+if __name__ == "__main__":  # pragma: no cover (not called in tests)
+    generate(test=False)
     print("Data generated.")

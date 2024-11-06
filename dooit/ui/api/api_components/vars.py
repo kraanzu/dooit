@@ -4,7 +4,7 @@ from dooit.api import Workspace
 from ._base import ApiComponent
 
 
-if TYPE_CHECKING: # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.tui import Dooit
 
 

@@ -26,7 +26,7 @@ class StatusBar(BarBase):
                 if len(value):
                     table.add_column(width=len(value))
                 else:
-                    row.pop() # pragma: no cover
+                    row.pop()  # pragma: no cover
 
             elif width := widget.width:
                 table.add_column(width=width)

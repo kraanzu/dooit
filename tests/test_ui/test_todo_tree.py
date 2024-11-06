@@ -110,7 +110,7 @@ async def test_remove_todo():
 
         await pilot.press("y")
         assert len(tree._options) == 0
-        assert tree.highlighted == None
+        assert tree.highlighted is None
 
 
 async def test_due():
@@ -203,12 +203,15 @@ async def test_effort_change():
         assert todo.effort == 0
         assert not tree.start_edit("effort")
 
-        app.api.layouts.todo_layout = [TodoWidget.effort] # make sure the column is there
+        app.api.layouts.todo_layout = [
+            TodoWidget.effort
+        ]  # make sure the column is there
         tree.start_edit("effort")
         await pilot.press("2")
         await pilot.press("escape")
 
         assert todo.effort == 2
+
 
 async def test_recurrence_change():
     async with run_pilot() as pilot:
@@ -227,7 +230,9 @@ async def test_recurrence_change():
 
         assert todo.recurrence is None
 
-        app.api.layouts.todo_layout = [TodoWidget.recurrence] # make sure the column is there
+        app.api.layouts.todo_layout = [
+            TodoWidget.recurrence
+        ]  # make sure the column is there
         tree.start_edit("recurrence")
         await pilot.press("1", "d")
         await pilot.press("escape")

@@ -6,8 +6,10 @@
   };
 
   outputs = inputs: let
+    # Define function to generate attributes for each system
     forEachSystem = inputs.nixpkgs.lib.genAttrs inputs.nixpkgs.lib.platforms.all;
 
+    # Import nixpkgs for each system
     pkgsFor = forEachSystem (
       system:
         import inputs.nixpkgs {
@@ -15,6 +17,7 @@
         }
     );
 
+    # Common Python packages used in both main package and devShell
     mainPkgs = python3:
       with python3; [
         poetry-core
@@ -28,6 +31,7 @@
         click
       ];
 
+    # Additional packages for the devShell
     devShellPkgs = python3:
       with python3; [
         textual-dev
@@ -37,11 +41,13 @@
         faker
       ];
 
+    # Native build inputs
     nativeBuildInputs = pkgs:
       with pkgs; [
         poetry
       ];
 
+    # Define devShell for each system
     devShellFor = system:
       inputs.nixpkgs.lib.genAttrs ["default"] (
         _:
@@ -59,6 +65,7 @@
           }
       );
 
+    # Define default package for each system
     defaultPackageFor = system:
       pkgsFor.${system}.python312Packages.buildPythonPackage {
         pname = "dooit";
@@ -81,14 +88,17 @@
         doCheck = false;
       };
   in {
+    # Define the devShells for each system
     devShells = forEachSystem devShellFor;
 
+    # Define the default package for each system
     packages = forEachSystem (
       system: {
         default = defaultPackageFor system;
       }
     );
 
-    defaultPackage = defaultPackageFor builtins.currentSystem;
+    # Expose a top-level `defaultPackage` that detects the current system
+    defaultPackage = defaultPackageFor inputs.nixpkgs.lib.systems.defaultSystem;
   };
 }

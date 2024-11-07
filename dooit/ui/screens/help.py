@@ -132,3 +132,9 @@ class HelpScreen(BaseScreen):
         yield Header()
         yield DooitKeyTable(self.api.keys, self.api.no_op)
         yield Outro()
+
+    def key_j(self):
+        self.scroll_down()
+
+    def key_k(self):
+        self.scroll_up()

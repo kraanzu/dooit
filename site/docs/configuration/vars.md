@@ -1,6 +1,7 @@
 # Dooit Vars
 
-This api component just has access to some stuff running on dooit which makes it easier to get things instead of writing scripts
+This api component exposes some of the stuff running on dooit + act as a global register to tweak settings \
+Its still developing and I'll add more stuff to it as per demand!
 
 ### theme
 

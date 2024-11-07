@@ -27,5 +27,8 @@
         default = packageFor system;
       }
     );
+    overlay = final: prev: {
+      dooit = packageFor final.system;
+    };
   };
 }

@@ -20,7 +20,10 @@
     );
 
     packageFor = system:
-      pkgsFor.${system}.callPackage ./nix {};
+      pkgsFor.${system}.callPackage ./nix {}
+      // {
+        override = attrs: (packageFor system).overrideAttrs (_: attrs);
+      };
   in {
     packages = forEachSystem (
       system: {

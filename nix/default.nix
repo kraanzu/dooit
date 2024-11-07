@@ -5,6 +5,7 @@
   python311,
   testers,
   nix-update-script,
+  extraPackages ? [],
 }: let
   python3 = python311;
 in
@@ -27,16 +28,18 @@ in
       "textual"
     ];
 
-    propagatedBuildInputs = with python3.pkgs; [
-      pyperclip
-      textual
-      pyyaml
-      dateutil
-      sqlalchemy
-      platformdirs
-      tzlocal
-      click
-    ];
+    propagatedBuildInputs = with python3.pkgs;
+      [
+        pyperclip
+        textual
+        pyyaml
+        dateutil
+        sqlalchemy
+        platformdirs
+        tzlocal
+        click
+      ]
+      ++ extraPackages;
 
     # No tests available
     doCheck = true;

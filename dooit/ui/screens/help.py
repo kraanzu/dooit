@@ -3,6 +3,7 @@ from rich.console import Group, RenderableType
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
+from textual import events
 from textual.app import ComposeResult
 from textual.widgets import Static
 
@@ -132,6 +133,12 @@ class HelpScreen(BaseScreen):
         yield Header()
         yield DooitKeyTable(self.api.keys, self.api.no_op)
         yield Outro()
+
+    def key_down(self):
+        self.scroll_down()
+
+    def key_up(self):
+        self.scroll_up()
 
     def key_j(self):
         self.scroll_down()

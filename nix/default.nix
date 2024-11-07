@@ -26,6 +26,7 @@ in
     pythonRelaxDeps = [
       "tzlocal"
       "textual"
+      "sqlalchemy"
     ];
 
     propagatedBuildInputs = with python3.pkgs;

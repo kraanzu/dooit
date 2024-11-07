@@ -9,7 +9,7 @@ and then you can use their variables to set the columns:
 
 
 :::info :grey_exclamation: NOTE
-Description will take up all the space left after rendering all other columns
+`Description` column will take up all the space left after rendering all other columns
 :::
 
 

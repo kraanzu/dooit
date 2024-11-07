@@ -22,7 +22,7 @@ dooit migrate
 
 This requires a bit more work but completly an easy process.
 
-Below, I'll split parts of it and provide you with newer format \
+Below, I'll split parts of it and provide you with newer format
 
 ***Let's start***
 
@@ -276,7 +276,7 @@ Check out [`Keys`](../configuration/keys.md) for more info
 
 Keybidings now are much more easier to understand and implement + now you get support for custom keybindings executing some custom code
 
-You can get a full list of available api functions [`here`]()
+You can get a full list of available api functions [`here`](../configuration/dooit_api.md)
 
 ### Old
 

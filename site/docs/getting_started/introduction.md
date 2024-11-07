@@ -1,4 +1,4 @@
-# Welcome to Dooit!
+# Welcome to Dooit's Documentation <3
 
 Dooit is a TUI todo manager aimed to be highly customizable! \
 It's built with [`Textual`](https://textual.textualize.io/)

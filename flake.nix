@@ -31,7 +31,10 @@
     );
 
     overlay = final: prev: {
-      dooit = extraPackages: packageFor final.system extraPackages;
+      dooit = extraPackages:
+        prev.dooit.override {
+          extraPackages = extraPackages;
+        };
     };
   };
 }

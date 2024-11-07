@@ -19,19 +19,19 @@
         }
     );
 
-    packageFor = system:
-      pkgsFor.${system}.callPackage ./nix {}
-      // {
-        override = attrs: (packageFor system).overrideAttrs (_: attrs);
+    packageFor = system: extraPackages:
+      pkgsFor.${system}.callPackage ./nix {
+        inherit extraPackages;
       };
   in {
     packages = forEachSystem (
       system: {
-        default = packageFor system;
+        default = packageFor system [];
       }
     );
+
     overlay = final: prev: {
-      dooit = packageFor final.system;
+      dooit = extraPackages: packageFor final.system extraPackages;
     };
   };
 }

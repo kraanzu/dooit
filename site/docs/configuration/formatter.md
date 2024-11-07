@@ -22,6 +22,10 @@ You can find a [a wide range of formatters](https://dooit-org.github.io/dooit-ex
 
 For creating a formatter, you define a function which takes in:
 
+:::tip :bulb: TIP
+Check out [`Backend API`](../backend/introduction.md) to get the know about the value types
+:::
+
 - `value` -> The real value of the object (for e.g., `due` will be a `datetime` object, `description` will be a `str`)
 - `model` -> The respective `Todo` or `Workspace` object
 - `api` [Optional] -> The dooit api 

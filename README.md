@@ -9,39 +9,39 @@ to make sure that you complete your tasks on time ;)
 [![GitHub license](https://img.shields.io/github/license/kraanzu/dooit?color=yellow&style=for-the-badge)](https://github.com/kraanzu/doit/blob/main/LICENSE)
 [![Support Server](https://img.shields.io/discord/989186205025464390.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge)](https://discord.gg/WA2ER9MBWa)
 
-<!-- # Installation 🔨 -->
-<!--  -->
-<!-- Dooit can be installed with various package managers! -->
-<!--  -->
-<!-- ### With Pip 🐍 -->
-<!--  -->
-<!-- > **Note** -->
-<!-- Make sure your `python local bin` is in `$PATH` -->
-<!--  -->
-<!-- You can install dooit easily using a python one-liner.  -->
-<!--  -->
-<!-- ```bash -->
-<!-- pip install dooit -->
-<!-- ``` -->
-<!--  -->
-<!-- ### With AUR helper 📦 -->
-<!-- ``` -->
-<!-- yay -S dooit -->
-<!-- ``` -->
-<!--  -->
-<!-- ### With Homebrew 🍻 -->
-<!--  -->
-<!-- You can install the latest stable version of dooit with [Homebrew](https://brew.sh): -->
-<!--  -->
-<!-- ```bash -->
-<!-- brew install dooit -->
-<!-- ``` -->
-<!--  -->
-<!-- Alternatively, you can install the most recent development version of dooit: -->
-<!--  -->
-<!-- ```bash -->
-<!-- brew install dooit --HEAD -->
-<!-- ``` -->
+# Installation 🔨
+
+Dooit can be installed with various package managers!
+
+### With Pip 🐍
+
+> **Note**
+Make sure your `python local bin` is in `$PATH`
+
+You can install dooit easily using a python one-liner. 
+
+```bash
+pip install dooit
+```
+
+### With AUR helper 📦
+```
+yay -S dooit
+```
+
+### With Homebrew 🍻
+
+You can install the latest stable version of dooit with [Homebrew](https://brew.sh):
+
+```bash
+brew install dooit
+```
+
+Alternatively, you can install the most recent development version of dooit:
+
+```bash
+brew install dooit --HEAD
+```
 
 # Features 🌟
 

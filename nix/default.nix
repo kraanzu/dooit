@@ -18,7 +18,7 @@ in
       owner = "kraanzu";
       repo = "dooit";
       rev = "develop"; # TODO: Change to version
-      hash = "sha256-N0r37iEj0P/qLBFG9bGPUPjw31Wk9kA+rrZd59Yrxd4=";
+      hash = "sha256-U1C1Ht6sNh1skjukGKeCcOxYMplsJ+XCWH/Pa4ylZZc=";
     };
 
     build-system = with python3.pkgs; [poetry-core];

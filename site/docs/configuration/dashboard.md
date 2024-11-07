@@ -3,6 +3,8 @@
 Dooit's dashboard is what you see when you enter the app \
 You can customize it to show ascii arts or some info in general
 
+Dashboard takes in a list of items to display
+
 ## Usage
 
 You can use api's `dashboard` attribute to set it

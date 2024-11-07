@@ -4,6 +4,12 @@ Dooit uses [sqlalchemy](https://www.sqlalchemy.org/) to store its data
 
 For backend, **there are two tables**: `Workspace` and  `Todo`
 
+You can easily import them from `dooit.api`
+
+```py
+from dooit.api import Workspace, Todo
+```
+
 An overview code below will show you the relationship between these two models
 
 ## Workspace

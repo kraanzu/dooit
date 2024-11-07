@@ -23,13 +23,12 @@ You probably wont need to deep dive too much into api functions, check out [`Def
 ### Sub-modules
 ------------
 
-- [`css`]()
-- [`keys`]()
-- [`layouts`]()
-- [`formatter`]()
-- [`bar`]()
-- [`vars`]()
-- [`dashboard`]()
+- [`keys`](./keys.md)
+- [`layout`](./layout.md)
+- [`formatter`](./formatter.md)
+- [`bar`](./bar.md)
+- [`vars`](./vars.md)
+- [`dashboard`](./dashboard.md)
 
 ### Functions
 

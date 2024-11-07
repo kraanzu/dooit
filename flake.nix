@@ -15,38 +15,41 @@
         }
     );
 
-    mainPkgs = python3: with python3; [
-      poetry-core
-      pyperclip
-      textual
-      pyyaml
-      dateutil
-      sqlalchemy
-      platformdirs
-      tzlocal
-      click
-    ];
+    mainPkgs = python3:
+      with python3; [
+        poetry-core
+        pyperclip
+        textual
+        pyyaml
+        dateutil
+        sqlalchemy
+        platformdirs
+        tzlocal
+        click
+      ];
 
-    devShellPkgs = python3: with python3; [
-      textual-dev
-      pre-commit-hooks
-      pytest
-      pytest-aio
-      faker
-    ];
+    devShellPkgs = python3:
+      with python3; [
+        textual-dev
+        pre-commit-hooks
+        pytest
+        pytest-aio
+        faker
+      ];
 
-    nativeBuildInputs = pkgs: with pkgs; [
-      poetry
-    ];
+    nativeBuildInputs = pkgs:
+      with pkgs; [
+        poetry
+      ];
 
-    # Define devShell for each system
     devShellFor = system:
       inputs.nixpkgs.lib.genAttrs ["default"] (
         _:
           pkgsFor.${system}.mkShell {
-            buildInputs = (mainPkgs pkgsFor.${system}.python312Packages)
+            buildInputs =
+              (mainPkgs pkgsFor.${system}.python312Packages)
               ++ (devShellPkgs pkgsFor.${system}.python312Packages)
-              ++ [ pkgsFor.${system}.bun ];
+              ++ [pkgsFor.${system}.bun];
 
             shellHook = ''
               cd site/
@@ -77,13 +80,15 @@
 
         doCheck = false;
       };
-
   in {
     devShells = forEachSystem devShellFor;
+
     packages = forEachSystem (
       system: {
         default = defaultPackageFor system;
       }
     );
+
+    defaultPackage = defaultPackageFor builtins.currentSystem;
   };
 }

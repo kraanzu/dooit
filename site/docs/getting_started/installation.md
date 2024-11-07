@@ -1,7 +1,4 @@
-# Welcome to Dooit!
-
-Thank you for installing dooit! I hope you enjoy it. \
-Feel free to open any feature requests if you have great ideas
+# Installing Dooit & Dooit Extras
 
 Dooit can be installed via various package managers
 

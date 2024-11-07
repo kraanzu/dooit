@@ -43,10 +43,10 @@ export default defineConfig({
           { text: "Events", link: "/configuration/events" },
           { text: "Themes", link: "/configuration/theme" },
           { text: "Keys", link: "/configuration/keys" },
-          { text: "Formatter", link: "/configuration/formatter" },
           { text: "Layout", link: "/configuration/layout" },
           { text: "Bar", link: "/configuration/bar" },
           { text: "Dashboard", link: "/configuration/dashboard" },
+          { text: "Formatter", link: "/configuration/formatter" },
         ],
       },
       {

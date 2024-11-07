@@ -21,10 +21,6 @@ export default defineConfig({
         text: "Getting Started",
         items: [
           { text: "Installation", link: "/getting_started/installation" },
-          {
-            text: "Default Config File",
-            link: "/getting_started/default_config",
-          },
         ],
       },
       {

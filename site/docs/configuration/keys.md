@@ -12,9 +12,14 @@ api.keys.set(keybind, callback, description, group)
 
 Example: 
 
-```python
-api.keys.set("j", api.move_down, "my custom vim keys")
-api.keys.set("k", api.move_up, "my custom vim keys")
+```python{6-7}
+from dooit.ui.api import DooitAPI, subscribe
+from dooit.ui.api.events import Startup
+
+@subscribe(Startup)
+def setup(api: DooitAPI, _):
+    api.keys.set("j", api.move_down, "my custom vim keys")
+    api.keys.set("k", api.move_up, "my custom vim keys")
 ```
 
 where `description` and `group` are optional
@@ -30,9 +35,14 @@ If you'd like to set multiple keybinding for same function, you can send all the
 For example, you'd like to use `+/-` keys for increasing or decreasing urgency but on QWERTY US layout, the `+` key needs shift as well
 So you could set something like this:
 
-```python
-api.keys.set(["=","+"], api.increase_urgency)
-api.keys.set(["-","_"], api.decrease_urgency)
+```python{6-7}
+from dooit.ui.api import DooitAPI, subscribe
+from dooit.ui.api.events import Startup
+
+@subscribe(Startup)
+def setup(api: DooitAPI, _):
+    api.keys.set(["=","+"], api.increase_urgency)
+    api.keys.set(["-","_"], api.decrease_urgency)
 ```
 
 ## Removing a keybind
@@ -40,11 +50,19 @@ api.keys.set(["-","_"], api.decrease_urgency)
 If you want to remove some default keybind, you can set function callback to `api.no_op` \
 For example, if you use a different layout keyboard and `+` and `-` are enough for you
 
-`This will also hide the keybinds from help menu`
+:::info :grey_exclamation: NOTE
+This will also hide the keybinds from help menu
+:::
 
-```python
-api.keys.set("=", api.no_op)
-api.keys.set("_", api.no_op)
+
+```python{6-7}
+from dooit.ui.api import DooitAPI, subscribe
+from dooit.ui.api.events import Startup
+
+@subscribe(Startup)
+def setup(api: DooitAPI, _):
+    api.keys.set("=", api.no_op)
+    api.keys.set("_", api.no_op)
 ```
 
 :::tip :fire: ***EXTRA***

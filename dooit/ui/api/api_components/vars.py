@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
+from textual.widgets import ContentSwitcher
+
 from dooit.api import Workspace
 from dooit.api.theme import DooitThemeBase
 from dooit.api.todo import Todo
@@ -34,14 +36,13 @@ class VarManager(ApiComponent):
 
     @property
     def todos_tree(self) -> Optional[TodosTree]:
-        workspace = self.current_workspace
-        if not workspace:
-            return
-
-        tree_id = TodosTree(workspace).id
-        assert tree_id is not None
-
-        return self.app.query_one(f"#{tree_id}", expect_type=TodosTree)
+        todo_switcher = self.app.query_one(
+            "#todo_switcher", expect_type=ContentSwitcher
+        )
+        if todo_switcher.visible_content and isinstance(
+            todo_switcher.visible_content, TodosTree
+        ):
+            return todo_switcher.visible_content
 
     @property
     def current_todo(self) -> Optional[Todo]:

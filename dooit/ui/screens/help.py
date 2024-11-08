@@ -45,7 +45,7 @@ class Outro(HelpWidget):
             style=self.get_component_rich_style("exit"),
         )
 
-        github_link = "'https://www.github.com/kraanzu/dooit'"
+        github_link = "'https://www.github.com/dooit-org/dooit'"
         github.highlight_words(
             [" github -> "],
             style=Style.from_meta(

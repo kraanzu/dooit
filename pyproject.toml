@@ -6,8 +6,8 @@ authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/kraanzu/dooit"
-repository = "https://github.com/kraanzu/dooit"
+homepage = "https://github.com/dooit-org/dooit"
+repository = "https://github.com/dooit-org/dooit"
 exclude = ["imgs"]
 
 [tool.poetry.dependencies]

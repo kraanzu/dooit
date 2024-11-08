@@ -25,7 +25,7 @@ yay -S dooit-bin dooit-extras
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # this can be stable, but if it is do not make hyprpanel follow it
 
-    dooit.url = "github:kraanzu/dooit/develop";
+    dooit.url = "github:dooit-org/dooit";
     dooit-extras.url = "github:dooit-org/dooit-extras";
   };
   # ...

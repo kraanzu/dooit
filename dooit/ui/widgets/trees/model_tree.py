@@ -196,7 +196,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             if key == "escape":
                 self.reset_state()
 
-            self.update_current_prompt()
+            if self.highlighted is not None:
+                self.update_current_prompt()
+
         return True
 
     def refresh_options(self) -> None:

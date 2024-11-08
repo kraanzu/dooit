@@ -47,7 +47,7 @@ class PluginManager:
 
     def on_event(self, event: DooitEvent):
         matched_events = [
-            e for e in self.events.keys() if issubclass(e, event.__class__)
+            e for e in self.events.keys() if issubclass(event.__class__, e)
         ]
 
         for e in matched_events:

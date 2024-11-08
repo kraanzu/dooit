@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from dooit.ui.api.events import BarNotification
+from dooit.ui.api.events import BarNotification, NotificationType
 from dooit.ui.api.plug import PluginManager
 from .events import DooitEvent, SwitchTab
 from dooit.ui.widgets import ModelTree
@@ -38,8 +38,8 @@ class DooitAPI:
         """<NOP>"""
         pass
 
-    def notify(self, message: str) -> None:
-        self.app.notify(message)
+    def notify(self, message: str, level: NotificationType = "info") -> None:
+        self.app.bar_switcher.switch_to_notification(BarNotification(message, level))
 
     async def handle_key(self, key: str) -> None:
         keymatch = self.keys.register_key(key)

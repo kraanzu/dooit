@@ -23,6 +23,7 @@ from .events import (
     TodoEvent,
     WorkspaceEvent,
     BarNotification,
+    NotificationType,
 )
 
 __all__ = [
@@ -51,4 +52,5 @@ __all__ = [
     "TodoEvent",
     "WorkspaceEvent",
     "BarNotification",
+    "NotificationType",
 ]

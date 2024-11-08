@@ -18,9 +18,7 @@ jobs:
         run: curl -L https://nixos.org/nix/install | sh
 
       - name: Set up Nix environment
-        run: |
-          . "$HOME/.nix-profile/etc/profile.d/nix.sh"
-          nix-shell -p nixpkgs.nix
+        run: . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
       - name: Run Nix Build
         run: nix build

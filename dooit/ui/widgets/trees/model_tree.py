@@ -82,8 +82,19 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def current_model(self) -> ModelType:
         return self.current.model
 
+    def update_prompt_at_index(self, index: int):
+        option = self.get_option_at_index(index)
+        assert option.id is not None
+
+        self.update_prompt_by_id(option.id)
+
+    def update_prompt_by_id(self, _id: str):
+        renderer = self._renderers[_id]
+        self.replace_option_prompt(_id, renderer.prompt)
+
     def update_current_prompt(self):
-        self.replace_option_prompt(self.current.id, self.current.prompt)
+        if self.highlighted is not None:
+            self.update_prompt_at_index(self.highlighted)
 
     def set_filter(self, filter: str) -> None:
         self.filter_refresh = bool(filter)

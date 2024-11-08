@@ -10,18 +10,18 @@
   python3 = python311;
   username = "dooit-org";
   repo = "dooit";
-  # version = "3.0.0";
-  version = "main"; # TODO: Change to version
+  # ver = "3.0.0";
+  ver = "main"; # TODO: Change to version
 in
   python3.pkgs.buildPythonApplication rec {
     pname = repo;
-    version = version;
+    version = ver;
     pyproject = true;
 
     src = fetchFromGitHub {
       owner = username;
       repo = pname;
-      rev = version;
+      rev = ver;
       hash = "sha256-U1C1Ht6sNh1skjukGKeCcOxYMplsJ+XCWH/Pa4ylZZc=";
     };
 
@@ -61,7 +61,7 @@ in
     meta = with lib; {
       description = "TUI todo manager";
       homepage = "https://github.com/${username}/${pname}";
-      changelog = "https://github.com/${username}/${pname}/blob/${version}/CHANGELOG.md";
+      changelog = "https://github.com/${username}/${pname}/blob/${ver}/CHANGELOG.md";
       license = licenses.mit;
       maintainers = with maintainers; [
         khaneliman

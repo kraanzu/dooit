@@ -22,7 +22,7 @@ in
       owner = username;
       repo = pname;
       rev = ver;
-      hash = "sha256-U1C1Ht6sNh1skjukGKeCcOxYMplsJ+XCWH/Pa4ylZZc=";
+      hash = "sha256-UvCuAlOzmkaYwlc5BpehWkhMVd2tGeBSpWT9YkIEXsk=";
     };
 
     build-system = with python3.pkgs; [poetry-core];

@@ -7,7 +7,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /getting_started/installation
+      link: /getting_started/introduction
     - theme: alt
       text: View on Github
       link: https://www.github.com/dooit-org/dooit

@@ -19,7 +19,7 @@ if getattr(sys, "frozen", False):
 else:
     BASE_PATH = Path(__file__).parent.parent.parent
 
-MAIN_FOLDER = "dooit_v3"
+MAIN_FOLDER = "dooit"
 CONFIG_FOLDER = Path(user_config_dir(MAIN_FOLDER))
 DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 

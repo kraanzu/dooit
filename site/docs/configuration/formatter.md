@@ -88,7 +88,7 @@ from rich.text import Text
 
 @subscribe(Startup)
 def set_formatters(api: DooitAPI, _):
-    fmt = api.formatters
+    fmt = api.formatter
 
     fmt.workspaces.description.add(redify_important)
     fmt.todos.description.add(redify_important)
@@ -107,7 +107,7 @@ from rich.text import Text
 
 @subscribe(Startup)
 def set_formatters(api: DooitAPI, _):
-    fmt = api.formatters
+    fmt = api.formatter
 
     fmt.workspaces.description.add(redify_important, id = "redify_important")
     fmt.todos.description.add(redify_important, id = "redify_important")
@@ -115,7 +115,7 @@ def set_formatters(api: DooitAPI, _):
 
     fmt.workspaces.description.disable("redify_important")
     fmt.workspaces.description.enable("redify_important")
-    fmt.todo.description.remove("redify_important")
+    fmt.todos.description.remove("redify_important")
 ```
 
 :::details Combining Multiple formatters :fire:

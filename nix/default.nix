@@ -8,16 +8,20 @@
   extraPackages ? [],
 }: let
   python3 = python311;
+  username = "dooit-org";
+  repo = "dooit";
+  # version = "3.0.0";
+  version = "main"; # TODO: Change to version
 in
   python3.pkgs.buildPythonApplication rec {
-    pname = "dooit";
-    version = "3.0.0";
+    pname = repo;
+    version = version;
     pyproject = true;
 
     src = fetchFromGitHub {
-      owner = "kraanzu";
-      repo = "dooit";
-      rev = "develop"; # TODO: Change to version
+      owner = username;
+      repo = pname;
+      rev = version;
       hash = "sha256-U1C1Ht6sNh1skjukGKeCcOxYMplsJ+XCWH/Pa4ylZZc=";
     };
 
@@ -56,8 +60,8 @@ in
 
     meta = with lib; {
       description = "TUI todo manager";
-      homepage = "https://github.com/kraanzu/dooit";
-      changelog = "https://github.com/kraanzu/dooit/blob/develop/CHANGELOG.md"; # TODO: change to version
+      homepage = "https://github.com/${username}/${pname}";
+      changelog = "https://github.com/${username}/${pname}/blob/${version}/CHANGELOG.md";
       license = licenses.mit;
       maintainers = with maintainers; [
         khaneliman

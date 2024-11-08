@@ -95,6 +95,29 @@ def set_formatters(api: DooitAPI, _):
     fmt.todos.due.add(my_custom_due)
 ```
 
+## Enable/Disable/Remove Formatters
+
+You can also temporarily enable/disable or remove the formatters with formatter ids \
+i.e. while adding a formatter, you can pass an id:
+
+```py
+from dooit.ui.api import DooitAPI, subscribe
+from dooit.ui.api.events import Startup
+from rich.text import Text
+
+@subscribe(Startup)
+def set_formatters(api: DooitAPI, _):
+    fmt = api.formatters
+
+    fmt.workspaces.description.add(redify_important, id = "redify_important")
+    fmt.todos.description.add(redify_important, id = "redify_important")
+    fmt.todos.due.add(my_custom_due, "my_due")
+
+    fmt.workspaces.description.disable("redify_important")
+    fmt.workspaces.description.enable("redify_important")
+    fmt.todo.description.remove("redify_important")
+```
+
 :::details Combining Multiple formatters :fire:
 
 > [!NOTE]

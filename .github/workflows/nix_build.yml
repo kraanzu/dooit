@@ -1,3 +1,5 @@
+name: Nix Build
+
 on:
   pull_request:
   push:

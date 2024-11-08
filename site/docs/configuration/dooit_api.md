@@ -38,6 +38,16 @@ def setup(api: DooitAPI, _):
     api.<Your function here>
 ```
 
+## `method` notify
+
+Create a notification to show in the bar
+
+**Parameters:**
+
+| Param|<div style="width: 100px">Default</div> |Description|
+| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
+| message       |                     | The message to show on the bar                                                           |
+| level         | `"info"`            | The level of the message. Can be `info`, `warning` or `error`                            |
 
 ## `method` add_child_node 
 

@@ -1,24 +1,17 @@
-name: Check Nix Build
-
 on:
-  push:
-    branches: [main, develop]
   pull_request:
+  push:
     branches: [main]
 
 jobs:
-  nix-build:
-    runs-on: ubuntu-latest
-
+  build:
+    name: Build Nix Test
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
+      - name: Check Nix flake inputs
+        uses: DeterminateSystems/flake-checker-action@v4 # This action
       - name: Install Nix
-        run: curl -L https://nixos.org/nix/install | sh
-
-      - name: Set up Nix environment
-        run: . "$HOME/.nix-profile/etc/profile.d/nix.sh"
-
-      - name: Run Nix Build
+        uses: DeterminateSystems/nix-installer-action@v3
+      - name: Build default package
         run: nix build

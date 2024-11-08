@@ -1,0 +1,26 @@
+name: Check Nix Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  nix-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Nix
+        run: curl -L https://nixos.org/nix/install | sh
+
+      - name: Set up Nix environment
+        run: |
+          . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+          nix-shell -p nixpkgs.nix
+
+      - name: Run Nix Build
+        run: nix build

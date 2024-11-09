@@ -5,7 +5,7 @@ from textual.message import Message
 from dooit.api.model import DooitModel
 from dooit.api import Workspace, Todo
 
-ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "K PENDING", "CONFIRM"]
+ModeType = Literal["NORMAL", "INSERT", "DATE", "SEARCH", "SORT", "CONFIRM"]
 EmptyWidgetType = Literal["todo", "workspace", "no_search_results"]
 PositionType = Literal["workspace", "todo"]
 NotificationType = Literal["info", "warning", "error"]

@@ -120,7 +120,7 @@ class FormatterStore:
                 if isinstance(res, Text):  # pragma: no cover
                     res = res.markup
 
-                value = res
+                value = str(res)
 
         if value:
             return Text.from_markup(value)

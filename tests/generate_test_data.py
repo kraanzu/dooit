@@ -11,6 +11,10 @@ f = faker.Faker()
 def gen_todo(parent):
     words = randint(2, 9)
     description = " ".join(f.words(nb=words))
+
+    if randint(0, 4) == 1:
+        description += " @" + f.word()
+
     due = f.date_between(start_date="-1y", end_date="+1y")
     urgency = randint(2, 5) if randint(0, 10) == 5 else 1
 

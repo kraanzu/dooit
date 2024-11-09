@@ -24,6 +24,7 @@ def gen_todo(parent):
         urgency=urgency,
         pending=randint(1, 3) == 3,
         recurrence=timedelta(days=randint(1, 30)) if randint(0, 10) == 5 else None,
+        effort = randint(1, 10)
     )
 
     if isinstance(parent, Todo):

@@ -19,6 +19,10 @@ class VarManager(ApiComponent):
         self.app = app
 
     @property
+    def mode(self) -> str:
+        return self.app.current_mode
+
+    @property
     def theme(self) -> DooitThemeBase:
         return self.app.current_theme
 

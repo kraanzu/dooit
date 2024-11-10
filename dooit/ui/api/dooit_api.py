@@ -57,7 +57,7 @@ class DooitAPI:
 
         assert keymatch.function is not None
         try:
-            res = keymatch.function.callback()
+            keymatch.function.callback()
         except Exception as e:
             self.app.bar_switcher.switch_to_notification(
                 BarNotification(str(e), "error")

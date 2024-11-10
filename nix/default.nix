@@ -45,8 +45,17 @@ in
       ]
       ++ extraPackages;
 
-    # No tests available
+    # testing
+
+    preBuild = ''
+      export HOME=$(mktemp -d)
+    '';
+
+    nativeCheckInputs = with python3.pkgs; [pytest faker];
     doCheck = true;
+    checkPhase = ''
+      python -m pytest
+    '';
 
     passthru = {
       tests.version = testers.testVersion {

@@ -54,7 +54,7 @@ Some screenshots of app with different customized configuration <3
 # Contribution 🤝
 - Want to contribute? Feel free to open a PR! 😸
 - Got some ideas for improvements? I'm all ears! 👂
-- If you have an idea that related to customizability, open an issue at [Dooit Extras](https://github.com/dooit-org/dooit-extras) instead
+- If you have an idea that related to customizability, open an issue at [Dooit Extras](https://github.com/dooit-org/dooit-extras/issues/new) instead
 
 ----------------------------
 

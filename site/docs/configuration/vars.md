@@ -3,6 +3,25 @@
 This api component exposes some of the stuff running on dooit + act as a global register to tweak settings \
 Its still developing and I'll add more stuff to it as per demand!
 
+## show_confirm
+
+Returns a boolean value if confirmation is enabled
+
+```py
+def show_confirm(self) -> bool
+```
+
+Returns the current mode of the app (`NORMAL/INSERT/SORT/CONFIRM/DATE/SEARCH`)
+
+```py{6}
+from dooit.ui.api.events import DooitEvent
+from dooit.ui.api import DooitAPI, subscribe
+
+@subscribe(DooitEvent)
+def foo(api: DooitAPI, event: DooitEvent):
+    api.vars.show_confirm = False # disables confirmation check
+```
+
 ## mode
 
 ```py

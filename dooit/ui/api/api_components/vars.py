@@ -17,6 +17,15 @@ class VarManager(ApiComponent):
     def __init__(self, app: "Dooit") -> None:
         super().__init__()
         self.app = app
+        self._show_confirm = True
+
+    @property
+    def show_confirm(self):
+        return self._show_confirm
+
+    @show_confirm.setter
+    def show_confirm(self, value: bool):
+        self._show_confirm = value
 
     @property
     def mode(self) -> str:

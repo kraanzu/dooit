@@ -12,3 +12,11 @@ You'd come across various places where you can render customized texts \
 which are provided by the [`rich`](https://rich.readthedocs.io/) library
 
 It'd be great if you famaliarize yourself with specifally rich's [`Text`](https://rich.readthedocs.io/en/stable/text.html) and [`Style`](https://rich.readthedocs.io/en/stable/style.html)
+
+## Config File
+
+The config file is present in the same place as before
+
+:::tip :bulb: TIP
+To know the location of the config file, run `dooit config-loc`
+:::

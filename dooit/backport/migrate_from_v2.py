@@ -1,5 +1,4 @@
 import re
-from functools import partial
 from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
 from yaml import safe_load

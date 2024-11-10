@@ -31,8 +31,9 @@ jobs:
 
       - name: Package app with pyinstaller
         run: |
+          pip install git+https://github.com/dooit-org/dooit-extras.git
           python -c "with open('dooit.py', 'w') as f: f.write('from dooit.__main__ import main\nmain()\n')"
-          pyinstaller --clean -F dooit.py --add-data="dooit/utils/default_config.py:dooit/utils/" --add-data="dooit/ui/styles.tcss:dooit/ui/"
+          pyinstaller --clean -F dooit.py --add-data="dooit/utils/default_config.py:dooit/utils/" --add-data="dooit/ui/styles.tcss:dooit/ui/" --hidden-import=dooit_extras.formatters --hidden-import=dooit_extras.bar_widgets --hidden-import=dooit_extras.scripts
 
       # Setup File name
       - name: Set Binary file name on Linux and Mac

@@ -9,6 +9,8 @@ You can easily import them from `dooit.api`
 ```py
 from dooit.api import Workspace, Todo, manager
 manager.connect() # this sets up connection to the database
+
+# from here on, you can perform any operations
 ```
 
 An overview code below will show you the relationship between these two models

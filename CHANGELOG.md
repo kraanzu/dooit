@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 - Brand new dooit api for configurations
-- Faster UI and startup overall
+- Snappier UI Experience
 - Event based code execution via dooit api
 - Customize the columns order and visibility for todos and workspaces
 - Allow addition of custom keybinds to trigger certain functions
@@ -18,10 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple Theme support
 - Custom CSS injections into the UI
 - Dooit will now confirm node deletion by default. This behaviour can be changed via config
++ many more...check out [the wiki](https://dooit-org.github.io/dooit/)
 
 ## Changed
 - Sort options now appear in bar rather than a menu
 - search will now show all items but will disable all non-matching ones
+- Yanking was removed (will be introduced again as a plugin instead)
 
 ## Removed
 - Now todos are no longer stored in `todo.yaml`, run dooit --migrate to migrate to new format

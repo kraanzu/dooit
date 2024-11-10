@@ -11,7 +11,7 @@ pip install dooit dooit-extras
 ## Arch Linux
 
 ```bash
-yay -S dooit
+yay -S dooit dooit-extras
 ```
 
 ## NixOS

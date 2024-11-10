@@ -5,9 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.0.1
+
+### Fixed
+- Start crash due to missing folder
+
 ## 3.0.0
 
-## Added
+### Added
 - Brand new dooit api for configurations
 - Snappier UI Experience
 - Event based code execution via dooit api
@@ -20,12 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dooit will now confirm node deletion by default. This behaviour can be changed via config
 + many more...check out [the wiki](https://dooit-org.github.io/dooit/)
 
-## Changed
+### Changed
 - Sort options now appear in bar rather than a menu
 - search will now show all items but will disable all non-matching ones
 - Yanking was removed (will be introduced again as a plugin instead)
 
-## Removed
+### Removed
 - Now todos are no longer stored in `todo.yaml`, run dooit --migrate to migrate to new format
 - Old config will no longer work, see the [latest docs](https://dooit-org.github.io/dooit/) to check out the configuration
 

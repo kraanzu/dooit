@@ -10,7 +10,7 @@
   python3 = python311;
   username = "dooit-org";
   repo = "dooit";
-  ver = "v3.0.1";
+  ver = "v3.0.2";
 in
   python3.pkgs.buildPythonApplication rec {
     pname = repo;
@@ -21,7 +21,7 @@ in
       owner = username;
       repo = pname;
       rev = ver;
-      hash = "sha256-yHL2HQyPENyAj/9jA7M+jFN0R4AAjLHVqyAmS3m8OME=";
+      hash = "sha256-DPmCADFduGc5n+6q9zl0f4x9C6RmzLvBeYh2j0ZSpH0=";
     };
 
     build-system = with python3.pkgs; [poetry-core];

@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Any, Callable, TYPE_CHECKING
 from textual.widgets.option_list import OptionDoesNotExist
 
@@ -48,9 +49,11 @@ def require_highlighted_node(func: Callable) -> Callable:
 
 def require_confirmation(func: Callable) -> Callable:
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
-        if not self.api.vars.show_confirm:
-            return func()
+        function = partial(func, self, *args, **kwargs)
 
-        self.post_message(ShowConfirm(func, *args, **kwargs))
+        if not self.api.vars.show_confirm:
+            return function()
+
+        self.post_message(ShowConfirm(function))
 
     return wrapper

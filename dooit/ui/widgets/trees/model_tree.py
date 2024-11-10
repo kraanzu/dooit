@@ -310,8 +310,8 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.highlight_id(node.uuid)
         self.start_edit("description")
 
-    @refresh_tree
     @require_confirmation
+    @refresh_tree
     def _remove_node(self):
         self.current_model.drop()
 

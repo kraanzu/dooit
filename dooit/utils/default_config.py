@@ -143,6 +143,7 @@ def key_setup(api: DooitAPI, _):
     api.keys.set(["-", "_"], api.decrease_urgency)
     api.keys.set("/", api.start_search)
     api.keys.set("<ctrl+s>", api.start_sort)
+    api.keys.set("<ctrl+q>", api.quit)
 
 
 @subscribe(Startup)

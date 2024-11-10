@@ -5,7 +5,7 @@ from textual.app import App
 from textual.binding import Binding
 
 from dooit.api.theme import DooitThemeBase
-from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup
+from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup, _QuitApp
 from dooit.ui.api.events.events import ShutDown
 from dooit.ui.widgets import BarSwitcher
 from dooit.ui.widgets.bars import StatusBar
@@ -33,7 +33,6 @@ class Dooit(App):
 
     BINDINGS = [
         Binding("ctrl+c", "quit", "Quit", show=False, priority=True),
-        Binding("ctrl+q", "quit", "Quit", show=False, priority=True),
     ]
 
     def __init__(self, connection_string: Optional[str] = None):
@@ -100,6 +99,10 @@ class Dooit(App):
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):
         self._mode = event.mode
+
+    @on(_QuitApp)
+    async def quit_app(self):
+        await self.action_quit()
 
     async def action_open_url(self, url: str) -> None:  # pragma: no cover
         webbrowser.open(url, new=2)

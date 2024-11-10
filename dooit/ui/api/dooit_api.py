@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from dooit.ui.api.events import BarNotification, NotificationType
 from dooit.ui.api.plug import PluginManager
-from .events import DooitEvent, SwitchTab
+from .events import DooitEvent, SwitchTab, _QuitApp
 from dooit.ui.widgets import ModelTree
 from dooit.ui.widgets.trees import TodosTree
 from dooit.utils import CssManager
@@ -38,6 +38,10 @@ class DooitAPI:
         """<NOP>"""
         pass
 
+    def quit(self):
+        """Quit dooit"""
+        self.app.post_message(_QuitApp())
+
     def notify(self, message: str, level: NotificationType = "info") -> None:
         self.app.bar_switcher.switch_to_notification(BarNotification(message, level))
 
@@ -53,7 +57,7 @@ class DooitAPI:
 
         assert keymatch.function is not None
         try:
-            keymatch.function.callback()
+            res = keymatch.function.callback()
         except Exception as e:
             self.app.bar_switcher.switch_to_notification(
                 BarNotification(str(e), "error")

@@ -24,6 +24,7 @@ from .events import (
     WorkspaceEvent,
     BarNotification,
     NotificationType,
+    _QuitApp,
 )
 
 __all__ = [
@@ -53,4 +54,5 @@ __all__ = [
     "WorkspaceEvent",
     "BarNotification",
     "NotificationType",
+    "_QuitApp",
 ]

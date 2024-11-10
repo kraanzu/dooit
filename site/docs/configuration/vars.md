@@ -1,9 +1,15 @@
+<style>
+h2 code {
+    color: var(--vp-c-brand-1);
+}
+</style>
+
 # Dooit Vars
 
 This api component exposes some of the stuff running on dooit + act as a global register to tweak settings \
 Its still developing and I'll add more stuff to it as per demand!
 
-## show_confirm
+## `editable` show_confirm
 
 Returns a boolean value if confirmation is enabled
 
@@ -22,7 +28,7 @@ def foo(api: DooitAPI, event: DooitEvent):
     api.vars.show_confirm = False # disables confirmation check
 ```
 
-## mode
+## `readonly` mode
 
 ```py
 def mode(self) -> str
@@ -38,7 +44,7 @@ from dooit.ui.api import DooitAPI, subscribe
 def foo(api: DooitAPI, event: DooitEvent):
     mode = api.vars.mode
 ```
-## theme
+## `readonly` theme
 
 ```py
 def theme(self) -> DooitThemeBase
@@ -57,7 +63,7 @@ def foo(api: DooitAPI, event: DooitEvent):
 
 ---
 
-## workspaces_tree
+## `readonly` workspaces_tree
 
 ```py
 def workspaces_tree(self) -> WorkspacesTree
@@ -76,7 +82,7 @@ def foo(api: DooitAPI, event: DooitEvent):
 
 ---
 
-## current_workspace
+## `readonly` current_workspace
 
 ```py
 def current_workspace(self) -> Optional[Workspace]
@@ -95,7 +101,7 @@ def foo(api: DooitAPI, event: DooitEvent):
 
 ---
 
-## todos_tree
+## `readonly` todos_tree
 
 ```py
 def todos_tree(self) -> Optional[TodosTree]
@@ -114,7 +120,7 @@ def foo(api: DooitAPI, event: DooitEvent):
 
 ---
 
-## current_todo
+## `readonly` current_todo
 
 ```py
 def current_todo(self) -> Optional[Todo]

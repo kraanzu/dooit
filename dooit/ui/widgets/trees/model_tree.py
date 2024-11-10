@@ -15,7 +15,12 @@ from dooit.ui.api.events import (
 from dooit.ui.widgets.renderers import BaseRenderer
 from .base_tree import BaseTree
 from ._render_dict import RenderDict
-from ._decorators import fix_highlight, refresh_tree, require_highlighted_node
+from ._decorators import (
+    fix_highlight,
+    refresh_tree,
+    require_highlighted_node,
+    require_confirmation,
+)
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.api_components.formatters._model_formatter_base import (
@@ -306,14 +311,13 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self.start_edit("description")
 
     @refresh_tree
+    @require_confirmation
     def _remove_node(self):
         self.current_model.drop()
 
     @require_highlighted_node
     def remove_node(self):
-        self.post_message(
-            ShowConfirm(self._remove_node),
-        )
+        self._remove_node()
 
     @refresh_tree
     def shift_up(self) -> None:

@@ -2,6 +2,7 @@ from typing import Any, Callable, TYPE_CHECKING
 from textual.widgets.option_list import OptionDoesNotExist
 
 from dooit.api.exceptions import NoNodeError
+from dooit.ui.api.events import ShowConfirm
 
 if TYPE_CHECKING:  # pragma: no cover
     from .model_tree import ModelTree
@@ -41,5 +42,12 @@ def require_highlighted_node(func: Callable) -> Callable:
             raise NoNodeError()
 
         return func(self, *args, **kwargs)
+
+    return wrapper
+
+
+def require_confirmation(func: Callable) -> Callable:
+    def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
+        self.post_message(ShowConfirm(func, *args, **kwargs))
 
     return wrapper

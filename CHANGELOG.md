@@ -27,8 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Removed
 - Now todos are no longer stored in `todo.yaml`, run dooit --migrate to migrate to new format
-- Old config will no longer work, see the [latest docs]() to check out the configuration
-  also check out [dooit community themes]() and [dooit snippet hacks]() for interesting config options
+- Old config will no longer work, see the [latest docs](https://dooit-org.github.io/dooit/) to check out the configuration
 
 > [!NOTE]
 > The support for YAML will be dropped from v3.0.0

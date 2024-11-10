@@ -10,7 +10,7 @@
   python3 = python311;
   username = "dooit-org";
   repo = "dooit";
-  ver = "v3.0.1";
+  ver = "3.0.1";
 in
   python3.pkgs.buildPythonApplication rec {
     pname = repo;
@@ -60,7 +60,7 @@ in
     meta = with lib; {
       description = "TUI todo manager";
       homepage = "https://github.com/${username}/${pname}";
-      changelog = "https://github.com/${username}/${pname}/blob/${ver}/CHANGELOG.md";
+      changelog = "https://github.com/${username}/${pname}/blob/v${ver}/CHANGELOG.md";
       license = licenses.mit;
       maintainers = with maintainers; [
         khaneliman

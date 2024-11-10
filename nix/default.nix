@@ -10,7 +10,7 @@
   python3 = python311;
   username = "dooit-org";
   repo = "dooit";
-  ver = "3.0.0";
+  ver = "v3.0.1";
 in
   python3.pkgs.buildPythonApplication rec {
     pname = repo;

@@ -1,7 +1,7 @@
 ![DOOIT](imgs/banner.png)
 
 # Dooit ✔️
-*A todo manager that you didn't ask for, but needed !* \
+*A todo manager that you didn't ask for, but needed !*
 
 [![GitHub issues](https://img.shields.io/github/issues/dooit-org/dooit?color=red&style=flat-square)](https://github.com/dooit-org/doit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/dooit-org/dooit?color=green&style=flat-square)](https://github.com/dooit-org/doit/stargazers)

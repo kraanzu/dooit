@@ -3,7 +3,7 @@ from pathlib import Path
 from platformdirs import user_data_dir, user_config_dir
 
 OLD_CONFIG = Path(user_data_dir("dooit")) / "todo.yaml"
-VERSION = "3.0.1"
+VERSION = "3.0.2"
 
 
 def run_dooit():

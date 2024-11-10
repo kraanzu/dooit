@@ -3,9 +3,10 @@
 # Dooit ✔️
 *A todo manager that you didn't ask for, but needed !*
 
+[![Wiki](https://img.shields.io/badge/Wiki-Dooit-blue?style=flat-square)](https://dooit-org.github.io/dooit/)
 [![GitHub issues](https://img.shields.io/github/issues/dooit-org/dooit?color=red&style=flat-square)](https://github.com/dooit-org/doit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/dooit-org/dooit?color=green&style=flat-square)](https://github.com/dooit-org/doit/stargazers)
-[![GitHub license](https://img.shields.io/github/license/dooit-org/dooit?color=yellow&style=flat-square)](https://github.com/dooit-org/doit/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/dooit-org/dooit?color=white&style=flat-square)](https://github.com/dooit-org/doit/blob/main/LICENSE)
 [![Support Server](https://img.shields.io/discord/989186205025464390.svg?label=Discord&logo=Discord&colorB=7289da&style=flat-square)](https://discord.gg/WA2ER9MBWa)
 
 -----------------------------

@@ -1,4 +1,5 @@
 import re
+from functools import partial
 from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
 from yaml import safe_load
@@ -10,6 +11,7 @@ from dooit.utils.database import delete_all_data
 
 manager.connect()
 BASE_PATH = Path(user_data_dir("dooit"))
+operations = []
 
 
 def parse_recurrence(recurrence: str) -> timedelta:
@@ -101,11 +103,11 @@ class Migrator2to3:
         workspace = Workspace(description=description, parent_workspace=parent)
         workspace.save()
 
-        for workspace in child_workspaces:
-            self.create_workspace(workspace, parent=workspace)
+        for child in child_workspaces:
+            self.create_workspace(child, parent=workspace)
 
-        for todo in todos:
-            self.create_todo(todo, parent_workspace=workspace)
+        for child in todos:
+            self.create_todo(child, parent_workspace=workspace)
 
     def create_todo(self, data: List, parent_todo=None, parent_workspace=None):
         self_data = data[0]

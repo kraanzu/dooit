@@ -7,7 +7,6 @@ from textual.widgets.option_list import Option
 from dooit.api import Todo, Workspace
 from dooit.ui.api.events import (
     ModeChanged,
-    ShowConfirm,
     StartSearch,
     StartSort,
     BarNotification,

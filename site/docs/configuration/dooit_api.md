@@ -38,6 +38,10 @@ def setup(api: DooitAPI, _):
     api.<Your function here>
 ```
 
+## `method` quit
+
+Quits the app
+
 ## `method` notify
 
 Create a notification to show in the bar

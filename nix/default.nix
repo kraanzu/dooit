@@ -8,19 +8,16 @@
   extraPackages ? [],
 }: let
   python3 = python311;
-  username = "dooit-org";
-  repo = "dooit";
-  ver = "v3.0.2";
 in
   python3.pkgs.buildPythonApplication rec {
-    pname = repo;
-    version = ver;
+    pname = "dooit";
+    version = "3.0.2";
     pyproject = true;
 
     src = fetchFromGitHub {
-      owner = username;
-      repo = pname;
-      rev = ver;
+      owner = "dooit-org";
+      repo = "dooit";
+      rev = "refs/tags/v${version}";
       hash = "sha256-DPmCADFduGc5n+6q9zl0f4x9C6RmzLvBeYh2j0ZSpH0=";
     };
 
@@ -45,17 +42,15 @@ in
       ]
       ++ extraPackages;
 
-    # testing
-
+    # /homeless-shelter
     preBuild = ''
       export HOME=$(mktemp -d)
     '';
 
-    nativeCheckInputs = with python3.pkgs; [pytest faker];
-    doCheck = true;
-    checkPhase = ''
-      python -m pytest
-    '';
+    checkInputs = with python3.pkgs; [
+      pytestCheckHook
+      faker
+    ];
 
     passthru = {
       tests.version = testers.testVersion {
@@ -68,8 +63,8 @@ in
 
     meta = with lib; {
       description = "TUI todo manager";
-      homepage = "https://github.com/${username}/${pname}";
-      changelog = "https://github.com/${username}/${pname}/blob/v${ver}/CHANGELOG.md";
+      homepage = "https://github.com/dooit-org/dooit";
+      changelog = "https://github.com/dooit-org/dooit/blob/v${version}/CHANGELOG.md";
       license = licenses.mit;
       maintainers = with maintainers; [
         khaneliman

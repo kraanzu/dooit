@@ -48,6 +48,9 @@ def require_highlighted_node(func: Callable) -> Callable:
 
 def require_confirmation(func: Callable) -> Callable:
     def wrapper(self: "ModelTree", *args, **kwargs) -> Any:
+        if not self.api.vars.show_confirm:
+            return func()
+
         self.post_message(ShowConfirm(func, *args, **kwargs))
 
     return wrapper

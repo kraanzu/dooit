@@ -138,7 +138,7 @@ class Todo(DooitModel):
         for index, todo in enumerate(items):
             todo.order_index = index
 
-        self.session.commit()
+        manager.commit()
 
     def add_todo(self) -> "Todo":
         todo = Todo(parent_todo=self)

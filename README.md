@@ -28,6 +28,9 @@ After launching the app, You can press the `?` key to know the keybindings!
 
 # Screenshots 🖼️
 
+> [!NOTE]
+> The configurations below heavily use [Dooit Extras](https://github.com/dooit-org/dooit-extras)
+
 Some screenshots of app with different customized configuration <3
 
 <details>

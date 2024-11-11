@@ -34,7 +34,7 @@ in
         pyperclip
         textual
         pyyaml
-        dateutil
+        python-dateutil
         sqlalchemy
         platformdirs
         tzlocal

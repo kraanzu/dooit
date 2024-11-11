@@ -21,6 +21,6 @@ in {
   };
 
   config = mkIf config.programs.dooit.enable {
-    environment.systemPackages = [dooitPackage] ++ config.programs.dooit.extraPackages;
+    home.packages = [dooitPackage] ++ config.programs.dooit.extraPackages;
   };
 }

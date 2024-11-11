@@ -1,6 +1,17 @@
 name: Ruff Checks (lint/format)
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - '**/*.py'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**/*.py'
 
 jobs:
   lint:
@@ -9,18 +20,18 @@ jobs:
       matrix:
         python-version: ["3.10"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install ruff
-    - name: Lint Check
-      run: |
-        ruff check .
-    - name: Format Check
-      run: |
-        ruff format --check .
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+      - name: Lint Check
+        run: |
+          ruff check .
+      - name: Format Check
+        run: |
+          ruff format --check .

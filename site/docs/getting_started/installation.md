@@ -16,9 +16,8 @@ yay -S dooit dooit-extras
 
 ## NixOS
 
-### Flakes :snowflake:
-
-```nix{25,7-8,}
+:::details Flakes/Module ❄️ 
+```nix{24,7-8,}
 # flake.nix
 
 {
@@ -42,13 +41,14 @@ yay -S dooit dooit-extras
         inherit system inputs pkgs;
       };
       modules = [
-        # ...
         ./dooit.nix
       ];
     };
   };
 }
 ```
+
+----
 
 ```nix
 # dooit.nix
@@ -73,5 +73,67 @@ in {
   ];
 }
 ```
+:::
+
+:::details Flakes/Home Manager ❄️ 
+```nix{26,7-8,}
+# flake.nix
+
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # this can be stable, but if it is do not make hyprpanel follow it
+
+    dooit.url = "github:dooit-org/dooit";
+    dooit-extras.url = "github:dooit-org/dooit-extras";
+  };
+  # ...
+
+  outputs = inputs @ {
+    nixpkgs,
+    ...
+  }: let
+    pkgs = import nixpkgs {};
+    system = "x86_64-linux"; # change to whatever your system should be
+  in {
+    homeConfigurations."${username}" = nixpkgs.lib.nixosSystem {
+      pkgs = pkgs;
+      extraSpecialArgs = {
+        inherit system inputs;
+      };
+ 
+      modules = [
+        ./home-manager/dooit.nix
+      ];
+    };
+  };
+}
+```
+
+----
+
+```nix
+# home-manager/dooit.nix
+
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # home manager module for dooit
+    inputs.dooit.homeManagerModules.default
+  ];
+
+  # adds dooit-extras to pkgs
+  nixpkgs.overlays = [inputs.dooit-extras.overlay];
+
+  programs.dooit = {
+    enable = true;
+    extraPackages = [pkgs.dooit-extras];
+  };
+}
+
+```
+:::
 
 > Thanks to [`Hyprpanel`](https://hyprpanel.com/) from whom I stole the format for the flake

@@ -29,5 +29,10 @@
     overlay = final: prev: {
       dooit = packageFor final.system;
     };
+
+    homeManagerModules = {
+      default = self.homeManagerModules.dooit;
+      dooit = import ./nix/hm-module.nix self;
+    };
   };
 }

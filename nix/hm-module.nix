@@ -1,11 +1,13 @@
-self: {
+{
   config,
   lib,
   pkgs,
   ...
 }:
 with lib; let
-  dooitPackage = pkgs.callPackage ./default.nix {};
+  dooitWithPackages = pkgs.dooit.override {
+    extraPackages = config.programs.dooit.extraPackages;
+  };
 in {
   options.programs.dooit = {
     enable = mkOption {
@@ -21,6 +23,6 @@ in {
   };
 
   config = mkIf config.programs.dooit.enable {
-    home.packages = [dooitPackage] ++ config.programs.dooit.extraPackages;
+    home.packages = [dooitWithPackages];
   };
 }

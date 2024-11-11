@@ -5,7 +5,7 @@ self: {
   ...
 }:
 with lib; let
-  dooitWithPackages = pkgs.dooit.override {
+  dooitWithPackages = pkgs.callPackage ./default.nix {
     extraPackages = config.programs.dooit.extraPackages;
   };
 in {

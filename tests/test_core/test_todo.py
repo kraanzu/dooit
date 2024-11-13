@@ -192,6 +192,16 @@ class TestTodo(CoreTestBase):
 
         assert t.urgency == 4
 
+    def test_recurrence_change(self):
+        t = self.default_workspace.add_todo()
+        t.due = datetime.strptime("2021-01-01", "%Y-%m-%d")
+        t.recurrence = timedelta(days=1)
+        t.save()
+
+        assert t.due == datetime.strptime("2021-01-01", "%Y-%m-%d")
+        t.toggle_complete()
+        assert t.due == datetime.strptime("2021-01-02", "%Y-%m-%d")
+
     def test_sort_invalid(self):
         t = self.default_workspace.add_todo()
 

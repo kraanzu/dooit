@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import event, update
 from ..todo import Todo
 
@@ -56,3 +57,18 @@ def update_pending_status_parent(mapper, connection, target: Todo):
         )
 
     connection.execute(query)
+
+
+@event.listens_for(Todo, "before_update")
+def update_due_for_recurrence(mapper, connection, todo: Todo):
+    if todo.recurrence is None:
+        return
+
+    if todo.due is None:
+        todo.due = datetime.now()
+
+    if todo.pending:
+        return
+
+    todo.pending = True
+    todo.due += todo.recurrence

@@ -44,7 +44,8 @@ class BarBase(Static):
         assert isinstance(parent, BarSwitcher)
         return parent
 
-    def on_unmount(self):
+    async def on_unmount(self):
+        self.post_message(ModeChanged("NORMAL"))
         self.switcher.current = "status_bar"
 
     def perform_action(self, cancel: bool):

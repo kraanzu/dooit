@@ -312,7 +312,11 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     @require_confirmation
     @refresh_tree
     def _remove_node(self):
-        self.current_model.drop()
+        model = self.current_model
+
+        self._renderers.pop(model.uuid)
+        self.expanded_nodes.pop(model.uuid)
+        model.drop()
 
     @require_highlighted_node
     def remove_node(self):

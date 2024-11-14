@@ -223,11 +223,9 @@ class TestTodo(CoreTestBase):
         return old_todos, new_descriptions
 
     def test_sort_pending(self):
-        _, new = self._sort_before_and_after("pending")
-        values_dict = {"completed": 3, "pending": 2, "overdue": 1}
-        values = [values_dict[t.status] for t in new]
-
-        self.assertEqual(values, sorted(values))
+        old, new = self._sort_before_and_after("pending")
+        old.sort(key=lambda x: (not x.pending, x.due or datetime.max, x.order_index))
+        self.assertEqual([i.id for i in old], [i.id for i in new])
 
     def test_sort_description(self):
         old, new = self._sort_before_and_after("description")

@@ -150,6 +150,7 @@ class Todo(DooitModel):
             parent_todo=self.parent_todo,
             parent_workspace=self.parent_workspace,
         )
+        todo.save()
         return todo
 
     # ----------- HELPER FUNCTIONS --------------

@@ -13,26 +13,16 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def _custom_sort_by_status(x: "Todo", y: "Todo") -> int:
-    if x.status == y.status:
-        d1 = x.due or datetime.max
-        d2 = y.due or datetime.max
-        if d1 < d2:
-            return 1
-        elif d1 > d2:
+    x_values = [not x.pending, x.due or datetime.max, x.order_index]
+    y_values = [not y.pending, y.due or datetime.max, y.order_index]
+
+    for x_val, y_val in zip(x_values, y_values):
+        if x_val < y_val:
             return -1
-        else:
-            return 0
+        elif x_val > y_val:
+            return 1
 
-    values = {"completed": 0, "pending": 1, "overdue": 2}
-    s1 = values[x.status]
-    s2 = values[y.status]
-
-    if s1 < s2:
-        return 1
-    elif s1 > s2:
-        return -1
-    else:
-        return 0
+    return 0
 
 
 class Todo(DooitModel):

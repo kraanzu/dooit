@@ -1,4 +1,3 @@
-from functools import cmp_to_key
 from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
@@ -10,19 +9,6 @@ from .manager import manager
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.api.workspace import Workspace
-
-
-def _custom_sort_by_status(x: "Todo", y: "Todo") -> int:
-    x_values = [not x.pending, x.due or datetime.max, x.order_index]
-    y_values = [not y.pending, y.due or datetime.max, y.order_index]
-
-    for x_val, y_val in zip(x_values, y_values):
-        if x_val < y_val:
-            return -1
-        elif x_val > y_val:
-            return 1
-
-    return 0
 
 
 class Todo(DooitModel):
@@ -122,7 +108,11 @@ class Todo(DooitModel):
         else:
             items = sorted(
                 self.siblings,
-                key=cmp_to_key(_custom_sort_by_status),
+                key=lambda x: (
+                    not x.pending,
+                    x.due or datetime.max,
+                    x.order_index,
+                ),
             )
 
         for index, todo in enumerate(items):

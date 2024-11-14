@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
 from sqlalchemy import ForeignKey, select, nulls_last
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from .model import DooitModel
 from .manager import manager
 
@@ -46,6 +46,13 @@ class Todo(DooitModel):
         cascade="all, delete-orphan",
         order_by=order_index,
     )
+
+    @validates("recurrence")
+    def validate_pending(self, key, value):
+        if value is not None:
+            self.pending = True
+
+        return value
 
     @classmethod
     def from_id(cls, _id: str) -> "Todo":

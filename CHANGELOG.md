@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Recurrence not working as expected (https://github.com/dooit-org/dooit/issues/204)
+- Dooit crash on item delete and then addition (https://github.com/dooit-org/dooit/issues/205)
 
 ## 3.0.2
 

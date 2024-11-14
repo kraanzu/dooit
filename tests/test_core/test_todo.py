@@ -252,9 +252,9 @@ class TestTodo(CoreTestBase):
         old.sort(key=lambda x: x.urgency)
         self.assertEqual(old, new)
 
-    def test_due(self):
+    def test_sort_due(self):
         old, new = self._sort_before_and_after("due")
         has_due = [t for t in old if t.due]
 
         has_due.sort(key=lambda x: x.due)
-        self.assertEqual(has_due, new[: len(has_due)])
+        self.assertEqual([i.id for i in has_due], [i.id for i in new[: len(has_due)]])

@@ -11,7 +11,7 @@
 in
   python3.pkgs.buildPythonApplication rec {
     pname = "dooit";
-    version = "3.0.2";
+    version = "3.0.3";
     pyproject = true;
 
     src = fetchFromGitHub {

@@ -105,6 +105,7 @@ class Workspace(DooitModel):
         workspace = Workspace(
             parent_workspace=self.parent_workspace,
         )
+        workspace.save()
         return workspace
 
     def save(self) -> None:

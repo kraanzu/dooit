@@ -192,6 +192,16 @@ class TestTodo(CoreTestBase):
 
         assert t.urgency == 4
 
+    def test_recurrence_change(self):
+        t = self.default_workspace.add_todo()
+        t.due = datetime.strptime("2021-01-01", "%Y-%m-%d")
+        t.recurrence = timedelta(days=1)
+        t.save()
+
+        assert t.due == datetime.strptime("2021-01-01", "%Y-%m-%d")
+        t.toggle_complete()
+        assert t.due == datetime.strptime("2021-01-02", "%Y-%m-%d")
+
     def test_sort_invalid(self):
         t = self.default_workspace.add_todo()
 
@@ -213,11 +223,9 @@ class TestTodo(CoreTestBase):
         return old_todos, new_descriptions
 
     def test_sort_pending(self):
-        _, new = self._sort_before_and_after("pending")
-        values_dict = {"completed": 3, "pending": 2, "overdue": 1}
-        values = [values_dict[t.status] for t in new]
-
-        self.assertEqual(values, sorted(values))
+        old, new = self._sort_before_and_after("pending")
+        old.sort(key=lambda x: (not x.pending, x.due or datetime.max, x.order_index))
+        self.assertEqual([i.id for i in old], [i.id for i in new])
 
     def test_sort_description(self):
         old, new = self._sort_before_and_after("description")
@@ -242,9 +250,9 @@ class TestTodo(CoreTestBase):
         old.sort(key=lambda x: x.urgency)
         self.assertEqual(old, new)
 
-    def test_due(self):
+    def test_sort_due(self):
         old, new = self._sort_before_and_after("due")
         has_due = [t for t in old if t.due]
 
         has_due.sort(key=lambda x: x.due)
-        self.assertEqual(has_due, new[: len(has_due)])
+        self.assertEqual([i.id for i in has_due], [i.id for i in new[: len(has_due)]])

@@ -99,6 +99,11 @@ class Dooit(App):
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):
         self._mode = event.mode
+        if event.mode == "NORMAL":
+            self.workspace_tree.refresh_options()
+            todos_tree = self.api.vars.todos_tree
+            if todos_tree:
+                todos_tree.refresh_options()
 
     @on(_QuitApp)
     async def quit_app(self):

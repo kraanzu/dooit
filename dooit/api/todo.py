@@ -1,38 +1,14 @@
-from functools import cmp_to_key
 from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 from typing import List
 from sqlalchemy import ForeignKey, select, nulls_last
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from .model import DooitModel
 from .manager import manager
 
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.api.workspace import Workspace
-
-
-def _custom_sort_by_status(x: "Todo", y: "Todo") -> int:
-    if x.status == y.status:
-        d1 = x.due or datetime.max
-        d2 = y.due or datetime.max
-        if d1 < d2:
-            return 1
-        elif d1 > d2:
-            return -1
-        else:
-            return 0
-
-    values = {"completed": 0, "pending": 1, "overdue": 2}
-    s1 = values[x.status]
-    s2 = values[y.status]
-
-    if s1 < s2:
-        return 1
-    elif s1 > s2:
-        return -1
-    else:
-        return 0
 
 
 class Todo(DooitModel):
@@ -70,6 +46,13 @@ class Todo(DooitModel):
         cascade="all, delete-orphan",
         order_by=order_index,
     )
+
+    @validates("recurrence")
+    def validate_pending(self, key, value):
+        if value is not None:
+            self.pending = True
+
+        return value
 
     @classmethod
     def from_id(cls, _id: str) -> "Todo":
@@ -132,7 +115,11 @@ class Todo(DooitModel):
         else:
             items = sorted(
                 self.siblings,
-                key=cmp_to_key(_custom_sort_by_status),
+                key=lambda x: (
+                    not x.pending,
+                    x.due or datetime.max,
+                    x.order_index,
+                ),
             )
 
         for index, todo in enumerate(items):
@@ -150,6 +137,7 @@ class Todo(DooitModel):
             parent_todo=self.parent_todo,
             parent_workspace=self.parent_workspace,
         )
+        todo.save()
         return todo
 
     # ----------- HELPER FUNCTIONS --------------

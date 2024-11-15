@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.0.3
+
+### Fixed
+
+- Recurrence not working as expected (https://github.com/dooit-org/dooit/issues/204)
+- Dooit crash on item delete and then addition (https://github.com/dooit-org/dooit/issues/205)
+- Stuck on CONFIRM mode if deletions are fast
+- Messed up column widths on sudden width changes
+- Values not getting parsed because of whitespace
+
 ## 3.0.2
 
 ### Fixed

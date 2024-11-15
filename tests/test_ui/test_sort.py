@@ -134,7 +134,7 @@ async def test_sort_cancelled():
         await pilot.press(*list("abcd"))
         await pilot.press("escape")
 
-        current_options = [node.prompt for node in tree._options]
+        current_options = [node.id for node in tree._options]
 
         api.start_sort()
         await pilot.pause()
@@ -148,7 +148,7 @@ async def test_sort_cancelled():
         current_bar = app.bar_switcher.visible_content
         assert isinstance(current_bar, StatusBar)
 
-        new_options = [node.prompt for node in tree._options]
+        new_options = [node.id for node in tree._options]
         assert current_options == new_options
 
 

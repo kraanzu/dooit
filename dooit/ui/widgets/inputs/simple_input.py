@@ -46,6 +46,7 @@ class SimpleInput(Input, Generic[ModelType, ModelValue]):
         return self.value
 
     def stop_edit(self) -> None:
+        self._value = self.value.strip()
         try:
             self.model_value = self._typecast_value(self.value)
             self.model.save()

@@ -1,5 +1,6 @@
-from functools import partial
+import os
 import sys
+from functools import partial
 from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, List, Type
@@ -24,6 +25,10 @@ CONFIG_FOLDER = Path(user_config_dir(MAIN_FOLDER))
 DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
 
+def is_running_under_pytest() -> bool:
+    return "PYTEST_CURRENT_TEST" in os.environ
+
+
 class PluginManager:
     def __init__(self, api: "DooitAPI") -> None:
         self.events: defaultdict[Type[DooitEvent], List[Callable]] = defaultdict(list)
@@ -33,6 +38,9 @@ class PluginManager:
 
     def scan(self):
         load_file(self, DEFAULT_CONFIG)
+        if is_running_under_pytest():
+            return
+
         load_file(self, CONFIG_FOLDER / "config.py")
 
     def _update_dooit_value(self, obj, *params):

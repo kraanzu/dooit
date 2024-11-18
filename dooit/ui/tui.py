@@ -3,8 +3,6 @@ from typing import Optional
 from textual import on
 from textual.app import App
 from textual.binding import Binding
-from dooit.api.theme import DooitThemeBase
-
 from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup, _QuitApp
 from dooit.ui.api.events.events import ShutDown
 from dooit.ui.widgets import BarSwitcher

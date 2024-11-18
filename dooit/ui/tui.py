@@ -1,4 +1,3 @@
-import webbrowser
 from typing import Optional
 from textual import on
 from textual.app import App
@@ -87,7 +86,7 @@ class Dooit(App):
             self.bar.refresh()
 
     @on(ShutDown)
-    def shutdown(self, event: ShutDown):
+    def shutdown(self, _: ShutDown):
         self.api.css.cleanup()
 
     @on(ModeChanged)
@@ -104,7 +103,7 @@ class Dooit(App):
         await self.action_quit()
 
     async def action_open_url(self, url: str) -> None:  # pragma: no cover
-        webbrowser.open(url, new=2)
+        self.open_url(url)
 
 
 if __name__ == "__main__":  # pragma: no cover

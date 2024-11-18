@@ -29,7 +29,7 @@ class VarManager(ApiComponent):
 
     @property
     def mode(self) -> str:
-        return self.api.app._mode
+        return self.api.app.dooit_mode
 
     @property
     def theme(self) -> DooitThemeBase:

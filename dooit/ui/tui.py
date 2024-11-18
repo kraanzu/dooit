@@ -34,7 +34,7 @@ class Dooit(App):
 
     def __init__(self, connection_string: Optional[str] = None):
         super().__init__(watch_css=True)
-        self._mode: ModeType = "NORMAL"
+        self.dooit_mode: ModeType = "NORMAL"
         manager.connect(connection_string)
 
     async def base_setup(self):
@@ -45,7 +45,7 @@ class Dooit(App):
         self.push_screen("main")
 
     async def setup_poller(self):
-        self.set_interval(1, self.poll)
+        self.set_interval(1, self.poll_dooit_db)
 
     async def on_mount(self):
         await self.base_setup()
@@ -67,10 +67,10 @@ class Dooit(App):
     def bar_switcher(self) -> BarSwitcher:
         return self.query_one(BarSwitcher)
 
-    def get_mode(self) -> ModeType:
-        return self._mode
+    def get_dooit_mode(self) -> ModeType:
+        return self.dooit_mode
 
-    async def poll(self):  # pragma: no cover
+    async def poll_dooit_db(self):  # pragma: no cover
         def refresh_all_trees():
             trees = self.query(ModelTree)
             for tree in trees:
@@ -91,7 +91,7 @@ class Dooit(App):
 
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):
-        self._mode = event.mode
+        self.dooit_mode = event.mode
         if event.mode == "NORMAL":
             self.workspace_tree.refresh_options()
             todos_tree = self.api.vars.todos_tree

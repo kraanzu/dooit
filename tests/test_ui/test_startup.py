@@ -13,4 +13,4 @@ async def test_startup():
         app.bar_switcher
         app.workspace_tree
 
-        assert app.get_mode() == "NORMAL"
+        assert app.get_dooit_mode() == "NORMAL"

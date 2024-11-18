@@ -10,13 +10,13 @@ from ._base import ApiComponent
 
 
 if TYPE_CHECKING:  # pragma: no cover
-    from dooit.ui.tui import Dooit
+    from dooit.ui.api.dooit_api import DooitAPI
 
 
 class VarManager(ApiComponent):
-    def __init__(self, app: "Dooit") -> None:
+    def __init__(self, api: "DooitAPI") -> None:
         super().__init__()
-        self.app = app
+        self.api = api
         self._show_confirm = True
 
     @property
@@ -29,19 +29,19 @@ class VarManager(ApiComponent):
 
     @property
     def mode(self) -> str:
-        return self.app.current_mode
+        return self.api.app.dooit_mode
 
     @property
     def theme(self) -> DooitThemeBase:
-        return self.app.current_theme
+        return self.api.css.theme
 
     @property
     def workspaces_tree(self) -> WorkspacesTree:
-        return self.app.query_one(WorkspacesTree)
+        return self.api.app.query_one(WorkspacesTree)
 
     @property
     def current_workspace(self) -> Optional[Workspace]:
-        tree = self.app.workspace_tree
+        tree = self.api.vars.workspaces_tree
         if tree.highlighted is None:
             return None
 
@@ -49,7 +49,7 @@ class VarManager(ApiComponent):
 
     @property
     def todos_tree(self) -> Optional[TodosTree]:
-        todo_switcher = self.app.query_one(
+        todo_switcher = self.api.app.query_one(
             "#todo_switcher", expect_type=ContentSwitcher
         )
         if todo_switcher.visible_content and isinstance(

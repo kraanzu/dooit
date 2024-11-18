@@ -13,7 +13,7 @@ from rich.text import Text
 
 @subscribe(ModeChanged)
 def get_mode(api: DooitAPI, event: ModeChanged):
-    theme = api.app.current_theme
+    theme = api.vars.theme
     mode = event.mode
 
     MODES = {
@@ -32,7 +32,7 @@ def get_mode(api: DooitAPI, event: ModeChanged):
 
 @timer(1)
 def get_clock(api: DooitAPI):
-    theme = api.app.current_theme
+    theme = api.vars.theme
     time = datetime.now().strftime("%H:%M:%S")
     return Text(
         f" {time} ",
@@ -45,7 +45,7 @@ def get_clock(api: DooitAPI):
 
 @subscribe(Startup)
 def get_user(api: DooitAPI, _: Startup):
-    theme = api.app.current_theme
+    theme = api.vars.theme
     try:
         username = os.getlogin()
     except OSError:
@@ -65,17 +65,19 @@ def get_user(api: DooitAPI, _: Startup):
 # Todo formatters
 
 
-def todo_status_formatter(status: str, todo: Todo, api: DooitAPI):
+def todo_status_formatter(status: str, _: Todo, api: DooitAPI):
     text = "o"
-    color = api.app.current_theme.yellow
+    theme = api.vars.theme
+
+    color = theme.yellow
 
     if status == "completed":
         text = "x"
-        color = api.app.current_theme.green
+        color = theme.green
 
     if status == "overdue":
         text = "!"
-        color = api.app.current_theme.red
+        color = theme.red
 
     return Text(text, style=Style(color=color, bold=True))
 
@@ -96,7 +98,7 @@ def todo_urgency_formatter(urgency, _, api: DooitAPI):
     if urgency == 0:
         return ""
 
-    theme = api.app.current_theme
+    theme = api.vars.theme
     colors = {
         1: theme.green,
         2: theme.yellow,

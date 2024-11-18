@@ -1,5 +1,6 @@
-from functools import partial
+import os
 import sys
+from functools import partial
 from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, List, Type
@@ -8,7 +9,7 @@ from textual.css.query import NoMatches
 
 from dooit.ui.api.event_handlers import DOOIT_EVENT_ATTR, DOOIT_TIMER_ATTR
 from dooit.ui.api.events import DooitEvent
-from .loader import load_dir, load_file
+from .loader import load_file
 
 if TYPE_CHECKING:  # pragma: no cover
     from dooit.ui.api.dooit_api import DooitAPI
@@ -24,6 +25,10 @@ CONFIG_FOLDER = Path(user_config_dir(MAIN_FOLDER))
 DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
 
+def is_running_under_pytest() -> bool:
+    return "PYTEST_CURRENT_TEST" in os.environ
+
+
 class PluginManager:
     def __init__(self, api: "DooitAPI") -> None:
         self.events: defaultdict[Type[DooitEvent], List[Callable]] = defaultdict(list)
@@ -33,7 +38,10 @@ class PluginManager:
 
     def scan(self):
         load_file(self, DEFAULT_CONFIG)
-        load_dir(self, CONFIG_FOLDER)
+        if is_running_under_pytest():
+            return
+
+        load_file(self, CONFIG_FOLDER / "config.py")
 
     def _update_dooit_value(self, obj, *params):
         res = obj(self.api, *params)

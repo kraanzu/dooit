@@ -17,7 +17,7 @@ def test_css_manager():
 
     # via classname
     manager.set_theme(TestTheme)
-    assert manager.theme is TestTheme
+    assert manager.theme.__class__ is TestTheme
 
     # reset
     manager.set_theme(DooitThemeBase)
@@ -26,7 +26,7 @@ def test_css_manager():
     # via name
     manager.add_theme(TestTheme)
     manager.set_theme("test_theme")
-    assert manager.theme is TestTheme
+    assert manager.theme.__class__ is TestTheme
 
 
 # ----------------------------------------

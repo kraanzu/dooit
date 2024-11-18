@@ -1,10 +1,7 @@
-import webbrowser
 from typing import Optional
 from textual import on
 from textual.app import App
 from textual.binding import Binding
-
-from dooit.api.theme import DooitThemeBase
 from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup, _QuitApp
 from dooit.ui.api.events.events import ShutDown
 from dooit.ui.widgets import BarSwitcher
@@ -37,7 +34,7 @@ class Dooit(App):
 
     def __init__(self, connection_string: Optional[str] = None):
         super().__init__(watch_css=True)
-        self._mode: ModeType = "NORMAL"
+        self.dooit_mode: ModeType = "NORMAL"
         manager.connect(connection_string)
 
     async def base_setup(self):
@@ -48,7 +45,7 @@ class Dooit(App):
         self.push_screen("main")
 
     async def setup_poller(self):
-        self.set_interval(1, self.poll)
+        self.set_interval(1, self.poll_dooit_db)
 
     async def on_mount(self):
         await self.base_setup()
@@ -70,14 +67,10 @@ class Dooit(App):
     def bar_switcher(self) -> BarSwitcher:
         return self.query_one(BarSwitcher)
 
-    def get_mode(self) -> ModeType:
-        return self._mode
+    def get_dooit_mode(self) -> ModeType:
+        return self.dooit_mode
 
-    @property
-    def current_theme(self) -> DooitThemeBase:
-        return self.api.css.theme
-
-    async def poll(self):  # pragma: no cover
+    async def poll_dooit_db(self):  # pragma: no cover
         def refresh_all_trees():
             trees = self.query(ModelTree)
             for tree in trees:
@@ -93,12 +86,12 @@ class Dooit(App):
             self.bar.refresh()
 
     @on(ShutDown)
-    def shutdown(self, event: ShutDown):
+    def shutdown(self, _: ShutDown):
         self.api.css.cleanup()
 
     @on(ModeChanged)
     def change_status(self, event: ModeChanged):
-        self._mode = event.mode
+        self.dooit_mode = event.mode
         if event.mode == "NORMAL":
             self.workspace_tree.refresh_options()
             todos_tree = self.api.vars.todos_tree
@@ -110,7 +103,7 @@ class Dooit(App):
         await self.action_quit()
 
     async def action_open_url(self, url: str) -> None:  # pragma: no cover
-        webbrowser.open(url, new=2)
+        self.open_url(url)
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -3,8 +3,8 @@ from typing import Optional
 from textual import on
 from textual.app import App
 from textual.binding import Binding
-
 from dooit.api.theme import DooitThemeBase
+
 from dooit.ui.api.events import ModeChanged, DooitEvent, ModeType, Startup, _QuitApp
 from dooit.ui.api.events.events import ShutDown
 from dooit.ui.widgets import BarSwitcher
@@ -72,10 +72,6 @@ class Dooit(App):
 
     def get_mode(self) -> ModeType:
         return self._mode
-
-    @property
-    def current_theme(self) -> DooitThemeBase:
-        return self.api.css.theme
 
     async def poll(self):  # pragma: no cover
         def refresh_all_trees():

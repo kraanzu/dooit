@@ -29,7 +29,7 @@ class DooitAPI:
         self.layouts = LayoutManager(self.app)
         self.formatter = Formatter(self)
         self.bar = BarManager(self)
-        self.vars = VarManager(self.app)
+        self.vars = VarManager(self)
         self.dashboard = DashboardManager(self.app)
 
         self.css.refresh_css()

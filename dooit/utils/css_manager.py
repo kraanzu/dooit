@@ -26,7 +26,7 @@ class CssManager:
         theme: DooitThemeBase = DooitThemeBase(),
         cache_path: Path = dooit_cache_path,
     ):
-        self.theme = theme
+        self.theme: DooitThemeBase = theme
         self.cache_path = cache_path
         self.stylesheets: Path = cache_path / "stylesheets"
         self.css_file: Path = cache_path / "dooit.tcss"
@@ -59,14 +59,14 @@ class CssManager:
         self.write(css)
 
     def add_theme(self, theme: Type[DooitThemeBase]):
-        self.themes[theme._name] = theme
+        self.themes[theme._name] = theme()
         self.refresh_css()
 
     def set_theme(self, theme: Union[str, Type[DooitThemeBase]]):
         if isinstance(theme, str):
             self.theme = self.themes.get(theme, DooitThemeBase)
         else:
-            self.theme = theme
+            self.theme = theme()
 
         self.refresh_css()
 

@@ -16,6 +16,7 @@ Dashboard {
 
 ModelTree {
     background: $background1;
+    background-tint: white 0%;
     color: $foreground3;
     border: $border_type $background3;
     padding: 1;

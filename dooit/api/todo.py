@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import List
 from sqlalchemy import ForeignKey, select, nulls_last
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
-from .model import DooitModel
+from .model import DooitModel, generate_unique_id
 from .manager import manager
 
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class Todo(DooitModel):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, default=generate_unique_id)
     order_index: Mapped[int] = mapped_column(default=-1)
     description: Mapped[str] = mapped_column(default="")
     due: Mapped[Optional[datetime]] = mapped_column(default=None)

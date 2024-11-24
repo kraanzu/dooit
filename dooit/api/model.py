@@ -1,3 +1,4 @@
+import uuid
 from typing import Any, List, Literal, TypeVar
 from typing_extensions import Self
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -20,6 +21,10 @@ class BaseModelMixin:
         return cls.__name__.lower()
 
 
+def generate_unique_id():
+    return uuid.uuid4().int & (2**62 - 1)  # Use only the lower 63 bits of the UUID
+
+
 class DooitModel(BaseModel, BaseModelMixin):
     """
     Model class to for the base tree structure
@@ -27,7 +32,7 @@ class DooitModel(BaseModel, BaseModelMixin):
 
     __abstract__ = True
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, default=generate_unique_id)
     order_index: Mapped[int] = mapped_column(default=-1)
 
     @classmethod

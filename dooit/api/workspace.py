@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..api.todo import Todo
-from .model import DooitModel
+from .model import DooitModel, generate_unique_id
 from .manager import manager
 
 ModelType = Union["Workspace", "Todo"]
@@ -10,7 +10,7 @@ ModelTypeList = Union[List["Workspace"], List["Todo"]]
 
 
 class Workspace(DooitModel):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, default=generate_unique_id)
     order_index: Mapped[int] = mapped_column(default=-1)
     description: Mapped[str] = mapped_column(default="")
     is_root: Mapped[bool] = mapped_column(default=False)

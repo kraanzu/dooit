@@ -43,6 +43,9 @@ class FormatterStore:
         )
         return id
 
+    def get_formatter_by_id(self, id: str) -> Optional[FormatterFunc]:
+        return self.formatters.get(id)
+
     @trigger_refresh
     def remove(self, id: str) -> None:
         self.formatters.pop(id, None)

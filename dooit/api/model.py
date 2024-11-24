@@ -22,7 +22,7 @@ class BaseModelMixin:
 
 
 def generate_unique_id():
-    return uuid.uuid4().int & (2**62 - 1)  # Use only the lower 63 bits of the UUID
+    return uuid.uuid4().int & (2**62 - 1)
 
 
 class DooitModel(BaseModel, BaseModelMixin):

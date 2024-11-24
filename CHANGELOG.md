@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.0
+
+### Added
+
+- Add `get_formatter_by_id` to formatters
+- IDs for todos are now random integers instead of auto increment
+ 
 ## 3.0.4
 
 This is a minor release with no new changes but fixing some stuff that was caused by recent textual update

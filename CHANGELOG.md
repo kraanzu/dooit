@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `get_formatter_by_id` to formatters
-- IDs for todos are now random integers instead of auto increment
  
 ## 3.0.4
 

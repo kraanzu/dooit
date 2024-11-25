@@ -76,6 +76,11 @@ class DooitAPI:
 
         raise ValueError(f"Expected BaseTree, got {type(focused)}")
 
+    def copy_description_to_clipboard(self):
+        """Copy the description of the focused item to the clipboard"""
+
+        self.focused.copy_description_to_clipboard()
+
     def switch_focus(self):
         """Switch focus between the workspace and the todo list"""
 

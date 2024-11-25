@@ -228,6 +228,10 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def _get_parent(self, id: str) -> Optional[ModelType]:
         raise NotImplementedError  # pragma: no cover
 
+    @require_highlighted_node
+    def copy_description_to_clipboard(self):
+        self.app.copy_to_clipboard(self.current_model.description)
+
     @refresh_tree
     def _expand_node(self, _id: str) -> None:
         self.expanded_nodes[_id] = True

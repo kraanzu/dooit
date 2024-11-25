@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from sqlalchemy import ForeignKey, asc, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..api.todo import Todo
-from .model import DooitModel, generate_unique_id
+from .model import DooitModel
 from .manager import manager
 
 ModelType = Union["Workspace", "Todo"]

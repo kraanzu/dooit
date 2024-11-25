@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import List
 from sqlalchemy import ForeignKey, select, nulls_last
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
-from .model import DooitModel, generate_unique_id
+from .model import DooitModel
 from .manager import manager
 
 

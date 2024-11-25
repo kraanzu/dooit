@@ -22,7 +22,7 @@ yay -S dooit dooit-extras
 
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # this can be stable, but if it is do not make hyprpanel follow it
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     dooit.url = "github:dooit-org/dooit";
     dooit-extras.url = "github:dooit-org/dooit-extras";
@@ -81,7 +81,7 @@ in {
 
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # this can be stable, but if it is do not make hyprpanel follow it
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     dooit.url = "github:dooit-org/dooit";
     dooit-extras.url = "github:dooit-org/dooit-extras";

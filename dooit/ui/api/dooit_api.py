@@ -179,3 +179,7 @@ class DooitAPI:
         """Decrease the urgency of the todo"""
         if isinstance(self.focused, TodosTree):
             self.focused.decrease_urgency()
+
+    def show_help(self):
+        """Show the help screen"""
+        self.focused.show_help()

@@ -156,9 +156,6 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def on_mount(self):
         self.force_refresh()
 
-    def key_question_mark(self):
-        self.app.push_screen("help")
-
     @require_highlighted_node
     def start_sort(self):
         self.post_message(StartSort(self.current_model, self.sort))
@@ -340,6 +337,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
             self.current_model.reverse_siblings()
         else:
             self.current_model.sort_siblings(attr)
+
+    def show_help(self):
+        self.app.push_screen("help")
 
     def compose(self) -> ComposeResult:
         with Label(id="empty_message"):

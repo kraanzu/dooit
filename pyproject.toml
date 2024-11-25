@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dooit"
-version = "3.0.4"
+version = "3.1.0"
 description = "A TUI Todo Manager"
 authors = ["kraanzu <kraanzu@gmail.com>"]
 maintainers = ["kraanzu <kraanzu@gmail.com>"]

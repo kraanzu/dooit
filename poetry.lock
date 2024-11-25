@@ -1372,13 +1372,13 @@ sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
 name = "textual"
-version = "0.86.1"
+version = "0.87.0"
 description = "Modern Text User Interface framework"
 optional = false
 python-versions = "<4.0.0,>=3.8.1"
 files = [
-    {file = "textual-0.86.1-py3-none-any.whl", hash = "sha256:ebc2bfd92c2f1a451c12dcbcfda002598a2fc9793d1684be83514b5fba75f915"},
-    {file = "textual-0.86.1.tar.gz", hash = "sha256:a6e68de5383415f222f26b4049c2a92ed204071fdfebe3d729f8dd373ca5f519"},
+    {file = "textual-0.87.0-py3-none-any.whl", hash = "sha256:e0f3e51e9568b7639011e4eb07082e8d0179576ea35df1a2181daabc7ba4c108"},
+    {file = "textual-0.87.0.tar.gz", hash = "sha256:15638863197dcc08f906523ef60341be754269b29fd656625a716aef7503d45e"},
 ]
 
 [package.dependencies]
@@ -1610,4 +1610,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "cc2ea6227b5cd8c93b7028687973d7c7d459f44ef4f8f1967d973e3f68b8ccda"
+content-hash = "bf0863f2923ed1e7aecd3e882e761bbe2b6cd4d85293b57dd3a6ca7e7c37a4c5"

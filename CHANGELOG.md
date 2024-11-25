@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `get_formatter_by_id` to formatters
+- Add functionality to yank descriptions from todo and workspaces
+
+### Fixed
+
+- Question Mark shows help me while editing text (#214)
+- SqlOperationError on windows (#210)
  
 ## 3.0.4
 

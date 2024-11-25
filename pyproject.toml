@@ -12,10 +12,9 @@ exclude = ["imgs"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pyperclip = "^1.9.0"
 pyyaml = "^6.0.2"
 tzlocal = "^5.2"
-textual = "^0.87.0"
+textual = "^0.87.1"
 python-dateutil = "^2.9.0.post0"
 sqlalchemy = "^2.0.36"
 platformdirs = "^4.3.6"

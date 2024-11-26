@@ -162,7 +162,7 @@ If you still want to have custom functions, check out [`Custom`](https://dooit-o
 
 ```py
 from dooit_extras.bar_widgets import Mode, Spacer, Clock, Date
-from dooit.ui.api.events import subscribe, Startup
+from dooit.ui.api.events import Startup
 from dooit.ui.api import DooitAPI, subscribe
 
 

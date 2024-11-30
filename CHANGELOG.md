@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `get_formatter_by_id` to formatters
 - Add functionality to yank descriptions from todo and workspaces
+- Add `-c/--config` flag for running custom configs
 
 ### Fixed
 

@@ -3,7 +3,7 @@ import sys
 from functools import partial
 from collections import defaultdict
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, List, Type
+from typing import TYPE_CHECKING, Callable, List, Optional, Type
 from platformdirs import user_config_dir
 from textual.css.query import NoMatches
 
@@ -21,7 +21,7 @@ else:
     BASE_PATH = Path(__file__).parent.parent.parent
 
 MAIN_FOLDER = "dooit"
-CONFIG_FOLDER = Path(user_config_dir(MAIN_FOLDER))
+CONFIG_FILE = Path(user_config_dir(MAIN_FOLDER)) / "config.py"
 DEFAULT_CONFIG = BASE_PATH / "utils" / "default_config.py"
 
 
@@ -30,7 +30,8 @@ def is_running_under_pytest() -> bool:
 
 
 class PluginManager:
-    def __init__(self, api: "DooitAPI") -> None:
+    def __init__(self, api: "DooitAPI", config: Optional[Path] = None) -> None:
+        self.config = config or CONFIG_FILE
         self.events: defaultdict[Type[DooitEvent], List[Callable]] = defaultdict(list)
         self.timers: defaultdict[float, List[Callable]] = defaultdict(list)
         self.api = api
@@ -41,7 +42,7 @@ class PluginManager:
         if is_running_under_pytest():
             return
 
-        load_file(self, CONFIG_FOLDER / "config.py")
+        load_file(self, self.config)
 
     def _update_dooit_value(self, obj, *params):
         res = obj(self.api, *params)

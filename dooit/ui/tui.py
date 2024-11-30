@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 from textual import on
 from textual.app import App
@@ -32,9 +33,14 @@ class Dooit(App):
         Binding("ctrl+c", "quit", "Quit", show=False, priority=True),
     ]
 
-    def __init__(self, connection_string: Optional[str] = None):
+    def __init__(
+        self,
+        connection_string: Optional[str] = None,
+        config: Optional[Path] = None,
+    ):
         super().__init__(watch_css=True)
         self.dooit_mode: ModeType = "NORMAL"
+        self.config = config
         manager.connect(connection_string)
 
     async def base_setup(self):

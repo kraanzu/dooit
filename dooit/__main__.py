@@ -1,3 +1,4 @@
+from typing import Optional
 import click
 from pathlib import Path
 from platformdirs import user_data_dir, user_config_dir
@@ -6,10 +7,14 @@ OLD_CONFIG = Path(user_data_dir("dooit")) / "todo.yaml"
 VERSION = "3.1.0"
 
 
-def run_dooit():
+def run_dooit(config: Optional[Path] = None):
+    if config and not (config.exists() and config.is_file()):
+        print(f"Config file {config} not found.")
+        return
+
     from dooit.ui.tui import Dooit
 
-    Dooit().run()
+    Dooit(config=config).run()
 
 
 @click.group(
@@ -22,8 +27,9 @@ def run_dooit():
     is_flag=True,
     help="Show version and exit.",
 )
+@click.option("-c", "--config", default=None, help="Path to config file.")
 @click.pass_context
-def main(ctx, version: bool) -> None:
+def main(ctx, version: bool, config: str) -> None:
     if version:
         return print(f"dooit - {VERSION}")
 
@@ -37,7 +43,10 @@ def main(ctx, version: bool) -> None:
             )
             return
 
-        run_dooit()
+        if config:
+            run_dooit(Path(config).expanduser())
+        else:
+            run_dooit()
 
 
 @main.command(help="Migrate data from v2 to v3.")

@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING
+from pathlib import Path
+from typing import TYPE_CHECKING, Optional
 from dooit.ui.api.events import BarNotification, NotificationType
 from dooit.ui.api.plug import PluginManager
 from .events import DooitEvent, SwitchTab, _QuitApp
@@ -21,9 +22,12 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class DooitAPI:
-    def __init__(self, app: "Dooit") -> None:
+    def __init__(
+        self,
+        app: "Dooit",
+    ) -> None:
         self.app = app
-        self.plugin_manager = PluginManager(self)
+        self.plugin_manager = PluginManager(self, app.config)
         self.css = CssManager()
         self.keys = KeyManager(self.app.get_dooit_mode)
         self.layouts = LayoutManager(self.app)

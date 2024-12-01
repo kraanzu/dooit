@@ -1,5 +1,4 @@
-from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from dooit.ui.api.events import BarNotification, NotificationType
 from dooit.ui.api.plug import PluginManager
 from .events import DooitEvent, SwitchTab, _QuitApp

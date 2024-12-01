@@ -99,6 +99,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
     def update_current_prompt(self):
         if self.highlighted is not None:
             self.update_prompt_at_index(self.highlighted)
+            self.scroll_to_highlight()
 
     def set_filter(self, filter: str) -> None:
         self.filter_refresh = bool(filter)

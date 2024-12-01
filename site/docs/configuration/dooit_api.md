@@ -61,6 +61,10 @@ Add a child to the highlighted item
 
 Add a sibling to the highlighted item
 
+## `method` copy_description_to_clipboard
+
+Copy the description of the selected node to clipboard
+
 ## `method` decrease_urgency 
 
 Decrease the urgency of the todo

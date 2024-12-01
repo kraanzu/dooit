@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Question Mark shows help me while editing text (#214)
 - SqlOperationError on windows (#210)
+- Cant see the cursor when typing at the bottom of the screen (#218)
  
 ## 3.0.4
 

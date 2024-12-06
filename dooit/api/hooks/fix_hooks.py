@@ -1,4 +1,4 @@
-from sqlalchemy import event
+from sqlalchemy import event, text
 from ..workspace import Workspace
 from ..todo import Todo
 
@@ -14,12 +14,12 @@ def fix_order_id_workspace(mapper, connection, target: Workspace):
 
     if target.order_index >= 0:
         connection.execute(
-            """
-            UPDATE todos
+            text("""
+            UPDATE workspace
             SET order_index = order_index + 1
             WHERE order_index >= :current_index
             AND id != :target_id
-            """,
+            """),
             {"current_index": target.order_index, "target_id": target.id},
         )
 
@@ -31,11 +31,11 @@ def fix_order_id_todo(mapper, connection, target: Todo):
 
     if target.order_index >= 0:
         connection.execute(
-            """
-            UPDATE workspaces
+            text("""
+            UPDATE todo
             SET order_index = order_index + 1
             WHERE order_index >= :current_index
             AND id != :target_id
-            """,
+            """),
             {"current_index": target.order_index, "target_id": target.id},
         )

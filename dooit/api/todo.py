@@ -137,6 +137,7 @@ class Todo(DooitModel):
         todo = Todo(
             parent_todo=self.parent_todo,
             parent_workspace=self.parent_workspace,
+            order_index=self.order_index + 1,
         )
         todo.save()
         return todo

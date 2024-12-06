@@ -105,6 +105,7 @@ class Workspace(DooitModel):
     def _add_sibling(self) -> "Workspace":
         workspace = Workspace(
             parent_workspace=self.parent_workspace,
+            order_index=self.order_index + 1,
         )
         workspace.save()
         return workspace

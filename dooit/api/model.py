@@ -125,20 +125,7 @@ class DooitModel(BaseModel, BaseModelMixin):
         raise NotImplementedError  # pragma: no cover
 
     def add_sibling(self):
-        sibling = self._add_sibling()
-        index = self.order_index
-
-        cls = self.__class__
-        manager.session.query(cls).filter(cls.order_index > index).update(
-            {cls.order_index: cls.order_index + 1},
-            synchronize_session=False,
-        )
-
-        sibling.order_index = index + 1
-        manager.session.add(sibling)
-        manager.commit()
-
-        return sibling
+        return self._add_sibling()
 
     def shift_down(self) -> bool:
         """

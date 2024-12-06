@@ -16,7 +16,7 @@ def fix_order_id_workspace(mapper, connection, target: Workspace):
         connection.execute(
             text("""
             UPDATE workspace
-            SET order_index = order_index + 1
+            SET order_index = order_index
             WHERE order_index >= :current_index
             AND id != :target_id
             """),
@@ -33,7 +33,7 @@ def fix_order_id_todo(mapper, connection, target: Todo):
         connection.execute(
             text("""
             UPDATE todo
-            SET order_index = order_index + 1
+            SET order_index = order_index
             WHERE order_index >= :current_index
             AND id != :target_id
             """),

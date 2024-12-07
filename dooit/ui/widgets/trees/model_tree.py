@@ -129,6 +129,9 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
         self._force_refresh()
         self.get_column_width.cache_clear()
 
+    def is_node_expaned(self, _id: str) -> bool:
+        return self.expanded_nodes[_id]
+
     def _force_refresh(self) -> None:
         highlighted = self.highlighted
         self.clear_options()
@@ -143,7 +146,7 @@ class ModelTree(BaseTree, Generic[ModelType, RenderDictType]):
                 render = self._renderers[child.uuid]
                 options.append(Option("", id=render.id))
 
-                if self.expanded_nodes[child.uuid] or self.filter_refresh:
+                if self.is_node_expaned(child.uuid) or self.filter_refresh:
                     add_children_recurse(child)
 
         add_children_recurse(self.model)

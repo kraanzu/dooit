@@ -27,6 +27,9 @@ class WorkspacesTree(ModelTree[Workspace, WorkspaceRenderDict]):
     def _get_parent(self, id: str) -> Optional[Workspace]:
         return Workspace.from_id(id).parent_workspace
 
+    def is_node_expaned(self, _id: str) -> bool:
+        return super().is_node_expaned(_id) or self.api.vars.always_expand_workspaces
+
     @property
     def formatter(self) -> "WorkspaceFormatter":
         return self.api.formatter.workspaces

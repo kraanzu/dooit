@@ -26,6 +26,9 @@ class TodosTree(ModelTree[Model, TodoRenderDict]):
     def _get_parent(self, id: str) -> Optional[Todo]:
         return Todo.from_id(id).parent_todo
 
+    def is_node_expaned(self, _id: str) -> bool:
+        return super().is_node_expaned(_id) or self.api.vars.always_expand_todos
+
     @property
     def formatter(self) -> "TodoFormatter":
         return self.api.formatter.todos

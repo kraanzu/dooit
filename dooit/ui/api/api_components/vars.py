@@ -18,6 +18,24 @@ class VarManager(ApiComponent):
         super().__init__()
         self.api = api
         self._show_confirm = True
+        self._always_expand_workspaces = False
+        self._always_expand_todos = False
+
+    @property
+    def always_expand_workspaces(self) -> bool:
+        return self._always_expand_workspaces
+
+    @always_expand_workspaces.setter
+    def always_expand_workspaces(self, value: bool):
+        self._always_expand_workspaces = value
+
+    @property
+    def always_expand_todos(self) -> bool:
+        return self._always_expand_todos
+
+    @always_expand_todos.setter
+    def always_expand_todos(self, value: bool):
+        self._always_expand_todos = value
 
     @property
     def show_confirm(self):

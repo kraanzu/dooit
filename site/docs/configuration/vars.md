@@ -9,6 +9,23 @@ h2 code {
 This api component exposes some of the stuff running on dooit + act as a global register to tweak settings \
 Its still developing and I'll add more stuff to it as per demand!
 
+## `editable` always_expand_workspaces
+
+If set to `True`, the workspaces will always be expanded
+
+```py
+def always_expand_workspaces(self) -> bool
+```
+
+## `editable` always_expand_todos
+
+If set to `True`, the todos will always be expanded
+
+```py
+def always_expand_todos(self) -> bool
+```
+
+
 ## `editable` show_confirm
 
 Returns a boolean value if confirmation is enabled

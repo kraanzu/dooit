@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - special function `dooit_setup` that always runs on startup
 - `dev only` Auto handling for order_index
+- vars `always_expand_workspaces` and `always_expand_todos`
 
 ## 3.1.0
 

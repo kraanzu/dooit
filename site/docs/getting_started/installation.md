@@ -137,3 +137,18 @@ in {
 :::
 
 > Thanks to [`Hyprpanel`](https://hyprpanel.com/) from whom I stole the format for the flake
+
+## Conda
+
+```bash
+conda install dooit dooit-extras
+```
+
+```bash
+mamba install dooit dooit-extras
+```
+
+Or using [Pixi](https://pixi.sh/latest/)s `global` feature for access independent of the directory:
+```bash
+pixi global install dooit
+```
